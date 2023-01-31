@@ -1,0 +1,26 @@
+:root {
+  --white: rgb(255, 255, 255);   
+  --bg-ui: rgb(245, 245, 247);
+  --bg-canvas-light: rgb(220, 229, 242);
+  --bg-canvas-dark: rgb(185, 194, 209);
+  --line: rgb(227, 228, 229);
+  --line-dark: rgb(165, 165, 165);
+  --canvas-shadow: rgb(171, 184, 202);
+  --selected-light: rgb(238, 243, 247);
+  --selected-light-line: rgb(196, 223, 249);
+  --selected-light-line-dark: rgb(160, 205, 250);
+  --selected-dark: rgb(201, 224, 247);
+  --selected-dark-line: rgb(98, 162, 228);
+  --text-color: rgb(60, 60, 60);
+  --text-color-2: rgb(90, 90, 90);
+  --text-color-3: rgb(170, 170, 170);
+}
+
+body {
+  margin: 0;
+}
+
+.top-bar {
+  background-color: red;
+  height: 30px;
+}
