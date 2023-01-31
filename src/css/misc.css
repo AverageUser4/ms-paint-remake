@@ -1,0 +1,51 @@
+@font-face {
+  font-family: 'segoe';
+  src: url(../assets/segoe.ttf) format('truetype');
+}
+
+@layer {
+  
+  body {
+    margin: 0;
+    font-family: 'segoe', 'Segoe UI', sans-serif;
+  }
+    
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    padding: 4px;
+    height: 28px;
+  
+    border-radius: 0;
+    background-color: transparent;
+    border: none;
+  }
+  .button:hover {
+    background-color: var(--button-hover);
+    outline: 1px solid var(--button-hover-outline);
+  }
+  .button img {
+    height: 100%;
+  }
+  
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+  
+    background-color: red;
+    height: 30px;
+  }
+  
+  .tob-bar__items {
+    display: flex;
+  }
+  
+  .quick-access-toolbar {
+    display: flex;
+    height: 30px;
+    background-color: green;
+  }
+
+}
