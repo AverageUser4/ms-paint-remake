@@ -1,0 +1,10 @@
+.text {
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+  line-height: 1;
+  color: var(--text-color-4);
+
+  user-select: none;
+}

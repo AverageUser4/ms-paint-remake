@@ -1,12 +1,13 @@
 import React from 'react';
-import saveFile from '../../assets/icons/save-file.png';
-import goBack from '../../assets/icons/go-back-disabled.png';
-import goForward from '../../assets/icons/go-forward-disabled.png';
-import arrowDropdown from '../../assets/icons/arrow-dropdown.png';
+import css from  './QuickAccessToolbar.module.css';
+import saveFile from '../../assets/QuickAccessToolbar/save.png';
+import goBack from '../../assets/QuickAccessToolbar/undo-dis.png';
+import goForward from '../../assets/QuickAccessToolbar/redo-dis.png';
+import arrowDropdown from '../../assets/QuickAccessToolbar/dropdown.png';
 
 function QuickAccessToolbar() {
   return (
-    <div className="quick-access-toolbar">
+    <div className={css['container']}>
       <button className="button">
         <img src={saveFile} alt="Save file."/>
       </button>

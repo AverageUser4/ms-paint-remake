@@ -1,0 +1,13 @@
+.container {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+}
+
+.container button {
+  width: 45px;
+  height: 28px;
+
+  border-radius: 0;
+  border: none;
+}
