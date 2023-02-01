@@ -7,4 +7,6 @@
   padding: 2px 4px;
 
   background-color: var(--bg-ui);
+  border-top: 1px solid var(--bg-line);
+  border-bottom: 1px solid var(--bg-line);
 }

@@ -1,16 +1,20 @@
-.text {
-  font-size: 12.4px;
-  margin: 0;
-  padding: 0;
-  font-weight: normal;
-  line-height: 1;
-  color: var(--text-color-4);
+@layer {
 
-  user-select: none;
-}
-
-.text--ribbon-item {
-  font-size: 11px;
-  color: var(--text-color);
-  letter-spacing: 1px;
+  .text {
+    font-size: 12.4px;
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    line-height: 1;
+    color: var(--text-color-4);
+  
+    user-select: none;
+  }
+  
+  .text--1 {
+    font-size: 11px;
+    color: var(--text-color);
+    letter-spacing: 1px;
+  }
+  
 }

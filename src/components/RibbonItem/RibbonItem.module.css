@@ -32,3 +32,8 @@
   width: 16px;
   height: 16px;
 }
+
+.triangle {
+  display: block;
+  margin-top: 8px;
+}
