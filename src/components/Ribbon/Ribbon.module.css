@@ -1,5 +1,10 @@
 .container {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
   height: 92px;
+  padding: 2px 4px;
 
   background-color: var(--bg-ui);
 }

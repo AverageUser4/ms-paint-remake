@@ -8,3 +8,9 @@
 
   user-select: none;
 }
+
+.text--ribbon-item {
+  font-size: 11px;
+  color: var(--text-color);
+  letter-spacing: 1px;
+}

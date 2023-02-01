@@ -9,6 +9,8 @@
   --line-dark: rgb(165, 165, 165);
   --canvas-shadow: rgb(171, 184, 202);
   --selected-light: rgb(238, 243, 247);
+  --selected-light-hover: rgb(249, 250, 250);
+  --selected-inner-bg: rgb(244, 247, 250);
   --selected-light-line: rgb(196, 223, 249);
   --selected-light-line-dark: rgb(160, 205, 250);
   --selected-dark: rgb(201, 224, 247);
