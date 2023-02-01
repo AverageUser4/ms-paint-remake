@@ -1,7 +1,26 @@
 .container {
   display: flex;
   align-items: center;
+  gap: 1px;
   
   height: 30px;
+  padding: 0 6px;
+
   background-color: green;
+}
+.container::before,
+.container::after {
+  content: '';
+
+  display: block;
+  width: 1px;
+  height: 14px;
+
+  background-color: var(--line-dark);
+}
+.container::before {
+  margin-right: 4px;
+}
+.container::after {
+  margin-left: 4px;
 }

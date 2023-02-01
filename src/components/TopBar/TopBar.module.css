@@ -2,8 +2,10 @@
   display: flex;
   justify-content: space-between;
 
-  background-color: red;
   height: 30px;
+  padding: 0 1px 0 8px;
+  
+  background-color: red;
 }
 
 .items {

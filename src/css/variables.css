@@ -1,6 +1,8 @@
 :root {
   --white: rgb(255, 255, 255);   
-  --bg-ui: rgb(245, 245, 247);
+  --bg-ui: rgb(245, 246, 247);
+  --bg-line: rgb(218, 219, 220);
+  --bg-line-light: rgb(235, 235, 236);
   --bg-canvas-light: rgb(220, 229, 242);
   --bg-canvas-dark: rgb(185, 194, 209);
   --line: rgb(227, 228, 229);
@@ -17,4 +19,7 @@
   --text-color-4: rgb(40, 40, 40);
   --button-hover: rgb(241, 247, 254);
   --button-hover-outline: rgb(171, 212, 254);
+  --button-blue: rgb(25, 121, 202);
+  --button-blue-hover: rgb(41, 140, 225);
+  --almost-white: rgb(253, 253, 255);
 }
