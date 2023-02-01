@@ -1,0 +1,28 @@
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 4px;
+  margin: 0 2px;
+
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+.container:hover {
+  background-color: var(--selected-light);
+  border: 1px solid var(--selected-light-line);
+}
+
+.image {
+  display: block;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 6px;
+}
+
+.triangle {
+  display: block;
+  margin-top: 8px;
+}
