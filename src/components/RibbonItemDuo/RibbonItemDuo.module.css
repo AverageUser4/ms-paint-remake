@@ -3,8 +3,8 @@
   flex-direction: column;
   align-items: center;
 
-  padding: 4px 0;
   margin: 0 2px;
+  min-width: 42px;
 
   background-color: transparent;
   border: 1px solid transparent;
@@ -13,35 +13,45 @@
   background-color: var(--selected-light);
   border: 1px solid var(--selected-light-line);
 }
-.container--active {
+/* .container--active {
   background-color: var(--selected-dark);
   border: 1px solid var(--selected-dark-line);
-}
+} */
 
 .top {
   display: flex;
   justify-content: center;
 
-  padding-bottom: 2px;
+  padding: 4px 0 2px;
   width: 100%;
-  margin-bottom: 3px;
 
+  border-top: none;
+  border-left: none;
+  border-right: none;
   border-bottom: 1px solid transparent;
+  background-color: transparent;
 }
-.container--active .top {
+.container:hover .top {
+  border-bottom: 1px solid var(--selected-light-line); 
+}
+/* .container--active .top {
   border-bottom: 1px solid var(--selected-dark-line);
-}
+} */
 
 .image {
   display: block;
-  width: 28px;
-  height: 28px;
+  width: var(--ribbon-icon-size);
+  height: var(--ribbon-icon-size);
 }
 
 .bottom {
   display: grid;
   justify-items: center;
-  padding: 0 2px;  
+
+  padding: 3px 2px 4px;  
+
+  border: none;
+  background-color: transparent;
 }
 
 .triangle {

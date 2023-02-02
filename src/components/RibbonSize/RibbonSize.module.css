@@ -16,8 +16,8 @@
 
 .image {
   display: block;
-  width: 28px;
-  height: 28px;
+  width: var(--ribbon-icon-size);
+  height: var(--ribbon-icon-size);
   margin-bottom: 6px;
 }
 
