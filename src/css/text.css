@@ -21,5 +21,9 @@
   .text--2 {
     color: var(--text-color-2);
   }
+
+  .text--3 {
+    color: var(--black);
+  }
   
 }

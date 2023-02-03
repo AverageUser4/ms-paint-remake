@@ -6,7 +6,7 @@ import WindowControls from '../WindowControls/WindowControls';
 
 function TopBar() {
   return (
-    <header class={css['container']}>
+    <header className={css['container']}>
 
       <div className={css['items']}>
 

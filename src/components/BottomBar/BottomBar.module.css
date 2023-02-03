@@ -1,8 +1,23 @@
 .container {
+  display: flex;
+  align-items: center;
+  
+  padding: 1px 0;
   height: var(--bottombar-height);
   
   background-color: var(--dark-white);
   border-top: 1px solid var(--line-medium);
 
   box-sizing: border-box;
+}
+
+.data {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  height: 100%;
+  padding-left: 6px;
+  width: 155px;
+  border-right: 1px solid var(--line-medium);
 }

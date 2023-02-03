@@ -1,5 +1,6 @@
 :root {
-  --white: rgb(255, 255, 255);   
+  --black: rgb(0, 0, 0);
+  --white: rgb(255, 255, 255);
   --bg-ui: rgb(245, 246, 247);
   --bg-line: rgb(218, 219, 220);
   --bg-line-light: rgb(235, 235, 236);

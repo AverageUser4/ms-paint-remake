@@ -9,7 +9,7 @@ import colors32 from '../../assets/RibbonColors/colors-32.png';
 function RibbonColors() {
   const colorsTemp = [];
   for(let i = 0; i < 30; i++) {
-    colorsTemp.push(<button className={css['color']}></button>);
+    colorsTemp.push(<button key={i} className={css['color']}></button>);
   }
   
   return (
