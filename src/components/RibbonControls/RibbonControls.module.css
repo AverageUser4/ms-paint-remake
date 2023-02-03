@@ -3,9 +3,8 @@
   justify-content: space-between;
 
   height: var(--ribbon-controls-height);
-  padding-right: 1px;
   
-  background-color: cyan;
+  /* background-color: cyan; */
 
   box-sizing: border-box;
 }

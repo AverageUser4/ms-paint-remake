@@ -1,19 +1,15 @@
-
 import React from "react";
 import css from './RibbonSize.module.css';
-import triangleDown from '../../assets/global/triangle-down.png';
-import size from '../../assets/RibbonSize/size-32.png';
+
+import RibbonItem from "../RibbonItem/RibbonItem";
+
+import size32 from '../../assets/RibbonSize/size-32.png';
 
 function RibbonSize() {
   return (
-    <button className={`${css['container']} ${css['container--active']}`}>
+    <RibbonItem icon={size32} name="Size">
 
-      <img className={css['image']} src={size}/>
-
-      <span className="text text--1">Size</span>
-      <img className={css['triangle']} src={triangleDown}/>
-
-    </button>
+    </RibbonItem>
   );
 }
 

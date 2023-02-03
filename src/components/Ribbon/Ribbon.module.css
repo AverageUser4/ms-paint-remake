@@ -10,5 +10,6 @@
   border-top: 1px solid var(--bg-line);
   border-bottom: 1px solid var(--bg-line);
 
+  overflow: hidden;
   box-sizing: border-box;
 }

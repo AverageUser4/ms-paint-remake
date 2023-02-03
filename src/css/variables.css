@@ -29,6 +29,8 @@
   --button-blue: rgb(25, 121, 202);
   --button-blue-hover: rgb(41, 140, 225);
   --almost-white: rgb(253, 253, 255);
+  --window-shadow: rgb(170, 180, 190);
+  --window-border: rgb(150, 155, 161);
 
   --ribbon-icon-size: 31px;
   --ribbon-icon-small-size: 23px;

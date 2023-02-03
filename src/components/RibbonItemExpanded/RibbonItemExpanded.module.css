@@ -3,12 +3,12 @@
   flex-direction: column;
   justify-content: space-between;
   
-  height: 92px;
+  height: var(--ribbon-height);
   max-height: 100%;
   padding: 5px;  
   
   border: none;
-  background-color: red;
+  /* background-color: red; */
 
   box-sizing: border-box;
 }

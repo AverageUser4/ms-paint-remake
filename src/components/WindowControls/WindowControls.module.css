@@ -6,7 +6,7 @@
 
 .container button {
   width: 45px;
-  height: 28px;
+  height: 100%;
 
   border-radius: 0;
   border: none;

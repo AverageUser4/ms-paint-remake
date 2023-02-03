@@ -4,7 +4,6 @@ import minimize from  '../../assets/WindowControls/minimize.png';
 import maximize from  '../../assets/WindowControls/maximize.png';
 import close from  '../../assets/WindowControls/close.png';
 
-
 function WindowControls() {
   return (
     <div className={css['container']}>

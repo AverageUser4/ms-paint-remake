@@ -1,0 +1,13 @@
+.container {
+  position: fixed;
+  top: 100px;
+  left: 200px;
+  
+  width: 600px;
+  height: 500px;
+  border: 1px solid var(--window-border);
+
+  box-shadow: 0 0 20px var(--window-shadow);
+
+  box-sizing: border-box;
+}

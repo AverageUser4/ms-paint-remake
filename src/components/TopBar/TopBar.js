@@ -4,9 +4,9 @@ import logoMini from '../../assets/TopBar/logo-mini.png';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
 
-function TopBar() {
+function TopBar({ onPointerDown }) {
   return (
-    <header className={css['container']}>
+    <header className={css['container']} onPointerDown={onPointerDown}>
 
       <div className={css['items']}>
 

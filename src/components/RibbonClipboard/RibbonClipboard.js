@@ -3,30 +3,34 @@ import css from './RibbonClipboard.module.css';
 
 import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
+import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
 import clipboard32 from '../../assets/RibbonClipboard/clipboard-32.png';
+import clipboard16 from '../../assets/RibbonClipboard/clipboard-16.png';
 import copy16 from '../../assets/RibbonClipboard/copy-16.png';
 import cut16 from '../../assets/RibbonClipboard/cut-16.png';
 
 function RibbonClipboard() {
   return (
-    <RibbonItemExpanded name="Clipboard">
+    <RibbonItemContainer icon={clipboard16} name="Clipboard">
+      <RibbonItemExpanded name="Clipboard">
 
-        <div className={css['container']}>
-          <RibbonItemDuo icon={clipboard32} name="Paste"/>
+          <div className={css['container']}>
+            <RibbonItemDuo icon={clipboard32} name="Paste"/>
 
-          <div>
-            <button className="button">
-              <img src={cut16} alt="Cut."/>
-            </button>
+            <div>
+              <button className="button">
+                <img src={cut16} alt="Cut."/>
+              </button>
 
-            <button className="button">
-              <img src={copy16} alt="Copy."/>
-            </button>
+              <button className="button">
+                <img src={copy16} alt="Copy."/>
+              </button>
+            </div>
           </div>
-        </div>
 
-    </RibbonItemExpanded>
+      </RibbonItemExpanded>
+    </RibbonItemContainer>
   );
 }
 

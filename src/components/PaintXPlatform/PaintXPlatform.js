@@ -1,5 +1,7 @@
 import React from 'react';
+import css from './PaintXPlatform.module.css';
 
+import Window from '../Window/Window';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
 import Ribbon from '../Ribbon/Ribbon';
 import RibbonControls from '../RibbonControls/RibbonControls';
@@ -8,13 +10,12 @@ import BottomBar from '../BottomBar/BottomBar';
 
 function PaintXPlatform() {
   return (
-    <article>
-      <TopBar/>
+    <Window Top={TopBar}>
       <RibbonControls/>
       <Ribbon/>
       <CanvasContainer/>
       <BottomBar/>
-    </article>
+    </Window>
   );
 }
 
