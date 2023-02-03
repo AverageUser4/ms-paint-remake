@@ -3,7 +3,7 @@ import css from  './QuickAccessToolbar.module.css';
 import saveFile from '../../assets/QuickAccessToolbar/save.png';
 import goBack from '../../assets/QuickAccessToolbar/undo-dis.png';
 import goForward from '../../assets/QuickAccessToolbar/redo-dis.png';
-import arrowDropdown from '../../assets/QuickAccessToolbar/dropdown.png';
+import arrowDropdown from '../../assets/global/triangle-down-with-line.png';
 
 function QuickAccessToolbar() {
   return (

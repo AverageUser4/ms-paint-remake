@@ -20,11 +20,13 @@
   
     border-radius: 0;
     background-color: transparent;
-    border: none;
+    border: 1px solid transparent;
+
+    box-sizing: border-box;
   }
   .button:hover {
     background-color: var(--button-hover);
-    outline: 1px solid var(--button-hover-outline);
+    border: 1px solid var(--button-hover-outline);
   }
 
 }

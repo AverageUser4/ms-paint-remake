@@ -7,6 +7,7 @@
   --bg-canvas-dark: rgb(185, 194, 209);
   --line: rgb(227, 228, 229);
   --line-dark: rgb(165, 165, 165);
+  --line-darker: rgb(128, 128, 128);
   --canvas-shadow: rgb(171, 184, 202);
   --selected-light: rgb(238, 243, 247);
   --selected-light-hover: rgb(249, 250, 250);
@@ -25,5 +26,6 @@
   --button-blue-hover: rgb(41, 140, 225);
   --almost-white: rgb(253, 253, 255);
 
-  --ribbon-icon-size: 29px;
+  --ribbon-icon-size: 31px;
+  --ribbon-icon-small-size: 23px;
 }

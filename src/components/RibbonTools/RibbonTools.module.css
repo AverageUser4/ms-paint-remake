@@ -1,0 +1,9 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  row-gap: 8px;
+
+  padding-top: 8px;
+  
+  background-color: blueviolet;
+}

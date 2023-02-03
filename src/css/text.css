@@ -7,6 +7,7 @@
     font-weight: normal;
     line-height: 1;
     color: var(--text-color-4);
+    text-align: center;
   
     user-select: none;
   }
@@ -15,6 +16,10 @@
     font-size: 11px;
     color: var(--text-color);
     letter-spacing: 1px;
+  }
+
+  .text--2 {
+    color: var(--text-color-2);
   }
   
 }

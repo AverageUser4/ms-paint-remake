@@ -1,22 +1,38 @@
 import React from "react";
 import css from './RibbonImage.module.css';
-import image from '../../assets/Ribbon/image.png';
-import triangleDown from '../../assets/global/triangle-down.png';
 
-function Clipboard() {
+import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
+import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
+
+import image32 from '../../assets/RibbonImage/image-32.png';
+import crop16 from '../../assets/RibbonImage/crop-16.png';
+import resize16 from '../../assets/RibbonImage/resize-16.png';
+import rotate16 from '../../assets/RibbonImage/rotate-16.png';
+
+function RibbonImage() {
   return (
-    <button className="ribbon-item">
+    <RibbonItemExpanded name="Image">
 
-      <div className="ribbon-item__image-container">
-        <img src={image}/>
-      </div>
+        <div className={css['container']}>
+          <RibbonItemDuo icon={image32} name="Select"/>
 
-      <span className="text text--ribbon-item">Image</span>
+          <div>
+            <button className="button">
+              <img src={crop16} alt="Crop."/>
+            </button>
 
-      <img className="ribbon-item__triangle" src={triangleDown}/>
+            <button className="button">
+              <img src={resize16} alt="Resize."/>
+            </button>
 
-    </button>
+            <button className="button">
+              <img src={rotate16} alt="Rotate."/>
+            </button>
+          </div>
+        </div>
+
+    </RibbonItemExpanded>
   );
 }
 
-export default Clipboard;
+export default RibbonImage;

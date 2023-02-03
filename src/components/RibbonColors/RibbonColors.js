@@ -1,22 +1,33 @@
 import React from "react";
 import css from './RibbonColors.module.css';
-import colors from '../../assets/Ribbon/colors.png';
-import triangleDown from '../../assets/global/triangle-down.png';
 
-function Clipboard() {
+import RibbonItem from '../RibbonItem/RibbonItem';
+import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
+
+import colors32 from '../../assets/RibbonColors/colors-32.png';
+
+function RibbonColors() {
+  const colorsTemp = [];
+  for(let i = 0; i < 30; i++) {
+    colorsTemp.push(<button className={css['color']}></button>);
+  }
+  
   return (
-    <button className="ribbon-item">
+    <RibbonItemExpanded name="Colors">
 
-      <div className="ribbon-item__image-container">
-        <img src={colors}/>
-      </div>
+        <div className={css['container']}>
+          <RibbonItem backgroundColor="red" hasArrow={false} name="Color 1"/>
+          <RibbonItem backgroundColor="blue" hasArrow={false} name="Color 2" iconSize="small"/>
 
-      <span className="text text--ribbon-item">Colors</span>
+          <div className={css['colors-grid']}>
+            {colorsTemp}
+          </div>
 
-      <img className="ribbon-item__triangle" src={triangleDown}/>
+          <RibbonItem icon={colors32} hasArrow={false} name="Edit colors"/>
+        </div>
 
-    </button>
+    </RibbonItemExpanded>
   );
 }
 
-export default Clipboard;
+export default RibbonColors;

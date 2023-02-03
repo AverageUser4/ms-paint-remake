@@ -1,0 +1,33 @@
+.container {
+  display: flex;
+  background-color: blueviolet;
+}
+
+.colors-grid {
+  display: grid;
+  grid-template-columns: repeat(10, auto);
+  gap: 2px;
+
+  padding-top: 5px;
+}
+
+.color {
+  width: 19px;
+  height: 19px;
+  padding: 1px;
+
+  border: 1px solid var(--line-darker);
+  background-color: transparent;
+  color: cyan;
+  
+  box-sizing: border-box;
+}
+.color::after {
+  content: '';
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background-color: currentColor;
+}

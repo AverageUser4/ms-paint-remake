@@ -1,34 +1,50 @@
 import React from "react";
 import css from './Ribbon.module.css';
-import RibbonItem from '../RibbonItem/RibbonItem';
-import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
-import clipboard from '../../assets/Ribbon/clipboard.png';
-import clipboard32 from '../../assets/Ribbon/clipboard-32.png';
-import image from '../../assets/Ribbon/image.png';
-import tools from '../../assets/Ribbon/tools.png';
-import shapes from '../../assets/Ribbon/shapes.png';
-import colors from '../../assets/Ribbon/colors.png';
-import brush from '../../assets/Ribbon/brush.png';
-import RibbonSize from "../RibbonSize/RibbonSize";
-import RibbonClipboard from "../RibbonClipboard/RibbonClipboard";
 
+import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
+import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
+import RibbonItem from "../RibbonItem/RibbonItem";
+import RibbonClipboard from "../RibbonClipboard/RibbonClipboard";
+import RibbonImage from "../RibbonImage/RibbonImage";
+import RibbonTools from "../RibbonTools/RibbonTools";
+import RibbonShapes from "../RibbonShapes/RibbonShapes";
+import RibbonColors from "../RibbonColors/RibbonColors";
+
+import clipboard from '../../assets/RibbonClipboard/clipboard-16.png';
+import image from '../../assets/RibbonImage/image-16.png';
+import tools from '../../assets/RibbonTools/tools-16.png';
+import shapes from '../../assets/RibbonShapes/shapes-16.png';
+import colors from '../../assets/RibbonColors/colors-16.png';
+import brushes from '../../assets/RibbonBrushes/brushes-32.png';
+import size from '../../assets/RibbonSize/size-32.png';
 
 function Ribbon() {
   return (
     <div className={css['container']}>
 
-      <RibbonItem icon={clipboard} name="Clipboard">
-        {/* <RibbonClipboard/> */}
-      </RibbonItem>
+      <RibbonItemContainer icon={clipboard} name="Clipboard">
+        <RibbonClipboard/>
+      </RibbonItemContainer>
 
-      <RibbonItemDuo icon={clipboard32} name="Paste"/>
+      <RibbonItemContainer icon={image} name="Image">
+        <RibbonImage/>
+      </RibbonItemContainer>
 
-      <RibbonItem icon={image} name="Image"/>
-      <RibbonItem icon={tools} name="Tools"/>
-      <RibbonItemDuo icon={brush} name="Brushes"/>
-      <RibbonItem icon={shapes} name="Shapes"/>
-      <RibbonSize/>
-      <RibbonItem icon={colors} name="Colors"/>
+      <RibbonItemContainer icon={tools} name="Tools">
+        <RibbonTools/>
+      </RibbonItemContainer>
+
+      <RibbonItemDuo icon={brushes} name="Brushes"/>
+
+      <RibbonItemContainer icon={shapes} name="Shapes">
+        <RibbonShapes/>
+      </RibbonItemContainer>
+
+      <RibbonItem icon={size} name="Size"/>
+
+      <RibbonItemContainer icon={colors} name="Colors">
+        <RibbonColors/>
+      </RibbonItemContainer>
 
     </div>
   );

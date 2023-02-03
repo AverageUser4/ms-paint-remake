@@ -1,20 +1,33 @@
 import React from "react";
 import css from './RibbonClipboard.module.css';
-import triangleDown from '../../assets/global/triangle-down.png';
 
-function Clipboard() {
+import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
+import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
+
+import clipboard32 from '../../assets/RibbonClipboard/clipboard-32.png';
+import copy16 from '../../assets/RibbonClipboard/copy-16.png';
+import cut16 from '../../assets/RibbonClipboard/cut-16.png';
+
+function RibbonClipboard() {
   return (
-    <button className={css['container']}>
+    <RibbonItemExpanded name="Clipboard">
 
-      <div className="ribbon-item__image-container">
-      </div>
+        <div className={css['container']}>
+          <RibbonItemDuo icon={clipboard32} name="Paste"/>
 
-      <span className="text text--ribbon-item">Clipboard</span>
+          <div>
+            <button className="button">
+              <img src={cut16} alt="Cut."/>
+            </button>
 
-      <img className="ribbon-item__triangle" src={triangleDown}/>
+            <button className="button">
+              <img src={copy16} alt="Copy."/>
+            </button>
+          </div>
+        </div>
 
-    </button>
+    </RibbonItemExpanded>
   );
 }
 
-export default Clipboard;
+export default RibbonClipboard;

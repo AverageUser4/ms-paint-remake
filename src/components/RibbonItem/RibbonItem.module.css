@@ -4,33 +4,50 @@
   align-items: center;
 
   padding: 4px;
-  height: 100%;
+  margin: 0 2px;
 
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+.container:hover {
   background-color: var(--selected-light);
   border: 1px solid var(--selected-light-line);
 }
-.container:hover {
-  background-color: var(--selected-light-hover);
+.container--small {
+  padding-top: calc(4px + (var(--ribbon-icon-size) - var(--ribbon-icon-small-size)) / 2);
 }
 
-.image-container {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-
+.icon {
+  display: block;
   width: var(--ribbon-icon-size);
   height: var(--ribbon-icon-size);
-  padding-top: 4px;
   margin-bottom: 6px;
-  
-  border: 1px solid var(--selected-light-line-dark);
-  background-color: var(--selected-inner-bg);
+}
+.icon--small {
+  width: var(--ribbon-icon-small-size);
+  height: var(--ribbon-icon-small-size);
+  margin-bottom: calc(6px + (var(--ribbon-icon-size) - var(--ribbon-icon-small-size)) / 2);
+}
+.icon--only-color {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1px;
+
+  background-color: transparent;
+  border: 1px solid var(--line-darker);
 
   box-sizing: border-box;
 }
-.image-container img {
-  width: 16px;
-  height: 16px;
+.icon--only-color::after {
+  content: '';
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  background-color: currentColor;
 }
 
 .triangle {

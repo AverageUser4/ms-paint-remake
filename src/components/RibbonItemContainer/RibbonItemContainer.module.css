@@ -1,0 +1,39 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 4px;
+  height: 100%;
+
+  background-color: var(--selected-light);
+  border: 1px solid var(--selected-light-line);
+}
+.container:hover {
+  background-color: var(--selected-light-hover);
+}
+
+.image-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  width: var(--ribbon-icon-size);
+  height: var(--ribbon-icon-size);
+  padding-top: 4px;
+  margin-bottom: 6px;
+  
+  border: 1px solid var(--selected-light-line-dark);
+  background-color: var(--selected-inner-bg);
+
+  box-sizing: border-box;
+}
+.image-container img {
+  width: 16px;
+  height: 16px;
+}
+
+.triangle {
+  display: block;
+  margin-top: 8px;
+}

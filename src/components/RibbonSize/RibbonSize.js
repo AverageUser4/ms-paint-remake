@@ -2,7 +2,7 @@
 import React from "react";
 import css from './RibbonSize.module.css';
 import triangleDown from '../../assets/global/triangle-down.png';
-import size from '../../assets/Ribbon/size.png';
+import size from '../../assets/RibbonSize/size-32.png';
 
 function RibbonSize() {
   return (
