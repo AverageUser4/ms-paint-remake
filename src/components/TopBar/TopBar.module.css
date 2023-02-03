@@ -2,10 +2,12 @@
   display: flex;
   justify-content: space-between;
 
-  height: 30px;
+  height: var(--topbar-height);
   padding: 0 1px 0 8px;
   
   background-color: red;
+
+  box-sizing: border-box;
 }
 
 .items {

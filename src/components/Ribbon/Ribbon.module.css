@@ -3,10 +3,12 @@
   align-items: flex-start;
   gap: 2px;
 
-  height: 92px;
+  height: var(--ribbon-height);
   padding: 2px 4px;
 
   background-color: var(--bg-ui);
   border-top: 1px solid var(--bg-line);
   border-bottom: 1px solid var(--bg-line);
+
+  box-sizing: border-box;
 }

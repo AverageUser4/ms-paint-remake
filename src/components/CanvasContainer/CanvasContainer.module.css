@@ -1,0 +1,8 @@
+.container {
+  width: 100%;
+  /*note that proper height might be different depending on ui changes, eg. toolbar showed below ribbon, this is temporary*/
+  height: calc(100vh - var(--ribbon-height) - var(--ribbon-controls-height) - var(--topbar-height) - var(--bottombar-height));
+
+  background-color: var(--bg-canvas-bottom);
+  background-image: linear-gradient(var(--bg-canvas-top), var(--bg-canvas-bottom));
+}

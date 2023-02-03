@@ -2,10 +2,12 @@
   display: flex;
   justify-content: space-between;
 
-  height: 24px;
+  height: var(--ribbon-controls-height);
   padding-right: 1px;
   
   background-color: cyan;
+
+  box-sizing: border-box;
 }
 
 .left {

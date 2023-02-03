@@ -3,9 +3,12 @@
   --bg-ui: rgb(245, 246, 247);
   --bg-line: rgb(218, 219, 220);
   --bg-line-light: rgb(235, 235, 236);
-  --bg-canvas-light: rgb(220, 229, 242);
-  --bg-canvas-dark: rgb(185, 194, 209);
+  --bg-canvas-top: rgb(197, 207, 223);
+  --bg-canvas-bottom: rgb(220, 229, 242);
+  --dark-white: rgb(240, 240, 240);
+  --dots: rgb(191, 191, 191);
   --line: rgb(227, 228, 229);
+  --line-medium: rgb(215, 215, 215);
   --line-dark: rgb(165, 165, 165);
   --line-darker: rgb(128, 128, 128);
   --canvas-shadow: rgb(171, 184, 202);
@@ -28,4 +31,9 @@
 
   --ribbon-icon-size: 31px;
   --ribbon-icon-small-size: 23px;
+
+  --ribbon-height: 98px;
+  --ribbon-controls-height: 24px;
+  --topbar-height: 30px;
+  --bottombar-height: 26px;
 }
