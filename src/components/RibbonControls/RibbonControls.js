@@ -1,7 +1,8 @@
 import React from 'react';
 import css from './RibbonControls.module.css';
-import hide from '../../assets/RibbonControls/hide.png';
-import info from '../../assets/RibbonControls/info.png';
+
+import hide from './assets/hide.png';
+import info from './assets/info.png';
 
 function RibbonControls() {
   return (

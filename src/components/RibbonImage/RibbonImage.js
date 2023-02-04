@@ -5,11 +5,11 @@ import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 
-import image16 from '../../assets/RibbonImage/image-16.png';
-import image32 from '../../assets/RibbonImage/image-32.png';
-import crop16 from '../../assets/RibbonImage/crop-16.png';
-import resize16 from '../../assets/RibbonImage/resize-16.png';
-import rotate16 from '../../assets/RibbonImage/rotate-16.png';
+import image16 from './assets/image-16.png';
+import image32 from './assets/image-32.png';
+import crop16 from './assets/crop-16.png';
+import resize16 from './assets/resize-16.png';
+import rotate16 from './assets/rotate-16.png';
 
 function RibbonImage() {
   return (

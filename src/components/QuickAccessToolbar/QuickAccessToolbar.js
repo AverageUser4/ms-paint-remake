@@ -1,8 +1,8 @@
 import React from 'react';
 import css from  './QuickAccessToolbar.module.css';
-import saveFile from '../../assets/QuickAccessToolbar/save.png';
-import goBack from '../../assets/QuickAccessToolbar/undo-dis.png';
-import goForward from '../../assets/QuickAccessToolbar/redo-dis.png';
+import saveFile from './assets/save.png';
+import goBack from './assets/undo-dis.png';
+import goForward from './assets/redo-dis.png';
 import arrowDropdown from '../../assets/global/triangle-down-with-line.png';
 
 function QuickAccessToolbar() {

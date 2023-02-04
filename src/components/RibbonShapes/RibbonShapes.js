@@ -5,10 +5,10 @@ import RibbonItem from '../RibbonItem/RibbonItem';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
-import shapes16 from '../../assets/RibbonShapes/shapes-16.png';
-import shapes32 from '../../assets/RibbonShapes/shapes-32.png';
-import fill16 from '../../assets/RibbonShapes/fill-16.png';
-import outline16 from '../../assets/RibbonShapes/outline-16.png';
+import shapes16 from './assets/shapes-16.png';
+import shapes32 from './assets/shapes-32.png';
+import fill16 from './assets/fill-16.png';
+import outline16 from './assets/outline-16.png';
 
 function RibbonShapes() {
   return (

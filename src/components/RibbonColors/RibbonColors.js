@@ -5,8 +5,8 @@ import RibbonItem from '../RibbonItem/RibbonItem';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
-import colors16 from '../../assets/RibbonColors/colors-16.png';
-import colors32 from '../../assets/RibbonColors/colors-32.png';
+import colors16 from './assets/colors-16.png';
+import colors32 from './assets/colors-32.png';
 
 function RibbonColors() {
   const colorsTemp = [];

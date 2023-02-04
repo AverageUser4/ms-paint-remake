@@ -1,8 +1,9 @@
 import React from "react";
 import css from './WindowControls.module.css';
-import minimize from  '../../assets/WindowControls/minimize.png';
-import maximize from  '../../assets/WindowControls/maximize.png';
-import close from  '../../assets/WindowControls/close.png';
+
+import minimize from  './assets/minimize.png';
+import maximize from  './assets/maximize.png';
+import close from  './assets/close.png';
 
 function WindowControls() {
   return (

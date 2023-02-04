@@ -1,8 +1,10 @@
 import React from 'react';
 import css from './TopBar.module.css';
-import logoMini from '../../assets/TopBar/logo-mini.png';
+
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
+
+import logoMini from './assets/logo-mini.png';
 
 function TopBar({ onPointerDown }) {
   return (

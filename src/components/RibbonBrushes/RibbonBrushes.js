@@ -3,7 +3,7 @@ import css from './RibbonBrushes.module.css';
 
 import RibbonItemDuo from "../RibbonItemDuo/RibbonItemDuo";
 
-import brushes32 from '../../assets/RibbonBrushes/brushes-32.png';
+import brushes32 from './assets/brushes-32.png';
 
 function RibbonBrushes() {
   return (

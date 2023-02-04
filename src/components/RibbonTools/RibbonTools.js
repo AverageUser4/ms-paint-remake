@@ -4,13 +4,13 @@ import css from './RibbonTools.module.css';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
-import tools16 from '../../assets/RibbonTools/tools-16.png';
-import pencil16 from '../../assets/RibbonTools/pencil-16.png';
-import fill16 from '../../assets/RibbonTools/fill-16.png';
-import text16 from '../../assets/RibbonTools/text-16.png';
-import eraser16 from '../../assets/RibbonTools/eraser-16.png';
-import colorPicker16 from '../../assets/RibbonTools/color-picker-16.png';
-import magnifier16 from '../../assets/RibbonTools/magnifier-16.png';
+import tools16 from './assets/tools-16.png';
+import pencil16 from './assets/pencil-16.png';
+import fill16 from './assets/fill-16.png';
+import text16 from './assets/text-16.png';
+import eraser16 from './assets/eraser-16.png';
+import colorPicker16 from './assets/color-picker-16.png';
+import magnifier16 from './assets/magnifier-16.png';
 
 function RibbonTools() {
   return (
