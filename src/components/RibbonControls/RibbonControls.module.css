@@ -4,7 +4,7 @@
 
   height: var(--ribbon-controls-height);
   
-  /* background-color: cyan; */
+  background-color: var(--white);
 
   box-sizing: border-box;
 }

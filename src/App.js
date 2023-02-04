@@ -4,7 +4,9 @@ import PaintXPlatform from './components/PaintXPlatform/PaintXPlatform';
 
 function App() {
   return (
-    <PaintXPlatform/>
+    <div className="app">
+      <PaintXPlatform/>
+    </div>
   );
 }
 

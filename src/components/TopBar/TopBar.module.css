@@ -5,7 +5,7 @@
   height: var(--topbar-height);
   padding-left: 8px;
   
-  /* background-color: red; */
+  background-color: var(--white);
 
   box-sizing: border-box;
 }
