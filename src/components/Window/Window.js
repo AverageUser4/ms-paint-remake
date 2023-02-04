@@ -43,13 +43,24 @@ function Window({ Top, children }) {
       const diffY = event.clientY - resizeData.initialY;
       let newWidth = size.width;
       let newHeight = size.height;
+      let newX = position.x;
+      let newY = position.y;
 
       if(resizeData.type.includes('left') || resizeData.type.includes('right'))
         newWidth = resizeData.initialWidth + diffX;
       if(resizeData.type.includes('top') || resizeData.type.includes('bottom'))
         newHeight = resizeData.initialHeight + diffY;
-
-      setSize({ width: newWidth, height: newHeight });
+      if(resizeData.type.includes('left'))
+        newX = position.x + diffX;
+      if(resizeData.type.includes('top'))
+        newY = position.y + diffY;
+      
+      if(newWidth !== size.width || newHeight !== size.height)
+        setSize({ width: newWidth, height: newHeight });
+      if(newX !== position.x || newY !== position.y) {
+        setPosition({ x: newX, y: newY });
+        setResizeData(prev => ({ ...prev, initialX: newX, initialY: newY }));
+      }
     }
 
     window.addEventListener('pointerup', onPointerUp);
@@ -59,7 +70,7 @@ function Window({ Top, children }) {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size]);
+  }, [resizeData, size, position]);
   
   function onPointerDown(event) {
     const x = event.clientX - position.x;
