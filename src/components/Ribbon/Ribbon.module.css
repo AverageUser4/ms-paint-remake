@@ -13,3 +13,7 @@
   overflow: hidden;
   box-sizing: border-box;
 }
+
+.container * {
+  flex-shrink: 0;
+}
