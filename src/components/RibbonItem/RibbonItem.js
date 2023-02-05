@@ -1,6 +1,7 @@
 import React from "react";
 import css from './RibbonItem.module.css';
-import triangleDown from '../../assets/global/triangle-down.png';
+
+import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItem({ name, icon, backgroundColor = '#ff00ff', iconSize = '', hasArrow = true }) {
   const containerClasses = `${css['container']} ${css[`container--${iconSize}`]}`;
@@ -21,10 +22,7 @@ function RibbonItem({ name, icon, backgroundColor = '#ff00ff', iconSize = '', ha
 
       <span className="text text--1">{name}</span>
 
-      {
-        hasArrow &&
-          <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
-      }
+      {hasArrow && <TriangleDown className={css['triangle']}/>}
 
     </button>
   );

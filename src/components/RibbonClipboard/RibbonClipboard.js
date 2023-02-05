@@ -12,6 +12,7 @@ import cut16 from './assets/cut-16.png';
 
 function RibbonClipboard({ ribbonWidth }) {
   const showContent = ribbonWidth >= 855;
+  const showText = ribbonWidth < 855 || ribbonWidth >= 1025; 
 
   return (
     <RibbonItemContainer showContent={showContent} icon={clipboard16} name="Clipboard">
@@ -23,10 +24,12 @@ function RibbonClipboard({ ribbonWidth }) {
             <div>
               <button className="button">
                 <img draggable="false" src={cut16} alt="Cut."/>
+                {showText && <span className="text text--1">Cut</span>}
               </button>
 
               <button className="button">
                 <img draggable="false" src={copy16} alt="Copy."/>
+                {showText && <span className="text text--1">Copy</span>}
               </button>
             </div>
           </div>

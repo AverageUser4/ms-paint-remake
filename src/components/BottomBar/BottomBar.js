@@ -5,7 +5,7 @@ import canvas16 from './assets/canvas-16.ico';
 import cursor16 from './assets/cursor-16.ico';
 import fileSize16 from './assets/file-size-16.ico';
 import selection16 from './assets/selection-16.ico';
-import cross from '../../assets/global/cross.png';
+import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
 function BottomBar() {
   return (
@@ -18,12 +18,12 @@ function BottomBar() {
       
       <div className={css['data']}>
         <img draggable="false" src={selection16} alt="Selection size."/>
-        <span className="text">100 <img draggable="false" src={cross} alt="x"/> 100px</span>
+        <span className="text">100 <Cross/> 100px</span>
       </div>
 
       <div className={css['data']}>
         <img draggable="false" src={canvas16} alt="Canvas size."/>
-        <span className="text">100 <img draggable="false" src={cross} alt="x"/> 100px</span>
+        <span className="text">100 <Cross/> 100px</span>
       </div>
 
       <div className={css['data']}>

@@ -9,9 +9,11 @@ import shapes16 from './assets/shapes-16.png';
 import shapes32 from './assets/shapes-32.png';
 import fill16 from './assets/fill-16.png';
 import outline16 from './assets/outline-16.png';
+import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonShapes({ ribbonWidth }) {
   const showContent = ribbonWidth >= 800;
+  const showText = ribbonWidth < 800 || ribbonWidth >= 900;
 
   return (
     <RibbonItemContainer showContent={showContent} icon={shapes16} name="Shapes">
@@ -23,10 +25,14 @@ function RibbonShapes({ ribbonWidth }) {
             <div>
               <button className="button">
                 <img draggable="false" src={outline16} alt="Outline."/>
+                {showText && <span className="text text--1">Outline</span>}
+                <TriangleDown/>
               </button>
 
               <button className="button">
                 <img draggable="false" src={fill16} alt="Fill."/>
+                {showText && <span className="text text--1">Fill</span>}
+                <TriangleDown/>
               </button>
             </div>
           </div>

@@ -3,7 +3,7 @@ import css from  './QuickAccessToolbar.module.css';
 import saveFile from './assets/save.png';
 import goBack from './assets/undo-dis.png';
 import goForward from './assets/redo-dis.png';
-import arrowDropdown from '../../assets/global/triangle-down-with-line.png';
+import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 function QuickAccessToolbar() {
   return (
@@ -18,7 +18,7 @@ function QuickAccessToolbar() {
         <img draggable="false" src={goForward} alt="Redo."/>
       </button>
       <button className="button button--height-20">
-        <img draggable="false" src={arrowDropdown} alt="Customize Quick Access Toolbar"/>
+        <TriangleLine/>
       </button>
     </div>
   );

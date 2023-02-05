@@ -1,7 +1,8 @@
 
 import React from "react";
 import css from './RibbonItemDuo.module.css';
-import triangleDown from '../../assets/global/triangle-down.png';
+
+import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItemDuo({ name, icon }) {
   return (
@@ -13,7 +14,7 @@ function RibbonItemDuo({ name, icon }) {
 
       <button className={css['bottom']}>
         <span className="text text--1">{name}</span>
-        <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
+        <TriangleDown className={css['triangle']}/>
       </button>
 
     </div>

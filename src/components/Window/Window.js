@@ -74,7 +74,7 @@ function Window({ items }) {
     }
   }, [resizeData, size, position]);
   
-  function onPointerDown(event) {
+  function onPointerDownMove(event) {
     const x = event.clientX - position.x;
     const y = event.clientY - position.y;
     setPositionDifference({ x, y });
@@ -108,13 +108,14 @@ function Window({ items }) {
       <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
       <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
       <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
-      {/* <Top onPointerDown={onPointerDown}/> */}
-      {items.map((Item, index) => {
-        const itemProps = { windowWidth: size.width, key: index };
-        if(index === 0)
-          itemProps.onPointerDown = onPointerDown;
+      {items.map((item, index) => {
+        const { Component, props } = item;
 
-        return <Item {...itemProps}/>
+        const itemProps = { ...props, windowWidth: size.width, key: index };
+        if(index === 0)
+          itemProps.onPointerDown = onPointerDownMove;
+          
+        return <Component {...itemProps}/>
       })}
     </article>
   );

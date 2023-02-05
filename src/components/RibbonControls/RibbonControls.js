@@ -4,14 +4,29 @@ import css from './RibbonControls.module.css';
 import hide from './assets/hide.png';
 import info from './assets/info.png';
 
-function RibbonControls() {
+function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
+  
   return (
     <div className={css['container']}>
 
       <div className={css['left']}>
-        <button className={`${css['button']} ${css['button--blue']}`}>File</button>
-        <button className={`${css['button']} ${css['button--active']}`}>Home</button>
-        <button className={`${css['button']} ${css['button--last']}`}>View</button>
+        <button
+          className={`${css['button']} ${css['button--blue']}`}
+        >
+          File
+        </button>
+        <button
+          className={`${css['button']} ${activeRibbonTab === 'home' ? css['button--active'] : ''}`}
+          onPointerDown={() => setActiveRibbonTab('home')}
+        >
+          Home
+        </button>
+        <button
+          className={`${css['button']} ${css['button--last']} ${activeRibbonTab === 'view' ? css['button--active'] : ''}`}
+          onPointerDown={() => setActiveRibbonTab('view')}
+        >
+          View
+        </button>
       </div>
 
       <div className={css['right']}>

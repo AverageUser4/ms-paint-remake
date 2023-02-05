@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import css from './RibbonItemContainer.module.css';
-import triangleDown from '../../assets/global/triangle-down.png';
+
+import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItemContainer({ icon, name, children, showContent }) {
   const containerRef = useRef();
@@ -48,7 +49,7 @@ function RibbonItemContainer({ icon, name, children, showContent }) {
 
         <span className="text text--1">{name}</span>
 
-        <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
+        <TriangleDown className={css['triangle']}/>
 
       </button>
 
