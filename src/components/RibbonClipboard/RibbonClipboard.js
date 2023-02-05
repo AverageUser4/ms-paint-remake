@@ -5,16 +5,16 @@ import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
-import useItemVisibility from "../../hooks/useItemVisibility";
-
 import clipboard32 from './assets/clipboard-32.png';
 import clipboard16 from './assets/clipboard-16.png';
 import copy16 from './assets/copy-16.png';
 import cut16 from './assets/cut-16.png';
 
 function RibbonClipboard({ ribbonWidth }) {
+  const showContent = ribbonWidth >= 855;
+
   return (
-    <RibbonItemContainer ribbonWidth={ribbonWidth} icon={clipboard16} name="Clipboard">
+    <RibbonItemContainer showContent={showContent} icon={clipboard16} name="Clipboard">
       <RibbonItemExpanded name="Clipboard">
 
           <div className={css['container']}>

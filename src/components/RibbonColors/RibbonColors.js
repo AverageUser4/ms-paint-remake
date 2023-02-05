@@ -9,13 +9,15 @@ import colors16 from './assets/colors-16.png';
 import colors32 from './assets/colors-32.png';
 
 function RibbonColors({ ribbonWidth }) {
+  const showContent = ribbonWidth >= 725;
+
   const colorsTemp = [];
   for(let i = 0; i < 30; i++) {
     colorsTemp.push(<button key={i} className={css['color']}></button>);
   }
   
   return (
-    <RibbonItemContainer ribbonWidth={ribbonWidth} icon={colors16} name="Colors">
+    <RibbonItemContainer showContent={showContent} icon={colors16} name="Colors">
       <RibbonItemExpanded name="Colors">
 
           <div className={css['container']}>

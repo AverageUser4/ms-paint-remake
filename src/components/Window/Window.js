@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import css from './Window.module.css';
 
-function Window({ Top, children }) {
+function Window({ items }) {
   const [position, setPosition] = useState({ x: 200, y: 100 });
   const [positionDifference, setPositionDifference] = useState(null);
   const [size, setSize] = useState({ width: 600, height: 500 });
   const [resizeData, setResizeData] = useState(null);
-  
+
   useEffect(() => {
     function onPointerUp() {
       setPositionDifference(null);
@@ -108,8 +108,14 @@ function Window({ Top, children }) {
       <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
       <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
       <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
-      <Top onPointerDown={onPointerDown}/>
-      {children}
+      {/* <Top onPointerDown={onPointerDown}/> */}
+      {items.map((Item, index) => {
+        const itemProps = { windowWidth: size.width, key: index };
+        if(index === 0)
+          itemProps.onPointerDown = onPointerDown;
+
+        return <Item {...itemProps}/>
+      })}
     </article>
   );
 }

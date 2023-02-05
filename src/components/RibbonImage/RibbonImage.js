@@ -11,9 +11,11 @@ import crop16 from './assets/crop-16.png';
 import resize16 from './assets/resize-16.png';
 import rotate16 from './assets/rotate-16.png';
 
-function RibbonImage() {
+function RibbonImage({ ribbonWidth}) {
+  const showContent = ribbonWidth >= 840;
+  
   return (
-    <RibbonItemContainer icon={image16} name="Image">
+    <RibbonItemContainer showContent={showContent} icon={image16} name="Image">
       <RibbonItemExpanded name="Image">
 
           <div className={css['container']}>

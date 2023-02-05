@@ -10,12 +10,7 @@ import BottomBar from '../BottomBar/BottomBar';
 
 function PaintXPlatform() {
   return (
-    <Window Top={TopBar}>
-      <RibbonControls/>
-      <Ribbon/>
-      <CanvasContainer/>
-      <BottomBar/>
-    </Window>
+    <Window items={[TopBar, RibbonControls, Ribbon, CanvasContainer, BottomBar]}/>
   );
 }
 

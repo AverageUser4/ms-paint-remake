@@ -1,4 +1,24 @@
 .container {
+  position: relative;
+  
+  height: 100%;
+
+  background-color: var(--selected-light);
+  border: 1px solid var(--selected-light-line);
+
+  box-sizing: border-box;
+}
+.container:hover {
+  background-color: var(--selected-light-hover);
+}
+.container:active,
+.container--active,
+.container--active:hover {
+  background-color: var(--selected-light-active);
+  border-color: var(--selected-light-active-border);
+}
+
+.button {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -6,11 +26,10 @@
   padding: 4px;
   height: 100%;
 
-  background-color: var(--selected-light);
-  border: 1px solid var(--selected-light-line);
-}
-.container:hover {
-  background-color: var(--selected-light-hover);
+  border: none;
+  background-color: transparent;
+
+  box-sizing: border-box;
 }
 
 .image-container {
@@ -28,6 +47,12 @@
 
   box-sizing: border-box;
 }
+.container:active .image-container,
+.container--active .image-container,
+.container--active:hover .image-container {
+  background-color: var(--selected-light-active-image);
+  border-color: var(--selected-light-active-border);
+}
 .image-container img {
   width: 16px;
   height: 16px;
@@ -36,4 +61,12 @@
 .triangle {
   display: block;
   margin-top: 8px;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 1px);
+
+  background-color: var(--bg-ui);
+  box-shadow: 2px 2px var(--dropdown-shadow);
 }

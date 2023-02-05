@@ -1,23 +1,65 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import css from './RibbonItemContainer.module.css';
 import triangleDown from '../../assets/global/triangle-down.png';
 
-function RibbonItemContainer({ icon, name, children }) {
-  if(children)
+function RibbonItemContainer({ icon, name, children, showContent }) {
+  const containerRef = useRef();
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    if(showDropdown && showContent)
+      setShowDropdown(false);
+  }, [showDropdown, showContent]);
+
+  useEffect(() => {
+    function onMouseDown(event) {
+      if(
+          !containerRef.current ||
+          containerRef.current === event.target ||
+          containerRef.current.contains(event.target)
+        )
+        return;
+      
+      if(showDropdown)
+        setShowDropdown(false);
+    }
+
+    window.addEventListener('mousedown', onMouseDown);
+
+    return () => {
+      window.removeEventListener('mousedown', onMouseDown);
+    };
+  }, [showDropdown]);
+  
+  if(showContent)
     return children;
   
   return (
-    <button className={css['container']}>
+    <div 
+      className={`${css['container']} ${showDropdown ? css['container--active'] : ''}`}
+      ref={containerRef}
+    >
 
-      <div className={css['image-container']}>
-        <img draggable="false" src={icon} alt=""/>
-      </div>
+      <button className={css['button']} onClick={() => setShowDropdown(prev => !prev)}>
 
-      <span className="text text--1">{name}</span>
+        <div className={css['image-container']}>
+          <img draggable="false" src={icon} alt=""/>
+        </div>
 
-      <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
+        <span className="text text--1">{name}</span>
 
-    </button>
+        <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
+
+      </button>
+
+      {
+        showDropdown &&
+          <div className={css['dropdown']}>
+            {children}
+          </div>
+      }
+      
+    </div>
   );
 }
 

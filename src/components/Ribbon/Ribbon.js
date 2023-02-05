@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState, useEffect } from "react";
 import css from './Ribbon.module.css';
 
 import RibbonClipboard from "../RibbonClipboard/RibbonClipboard";
@@ -9,16 +9,18 @@ import RibbonColors from "../RibbonColors/RibbonColors";
 import RibbonSize from "../RibbonSize/RibbonSize";
 import RibbonBrushes from "../RibbonBrushes/RibbonBrushes";
 
-function Ribbon() {
+function Ribbon({ windowWidth }) {
+  const containerRef = useRef();
+  
   return (
-    <div className={css['container']}>
-      <RibbonClipboard/>
-      <RibbonImage/>
-      <RibbonTools/>
+    <div ref={containerRef} className={css['container']}>
+      <RibbonClipboard ribbonWidth={windowWidth}/>
+      <RibbonImage ribbonWidth={windowWidth}/>
+      <RibbonTools ribbonWidth={windowWidth}/>
       <RibbonBrushes/>
-      <RibbonShapes/>
+      <RibbonShapes ribbonWidth={windowWidth}/>
       <RibbonSize/>
-      <RibbonColors/>
+      <RibbonColors ribbonWidth={windowWidth}/>
     </div>
   );
 }

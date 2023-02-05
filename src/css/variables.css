@@ -17,6 +17,10 @@
 
   --selected-light: rgb(238, 243, 247);
   --selected-light-hover: rgb(249, 250, 250);
+  --selected-light-active: rgb(201, 224, 247);
+  --selected-light-active-border: rgb(98, 162, 228);
+  --selected-light-active-image: rgb(220, 235, 250);
+
   --selected-inner-bg: rgb(244, 247, 250);
   --selected-light-line: rgb(196, 223, 249);
   --selected-light-line-dark: rgb(160, 205, 250);
@@ -34,6 +38,7 @@
 
   --dots: rgb(191, 191, 191);
   --canvas-shadow: rgb(171, 184, 202);
+  --dropdown-shadow: rgb(236, 236, 236);
 
   --button-hover: rgb(241, 247, 254);
   --button-hover-border: rgb(171, 212, 254);

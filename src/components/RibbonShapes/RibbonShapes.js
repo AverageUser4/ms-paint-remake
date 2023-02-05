@@ -10,9 +10,11 @@ import shapes32 from './assets/shapes-32.png';
 import fill16 from './assets/fill-16.png';
 import outline16 from './assets/outline-16.png';
 
-function RibbonShapes() {
+function RibbonShapes({ ribbonWidth }) {
+  const showContent = ribbonWidth >= 800;
+
   return (
-    <RibbonItemContainer icon={shapes16} name="Shapes">
+    <RibbonItemContainer showContent={showContent} icon={shapes16} name="Shapes">
       <RibbonItemExpanded name="Shapes">
 
           <div className={css['container']}>
