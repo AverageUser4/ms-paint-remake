@@ -8,6 +8,9 @@ import RibbonShapes from "../RibbonShapes/RibbonShapes";
 import RibbonColors from "../RibbonColors/RibbonColors";
 import RibbonSize from "../RibbonSize/RibbonSize";
 import RibbonBrushes from "../RibbonBrushes/RibbonBrushes";
+import RibbonZoom from "../RibbonZoom/RibbonZoom";
+import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
+import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 
 function Ribbon({ windowWidth, activeRibbonTab }) {
   console.log(activeRibbonTab)
@@ -27,6 +30,9 @@ function Ribbon({ windowWidth, activeRibbonTab }) {
   } else {
     return (
       <div className={css['container']}>
+        <RibbonZoom ribbonWidth={windowWidth}/>
+        <RibbonShowOrHide/>
+        <RibbonDisplay/>
       </div>
     );
   }

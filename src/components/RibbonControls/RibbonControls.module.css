@@ -7,6 +7,7 @@
   background-color: var(--white);
 
   box-sizing: border-box;
+  position: relative;
 }
 
 .left {
@@ -18,69 +19,4 @@
   display: flex;
   align-items: center;
   gap: 1px;
-}
-
-.button {
-  width: 56px;
-  height: 100%;
-  padding: 0;
-
-  color: var(--text-color);
-  border-radius: 0;
-  border: 1px solid transparent;
-  font-size: 11px;
-  letter-spacing: 1px;
-  background-color: transparent;
-
-  box-sizing: border-box;
-  transition: 100ms;
-}
-.button:hover {
-  --b: 1px solid var(--bg-line-light);
-
-  background-color: var(--almost-white);
-  border-top: var(--b);
-  border-left: var(--b);
-  border-right: var(--b);
-}
-
-.button--blue {
-  background-color: var(--button-blue);
-  border: none;
-  color: var(--white);
-}
-.button--blue:hover {
-  background-color: var(--button-blue-hover);
-  border: none;
-}
-.button--blue:active {
-  background-color: rgb(18, 104, 179);
-}
-
-.button--active,
-.button--active:hover {
-  --b: 1px solid var(--bg-line);
-
-  position: relative;
-
-  background-color: var(--bg-ui);
-  border-top: var(--b);
-  border-left: var(--b);
-  border-right: var(--b);
-}
-.button--active::after {
-  content: '';
-
-  position: absolute;
-  top: calc(100% + 1px);
-  
-  display: block;
-  width: 100%;
-  height: 1px;
-
-  background-color: var(--bg-ui);
-}
-
-.button--last {
-  margin-left: 1px;
 }

@@ -1,1 +1,2 @@
-cursor filckers when resizing window (as it gets out of reach of the element that is used to resizing)
+- cursor filckers when resizing window (as it gets out of reach of the element that is used to resizing)
+- there should be lines between ribbon items
