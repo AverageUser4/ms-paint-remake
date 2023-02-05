@@ -19,27 +19,27 @@ function RibbonTools() {
 
         <div className={css['container']}>
           <button className="button">
-            <img src={pencil16} alt="Pencil."/>
+            <img draggable="false" src={pencil16} alt="Pencil."/>
           </button>
 
           <button className="button">
-            <img src={fill16} alt="Fill color."/>
+            <img draggable="false" src={fill16} alt="Fill color."/>
           </button>
 
           <button className="button">
-            <img src={text16} alt="Text."/>
+            <img draggable="false" src={text16} alt="Text."/>
           </button>
 
           <button className="button">
-            <img src={eraser16} alt="Eraser."/>
+            <img draggable="false" src={eraser16} alt="Eraser."/>
           </button>
 
           <button className="button">
-            <img src={colorPicker16} alt="Color picker."/>
+            <img draggable="false" src={colorPicker16} alt="Color picker."/>
           </button>
 
           <button className="button">
-            <img src={magnifier16} alt="Magnifier."/>
+            <img draggable="false" src={magnifier16} alt="Magnifier."/>
           </button>
         </div>
 

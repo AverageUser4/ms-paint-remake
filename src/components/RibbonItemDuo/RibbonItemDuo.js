@@ -8,12 +8,12 @@ function RibbonItemDuo({ name, icon }) {
     <div className={`${css['container']} ${css['container--active']}`}>
 
       <button className={css['top']}>
-        <img className={css['image']} src={icon}/>
+        <img draggable="false" className={css['image']} src={icon} alt=""/>
       </button>
 
       <button className={css['bottom']}>
         <span className="text text--1">{name}</span>
-        <img className={css['triangle']} src={triangleDown}/>
+        <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
       </button>
 
     </div>

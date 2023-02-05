@@ -20,11 +20,11 @@ function RibbonClipboard() {
 
             <div>
               <button className="button">
-                <img src={cut16} alt="Cut."/>
+                <img draggable="false" src={cut16} alt="Cut."/>
               </button>
 
               <button className="button">
-                <img src={copy16} alt="Copy."/>
+                <img draggable="false" src={copy16} alt="Copy."/>
               </button>
             </div>
           </div>

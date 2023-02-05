@@ -9,16 +9,16 @@ function QuickAccessToolbar() {
   return (
     <div className={css['container']}>
       <button className="button">
-        <img src={saveFile} alt="Save file."/>
+        <img draggable="false" src={saveFile} alt="Save file."/>
       </button>
       <button className="button">
-        <img src={goBack} alt="Undo."/>
+        <img draggable="false" src={goBack} alt="Undo."/>
       </button>
       <button className="button">
-        <img src={goForward} alt="Redo."/>
+        <img draggable="false" src={goForward} alt="Redo."/>
       </button>
-      <button className="button">
-        <img src={arrowDropdown} alt="Customize Quick Access Toolbar"/>
+      <button className="button button--height-20">
+        <img draggable="false" src={arrowDropdown} alt="Customize Quick Access Toolbar"/>
       </button>
     </div>
   );

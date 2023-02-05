@@ -10,12 +10,12 @@ function RibbonItemContainer({ icon, name, children }) {
     <button className={css['container']}>
 
       <div className={css['image-container']}>
-        <img src={icon}/>
+        <img draggable="false" src={icon} alt=""/>
       </div>
 
       <span className="text text--1">{name}</span>
 
-      <img className={css['triangle']} src={triangleDown}/>
+      <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
 
     </button>
   );

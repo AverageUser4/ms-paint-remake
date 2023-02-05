@@ -20,11 +20,11 @@ function RibbonShapes() {
 
             <div>
               <button className="button">
-                <img src={outline16} alt="Outline."/>
+                <img draggable="false" src={outline16} alt="Outline."/>
               </button>
 
               <button className="button">
-                <img src={fill16} alt="Fill."/>
+                <img draggable="false" src={fill16} alt="Fill."/>
               </button>
             </div>
           </div>

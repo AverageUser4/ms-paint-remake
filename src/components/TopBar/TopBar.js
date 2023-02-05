@@ -12,7 +12,7 @@ function TopBar({ onPointerDown }) {
 
       <div className={css['items']}>
 
-        <img src={logoMini} alt=""/>
+        <img draggable="false" src={logoMini} alt=""/>
 
         <QuickAccessToolbar/>
 

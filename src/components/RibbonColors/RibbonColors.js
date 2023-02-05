@@ -19,14 +19,14 @@ function RibbonColors() {
       <RibbonItemExpanded name="Colors">
 
           <div className={css['container']}>
-            <RibbonItem backgroundColor="red" hasArrow={false} name="Color 1"/>
-            <RibbonItem backgroundColor="blue" hasArrow={false} name="Color 2" iconSize="small"/>
+            <RibbonItem backgroundColor="red" hasArrow={false} name={<span>Color <div className="line-break"></div> 1</span>}/>
+            <RibbonItem backgroundColor="blue" hasArrow={false} name={<span>Color <div className="line-break"></div> 2</span>} iconSize="small"/>
 
             <div className={css['colors-grid']}>
               {colorsTemp}
             </div>
 
-            <RibbonItem icon={colors32} hasArrow={false} name="Edit colors"/>
+            <RibbonItem icon={colors32} hasArrow={false} name={<span>Edit <div className="line-break"></div> colors</span>}/>
           </div>
 
       </RibbonItemExpanded>

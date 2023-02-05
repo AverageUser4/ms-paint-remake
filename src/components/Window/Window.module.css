@@ -13,7 +13,7 @@
   top: -8px;
   left: 8px;
   
-  background-color: red;
+  /* background-color: red; */
   width: calc(100% - 16px);
   height: 8px;
 }
@@ -26,7 +26,7 @@
   bottom: -8px;
   left: 8px;
   
-  background-color: blue;
+  /* background-color: blue; */
   width: calc(100% - 16px);
   height: 8px;
 }
@@ -39,7 +39,7 @@
   top: 8px;
   left: -8px;
   
-  background-color: green;
+  /* background-color: green; */
   width: 8px;
   height: calc(100% - 16px);
 }
@@ -52,7 +52,7 @@
   top: 8px;
   right: -8px;
   
-  background-color: cyan;
+  /* background-color: cyan; */
   width: 8px;
   height: calc(100% - 16px);
 }
@@ -72,7 +72,7 @@
   width: 8px;
   height: 8px;
 
-  background-color: gold;
+  /* background-color: gold; */
 }
 
 .top-left:hover {

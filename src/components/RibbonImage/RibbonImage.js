@@ -21,15 +21,15 @@ function RibbonImage() {
 
             <div>
               <button className="button">
-                <img src={crop16} alt="Crop."/>
+                <img draggable="false" src={crop16} alt="Crop."/>
               </button>
 
               <button className="button">
-                <img src={resize16} alt="Resize."/>
+                <img draggable="false" src={resize16} alt="Resize."/>
               </button>
 
               <button className="button">
-                <img src={rotate16} alt="Rotate."/>
+                <img draggable="false" src={rotate16} alt="Rotate."/>
               </button>
             </div>
           </div>

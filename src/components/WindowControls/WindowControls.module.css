@@ -4,10 +4,28 @@
   gap: 1px;
 }
 
-.container button {
+.button {
   width: 45px;
   height: 100%;
 
   border-radius: 0;
   border: none;
+  background-color: transparent;
+  color: var(--black);
+  transition: 200ms;
 }
+.button:hover {
+  background-color: var(--window-control-bg);
+}
+.button:active {
+  background-color: var(--widnow-control-bg-active);
+}
+
+.button--danger:hover {
+  background-color: var(--window-control-bg-danger);
+  color: var(--white);
+}
+.button--danger:active {
+  background-color: var(--widnow-control-bg-danger-active);
+}
+

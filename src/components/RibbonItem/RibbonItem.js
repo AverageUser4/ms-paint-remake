@@ -14,7 +14,7 @@ function RibbonItem({ name, icon, backgroundColor = '#ff00ff', iconSize = '', ha
 
       {
         icon ?
-          <img className={iconClasses} src={icon}/>
+          <img draggable="false" className={iconClasses} src={icon} alt=""/>
         :
           <div style={{ color: backgroundColor }} className={iconClasses}></div>
       }
@@ -23,7 +23,7 @@ function RibbonItem({ name, icon, backgroundColor = '#ff00ff', iconSize = '', ha
 
       {
         hasArrow &&
-          <img className={css['triangle']} src={triangleDown}/>
+          <img draggable="false" className={css['triangle']} src={triangleDown} alt=""/>
       }
 
     </button>

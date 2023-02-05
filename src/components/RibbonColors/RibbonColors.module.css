@@ -6,9 +6,10 @@
 .colors-grid {
   display: grid;
   grid-template-columns: repeat(10, auto);
+  align-content: start;
   gap: 2px;
 
-  padding-top: 5px;
+  padding-top: 4px;
 }
 
 .color {

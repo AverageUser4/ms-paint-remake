@@ -15,11 +15,11 @@ function RibbonControls() {
       </div>
 
       <div className={css['right']}>
-        <button className="button">
-          <img src={hide} alt="Hide ribbon."/>
+        <button className="button button--height-20">
+          <img draggable="false" src={hide} alt="Hide ribbon."/>
         </button>
         <button className="button">
-          <img src={info} alt="Paint help."/>
+          <img draggable="false" src={info} alt="Paint help."/>
         </button>
       </div>
       

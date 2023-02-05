@@ -39,28 +39,30 @@ function Window({ Top, children }) {
       if(!resizeData)
         return;
 
-      const diffX = event.clientX - resizeData.initialX;
-      const diffY = event.clientY - resizeData.initialY;
+      let diffX = event.clientX - resizeData.initialX;
+      let diffY = event.clientY - resizeData.initialY;
       let newWidth = size.width;
       let newHeight = size.height;
       let newX = position.x;
       let newY = position.y;
 
+      if(resizeData.type.includes('left')) {
+        diffX = resizeData.initialX - event.clientX;
+        newX = resizeData.initialX - diffX;
+      }
+      if(resizeData.type.includes('top')) {
+        diffY = resizeData.initialY - event.clientY;
+        newY = resizeData.initialY - diffY;
+      }
       if(resizeData.type.includes('left') || resizeData.type.includes('right'))
         newWidth = resizeData.initialWidth + diffX;
       if(resizeData.type.includes('top') || resizeData.type.includes('bottom'))
         newHeight = resizeData.initialHeight + diffY;
-      if(resizeData.type.includes('left'))
-        newX = position.x + diffX;
-      if(resizeData.type.includes('top'))
-        newY = position.y + diffY;
       
       if(newWidth !== size.width || newHeight !== size.height)
         setSize({ width: newWidth, height: newHeight });
-      if(newX !== position.x || newY !== position.y) {
+      if(newX !== position.x || newY !== position.y)
         setPosition({ x: newX, y: newY });
-        setResizeData(prev => ({ ...prev, initialX: newX, initialY: newY }));
-      }
     }
 
     window.addEventListener('pointerup', onPointerUp);

@@ -1,21 +1,21 @@
 import React from "react";
 import css from './WindowControls.module.css';
 
-import minimize from  './assets/minimize.png';
-import maximize from  './assets/maximize.png';
-import close from  './assets/close.png';
+import { ReactComponent as Close } from './assets/close.svg';
+import { ReactComponent as Maximize } from './assets/maximize.svg';
+import { ReactComponent as Minimize } from './assets/minimize.svg';
 
 function WindowControls() {
   return (
     <div className={css['container']}>
-      <button>
-        <img src={minimize} alt="Minimize."/>
+      <button className={css['button']}>
+        <Minimize draggable="false"/>
       </button>
-      <button>
-        <img src={maximize} alt="Maximize."/>
+      <button className={css['button']}>
+        <Maximize draggable="false"/>
       </button>
-      <button>
-        <img src={close} alt="Close."/>
+      <button className={`${css['button']} ${css['button--danger']}`}>
+        <Close draggable="false"/>
       </button>
     </div>  
   );

@@ -12,22 +12,22 @@ function BottomBar() {
     <footer className={css['container']}>
       
       <div className={css['data']}>
-        <img src={cursor16} alt="Canvas position."/>
+        <img draggable="false" src={cursor16} alt="Canvas position."/>
         <span className="text">100, 100px</span>
       </div>
       
       <div className={css['data']}>
-        <img src={selection16} alt="Selection size."/>
-        <span className="text">100 <img src={cross} alt="x"/> 100px</span>
+        <img draggable="false" src={selection16} alt="Selection size."/>
+        <span className="text">100 <img draggable="false" src={cross} alt="x"/> 100px</span>
       </div>
 
       <div className={css['data']}>
-        <img src={canvas16} alt="Canvas size."/>
-        <span className="text">100 <img src={cross} alt="x"/> 100px</span>
+        <img draggable="false" src={canvas16} alt="Canvas size."/>
+        <span className="text">100 <img draggable="false" src={cross} alt="x"/> 100px</span>
       </div>
 
       <div className={css['data']}>
-        <img src={fileSize16} alt="File size."/>
+        <img draggable="false" src={fileSize16} alt="File size."/>
         <span className="text">Size: 4.8KB</span>
       </div>
       
