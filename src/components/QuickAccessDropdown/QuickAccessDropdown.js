@@ -9,55 +9,62 @@ function QuickAccessDropdown() {
         <h3 className="head head--dark">Customize Quick Access Toolbar</h3>
       </div>
 
-      <form className="text text--1">
+      <form onSubmit={(e) => e.preventDefault()} className={css['form']}>
 
-        <label>
-          <input type="checkbox"/>
-          <span>New</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">New</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Open</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Open</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Save</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Save</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Print</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Print</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Print preview</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Print preview</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Send in email</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Send in email</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Undo</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Undo</span>
         </label>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Redo</span>
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Redo</span>
         </label>
 
-        <button>
-          <span className="text--underline">S</span>how below the Ribbon
+        <div className={css['line']}></div>
+
+        <button className={`text text--1 ${css['button']}`}>
+          <span className={css['checkbox']}></span>
+          <span>
+            <span className="text--underline">S</span>how below the Ribbon
+          </span>
         </button>
 
-        <label>
-          <input type="checkbox"/>
-          <span>Mi<span className="text--underline">n</span>imize the Ribbon</span>
+        <div className={css['line']}></div>
+
+        <label className={css['label']}>
+          <input className={css['checkbox']} type="checkbox"/>
+          <span className="text text--1">Mi<span className="text--underline">n</span>imize the Ribbon</span>
         </label>
 
       </form>
