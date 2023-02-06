@@ -26,4 +26,8 @@
     color: var(--black);
   }
 
+  .text--underline {
+    text-decoration: underline;
+  }
+
 }
