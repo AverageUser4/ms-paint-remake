@@ -38,4 +38,8 @@
     text-decoration: underline;
   }
 
+  .text--disabled {
+    color: rgb(170, 170, 170);
+  }
+
 }

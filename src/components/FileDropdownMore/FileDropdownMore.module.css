@@ -52,6 +52,6 @@
 }
 .dropdown--hidden {
   opacity: 0;
-  pointer-events: none;
   visibility: hidden;
+  transition: visibility 0s linear 300ms, opacity 300ms;
 }

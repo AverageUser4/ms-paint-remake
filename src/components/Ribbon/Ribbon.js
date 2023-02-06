@@ -13,8 +13,6 @@ import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 
 function Ribbon({ windowWidth, activeRibbonTab }) {
-  console.log(activeRibbonTab)
-  
   if(activeRibbonTab === 'home') {
     return (
       <div className={css['container']}>

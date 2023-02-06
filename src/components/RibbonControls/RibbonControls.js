@@ -7,7 +7,7 @@ import info from './assets/info.png';
 import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
 
 function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
-  const [showFile, setShowFile] = useState(true);
+  const [showFile, setShowFile] = useState(false);
 
   useEffect(() => {
     function onPointerDown(event) {

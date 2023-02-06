@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import css from './Window.module.css';
 
 function Window({ items }) {
@@ -6,6 +6,24 @@ function Window({ items }) {
   const [positionDifference, setPositionDifference] = useState(null);
   const [size, setSize] = useState({ width: 600, height: 500 });
   const [resizeData, setResizeData] = useState(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const windowRef = useRef();
+
+  useEffect(() => {
+    function onPointerDown(event) {
+      if(event.target === windowRef.current || windowRef.current.contains(event.target))
+        return;
+      
+      if(isFocused)
+        setIsFocused(false);
+    }
+
+    window.addEventListener('pointerdown', onPointerDown);
+
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [isFocused]);
 
   useEffect(() => {
     function onPointerUp() {
@@ -89,16 +107,23 @@ function Window({ items }) {
       initialHeight: size.height
     });
   }
+
+  function onPointerDownFocus() {
+    if(!isFocused)
+      setIsFocused(true);
+  }
   
   return (
-    <article 
+    <article
+      onPointerDown={onPointerDownFocus}
+      ref={windowRef}
       style={{ 
         top: position.y,
         left: position.x,
         width: size.width,
         height: size.height
       }} 
-       className={css['container']}
+       className={`${css['container']} ${isFocused ? css['container--focused'] : ''}`}
     >
       <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
       <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
@@ -111,7 +136,13 @@ function Window({ items }) {
       {items.map((item, index) => {
         const { Component, props } = item;
 
-        const itemProps = { ...props, windowWidth: size.width, key: index };
+        const itemProps = { 
+          ...props, 
+          windowWidth: size.width, 
+          key: index,
+          windowHasFocus: isFocused
+        };
+
         if(index === 0)
           itemProps.onPointerDown = onPointerDownMove;
           

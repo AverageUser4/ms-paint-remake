@@ -15,6 +15,7 @@
   transition: 200ms;
 }
 .button:hover {
+  color: var(--black);
   background-color: var(--window-control-bg);
 }
 .button:active {
@@ -28,4 +29,6 @@
 .button--danger:active {
   background-color: var(--widnow-control-bg-danger-active);
 }
-
+.button--disabled {
+  color: rgb(153, 153, 153);
+}

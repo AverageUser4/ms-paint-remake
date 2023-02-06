@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import css from './FileDropdownMore.module.css';
 
 import bmp32 from './assets/bmp-32.png';
@@ -87,28 +87,41 @@ function FileDropdownMore({ currentMore }) {
     },
   ];
 
-  let items;
-  let sectionName;
+  const [moreData, setMoreData] = useState({ name: '', items: [] });
 
-  switch(currentMore) {
-    case 'save':
-      items = saveData.map(mapItems);
-      sectionName = "Save as";
-      break;
-
-    case 'print':
-      items = printData.map(mapItems);
-      sectionName = "Print";
-      break;
-
-    case 'set':
-      items = setData.map(mapItems);
-      sectionName = "Set as desktop background";
-      break;
-
-    default:
-      console.error('Unexpected value of "currentMore" variable.');
-  }
+  useEffect(() => {
+    switch(currentMore) {
+      case 'recent':
+        break;
+      
+      case 'save':
+        if(!moreData.name.includes('Save'))
+          setMoreData({
+            items: saveData.map(mapItems),
+            name: "Save as"
+          });
+        break;
+  
+      case 'print':
+        if(!moreData.name.includes('Print'))
+          setMoreData({
+            items: printData.map(mapItems),
+            name: "Print"
+          });
+        break;
+  
+      case 'set':
+        if(!moreData.name.includes('Set'))
+          setMoreData({
+            items: setData.map(mapItems),
+            name: "Set as desktop background"
+          });
+        break;
+  
+      default:
+        console.error(`Unexpected value of "currentMore" variable, "${currentMore}".`);
+    }
+  });
 
   function mapItems(data, index) {
     return (
@@ -145,11 +158,11 @@ function FileDropdownMore({ currentMore }) {
 
       <div className={`${css['dropdown']} ${currentMore === 'recent' ? css['dropdown--hidden'] : ''}`}>
         <div className={`${css['top']} ${css['top--alt']}`}>
-          <h3 className="head">{sectionName}</h3>
+          <h3 className="head">{moreData.name}</h3>
         </div>
 
         <ul className="clean-list">
-          {items}
+          {moreData.items}
         </ul>
       </div>
       
@@ -158,7 +171,3 @@ function FileDropdownMore({ currentMore }) {
 }
 
 export default FileDropdownMore;
-
-/*
-  - transition is not smooth when closing, because change of 'currentMore' state to 'recent' causes elements to be removed
-*/

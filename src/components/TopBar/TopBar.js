@@ -6,7 +6,7 @@ import WindowControls from '../WindowControls/WindowControls';
 
 import logoMini from './assets/logo-mini.png';
 
-function TopBar({ onPointerDown }) {
+function TopBar({ onPointerDown, windowHasFocus }) {
   return (
     <header className={css['container']} onPointerDown={onPointerDown}>
 
@@ -16,11 +16,11 @@ function TopBar({ onPointerDown }) {
 
         <QuickAccessToolbar/>
 
-        <h1 className="text">Untitled - Paint</h1>
+        <h1 className={`text ${!windowHasFocus ? 'text--disabled' : ''}`}>Untitled - Paint</h1>
         
       </div>
 
-      <WindowControls/>
+      <WindowControls windowHasFocus={windowHasFocus}/>
 
     </header>
   );

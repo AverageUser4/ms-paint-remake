@@ -30,6 +30,11 @@ function FileDropdown() {
     timeoutRef.current = setTimeout(() => setCurrentMore('recent'), 500);
   }
 
+  function onPointerDown(event, which) {
+    event.stopPropagation();
+    setCurrentMore(which);
+  }
+
   return (
     <div className={css['container']}>
 
@@ -65,7 +70,7 @@ function FileDropdown() {
               <span className="text text--1">Save <span className="text--underline">a</span>s</span>
             </button>
 
-            <button className={css['arrow-button']}>
+            <button onPointerDown={(e) => onPointerDown(e, 'save')} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
@@ -82,7 +87,7 @@ function FileDropdown() {
               <span className="text text--1"><span className="text--underline">P</span>rint</span>
             </button>
 
-            <button className={css['arrow-button']}>
+            <button onPointerDown={(e) => onPointerDown(e, 'print')} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
@@ -109,7 +114,7 @@ function FileDropdown() {
               <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
             </button>
 
-            <button className={css['arrow-button']}>
+            <button onPointerDown={(e) => onPointerDown(e, 'set')} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
