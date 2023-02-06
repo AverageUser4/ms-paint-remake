@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import css from './FileDropdownMore.module.css';
 
 import bmp32 from './assets/bmp-32.png';
@@ -80,7 +81,7 @@ function FileDropdownMore({ currentMore }) {
       onClick: ()=>0
     },
     {
-      src: printPreview32,
+      src: center32,
       heading: <><span className="head--underline">C</span>enter</>,
       text: 'Center the picture in the middle of the screen.',
       onClick: ()=>0
@@ -169,5 +170,9 @@ function FileDropdownMore({ currentMore }) {
     </div>
   );
 }
+
+FileDropdownMore.propTypes = {
+  currentMore: PropTypes.string,
+};
 
 export default FileDropdownMore;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonShapes.module.css';
 
 import RibbonItem from '../RibbonItem/RibbonItem';
@@ -41,5 +42,9 @@ function RibbonShapes({ ribbonWidth }) {
     </RibbonItemContainer>
   );
 }
+
+RibbonShapes.propTypes = {
+  ribbonWidth: PropTypes.number
+};
 
 export default RibbonShapes;

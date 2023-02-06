@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import css from './RibbonItemExpanded.module.css';
 
 function RibbonItemExpanded({ name, children }) {
@@ -14,5 +15,10 @@ function RibbonItemExpanded({ name, children }) {
     </div>
   );
 }
+
+RibbonItemExpanded.propTypes = {
+  name: PropTypes.string,
+  children: PropTypes.element
+};
 
 export default RibbonItemExpanded;

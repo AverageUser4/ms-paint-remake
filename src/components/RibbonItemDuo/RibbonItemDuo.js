@@ -1,5 +1,6 @@
 
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonItemDuo.module.css';
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
@@ -20,5 +21,10 @@ function RibbonItemDuo({ name, icon }) {
     </div>
   );
 }
+
+RibbonItemDuo.propTypes = {
+  name: PropTypes.string,
+  icon: PropTypes.string,
+};
 
 export default RibbonItemDuo;

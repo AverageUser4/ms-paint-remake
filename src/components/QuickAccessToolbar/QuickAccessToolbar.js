@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import css from  './QuickAccessToolbar.module.css';
 
 import saveFile from './assets/save.png';
@@ -8,7 +8,24 @@ import { ReactComponent as TriangleLine } from '../../assets/global/triangle-lin
 
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
 function QuickAccessToolbar() {
-  const [showDropdown, setShowDropdown] = useState(true);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownRef = useRef();
+  
+  useEffect(() => {
+    function onPointerDown(event) {
+      if(!dropdownRef.current || dropdownRef.current === event.target || dropdownRef.current.contains(event.target))
+        return;
+
+      if(showDropdown)
+        setShowDropdown(false);
+    }
+
+    window.addEventListener('pointerdown', onPointerDown);
+
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [showDropdown]);
   
   return (
     <div className={css['container']}>
@@ -25,12 +42,12 @@ function QuickAccessToolbar() {
         <img draggable="false" src={goForward} alt="Redo."/>
       </button>
 
-      <div className={css['dropdown-container']}>
-        <button onClick={() => setShowDropdown(prev => !prev)} className="button button--height-20">
+      <div ref={dropdownRef} className={css['dropdown-container']}>
+        <button onPointerDown={() => setShowDropdown(prev => !prev)} className="button button--height-20">
           <TriangleLine/>
         </button>
 
-        {showDropdown && <QuickAccessDropdown/>}
+        <QuickAccessDropdown isVisible={showDropdown} close={() => setShowDropdown(false)}/>
       </div>
       
     </div>

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonClipboard.module.css';
 
 import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
@@ -38,5 +39,9 @@ function RibbonClipboard({ ribbonWidth }) {
     </RibbonItemContainer>
   );
 }
+
+RibbonClipboard.propTypes = {
+  ribbonWidth: PropTypes.number,
+};
 
 export default RibbonClipboard;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import css from './RibbonItem.module.css';
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
@@ -27,5 +28,13 @@ function RibbonItem({ name, icon, backgroundColor = '#ff00ff', iconSize = '', ha
     </button>
   );
 }
+
+RibbonItem.propTypes = {
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  icon: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  iconSize: PropTypes.oneOf(['', 'small']),
+  hasArrow: PropTypes.bool
+};
 
 export default RibbonItem;

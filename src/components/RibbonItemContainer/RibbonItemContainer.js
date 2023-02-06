@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonItemContainer.module.css';
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
@@ -63,5 +64,12 @@ function RibbonItemContainer({ icon, name, children, showContent }) {
     </div>
   );
 }
+
+RibbonItemContainer.propTypes = {
+  name: PropTypes.string,
+  icon: PropTypes.string,
+  children: PropTypes.element,
+  showContent: PropTypes.bool
+};
 
 export default RibbonItemContainer;

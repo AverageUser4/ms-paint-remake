@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import css from './RibbonControls.module.css';
 
 import FileDropdown from '../FileDropdown/FileDropdown';
@@ -64,5 +65,11 @@ function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
     </div>
   );
 }
+
+RibbonControls.propTypes = {
+  activeRibbonTab: PropTypes.oneOf(['home', 'view']),
+  setActiveRibbonTab: PropTypes.func,
+};
+
 
 export default RibbonControls;

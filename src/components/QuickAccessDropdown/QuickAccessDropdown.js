@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import css from './QuickAccessDropdown.module.css';
 
-function QuickAccessDropdown() {
+function QuickAccessDropdown({ isVisible, close }) {
   return (
-    <div className={css['container']}>
+    <div className={`${css['container']} ${!isVisible ? css['container--hidden'] : ''}`}>
       
       <div className={css['top']}>
         <h3 className="head head--dark">Customize Quick Access Toolbar</h3>
       </div>
 
-      <form onSubmit={(e) => e.preventDefault()} className={css['form']}>
+      <form onSubmit={(e) => e.preventDefault()} className={css['form']} onClick={close}>
 
         <label className={css['label']}>
           <input className={css['checkbox']} type="checkbox"/>
@@ -72,5 +73,10 @@ function QuickAccessDropdown() {
     </div>
   );
 }
+
+QuickAccessDropdown.propTypes = {
+  close: PropTypes.func,
+  isVisible: PropTypes.bool
+};
 
 export default QuickAccessDropdown;

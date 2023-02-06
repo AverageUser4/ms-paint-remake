@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './Ribbon.module.css';
 
 import RibbonClipboard from "../RibbonClipboard/RibbonClipboard";
@@ -35,5 +36,10 @@ function Ribbon({ windowWidth, activeRibbonTab }) {
     );
   }
 }
+
+Ribbon.propTypes = {
+  windowWidth: PropTypes.number,
+  activeRibbonTab: PropTypes.oneOf(['home', 'view']),
+};
 
 export default Ribbon;

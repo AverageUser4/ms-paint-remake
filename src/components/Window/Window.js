@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
 function Window({ items }) {
@@ -139,17 +140,20 @@ function Window({ items }) {
         const itemProps = { 
           ...props, 
           windowWidth: size.width, 
-          key: index,
           windowHasFocus: isFocused
         };
 
         if(index === 0)
           itemProps.onPointerDown = onPointerDownMove;
           
-        return <Component {...itemProps}/>
+        return <Component key={index} {...itemProps}/>
       })}
     </article>
   );
 }
+
+Window.propTypes = {
+  items: PropTypes.array
+};
 
 export default Window;

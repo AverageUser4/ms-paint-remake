@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import css from './TopBar.module.css';
 
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
@@ -25,6 +26,11 @@ function TopBar({ onPointerDown, windowHasFocus }) {
     </header>
   );
 }
+
+TopBar.propTypes = {
+  onPointerDown: PropTypes.func,
+  windowHasFocus: PropTypes.bool
+};
 
 export default TopBar;
 

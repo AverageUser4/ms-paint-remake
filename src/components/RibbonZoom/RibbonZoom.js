@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import css from './RibbonZoom.module.css';
 
 import RibbonItem from '../RibbonItem/RibbonItem';
@@ -43,5 +44,9 @@ function RibbonZoom({ ribbonWidth }) {
     </RibbonItemExpanded>
   );
 }
+
+RibbonZoom.propTypes = {
+  ribbonWidth: PropTypes.number
+};
 
 export default RibbonZoom;

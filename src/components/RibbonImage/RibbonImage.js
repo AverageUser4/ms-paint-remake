@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonImage.module.css';
 
 import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
@@ -12,7 +13,7 @@ import resize16 from './assets/resize-16.png';
 import rotate16 from './assets/rotate-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonImage({ ribbonWidth}) {
+function RibbonImage({ ribbonWidth }) {
   const showContent = ribbonWidth >= 840;
   const showText = ribbonWidth < 840 || ribbonWidth >= 1000;
   
@@ -46,5 +47,9 @@ function RibbonImage({ ribbonWidth}) {
     </RibbonItemContainer>
   );
 }
+
+RibbonImage.propTypes = {
+  ribbonWidth: PropTypes.number,
+};
 
 export default RibbonImage;

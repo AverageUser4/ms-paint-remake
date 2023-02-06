@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './WindowControls.module.css';
 
 import { ReactComponent as Close } from './assets/close.svg';
@@ -20,5 +21,9 @@ function WindowControls({ windowHasFocus }) {
     </div>  
   );
 }
+
+WindowControls.propTypes = {
+  windowHasFocus: PropTypes.bool
+};
 
 export default WindowControls;

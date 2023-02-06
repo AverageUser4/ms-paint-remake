@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonTools.module.css';
 
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
@@ -49,5 +50,9 @@ function RibbonTools({ ribbonWidth }) {
     </RibbonItemContainer>
   );
 }
+
+RibbonTools.propTypes = {
+  ribbonWidth: PropTypes.number
+};
 
 export default RibbonTools;

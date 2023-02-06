@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './RibbonColors.module.css';
 
 import RibbonItem from '../RibbonItem/RibbonItem';
@@ -35,5 +36,9 @@ function RibbonColors({ ribbonWidth }) {
     </RibbonItemContainer>
   );
 }
+
+RibbonColors.propTypes = {
+  ribbonWidth: PropTypes.number,
+};
 
 export default RibbonColors;
