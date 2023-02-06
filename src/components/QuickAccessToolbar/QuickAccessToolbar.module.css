@@ -24,3 +24,7 @@
 .container::after {
   margin-left: 4px;
 }
+
+.dropdown-container {
+  position: relative;
+}

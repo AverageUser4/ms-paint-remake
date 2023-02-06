@@ -1,0 +1,30 @@
+.container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  width: 200px;
+
+  border: 1px solid rgb(220, 221, 222);
+  border-radius: 3px;
+  background-color: rgb(251, 252, 253);
+  box-shadow: 2px 2px 4px rgb(190, 190, 190);
+  opacity: 1;
+
+  box-sizing: border-box;
+  transition: opacity 300ms;
+  z-index: 5;
+}
+.container--hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}
+
+.top {
+  padding: 4px 5px;
+  margin: 0 0 1px 1px;
+
+  background-color: rgb(246, 247, 248);
+  border-bottom: 1px solid rgb(220, 221, 222);
+}

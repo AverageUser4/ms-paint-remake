@@ -27,6 +27,9 @@
   .head--underline {
     text-decoration: underline;
   }
+  .head--dark {
+    color: rgb(88, 88, 88);
+  }
   
   .clean-list {
     margin: 0;
