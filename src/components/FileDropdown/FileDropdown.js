@@ -4,25 +4,16 @@ import css from './FileDropdown.module.css';
 import FileDropdownMore from '../FileDropdownMore/FileDropdownMore';
 
 import about32 from './assets/about-32.png';
-import bmp32 from './assets/bmp-32.png';
-import center32 from './assets/center-32.png';
 import email32 from './assets/email-32.png';
 import exit32 from './assets/exit-32.png';
-import fill32 from './assets/fill-32.png';
-import gif32 from './assets/gif-32.png';
-import jpeg32 from './assets/jpeg-32.png';
 import new32 from './assets/new-32.png';
 import open32 from './assets/open-32.png';
-import pageSetup32 from './assets/page-setup-32.png';
-import png32 from './assets/png-32.png';
 import print32 from './assets/print-32.png';
-import printPreview32 from './assets/print-preview-32.png';
 import properties32 from './assets/properties-32.png';
 import save32 from './assets/save-32.png';
 import saveAs32 from './assets/save-as-32.png';
 import scanner32 from './assets/scanner-32.png';
 import set32 from './assets/set-32.png';
-import tile32 from './assets/tile-32.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
 
 function FileDropdown() {
@@ -53,7 +44,7 @@ function FileDropdown() {
             <span className="text text--1"><span className="text--underline">S</span>ave</span>
           </button>
 
-          <div className={css['duo-container']}>
+          <div className={css['duo-container']} onMouseEnter={() => setCurrentMore('save')}>
             <button className={css['button']}>
               <img src={saveAs32} alt=""/>
               <span className="text text--1">Save <span className="text--underline">a</span>s</span>
@@ -66,7 +57,7 @@ function FileDropdown() {
 
           <div className={css['border']}></div>
 
-          <div className={css['duo-container']}>
+          <div className={css['duo-container']} onMouseEnter={() => setCurrentMore('print')}>
             <button className={css['button']}>
               <img src={print32} alt=""/>
               <span className="text text--1"><span className="text--underline">P</span>rint</span>
@@ -89,7 +80,7 @@ function FileDropdown() {
 
           <div className={css['border']}></div>
 
-          <div className={css['duo-container']}>
+          <div className={css['duo-container']} onMouseEnter={() => setCurrentMore('set')}>
             <button className={css['button']}>
               <img src={set32} alt=""/>
               <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
@@ -117,7 +108,7 @@ function FileDropdown() {
           <div className={css['border']}></div>
 
           <button className={css['button']}>
-            <img src={set32} alt=""/>
+            <img src={exit32} alt=""/>
             <span className="text text--1">E<span className="text--underline">x</span>it</span>
           </button>
 
