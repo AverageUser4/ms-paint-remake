@@ -89,6 +89,7 @@ function FileDropdownMore({ currentMore }) {
 
   let items;
   let sectionName;
+
   switch(currentMore) {
     case 'save':
       items = saveData.map(mapItems);
@@ -104,6 +105,9 @@ function FileDropdownMore({ currentMore }) {
       items = setData.map(mapItems);
       sectionName = "Set as desktop background";
       break;
+
+    default:
+      console.error('Unexpected value of "currentMore" variable.');
   }
 
   function mapItems(data, index) {
@@ -139,23 +143,22 @@ function FileDropdownMore({ currentMore }) {
 
       </ul>
 
-      {
-        currentMore !== 'recent' &&
-          <div className={css['dropdown']}>
+      <div className={`${css['dropdown']} ${currentMore === 'recent' ? css['dropdown--hidden'] : ''}`}>
+        <div className={`${css['top']} ${css['top--alt']}`}>
+          <h3 className="head">{sectionName}</h3>
+        </div>
 
-            <div className={`${css['top']} ${css['top--alt']}`}>
-              <h3 className="head">{sectionName}</h3>
-            </div>
-
-            <ul className="clean-list">
-              {items}
-            </ul>
-
-          </div>
-      }
+        <ul className="clean-list">
+          {items}
+        </ul>
+      </div>
       
     </div>
   );
 }
 
 export default FileDropdownMore;
+
+/*
+  - transition is not smooth when closing, because change of 'currentMore' state to 'recent' causes elements to be removed
+*/

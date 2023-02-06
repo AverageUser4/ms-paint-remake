@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import css from './FileDropdown.module.css';
 
 import FileDropdownMore from '../FileDropdownMore/FileDropdownMore';
@@ -18,7 +18,18 @@ import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.sv
 
 function FileDropdown() {
   const [currentMore, setCurrentMore] = useState('recent');
-  
+  const timeoutRef = useRef();
+
+  function onMouseEnter(which) {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setCurrentMore(which), 500);
+  }
+
+  function onMouseLeave() {
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setCurrentMore('recent'), 500);
+  }
+
   return (
     <div className={css['container']}>
 
@@ -44,7 +55,11 @@ function FileDropdown() {
             <span className="text text--1"><span className="text--underline">S</span>ave</span>
           </button>
 
-          <div className={css['duo-container']} onMouseEnter={() => setCurrentMore('save')}>
+          <div 
+            className={`${css['duo-container']} ${currentMore === 'save' ? css['duo-container--active'] : ''}`}
+            onMouseEnter={() => onMouseEnter('save')}
+            onMouseLeave={onMouseLeave}
+          >
             <button className={css['button']}>
               <img src={saveAs32} alt=""/>
               <span className="text text--1">Save <span className="text--underline">a</span>s</span>
@@ -57,7 +72,11 @@ function FileDropdown() {
 
           <div className={css['border']}></div>
 
-          <div className={css['duo-container']} onMouseEnter={() => setCurrentMore('print')}>
+          <div 
+            className={`${css['duo-container']} ${currentMore === 'print' ? css['duo-container--active'] : ''}`}
+            onMouseEnter={() => onMouseEnter('print')}
+            onMouseLeave={onMouseLeave}
+          >
             <button className={css['button']}>
               <img src={print32} alt=""/>
               <span className="text text--1"><span className="text--underline">P</span>rint</span>
@@ -80,7 +99,11 @@ function FileDropdown() {
 
           <div className={css['border']}></div>
 
-          <div className={css['duo-container']} onMouseEnter={() => setCurrentMore('set')}>
+          <div 
+            className={`${css['duo-container']} ${currentMore === 'set' ? css['duo-container--active'] : ''}`}
+            onMouseEnter={() => onMouseEnter('set')}
+            onMouseLeave={onMouseLeave}
+          >
             <button className={css['button']}>
               <img src={set32} alt=""/>
               <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
@@ -114,7 +137,11 @@ function FileDropdown() {
 
         </div>
         
-        <div className={css['right']}>
+        <div 
+          className={css['right']}
+          onMouseEnter={() => clearTimeout(timeoutRef.current)}
+          onMouseLeave={onMouseLeave}
+        >
           <FileDropdownMore currentMore={currentMore}/>
         </div>
       </div>
