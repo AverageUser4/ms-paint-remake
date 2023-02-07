@@ -3,10 +3,16 @@
   align-items: center;
   gap: 1px;
   
-  height: 30px;
+  height: var(--qa-toolbar-height);
+
+  background-color: rgb(255, 255, 255);  
+
+  box-sizing: border-box;
+}
+.container--repositioned {
   padding: 0 6px;
 
-  /* background-color: green; */
+  border-bottom: 1px solid rgb(232, 233, 234);
 }
 .container::before,
 .container::after {
@@ -23,6 +29,10 @@
 }
 .container::after {
   margin-left: 4px;
+}
+.container--repositioned::before,
+.container--repositioned::after {
+  display: none;
 }
 
 .dropdown-container {

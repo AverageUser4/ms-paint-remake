@@ -135,6 +135,9 @@ function Window({ items }) {
       <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
       <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
       {items.map((item, index) => {
+        if(!item)
+          return null;
+        
         const { Component, props } = item;
 
         const itemProps = { 
@@ -145,7 +148,7 @@ function Window({ items }) {
 
         if(index === 0)
           itemProps.onPointerDown = onPointerDownMove;
-          
+
         return <Component key={index} {...itemProps}/>
       })}
     </article>

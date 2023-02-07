@@ -5,6 +5,7 @@
   height: var(--ribbon-controls-height);
   
   background-color: var(--white);
+  border-bottom: 1px solid var(--bg-line);
 
   box-sizing: border-box;
   position: relative;
@@ -19,4 +20,8 @@
   display: flex;
   align-items: center;
   gap: 1px;
+}
+
+.arrow-down {
+  transform: rotate(180deg);
 }

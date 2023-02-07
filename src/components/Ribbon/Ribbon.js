@@ -13,25 +13,33 @@ import RibbonZoom from "../RibbonZoom/RibbonZoom";
 import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 
-function Ribbon({ windowWidth, activeRibbonTab }) {
+function Ribbon({ windowWidth, activeRibbonTab, hideRibbon }) {
+  let ribbonClasses = css['ribbon'];
+  if(hideRibbon)
+    ribbonClasses += ` ${css['ribbon--hidden']}`;
+  
   if(activeRibbonTab === 'home') {
     return (
       <div className={css['container']}>
-        <RibbonClipboard ribbonWidth={windowWidth}/>
-        <RibbonImage ribbonWidth={windowWidth}/>
-        <RibbonTools ribbonWidth={windowWidth}/>
-        <RibbonBrushes/>
-        <RibbonShapes ribbonWidth={windowWidth}/>
-        <RibbonSize/>
-        <RibbonColors ribbonWidth={windowWidth}/>
+        <div className={ribbonClasses}>
+          <RibbonClipboard ribbonWidth={windowWidth}/>
+          <RibbonImage ribbonWidth={windowWidth}/>
+          <RibbonTools ribbonWidth={windowWidth}/>
+          <RibbonBrushes/>
+          <RibbonShapes ribbonWidth={windowWidth}/>
+          <RibbonSize/>
+          <RibbonColors ribbonWidth={windowWidth}/>
+        </div>
       </div>
     );
   } else {
     return (
       <div className={css['container']}>
-        <RibbonZoom ribbonWidth={windowWidth}/>
-        <RibbonShowOrHide/>
-        <RibbonDisplay/>
+        <div className={ribbonClasses}>
+          <RibbonZoom ribbonWidth={windowWidth}/>
+          <RibbonShowOrHide/>
+          <RibbonDisplay/>
+        </div>
       </div>
     );
   }
@@ -40,6 +48,7 @@ function Ribbon({ windowWidth, activeRibbonTab }) {
 Ribbon.propTypes = {
   windowWidth: PropTypes.number,
   activeRibbonTab: PropTypes.oneOf(['home', 'view']),
+  hideRibbon: PropTypes.bool
 };
 
 export default Ribbon;

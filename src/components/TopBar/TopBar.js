@@ -7,7 +7,7 @@ import WindowControls from '../WindowControls/WindowControls';
 
 import logoMini from './assets/logo-mini.png';
 
-function TopBar({ onPointerDown, windowHasFocus }) {
+function TopBar({ onPointerDown, windowHasFocus, repositionToolbar, setRepositionToolbar, toolbarButtons, setToolbarButtons, hideRibbon, setHideRibbon }) {
   return (
     <header className={css['container']} onPointerDown={onPointerDown}>
 
@@ -15,7 +15,17 @@ function TopBar({ onPointerDown, windowHasFocus }) {
 
         <img draggable="false" src={logoMini} alt=""/>
 
-        <QuickAccessToolbar/>
+        {
+          !repositionToolbar &&
+            <QuickAccessToolbar 
+              repositionToolbar={repositionToolbar}
+              setRepositionToolbar={setRepositionToolbar}
+              availableButtons={toolbarButtons}
+              setAvailableButtons={setToolbarButtons}
+              hideRibbon={hideRibbon}
+              setHideRibbon={setHideRibbon}
+            />
+        }
 
         <h1 className={`text ${!windowHasFocus ? 'text--disabled' : ''}`}>Untitled - Paint</h1>
         
@@ -29,7 +39,13 @@ function TopBar({ onPointerDown, windowHasFocus }) {
 
 TopBar.propTypes = {
   onPointerDown: PropTypes.func,
-  windowHasFocus: PropTypes.bool
+  windowHasFocus: PropTypes.bool,
+  repositionToolbar: PropTypes.bool,
+  setRepositionToolbar: PropTypes.func,
+  toolbarButtons: PropTypes.array,
+  setToolbarButtons: PropTypes.func,
+  hideRibbon: PropTypes.bool,
+  setHideRibbon: PropTypes.func,
 };
 
 export default TopBar;

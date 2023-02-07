@@ -7,7 +7,7 @@ import FileDropdown from '../FileDropdown/FileDropdown';
 import info from './assets/info.png';
 import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
 
-function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
+function RibbonControls({ activeRibbonTab, setActiveRibbonTab, hideRibbon, setHideRibbon }) {
   const [showFile, setShowFile] = useState(false);
 
   useEffect(() => {
@@ -38,13 +38,13 @@ function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
           File
         </button>
         <button
-          className={`ribbon-button ${activeRibbonTab === 'home' ? 'ribbon-button--active' : ''}`}
+          className={`ribbon-button ${activeRibbonTab === 'home' ? 'ribbon-button--active' : ''} ${hideRibbon ? 'ribbon-button--no-ribbon' : ''}`}
           onPointerDown={() => setActiveRibbonTab('home')}
         >
           Home
         </button>
         <button
-          className={`ribbon-button ribbon-button--last ${activeRibbonTab === 'view' ? 'ribbon-button--active' : ''}`}
+          className={`ribbon-button ribbon-button--last ${activeRibbonTab === 'view' ? 'ribbon-button--active' : ''} ${hideRibbon ? 'ribbon-button--no-ribbon' : ''}`}
           onPointerDown={() => setActiveRibbonTab('view')}
         >
           View
@@ -52,8 +52,8 @@ function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
       </div>
 
       <div className={css['right']}>
-        <button className="button button--height-20">
-          <ArrowUp/>
+        <button className="button button--height-20" onClick={() => setHideRibbon(prev => !prev)}>
+          <ArrowUp className={hideRibbon ? css['arrow-down'] : ''}/>
         </button>
         <button className="button">
           <img draggable="false" src={info} alt="Paint help."/>
@@ -67,8 +67,10 @@ function RibbonControls({ activeRibbonTab, setActiveRibbonTab }) {
 }
 
 RibbonControls.propTypes = {
-  activeRibbonTab: PropTypes.oneOf(['home', 'view']),
-  setActiveRibbonTab: PropTypes.func,
+  activeRibbonTab: PropTypes.oneOf(['home', 'view']).isRequired,
+  setActiveRibbonTab: PropTypes.func.isRequired,
+  hideRibbon: PropTypes.bool.isRequired,
+  setHideRibbon: PropTypes.func.isRequired,
 };
 
 

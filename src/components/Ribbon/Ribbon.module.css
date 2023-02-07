@@ -1,4 +1,8 @@
 .container {
+  position: relative;
+}
+
+.ribbon {
   display: flex;
   align-items: flex-start;
   gap: 2px;
@@ -7,13 +11,17 @@
   padding: 2px 4px;
 
   background-color: var(--bg-ui);
-  border-top: 1px solid var(--bg-line);
   border-bottom: 1px solid var(--bg-line);
 
   /* overflow: hidden; */
   box-sizing: border-box;
 }
+.ribbon--hidden {
+  position: absolute;
+  
+  visibility: hidden;
+}
 
-.container * {
+.ribbon * {
   flex-shrink: 0;
 }

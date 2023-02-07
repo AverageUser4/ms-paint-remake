@@ -1,15 +1,79 @@
 import React, { useEffect, useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import css from  './QuickAccessToolbar.module.css';
 
-import saveFile from './assets/save.png';
-import goBack from './assets/undo-dis.png';
-import goForward from './assets/redo-dis.png';
+import email from './assets/email.png';
+import newFile from './assets/new.png';
+import open from './assets/open.png';
+import print from './assets/print.png';
+import printPreview from './assets/print-preview.png';
+import redoDis from './assets/redo-dis.png';
+import redoEn from './assets/redo-en.png';
+import save from './assets/save.png';
+import undoDis from './assets/undo-dis.png';
+import undoEn from './assets/undo-en.png';
+
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
-function QuickAccessToolbar() {
+function QuickAccessToolbar({ repositionToolbar, setRepositionToolbar, availableButtons, setAvailableButtons, hideRibbon, setHideRibbon }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
+
+  const buttonsData = [
+    {
+      id: 'email',
+      src: email,
+      onClick: ()=>0
+    },
+    {
+      id: 'newFile',
+      src: newFile,
+      onClick: ()=>0
+    },
+    {
+      id: 'open',
+      src: open,
+      onClick: ()=>0
+    },
+    {
+      id: 'print',
+      src: print,
+      onClick: ()=>0
+    },
+    {
+      id: 'printPreview',
+      src: printPreview,
+      onClick: ()=>0
+    },
+    {
+      id: 'redo',
+      src: redoDis,
+      onClick: ()=>0
+    },
+    {
+      id: 'save',
+      src: save,
+      onClick: ()=>0
+    },
+    {
+      id: 'undo',
+      src: undoDis,
+      onClick: ()=>0
+    },
+  ];
+
+  const buttonElements = availableButtons.map(item => {
+    const data = buttonsData.find(data => data.id === item);
+    if(!data)
+      throw new Error(`de_Unexpected item in 'availableButtons' array: '${item}'`);
+
+    return (
+      <button key={data.id} className="button" onClick={data.onClick}>
+        <img draggable="false" src={data.src} alt={data.id}/>
+      </button>
+    );
+  });
   
   useEffect(() => {
     function onPointerDown(event) {
@@ -28,30 +92,38 @@ function QuickAccessToolbar() {
   }, [showDropdown]);
   
   return (
-    <div className={css['container']}>
+    <div className={`${css['container']} ${repositionToolbar ? css['container--repositioned'] : ''}`}>
 
-      <button className="button">
-        <img draggable="false" src={saveFile} alt="Save file."/>
-      </button>
-
-      <button className="button">
-        <img draggable="false" src={goBack} alt="Undo."/>
-      </button>
-
-      <button className="button">
-        <img draggable="false" src={goForward} alt="Redo."/>
-      </button>
+      {buttonElements}
 
       <div ref={dropdownRef} className={css['dropdown-container']}>
         <button onPointerDown={() => setShowDropdown(prev => !prev)} className="button button--height-20">
           <TriangleLine/>
         </button>
 
-        <QuickAccessDropdown isVisible={showDropdown} close={() => setShowDropdown(false)}/>
+        <QuickAccessDropdown 
+          isVisible={showDropdown} 
+          close={() => setShowDropdown(false)}
+          availableButtons={availableButtons}
+          setAvailableButtons={setAvailableButtons}
+          repositionToolbar={repositionToolbar}
+          setRepositionToolbar={setRepositionToolbar}
+          hideRibbon={hideRibbon}
+          setHideRibbon={setHideRibbon}
+        />
       </div>
       
     </div>
   );
 }
+
+QuickAccessToolbar.propTypes = {
+  repositionToolbar: PropTypes.bool,
+  setRepositionToolbar: PropTypes.func,
+  availableButtons: PropTypes.array,
+  setAvailableButtons: PropTypes.func,
+  hideRibbon: PropTypes.bool,
+  setHideRibbon: PropTypes.func,
+};
 
 export default QuickAccessToolbar;
