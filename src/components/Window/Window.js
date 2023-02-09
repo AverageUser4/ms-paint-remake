@@ -156,7 +156,7 @@ function Window({ items }) {
 }
 
 Window.propTypes = {
-  items: PropTypes.array
+  items: PropTypes.array.isRequired
 };
 
 export default Window;

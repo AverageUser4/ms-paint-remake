@@ -46,7 +46,7 @@ function RibbonZoom({ ribbonWidth }) {
 }
 
 RibbonZoom.propTypes = {
-  ribbonWidth: PropTypes.number
+  ribbonWidth: PropTypes.number.isRequired,
 };
 
 export default RibbonZoom;

@@ -52,7 +52,7 @@ function RibbonTools({ ribbonWidth }) {
 }
 
 RibbonTools.propTypes = {
-  ribbonWidth: PropTypes.number
+  ribbonWidth: PropTypes.number.isRequired,
 };
 
 export default RibbonTools;

@@ -44,7 +44,7 @@ function RibbonShapes({ ribbonWidth }) {
 }
 
 RibbonShapes.propTypes = {
-  ribbonWidth: PropTypes.number
+  ribbonWidth: PropTypes.number.isRequired,
 };
 
 export default RibbonShapes;

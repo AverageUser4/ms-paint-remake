@@ -23,7 +23,7 @@ function WindowControls({ windowHasFocus }) {
 }
 
 WindowControls.propTypes = {
-  windowHasFocus: PropTypes.bool
+  windowHasFocus: PropTypes.bool.isRequired
 };
 
 export default WindowControls;

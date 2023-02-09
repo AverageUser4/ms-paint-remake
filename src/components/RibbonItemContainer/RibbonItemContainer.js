@@ -66,10 +66,10 @@ function RibbonItemContainer({ icon, name, children, showContent }) {
 }
 
 RibbonItemContainer.propTypes = {
-  name: PropTypes.string,
-  icon: PropTypes.string,
-  children: PropTypes.element,
-  showContent: PropTypes.bool
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+  children: PropTypes.element.isRequired,
+  showContent: PropTypes.bool.isRequired,
 };
 
 export default RibbonItemContainer;

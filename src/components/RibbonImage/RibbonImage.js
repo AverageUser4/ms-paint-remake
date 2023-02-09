@@ -49,7 +49,7 @@ function RibbonImage({ ribbonWidth }) {
 }
 
 RibbonImage.propTypes = {
-  ribbonWidth: PropTypes.number,
+  ribbonWidth: PropTypes.number.isRequired,
 };
 
 export default RibbonImage;

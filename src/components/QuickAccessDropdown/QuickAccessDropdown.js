@@ -2,15 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './QuickAccessDropdown.module.css';
 
-function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableButtons, repositionToolbar, setRepositionToolbar, hideRibbon, setHideRibbon }) {
+function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ribbonData, setRibbonData }) {
   function onChange(event) {
     const { name } = event.target;
     
-    setAvailableButtons(prev => {
-      if(prev.includes(name))
-        return prev.filter(item => item !== name);
-      
-      return [...prev, name];
+    setToolbarData(prev => {
+      const prevButtons = prev.buttons;
+      let newButtons;
+
+      if(prevButtons.includes(name))
+        newButtons = prevButtons.filter(item => item !== name);
+      else
+        newButtons = [...prevButtons, name];
+    
+      return { ...prev, buttons: newButtons };
     });
   }
 
@@ -28,7 +33,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="newFile"
-            checked={availableButtons.includes('newFile')}
+            checked={toolbarData.buttons.includes('newFile')}
             onChange={onChange}
           />
           <span className="text text--1">New</span>
@@ -39,7 +44,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="open"
-            checked={availableButtons.includes('open')}
+            checked={toolbarData.buttons.includes('open')}
             onChange={onChange}
           />
           <span className="text text--1">Open</span>
@@ -50,7 +55,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="save"
-            checked={availableButtons.includes('save')}
+            checked={toolbarData.buttons.includes('save')}
             onChange={onChange}
           />
           <span className="text text--1">Save</span>
@@ -61,7 +66,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="print"
-            checked={availableButtons.includes('print')}
+            checked={toolbarData.buttons.includes('print')}
             onChange={onChange}
           />
           <span className="text text--1">Print</span>
@@ -72,7 +77,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="printPreview"
-            checked={availableButtons.includes('printPreview')}
+            checked={toolbarData.buttons.includes('printPreview')}
             onChange={onChange}
           />
           <span className="text text--1">Print preview</span>
@@ -83,7 +88,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="email"
-            checked={availableButtons.includes('email')}
+            checked={toolbarData.buttons.includes('email')}
             onChange={onChange}
           />
           <span className="text text--1">Send in email</span>
@@ -94,7 +99,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="undo"
-            checked={availableButtons.includes('undo')}
+            checked={toolbarData.buttons.includes('undo')}
             onChange={onChange}
           />
           <span className="text text--1">Undo</span>
@@ -105,7 +110,7 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
             className={css['checkbox']}
             type="checkbox"
             name="redo"
-            checked={availableButtons.includes('redo')}
+            checked={toolbarData.buttons.includes('redo')}
             onChange={onChange}
           />
           <span className="text text--1">Redo</span>
@@ -113,10 +118,10 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
 
         <div className={css['line']}></div>
 
-        <button className={`text text--1 ${css['button']}`} onClick={() => setRepositionToolbar(prev => !prev)}>
+        <button className={`text text--1 ${css['button']}`} onClick={() => setToolbarData(prev => ({ ...prev, reposition: !prev.reposition }))}>
           <span className={css['checkbox']}></span>
           <span>
-            <span className="text--underline">S</span>how {repositionToolbar ? 'above' : 'below'} the Ribbon
+            <span className="text--underline">S</span>how {toolbarData.reposition ? 'above' : 'below'} the Ribbon
           </span>
         </button>
 
@@ -126,8 +131,9 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
           <input 
             className={css['checkbox']}
             type="checkbox"
-            checked={hideRibbon}
-            onChange={() => setHideRibbon(prev => !prev)}
+            checked={ribbonData.minimize}
+            onChange={() => setRibbonData(prev => ({ ...prev, minimize: !prev.minimize, expand: false }))}
+            aria-controls={'ribbon'}
           />
           <span className="text text--1">Mi<span className="text--underline">n</span>imize the Ribbon</span>
         </label>
@@ -141,12 +147,10 @@ function QuickAccessDropdown({ isVisible, close, availableButtons, setAvailableB
 QuickAccessDropdown.propTypes = {
   close: PropTypes.func.isRequired,
   isVisible: PropTypes.bool.isRequired,
-  availableButtons: PropTypes.array.isRequired,
-  setAvailableButtons: PropTypes.func.isRequired,
-  repositionToolbar: PropTypes.bool.isRequired,
-  setRepositionToolbar: PropTypes.func.isRequired,
-  hideRibbon: PropTypes.bool.isRequired,
-  setHideRibbon: PropTypes.func.isRequired,
+  toolbarData: PropTypes.object.isRequired,
+  setToolbarData: PropTypes.func.isRequired,
+  ribbonData: PropTypes.object.isRequired,
+  setRibbonData: PropTypes.func.isRequired,
 };
 
 export default QuickAccessDropdown;

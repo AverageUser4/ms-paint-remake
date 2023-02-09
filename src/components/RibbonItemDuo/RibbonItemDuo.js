@@ -23,8 +23,8 @@ function RibbonItemDuo({ name, icon }) {
 }
 
 RibbonItemDuo.propTypes = {
-  name: PropTypes.string,
-  icon: PropTypes.string,
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
 };
 
 export default RibbonItemDuo;

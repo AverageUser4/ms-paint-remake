@@ -17,8 +17,8 @@ function RibbonItemExpanded({ name, children }) {
 }
 
 RibbonItemExpanded.propTypes = {
-  name: PropTypes.string,
-  children: PropTypes.element
+  name: PropTypes.string.isRequired,
+  children: PropTypes.element.isRequired,
 };
 
 export default RibbonItemExpanded;

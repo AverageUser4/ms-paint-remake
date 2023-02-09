@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from 'prop-types';
 import css from './Ribbon.module.css';
 
@@ -13,42 +13,66 @@ import RibbonZoom from "../RibbonZoom/RibbonZoom";
 import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 
-function Ribbon({ windowWidth, activeRibbonTab, hideRibbon }) {
-  let ribbonClasses = css['ribbon'];
-  if(hideRibbon)
-    ribbonClasses += ` ${css['ribbon--hidden']}`;
+function Ribbon({ windowWidth, ribbonData, setRibbonData }) {
+  const containerRef = useRef();
   
-  if(activeRibbonTab === 'home') {
-    return (
-      <div className={css['container']}>
-        <div className={ribbonClasses}>
-          <RibbonClipboard ribbonWidth={windowWidth}/>
-          <RibbonImage ribbonWidth={windowWidth}/>
-          <RibbonTools ribbonWidth={windowWidth}/>
-          <RibbonBrushes/>
-          <RibbonShapes ribbonWidth={windowWidth}/>
-          <RibbonSize/>
-          <RibbonColors ribbonWidth={windowWidth}/>
-        </div>
+  useEffect(() => {
+    function onPointerDown(event) {
+      if(
+          !containerRef.current ||
+          containerRef.current === event.target ||
+          containerRef.current.contains(event.target) ||
+          event.target.ariaControls === 'ribbon'
+        )
+        return;
+
+      if(ribbonData.minimize && ribbonData.expand)
+        setRibbonData(prev => ({ ...prev, expand: false }));
+    }
+
+    window.addEventListener('pointerdown', onPointerDown);
+
+    return () => {
+      window.removeEventListener('pointerdown', onPointerDown);
+    };
+  }, [ribbonData]);
+  
+  let ribbonClasses = css['ribbon'];
+  if(ribbonData.minimize)
+    ribbonClasses += ` ${css['ribbon--minimized']}`;
+  if(ribbonData.expand)
+    ribbonClasses += ` ${css['ribbon--expanded']}`;
+  
+  return (
+    <div className={css['container']} ref={containerRef}>
+      <div id="ribbon" className={ribbonClasses}>
+        {
+          ribbonData.activeTab === 'home' ?
+            <>
+              <RibbonClipboard ribbonWidth={windowWidth}/>
+              <RibbonImage ribbonWidth={windowWidth}/>
+              <RibbonTools ribbonWidth={windowWidth}/>
+              <RibbonBrushes/>
+              <RibbonShapes ribbonWidth={windowWidth}/>
+              <RibbonSize/>
+              <RibbonColors ribbonWidth={windowWidth}/>
+            </>
+          :
+            <>
+              <RibbonZoom ribbonWidth={windowWidth}/>
+              <RibbonShowOrHide/>
+              <RibbonDisplay/>
+            </>
+        }
       </div>
-    );
-  } else {
-    return (
-      <div className={css['container']}>
-        <div className={ribbonClasses}>
-          <RibbonZoom ribbonWidth={windowWidth}/>
-          <RibbonShowOrHide/>
-          <RibbonDisplay/>
-        </div>
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 Ribbon.propTypes = {
-  windowWidth: PropTypes.number,
-  activeRibbonTab: PropTypes.oneOf(['home', 'view']),
-  hideRibbon: PropTypes.bool
+  windowWidth: PropTypes.number.isRequired,
+  ribbonData: PropTypes.object.isRequired,
+  setRibbonData: PropTypes.func.isRequired
 };
 
 export default Ribbon;

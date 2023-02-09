@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import css from './PaintXPlatform.module.css';
 
 import Window from '../Window/Window';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
@@ -10,50 +9,42 @@ import BottomBar from '../BottomBar/BottomBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 
 function PaintXPlatform() {
-  const [repositionToolbar, setRepositionToolbar] = useState(true);
-  const [toolbarButtons, setToolbarButtons] = useState(['save', 'undo', 'redo']);
-  const [activeRibbonTab, setActiveRibbonTab] = useState('home');
-  const [hideRibbon, setHideRibbon] = useState(true);
-
+  const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
+  const [ribbonData, setRibbonData] = useState({ minimize: false, activeTab: 'home', expand: false });
+  
   const items = [
     {
       Component: TopBar, 
       props: { 
-        repositionToolbar,
-        setRepositionToolbar,
-        toolbarButtons,
-        setToolbarButtons,
-        hideRibbon,
-        setHideRibbon,
+        toolbarData,
+        setToolbarData,
+        ribbonData,
+        setRibbonData
       }
     },
     { 
       Component: RibbonControls,
       props: { 
-        activeRibbonTab,
-        setActiveRibbonTab,
-        hideRibbon,
-        setHideRibbon,
+        ribbonData,
+        setRibbonData
       }
     },
     { 
       Component: Ribbon,
       props: { 
-        activeRibbonTab,
-        hideRibbon
+        ribbonData,
+        setRibbonData
       }
     },
     (
-      repositionToolbar ?
+      toolbarData.reposition ?
         { 
           Component: QuickAccessToolbar,
           props: { 
-            repositionToolbar,
-            setRepositionToolbar,
-            availableButtons: toolbarButtons,
-            setAvailableButtons: setToolbarButtons,
-            hideRibbon,
-            setHideRibbon
+            toolbarData,
+            setToolbarData,
+            ribbonData,
+            setRibbonData
           }
         }
       :
@@ -62,7 +53,8 @@ function PaintXPlatform() {
     { 
       Component: CanvasContainer,
       props: { 
-        repositionToolbar 
+        toolbarData,
+        ribbonData
       }
     },
     { 

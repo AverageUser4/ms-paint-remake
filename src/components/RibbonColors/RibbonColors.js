@@ -38,7 +38,7 @@ function RibbonColors({ ribbonWidth }) {
 }
 
 RibbonColors.propTypes = {
-  ribbonWidth: PropTypes.number,
+  ribbonWidth: PropTypes.number.isRequired,
 };
 
 export default RibbonColors;

@@ -2,15 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './CanvasContainer.module.css';
 
-function CanvasContainer({ repositionToolbar }) {
+function CanvasContainer({ toolbarData, ribbonData }) {
   const style = {
     height: `calc(
       100%
-      - var(--ribbon-height)
+      ${!ribbonData.minimize ? '- var(--ribbon-height)' : ''}
       - var(--ribbon-controls-height)
       - var(--topbar-height)
       - var(--bottombar-height)
-      ${repositionToolbar ? '- var(--qa-toolbar-height)' : ''}
+      ${toolbarData.reposition ? '- var(--qa-toolbar-height)' : ''}
     )`
   };
 
@@ -22,7 +22,8 @@ function CanvasContainer({ repositionToolbar }) {
 }
 
 CanvasContainer.propTypes = {
-  repositionToolbar: PropTypes.bool
+  ribbonData: PropTypes.object.isRequired,
+  toolbarData: PropTypes.object.isRequired
 }
 
 export default CanvasContainer;

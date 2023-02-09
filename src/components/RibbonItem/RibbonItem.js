@@ -30,11 +30,11 @@ function RibbonItem({ name, icon, backgroundColor = '#ff00ff', iconSize = '', ha
 }
 
 RibbonItem.propTypes = {
-  name: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+  name: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   icon: PropTypes.string,
   backgroundColor: PropTypes.string,
   iconSize: PropTypes.oneOf(['', 'small']),
-  hasArrow: PropTypes.bool
+  hasArrow: PropTypes.bool,
 };
 
 export default RibbonItem;

@@ -172,7 +172,7 @@ function FileDropdownMore({ currentMore }) {
 }
 
 FileDropdownMore.propTypes = {
-  currentMore: PropTypes.string,
+  currentMore: PropTypes.string.isRequired,
 };
 
 export default FileDropdownMore;

@@ -16,7 +16,7 @@ import undoEn from './assets/undo-en.png';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
-function QuickAccessToolbar({ repositionToolbar, setRepositionToolbar, availableButtons, setAvailableButtons, hideRibbon, setHideRibbon }) {
+function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData, setRibbonData }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
 
@@ -63,10 +63,10 @@ function QuickAccessToolbar({ repositionToolbar, setRepositionToolbar, available
     },
   ];
 
-  const buttonElements = availableButtons.map(item => {
+  const buttonElements = toolbarData.buttons.map(item => {
     const data = buttonsData.find(data => data.id === item);
     if(!data)
-      throw new Error(`de_Unexpected item in 'availableButtons' array: '${item}'`);
+      throw new Error(`de_Unexpected item in 'toolbarData.buttons' array: '${item}'`);
 
     return (
       <button key={data.id} className="button" onClick={data.onClick}>
@@ -92,7 +92,7 @@ function QuickAccessToolbar({ repositionToolbar, setRepositionToolbar, available
   }, [showDropdown]);
   
   return (
-    <div className={`${css['container']} ${repositionToolbar ? css['container--repositioned'] : ''}`}>
+    <div className={`${css['container']} ${toolbarData.reposition ? css['container--repositioned'] : ''}`}>
 
       {buttonElements}
 
@@ -104,12 +104,10 @@ function QuickAccessToolbar({ repositionToolbar, setRepositionToolbar, available
         <QuickAccessDropdown 
           isVisible={showDropdown} 
           close={() => setShowDropdown(false)}
-          availableButtons={availableButtons}
-          setAvailableButtons={setAvailableButtons}
-          repositionToolbar={repositionToolbar}
-          setRepositionToolbar={setRepositionToolbar}
-          hideRibbon={hideRibbon}
-          setHideRibbon={setHideRibbon}
+          toolbarData={toolbarData}
+          setToolbarData={setToolbarData}
+          ribbonData={ribbonData}
+          setRibbonData={setRibbonData}
         />
       </div>
       
@@ -118,12 +116,10 @@ function QuickAccessToolbar({ repositionToolbar, setRepositionToolbar, available
 }
 
 QuickAccessToolbar.propTypes = {
-  repositionToolbar: PropTypes.bool,
-  setRepositionToolbar: PropTypes.func,
-  availableButtons: PropTypes.array,
-  setAvailableButtons: PropTypes.func,
-  hideRibbon: PropTypes.bool,
-  setHideRibbon: PropTypes.func,
+  ribbonData: PropTypes.object.isRequired,
+  setRibbonData: PropTypes.func.isRequired,
+  toolbarData: PropTypes.object.isRequired,
+  setToolbarData: PropTypes.func.isRequired,
 };
 
 export default QuickAccessToolbar;

@@ -41,7 +41,7 @@ function RibbonClipboard({ ribbonWidth }) {
 }
 
 RibbonClipboard.propTypes = {
-  ribbonWidth: PropTypes.number,
+  ribbonWidth: PropTypes.number.isRequired,
 };
 
 export default RibbonClipboard;

@@ -7,7 +7,7 @@ import WindowControls from '../WindowControls/WindowControls';
 
 import logoMini from './assets/logo-mini.png';
 
-function TopBar({ onPointerDown, windowHasFocus, repositionToolbar, setRepositionToolbar, toolbarButtons, setToolbarButtons, hideRibbon, setHideRibbon }) {
+function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ribbonData, setRibbonData }) {
   return (
     <header className={css['container']} onPointerDown={onPointerDown}>
 
@@ -16,14 +16,12 @@ function TopBar({ onPointerDown, windowHasFocus, repositionToolbar, setRepositio
         <img draggable="false" src={logoMini} alt=""/>
 
         {
-          !repositionToolbar &&
+          !toolbarData.reposition &&
             <QuickAccessToolbar 
-              repositionToolbar={repositionToolbar}
-              setRepositionToolbar={setRepositionToolbar}
-              availableButtons={toolbarButtons}
-              setAvailableButtons={setToolbarButtons}
-              hideRibbon={hideRibbon}
-              setHideRibbon={setHideRibbon}
+              toolbarData={toolbarData}
+              setToolbarData={setToolbarData}
+              ribbonData={ribbonData}
+              setRibbonData={setRibbonData}
             />
         }
 
@@ -38,14 +36,12 @@ function TopBar({ onPointerDown, windowHasFocus, repositionToolbar, setRepositio
 }
 
 TopBar.propTypes = {
-  onPointerDown: PropTypes.func,
-  windowHasFocus: PropTypes.bool,
-  repositionToolbar: PropTypes.bool,
-  setRepositionToolbar: PropTypes.func,
-  toolbarButtons: PropTypes.array,
-  setToolbarButtons: PropTypes.func,
-  hideRibbon: PropTypes.bool,
-  setHideRibbon: PropTypes.func,
+  onPointerDown: PropTypes.func.isRequired,
+  windowHasFocus: PropTypes.bool.isRequired,
+  toolbarData: PropTypes.object.isRequired,
+  setToolbarData: PropTypes.func.isRequired,
+  ribbonData: PropTypes.object.isRequired,
+  setRibbonData: PropTypes.func.isRequired,
 };
 
 export default TopBar;
