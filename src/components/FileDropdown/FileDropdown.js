@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import PropTypes from 'prop-types';
 import css from './FileDropdown.module.css';
 
 import FileDropdownMore from '../FileDropdownMore/FileDropdownMore';
@@ -16,7 +17,7 @@ import scanner32 from './assets/scanner-32.png';
 import set32 from './assets/set-32.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
 
-function FileDropdown() {
+function FileDropdown({ show, setShow }) {
   const [currentMore, setCurrentMore] = useState('recent');
   const timeoutRef = useRef();
 
@@ -35,11 +36,14 @@ function FileDropdown() {
     setCurrentMore(which);
   }
 
+  if(!show)
+    return null;
+  
   return (
     <div className={css['container']}>
 
-      <div className={css['top']}>
-        <button className="ribbon-button ribbon-button--blue">File</button>
+      <div className={css['top']} data-file="1">
+        <button className="ribbon-button ribbon-button--blue" data-file="">File</button>
       </div>
 
       <div className={css['middle']}>
@@ -156,5 +160,10 @@ function FileDropdown() {
     </div>
   );
 }
+
+FileDropdown.propTypes = {
+  show: PropTypes.bool,
+  setShow: PropTypes.func
+};
 
 export default FileDropdown;

@@ -22,7 +22,7 @@ function Ribbon({ windowWidth, ribbonData, setRibbonData }) {
           !containerRef.current ||
           containerRef.current === event.target ||
           containerRef.current.contains(event.target) ||
-          event.target.ariaControls === 'ribbon'
+          event.target.dataset.ribbonexpand
         )
         return;
 

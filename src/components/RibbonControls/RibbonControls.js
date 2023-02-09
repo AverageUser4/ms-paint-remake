@@ -6,6 +6,7 @@ import FileDropdown from '../FileDropdown/FileDropdown';
 
 import info from './assets/info.png';
 import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
+import pin from '../../assets/global/pin.png';
 
 function RibbonControls({ ribbonData, setRibbonData }) {
   const [showFile, setShowFile] = useState(false);
@@ -38,16 +39,25 @@ function RibbonControls({ ribbonData, setRibbonData }) {
           File
         </button>
         <button
-          className={`ribbon-button ${ribbonData.activeTab === 'home' ? 'ribbon-button--active' : ''} ${ribbonData.minimize ? 'ribbon-button--no-ribbon' : ''}`}
+          className={
+            `ribbon-button 
+            ${ribbonData.activeTab === 'home' && (!ribbonData.minimize || ribbonData.expand) ? 'ribbon-button--active' : ''}
+            ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
+          }
           onPointerDown={() => setRibbonData(prev => ({ ...prev, activeTab: 'home', expand: true }))}
-          aria-controls={'ribbon'}
+          data-ribbonexpand="1"
         >
           Home
         </button>
         <button
-          className={`ribbon-button ribbon-button--last ${ribbonData.activeTab === 'view' ? 'ribbon-button--active' : ''} ${ribbonData.minimize ? 'ribbon-button--no-ribbon' : ''}`}
+          className={`
+            ribbon-button 
+            ribbon-button--last
+            ${ribbonData.activeTab === 'view' && (!ribbonData.minimize || ribbonData.expand) ? 'ribbon-button--active' : ''}
+            ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
+          }
           onPointerDown={() => setRibbonData(prev => ({ ...prev, activeTab: 'view', expand: true }))}
-          aria-controls={'ribbon'}
+          data-ribbonexpand="1"
         >
           View
         </button>
@@ -57,16 +67,21 @@ function RibbonControls({ ribbonData, setRibbonData }) {
         <button 
           className="button button--height-20"
           onClick={() => setRibbonData(prev => ({ ...prev, minimize: !prev.minimize, expand: false }))}
-          aria-controls={'ribbon'}
+          data-ribbonexpand="1"
         >
-          <ArrowUp className={ribbonData.minimize ? css['arrow-down'] : ''}/>
+          {
+            ribbonData.minimize && ribbonData.expand ?
+              <img data-ribbonexpand="1" src={pin} alt=""/>
+            :
+              <ArrowUp data-ribbonexpand="1" className={ribbonData.minimize ? css['arrow-down'] : ''}/>
+          }
         </button>
         <button className="button">
           <img draggable="false" src={info} alt="Paint help."/>
         </button>
       </div>
 
-      {showFile && <FileDropdown/>}
+      <FileDropdown show={showFile} setShow={setShowFile}/>
       
     </div>
   );

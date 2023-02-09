@@ -133,7 +133,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
             type="checkbox"
             checked={ribbonData.minimize}
             onChange={() => setRibbonData(prev => ({ ...prev, minimize: !prev.minimize, expand: false }))}
-            aria-controls={'ribbon'}
+            data-ribbonexpand="1"
           />
           <span className="text text--1">Mi<span className="text--underline">n</span>imize the Ribbon</span>
         </label>
