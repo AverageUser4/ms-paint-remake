@@ -1,4 +1,6 @@
 .container {
+  position: relative;
+
   display: flex;
 
   background-color: rgb(250, 251, 252);
@@ -18,13 +20,92 @@
   border-right: none;
 }
 
+.dropdown {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
+.expanded {
+  display: flex;
+}
+
+.expanded__grid {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+}
+
+.expanded__scrollbar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  border: none;
+  border-left: 1px solid rgb(235, 237, 239);
+  border-right: 1px solid rgb(235, 237, 239);
+}
+
+.expanded__scrollbar__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 17px;
+  height: 17px;
+
+  border: none;
+  background-color: transparent;
+}
+.expanded__scrollbar__button svg {
+  width: 10px;
+  height: 6px;
+}
+.expanded__scrollbar__button--disabled {
+  opacity: 0.3;
+}
+
 .button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   height: 22px;
+  width: 17px;
+  padding: 0;
 
   border-radius: 0;
   background-color: rgb(245, 246, 247);
   border: none;
+  border-right: 1px solid rgb(219, 220, 221);
+  border-left: 1px solid rgb(219, 220, 221);
   
   box-sizing: border-box;
+}
+.button:hover:not(.button--disabled) {
+  background-color: rgb(230, 240, 250);
+}
+
+.button:first-of-type {
+  height: 23px;
+  border-top: 1px solid rgb(219, 220, 221);
+}
+.container:hover .button:first-of-type:not(.button--disabled) {
+  border-color: rgb(145, 190, 235);
+}
+
+.container:hover .button:nth-of-type(2):not(.button--disabled) {
+  border: 1px solid rgb(145, 190, 235);
+}
+
+.button:last-of-type {
+  height: 23px;
+  border-bottom: 1px solid rgb(219, 220, 221);
+}
+.container:hover .button:last-of-type:not(.button--disabled) {
+  border-color: rgb(145, 190, 235);
+}
+
+.button--disabled img {
+  opacity: 0.5;
 }
