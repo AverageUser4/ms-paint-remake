@@ -3,6 +3,8 @@
 
   display: flex;
 
+  margin-right: 4px;
+  
   background-color: rgb(250, 251, 252);
 }
 .container:hover {

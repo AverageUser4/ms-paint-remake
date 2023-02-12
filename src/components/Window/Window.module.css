@@ -87,6 +87,8 @@
   left: -8px;
 }
 .top-left::before {
+  /* made bigger purposefully, remove width to make it like other corners */
+  width: 16px;
   height: 16px;
 }
 .top-left::after {
@@ -132,6 +134,8 @@
   right: -8px;
 }
 .bottom-right::before {
+  /* made bigger purposefully, remove width to make it like other corners */
+  width: 16px;
   height: 16px;
 }
 .bottom-right::after {

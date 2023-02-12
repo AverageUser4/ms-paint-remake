@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './RibbonShapes.module.css';
 
 import BigButton from '../BigButton/BigButton';
+import ShapesGrid from "../ShapesGrid/ShapesGrid";
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import useOutsideClick from "../../hooks/useOutsideClick";
@@ -20,7 +21,6 @@ import pencil16 from './assets/pencil-16.png';
 import waterColor16 from './assets/water-color-16.png';
 import solidColor16 from './assets/solid-color-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
-import ShapesGrid from "../ShapesGrid/ShapesGrid";
 
 function RibbonShapes({ ribbonWidth }) {
   const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);

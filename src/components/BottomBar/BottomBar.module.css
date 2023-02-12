@@ -7,6 +7,9 @@
   
   background-color: var(--dark-white);
   border-top: 1px solid var(--line-medium);
+  background-image: url(./assets/dots.png);
+  background-repeat: no-repeat;
+  background-position: bottom 2px right 2px;
 
   box-sizing: border-box;
 }

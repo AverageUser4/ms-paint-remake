@@ -32,7 +32,7 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 function ShapesGrid() {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(true);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
   
