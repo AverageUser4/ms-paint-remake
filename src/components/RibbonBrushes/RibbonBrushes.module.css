@@ -1,0 +1,19 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+}
+
+.button {
+  background-color: transparent;
+  border: 1px solid transparent;
+
+  padding: 3px;
+}
+.button:hover {
+  background-color: rgb(240, 245, 250);
+  border-color: rgb(170, 210, 255);
+}
+
+.button img {
+  display: block;
+}

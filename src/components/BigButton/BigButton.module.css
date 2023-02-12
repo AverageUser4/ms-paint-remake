@@ -4,12 +4,6 @@
   margin: 0 2px;
 }
 
-.children-container {
-  position: absolute;
-  top: 100%;
-  left: 0;
-}
-
 .button {
   display: flex;
   flex-direction: column;

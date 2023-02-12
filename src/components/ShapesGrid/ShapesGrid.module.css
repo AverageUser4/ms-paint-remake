@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+
+  background-color: rgb(250, 251, 252);
+}
+.container:hover {
+  background-color: rgb(253, 254, 255);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+
+  height: 66px;
+  overflow: hidden;
+
+  border: 1px solid rgb(219, 220, 221);
+  border-right: none;
+}
+
+.button {
+  display: block;
+  height: 22px;
+
+  border-radius: 0;
+  background-color: rgb(245, 246, 247);
+  border: none;
+  
+  box-sizing: border-box;
+}

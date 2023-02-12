@@ -1,40 +1,159 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonShapes.module.css';
 
 import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
+import useOutsideClick from "../../hooks/useOutsideClick";
+import { toggleBoolState } from "../../utils/utils";
 
 import shapes16 from './assets/shapes-16.png';
 import shapes32 from './assets/shapes-32.png';
 import fill16 from './assets/fill-16.png';
 import outline16 from './assets/outline-16.png';
+import none16 from './assets/none-16.png';
+import crayon16 from './assets/crayon-16.png';
+import marker16 from './assets/marker-16.png';
+import oil16 from './assets/oil-16.png';
+import pencil16 from './assets/pencil-16.png';
+import waterColor16 from './assets/water-color-16.png';
+import solidColor16 from './assets/solid-color-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
+import ShapesGrid from "../ShapesGrid/ShapesGrid";
 
 function RibbonShapes({ ribbonWidth }) {
+  const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);
+  const fillDropdownRef = useRef();
+  useOutsideClick(fillDropdownRef, () => isFillDropdownOpen && setIsFillDropdownOpen(false));
+
+  const [isOutlineDropdownOpen, setIsOutlineDropdownOpen] = useState(false);
+  const outlineDropdownRef = useRef();
+  useOutsideClick(outlineDropdownRef, () => isOutlineDropdownOpen && setIsOutlineDropdownOpen(false));
+  
   const isOnlyContent = ribbonWidth >= 800;
   const showText = ribbonWidth < 800 || ribbonWidth >= 900;
+  const isBigButtonHidden = ribbonWidth < 800 || ribbonWidth >= 950;
 
   return (
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={shapes16} name="Shapes">
       <RibbonItemExpanded name="Shapes">
 
           <div className={css['container']}>
-            <BigButton icon={shapes32} name="Shapes"/>
+            <BigButton 
+              icon={shapes32}
+              name="Shapes"
+              isOnlyChildren={isBigButtonHidden}
+            >
+              <ShapesGrid/>
+            </BigButton>
 
             <div>
-              <button className="button">
-                <img draggable="false" src={outline16} alt="Outline."/>
-                {showText && <span className="text text--1">Outline</span>}
-                <TriangleDown/>
-              </button>
+              <div className="dropdown-container">
+                <button 
+                  className="button"
+                  onPointerDown={() => toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
+                >
+                  <img draggable="false" src={outline16} alt="Outline."/>
+                  {showText && <span className="text text--1">Outline</span>}
+                  <TriangleDown/>
+                </button>
 
-              <button className="button">
-                <img draggable="false" src={fill16} alt="Fill."/>
-                {showText && <span className="text text--1">Fill</span>}
-                <TriangleDown/>
-              </button>
+                {
+                  isOutlineDropdownOpen &&
+                    <div className="dropdown">
+                      <div className="popup" ref={outlineDropdownRef}>
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={none16} alt=""/>
+                          <span>No outline</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={solidColor16} alt=""/>
+                          <span>Solid color</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={crayon16} alt=""/>
+                          <span>Crayon</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={marker16} alt=""/>
+                          <span>Marker</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={oil16} alt=""/>
+                          <span>Oil</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={pencil16} alt=""/>
+                          <span>Natural pencil</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={waterColor16} alt=""/>
+                          <span>Watercolor</span>
+                        </button>
+                      </div>
+                    </div>
+                }
+              </div>
+
+              <div className="dropdown-container">
+                <button 
+                  className="button"
+                  onPointerDown={() => toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
+                >
+                  <img draggable="false" src={fill16} alt="Fill."/>
+                  {showText && <span className="text text--1">Fill</span>}
+                  <TriangleDown/>
+                </button>
+
+                {
+                  isFillDropdownOpen &&
+                    <div className="dropdown">
+                      <div className="popup" ref={fillDropdownRef}>
+                      <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={none16} alt=""/>
+                          <span>No fill</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={solidColor16} alt=""/>
+                          <span>Solid color</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={crayon16} alt=""/>
+                          <span>Crayon</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={marker16} alt=""/>
+                          <span>Marker</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={oil16} alt=""/>
+                          <span>Oil</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={pencil16} alt=""/>
+                          <span>Natural pencil</span>
+                        </button>
+
+                        <button className="popup__button text text--4 text--nowrap">
+                          <img className="popup__image" src={waterColor16} alt=""/>
+                          <span>Watercolor</span>
+                        </button>
+                      </div>
+                    </div>
+                }
+              </div>
             </div>
           </div>
 

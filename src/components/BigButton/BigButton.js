@@ -12,13 +12,17 @@ function BigButton({
   hasArrow = true,
   children,
   showChildren,
-  onPointerDown
+  onPointerDown,
+  isOnlyChildren = false
 }) {
   const buttonClasses = `${css['button']} ${css[`button--${iconSize}`]}`;
   let iconClasses = `${css['icon']} ${css[`icon--${iconSize}`]}`;
 
   if(!icon)
     iconClasses += !icon ? ` ${css['icon--only-color']}` : '';
+
+  if(isOnlyChildren)
+    return children;
   
   return (
     <div className={css['container']}>
@@ -42,7 +46,7 @@ function BigButton({
 
       {
         showChildren &&
-          <div className={css['children-container']}>
+          <div className="dropdown">
             {children}
           </div>
       }
@@ -59,6 +63,7 @@ BigButton.propTypes = {
   children: PropTypes.element,
   showChildren: PropTypes.bool,
   onPointerDown: PropTypes.func,
+  isOnlyChildren: PropTypes.bool,
 };
 
 export default BigButton;
