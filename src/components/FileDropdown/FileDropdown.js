@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { forwardRef, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './FileDropdown.module.css';
 
@@ -17,53 +17,54 @@ import scanner32 from './assets/scanner-32.png';
 import set32 from './assets/set-32.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
 
-function FileDropdown({ show, setShow }) {
+const FileDropdown = forwardRef(function FileDropdown(props, ref) {
   const [currentMore, setCurrentMore] = useState('recent');
   const timeoutRef = useRef();
+  const { isShown, setIsShown } = props;
 
   function onMouseEnter(which) {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setCurrentMore(which), 500);
   }
-
+  
   function onMouseLeave() {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setCurrentMore('recent'), 500);
   }
 
-  function onPointerDown(event, which) {
-    event.stopPropagation();
-    setCurrentMore(which);
+  function close() {
+    if(isShown)
+      setIsShown(false);
   }
-
-  if(!show)
+  
+  if(!isShown)
     return null;
   
   return (
-    <div className={css['container']}>
-
-      <div className={css['top']} data-file="1">
-        <button className="ribbon-button ribbon-button--blue" data-file="">File</button>
+    <div className={css['container']} ref={ref}>
+  
+      <div className={css['top']}>
+        <button onPointerDown={close} className="ribbon-button ribbon-button--blue">File</button>
       </div>
-
+  
       <div className={css['middle']}>
         <div className={css['left']}>
-
+  
           <button className={css['button']}>
             <img src={new32} alt=""/>
             <span className="text text--1"><span className="text--underline">N</span>ew</span>
           </button>
-
+  
           <button className={css['button']}>
             <img src={open32} alt=""/>
             <span className="text text--1"><span className="text--underline">O</span>pen</span>
           </button>
-
+  
           <button className={css['button']}>
             <img src={save32} alt=""/>
             <span className="text text--1"><span className="text--underline">S</span>ave</span>
           </button>
-
+  
           <div 
             className={`${css['duo-container']} ${currentMore === 'save' ? css['duo-container--active'] : ''}`}
             onMouseEnter={() => onMouseEnter('save')}
@@ -73,14 +74,14 @@ function FileDropdown({ show, setShow }) {
               <img src={saveAs32} alt=""/>
               <span className="text text--1">Save <span className="text--underline">a</span>s</span>
             </button>
-
-            <button onPointerDown={(e) => onPointerDown(e, 'save')} className={css['arrow-button']}>
+  
+            <button onPointerDown={() => (setCurrentMore('save'))} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
-
+  
           <div className={css['border']}></div>
-
+  
           <div 
             className={`${css['duo-container']} ${currentMore === 'print' ? css['duo-container--active'] : ''}`}
             onMouseEnter={() => onMouseEnter('print')}
@@ -90,8 +91,8 @@ function FileDropdown({ show, setShow }) {
               <img src={print32} alt=""/>
               <span className="text text--1"><span className="text--underline">P</span>rint</span>
             </button>
-
-            <button onPointerDown={(e) => onPointerDown(e, 'print')} className={css['arrow-button']}>
+  
+            <button onPointerDown={() => (setCurrentMore('print'))} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
@@ -100,14 +101,14 @@ function FileDropdown({ show, setShow }) {
             <img src={scanner32} alt=""/>
             <span className="text text--1">Fro<span className="text--underline">m</span> scanner or camera</span>
           </button>
-
+  
           <button className={css['button']}>
             <img src={email32} alt=""/>
             <span className="text text--1">Sen<span className="text--underline">d</span> in email</span>
           </button>
-
+  
           <div className={css['border']}></div>
-
+  
           <div 
             className={`${css['duo-container']} ${currentMore === 'set' ? css['duo-container--active'] : ''}`}
             onMouseEnter={() => onMouseEnter('set')}
@@ -117,33 +118,33 @@ function FileDropdown({ show, setShow }) {
               <img src={set32} alt=""/>
               <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
             </button>
-
-            <button onPointerDown={(e) => onPointerDown(e, 'set')} className={css['arrow-button']}>
+  
+            <button onPointerDown={() => (setCurrentMore('set'))} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
-
+  
           <div className={css['border']}></div>
-
+  
           <button className={css['button']}>
             <img src={properties32} alt=""/>
             <span className="text text--1">Prop<span className="text--underline">e</span>rties</span>
           </button>
-
+  
           <div className={css['border']}></div>
-
+  
           <button className={css['button']}>
             <img src={about32} alt=""/>
             <span className="text text--1">Abou<span className="text--underline">t</span> paint</span>
           </button>
-
+  
           <div className={css['border']}></div>
-
+  
           <button className={css['button']}>
             <img src={exit32} alt=""/>
             <span className="text text--1">E<span className="text--underline">x</span>it</span>
           </button>
-
+  
         </div>
         
         <div 
@@ -154,16 +155,16 @@ function FileDropdown({ show, setShow }) {
           <FileDropdownMore currentMore={currentMore}/>
         </div>
       </div>
-
+  
       <div className={css['bottom']}></div>
-
+  
     </div>
   );
-}
+});
 
 FileDropdown.propTypes = {
-  show: PropTypes.bool,
-  setShow: PropTypes.func
+  isShown: PropTypes.bool.isRequired,
+  setIsShown: PropTypes.func.isRequired
 };
 
 export default FileDropdown;

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonShapes.module.css';
 
-import RibbonItem from '../RibbonItem/RibbonItem';
+import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
@@ -13,15 +13,15 @@ import outline16 from './assets/outline-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonShapes({ ribbonWidth }) {
-  const showContent = ribbonWidth >= 800;
+  const isOnlyContent = ribbonWidth >= 800;
   const showText = ribbonWidth < 800 || ribbonWidth >= 900;
 
   return (
-    <RibbonItemContainer showContent={showContent} icon={shapes16} name="Shapes">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={shapes16} name="Shapes">
       <RibbonItemExpanded name="Shapes">
 
           <div className={css['container']}>
-            <RibbonItem icon={shapes32} name="Shapes"/>
+            <BigButton icon={shapes32} name="Shapes"/>
 
             <div>
               <button className="button">

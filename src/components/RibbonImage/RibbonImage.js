@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonImage.module.css';
 
-import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
+import BigButtonDuo from '../BigButtonDuo/BigButtonDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 
@@ -14,15 +14,15 @@ import rotate16 from './assets/rotate-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonImage({ ribbonWidth }) {
-  const showContent = ribbonWidth >= 840;
+  const isOnlyContent = ribbonWidth >= 840;
   const showText = ribbonWidth < 840 || ribbonWidth >= 1000;
   
   return (
-    <RibbonItemContainer showContent={showContent} icon={image16} name="Image">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={image16} name="Image">
       <RibbonItemExpanded name="Image">
 
           <div className={css['container']}>
-            <RibbonItemDuo icon={image32} name="Select"/>
+            <BigButtonDuo icon={image32} name="Select"/>
 
             <div>
               <button className="button">

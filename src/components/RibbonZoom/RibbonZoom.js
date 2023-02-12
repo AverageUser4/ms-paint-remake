@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './RibbonZoom.module.css';
 
-import RibbonItem from '../RibbonItem/RibbonItem';
+import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 
 import zoomIn16 from './assets/zoom-in-16.png';
@@ -37,9 +37,9 @@ function RibbonZoom({ ribbonWidth }) {
   return (
     <RibbonItemExpanded name="Zoom">
       <div className={css['container']}>
-        <RibbonItem icon={zoomIn32} hasArrow={false} name={<div>Zoom <div className="line-break"></div> in</div>}/>
-        <RibbonItem icon={zoomOut32} hasArrow={false} name={<div>Zoom <div className="line-break"></div> out</div>}/>
-        <RibbonItem icon={percent32} hasArrow={false} name={<div>100 <div className="line-break"></div> %</div>}/>
+        <BigButton icon={zoomIn32} hasArrow={false} name={<div>Zoom <div className="line-break"></div> in</div>}/>
+        <BigButton icon={zoomOut32} hasArrow={false} name={<div>Zoom <div className="line-break"></div> out</div>}/>
+        <BigButton icon={percent32} hasArrow={false} name={<div>100 <div className="line-break"></div> %</div>}/>
       </div>
     </RibbonItemExpanded>
   );

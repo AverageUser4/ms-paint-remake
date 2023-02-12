@@ -16,7 +16,7 @@ import undoEn from './assets/undo-en.png';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
-function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData, setRibbonData }) {
+function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
 
@@ -107,7 +107,6 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData, setRibbon
           toolbarData={toolbarData}
           setToolbarData={setToolbarData}
           ribbonData={ribbonData}
-          setRibbonData={setRibbonData}
         />
       </div>
       
@@ -117,7 +116,6 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData, setRibbon
 
 QuickAccessToolbar.propTypes = {
   ribbonData: PropTypes.object.isRequired,
-  setRibbonData: PropTypes.func.isRequired,
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
 };

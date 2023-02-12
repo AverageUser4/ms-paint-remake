@@ -13,7 +13,7 @@ import RibbonZoom from "../RibbonZoom/RibbonZoom";
 import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 
-function Ribbon({ windowWidth, ribbonData, setRibbonData }) {
+function Ribbon({ windowWidth, ribbonData }) {
   const containerRef = useRef();
   
   useEffect(() => {
@@ -21,13 +21,12 @@ function Ribbon({ windowWidth, ribbonData, setRibbonData }) {
       if(
           !containerRef.current ||
           containerRef.current === event.target ||
-          containerRef.current.contains(event.target) ||
-          event.target.dataset.ribbonexpand
+          containerRef.current.contains(event.target)
         )
         return;
 
       if(ribbonData.minimize && ribbonData.expand)
-        setRibbonData(prev => ({ ...prev, expand: false }));
+        ribbonData.stopExpanding();
     }
 
     window.addEventListener('pointerdown', onPointerDown);
@@ -72,7 +71,6 @@ function Ribbon({ windowWidth, ribbonData, setRibbonData }) {
 Ribbon.propTypes = {
   windowWidth: PropTypes.number.isRequired,
   ribbonData: PropTypes.object.isRequired,
-  setRibbonData: PropTypes.func.isRequired
 };
 
 export default Ribbon;

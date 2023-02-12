@@ -4,17 +4,17 @@ import css from './RibbonItemContainer.module.css';
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonItemContainer({ icon, name, children, showContent }) {
+function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
   const containerRef = useRef();
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   useEffect(() => {
-    if(showDropdown && showContent)
-      setShowDropdown(false);
-  }, [showDropdown, showContent]);
+    if(isDropdownOpen && isOnlyContent)
+      setIsDropdownOpen(false);
+  }, [isDropdownOpen, isOnlyContent]);
 
   useEffect(() => {
-    function onMouseDown(event) {
+    function onPointerDown(event) {
       if(
           !containerRef.current ||
           containerRef.current === event.target ||
@@ -22,27 +22,27 @@ function RibbonItemContainer({ icon, name, children, showContent }) {
         )
         return;
       
-      if(showDropdown)
-        setShowDropdown(false);
+      if(isDropdownOpen)
+        setIsDropdownOpen(false);
     }
 
-    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('pointerdown', onPointerDown);
 
     return () => {
-      window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('pointerdown', onPointerDown);
     };
-  }, [showDropdown]);
+  }, [isDropdownOpen]);
   
-  if(showContent)
+  if(isOnlyContent)
     return children;
   
   return (
     <div 
-      className={`${css['container']} ${showDropdown ? css['container--active'] : ''}`}
+      className={`${css['container']} ${isDropdownOpen ? css['container--active'] : ''}`}
       ref={containerRef}
     >
 
-      <button className={css['button']} onClick={() => setShowDropdown(prev => !prev)}>
+      <button className={css['button']} onClick={() => setIsDropdownOpen(prev => !prev)}>
 
         <div className={css['image-container']}>
           <img draggable="false" src={icon} alt=""/>
@@ -55,7 +55,7 @@ function RibbonItemContainer({ icon, name, children, showContent }) {
       </button>
 
       {
-        showDropdown &&
+        isDropdownOpen &&
           <div className={css['dropdown']}>
             {children}
           </div>
@@ -69,7 +69,7 @@ RibbonItemContainer.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
   children: PropTypes.element.isRequired,
-  showContent: PropTypes.bool.isRequired,
+  isOnlyContent: PropTypes.bool.isRequired,
 };
 
 export default RibbonItemContainer;

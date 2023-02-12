@@ -7,7 +7,7 @@ import WindowControls from '../WindowControls/WindowControls';
 
 import logoMini from './assets/logo-mini.png';
 
-function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ribbonData, setRibbonData }) {
+function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ribbonData }) {
   return (
     <header className={css['container']} onPointerDown={onPointerDown}>
 
@@ -21,7 +21,6 @@ function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ri
               toolbarData={toolbarData}
               setToolbarData={setToolbarData}
               ribbonData={ribbonData}
-              setRibbonData={setRibbonData}
             />
         }
 
@@ -41,7 +40,6 @@ TopBar.propTypes = {
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
-  setRibbonData: PropTypes.func.isRequired,
 };
 
 export default TopBar;

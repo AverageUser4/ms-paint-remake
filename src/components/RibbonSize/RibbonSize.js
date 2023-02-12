@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import css from './RibbonSize.module.css';
 
-import RibbonItem from "../RibbonItem/RibbonItem";
+import BigButton from "../BigButton/BigButton";
 
 import size32 from './assets/size-32.png';
 
 function RibbonSize() {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  
   return (
-    <RibbonItem icon={size32} name="Size">
-
-    </RibbonItem>
+    <BigButton 
+      icon={size32}
+      name="Size"
+      showChildren={isDropdownOpen}
+    >
+      <div>
+        
+      </div>
+    </BigButton>
   );
 }
 

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonClipboard.module.css';
 
-import RibbonItemDuo from '../RibbonItemDuo/RibbonItemDuo';
+import BigButtonDuo from '../BigButtonDuo/BigButtonDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
@@ -12,15 +12,15 @@ import copy16 from './assets/copy-16.png';
 import cut16 from './assets/cut-16.png';
 
 function RibbonClipboard({ ribbonWidth }) {
-  const showContent = ribbonWidth >= 855;
+  const isOnlyContent = ribbonWidth >= 855;
   const showText = ribbonWidth < 855 || ribbonWidth >= 1025; 
 
   return (
-    <RibbonItemContainer showContent={showContent} icon={clipboard16} name="Clipboard">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={clipboard16} name="Clipboard">
       <RibbonItemExpanded name="Clipboard">
 
           <div className={css['container']}>
-            <RibbonItemDuo icon={clipboard32} name="Paste"/>
+            <BigButtonDuo icon={clipboard32} name="Paste"/>
 
             <div>
               <button className="button">

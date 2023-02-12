@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './QuickAccessDropdown.module.css';
 
-function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ribbonData, setRibbonData }) {
+function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ribbonData }) {
   function onChange(event) {
     const { name } = event.target;
     
@@ -132,8 +132,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
             className={css['checkbox']}
             type="checkbox"
             checked={ribbonData.minimize}
-            onChange={() => setRibbonData(prev => ({ ...prev, minimize: !prev.minimize, expand: false }))}
-            data-ribbonexpand="1"
+            onChange={() => ribbonData.toggleMinimize()}
           />
           <span className="text text--1">Mi<span className="text--underline">n</span>imize the Ribbon</span>
         </label>
@@ -150,7 +149,6 @@ QuickAccessDropdown.propTypes = {
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
-  setRibbonData: PropTypes.func.isRequired,
 };
 
 export default QuickAccessDropdown;

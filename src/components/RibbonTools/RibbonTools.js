@@ -14,10 +14,10 @@ import colorPicker16 from './assets/color-picker-16.png';
 import magnifier16 from './assets/magnifier-16.png';
 
 function RibbonTools({ ribbonWidth }) {
-  const showContent = ribbonWidth >= 760;
+  const isOnlyContent = ribbonWidth >= 760;
 
   return (
-    <RibbonItemContainer showContent={showContent} icon={tools16} name="Tools">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={tools16} name="Tools">
       <RibbonItemExpanded name="Tools">
 
         <div className={css['container']}>

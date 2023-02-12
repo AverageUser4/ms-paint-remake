@@ -1,23 +1,34 @@
 .container {
+  position: relative;
+
+  margin: 0 2px;
+}
+
+.children-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+}
+
+.button {
   display: flex;
   flex-direction: column;
   align-items: center;
 
   padding: 4px;
-  margin: 0 2px;
 
   background-color: transparent;
   border: 1px solid transparent;
 }
-.container:hover {
+.button:hover {
   background-color: var(--selected-light);
   border-color: var(--selected-light-line);
 }
-.container:active {
+.button:active {
   background-color: var(--selected-dark);
   border: 1px solid var(--selected-dark-line);
 }
-.container--small {
+.button--small {
   padding-top: calc(4px + (var(--ribbon-icon-size) - var(--ribbon-icon-small-size)) / 2);
 }
 

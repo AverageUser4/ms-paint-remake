@@ -1,11 +1,11 @@
 
 import React from "react";
 import PropTypes from 'prop-types';
-import css from './RibbonItemDuo.module.css';
+import css from './BigButtonDuo.module.css';
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonItemDuo({ name, icon }) {
+function BigButtonDuo({ name, icon }) {
   return (
     <div className={`${css['container']} ${css['container--active']}`}>
 
@@ -22,9 +22,9 @@ function RibbonItemDuo({ name, icon }) {
   );
 }
 
-RibbonItemDuo.propTypes = {
+BigButtonDuo.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
 };
 
-export default RibbonItemDuo;
+export default BigButtonDuo;
