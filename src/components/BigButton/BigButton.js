@@ -4,7 +4,17 @@ import css from './BigButton.module.css';
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function BigButton({ name, icon, backgroundColor = '#ff00ff', iconSize = '', hasArrow = true, children, showChildren }) {
+function BigButton({ 
+  name,
+  icon,
+  backgroundColor = '#ff00ff',
+  iconSize = '',
+  hasArrow = true,
+  children,
+  showChildren,
+  onClick,
+  onPointerDown
+}) {
   const buttonClasses = `${css['button']} ${css[`button--${iconSize}`]}`;
   let iconClasses = `${css['icon']} ${css[`icon--${iconSize}`]}`;
 
@@ -13,7 +23,11 @@ function BigButton({ name, icon, backgroundColor = '#ff00ff', iconSize = '', has
   
   return (
     <div className={css['container']}>
-      <button className={buttonClasses}>
+      <button 
+        className={buttonClasses}
+        onClick={onClick ? onClick : ()=>0}
+        onPointerDown={onPointerDown ? onPointerDown : ()=>0}
+      >
 
         {
           icon ?
@@ -45,7 +59,9 @@ BigButton.propTypes = {
   iconSize: PropTypes.oneOf(['', 'small']),
   hasArrow: PropTypes.bool,
   children: PropTypes.element,
-  showChildren: PropTypes.bool
+  showChildren: PropTypes.bool,
+  onClick: PropTypes.func,
+  onPointerDown: PropTypes.func,
 };
 
 export default BigButton;

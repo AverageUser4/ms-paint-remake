@@ -1,6 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from  './QuickAccessToolbar.module.css';
+
+import useOutsideClick from '../../hooks/useOutsideClick';
 
 import email from './assets/email.png';
 import newFile from './assets/new.png';
@@ -19,6 +21,7 @@ import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
 function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
+  useOutsideClick(dropdownRef, () => showDropdown && setShowDropdown(false));
 
   const buttonsData = [
     {
@@ -74,22 +77,6 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
       </button>
     );
   });
-  
-  useEffect(() => {
-    function onPointerDown(event) {
-      if(!dropdownRef.current || dropdownRef.current === event.target || dropdownRef.current.contains(event.target))
-        return;
-
-      if(showDropdown)
-        setShowDropdown(false);
-    }
-
-    window.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [showDropdown]);
   
   return (
     <div className={`${css['container']} ${toolbarData.reposition ? css['container--repositioned'] : ''}`}>

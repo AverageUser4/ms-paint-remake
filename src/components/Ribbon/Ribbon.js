@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useRef } from "react";
 import PropTypes from 'prop-types';
 import css from './Ribbon.module.css';
 
@@ -12,29 +12,11 @@ import RibbonBrushes from "../RibbonBrushes/RibbonBrushes";
 import RibbonZoom from "../RibbonZoom/RibbonZoom";
 import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 function Ribbon({ windowWidth, ribbonData }) {
   const containerRef = useRef();
-  
-  useEffect(() => {
-    function onPointerDown(event) {
-      if(
-          !containerRef.current ||
-          containerRef.current === event.target ||
-          containerRef.current.contains(event.target)
-        )
-        return;
-
-      if(ribbonData.minimize && ribbonData.expand)
-        ribbonData.stopExpanding();
-    }
-
-    window.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [ribbonData]);
+  useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding());
   
   let ribbonClasses = css['ribbon'];
   if(ribbonData.minimize)

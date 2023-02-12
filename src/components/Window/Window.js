@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
+import useOutsideClick from '../../hooks/useOutsideClick';
+
 function Window({ items }) {
   const [position, setPosition] = useState({ x: 200, y: 100 });
   const [positionDifference, setPositionDifference] = useState(null);
@@ -9,22 +11,7 @@ function Window({ items }) {
   const [resizeData, setResizeData] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef();
-
-  useEffect(() => {
-    function onPointerDown(event) {
-      if(event.target === windowRef.current || windowRef.current.contains(event.target))
-        return;
-      
-      if(isFocused)
-        setIsFocused(false);
-    }
-
-    window.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [isFocused]);
+  useOutsideClick(windowRef, () => isFocused && setIsFocused(false));
 
   useEffect(() => {
     function onPointerUp() {
