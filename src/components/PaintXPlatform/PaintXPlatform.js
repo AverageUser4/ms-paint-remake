@@ -68,7 +68,11 @@ function PaintXPlatform() {
   ];
 
   return (
-    <Window items={items}/>
+    <Window 
+      items={items}
+      minWidth={460}
+      minHeight={300}
+    />
   );
 }
 

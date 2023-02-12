@@ -4,7 +4,7 @@ import css from './Window.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 
-function Window({ items }) {
+function Window({ items, minWidth, minHeight }) {
   const [position, setPosition] = useState({ x: 200, y: 100 });
   const [positionDifference, setPositionDifference] = useState(null);
   const [size, setSize] = useState({ width: 600, height: 500 });
@@ -53,18 +53,33 @@ function Window({ items }) {
       let newY = position.y;
 
       if(resizeData.type.includes('left')) {
-        diffX = resizeData.initialX - event.clientX;
-        newX = resizeData.initialX - diffX;
+        diffX *= -1;
+        newX = event.clientX;
       }
       if(resizeData.type.includes('top')) {
-        diffY = resizeData.initialY - event.clientY;
-        newY = resizeData.initialY - diffY;
+        diffY *= -1;
+        newY = event.clientY;
       }
       if(resizeData.type.includes('left') || resizeData.type.includes('right'))
         newWidth = resizeData.initialWidth + diffX;
       if(resizeData.type.includes('top') || resizeData.type.includes('bottom'))
         newHeight = resizeData.initialHeight + diffY;
-      
+
+      if(newWidth < minWidth) {
+        if(resizeData.type.includes('left')) {
+          const diffW = minWidth - newWidth;
+          newX -= diffW;
+        }
+        newWidth = minWidth;
+      }
+      if(newHeight < minHeight) {
+        if(resizeData.type.includes('top')) {
+          const diffH = minHeight - newHeight;
+          newY -= diffH;
+        }
+        newHeight = minHeight;
+      }
+
       if(newWidth !== size.width || newHeight !== size.height)
         setSize({ width: newWidth, height: newHeight });
       if(newX !== position.x || newY !== position.y)
@@ -78,7 +93,7 @@ function Window({ items }) {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size, position]);
+  }, [resizeData, size, position, minHeight, minWidth]);
   
   function onPointerDownMove(event) {
     const x = event.clientX - position.x;
@@ -143,7 +158,9 @@ function Window({ items }) {
 }
 
 Window.propTypes = {
-  items: PropTypes.array.isRequired
+  items: PropTypes.array.isRequired,
+  minWidth: PropTypes.number.isRequired,
+  minHeight: PropTypes.number.isRequired,
 };
 
 export default Window;

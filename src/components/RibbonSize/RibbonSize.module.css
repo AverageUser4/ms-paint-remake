@@ -7,7 +7,7 @@
   
   border: 1px solid rgb(220, 221, 222);
   background-color: rgb(251, 252, 253);
-  box-shadow: 2px 2px 4px rgb(190, 190, 190);
+  box-shadow: 2px 2px rgba(170, 170, 170, 0.2);
 }
 
 .button {

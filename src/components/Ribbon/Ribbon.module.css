@@ -14,7 +14,6 @@
   background-color: var(--bg-ui);
   border-bottom: 1px solid var(--bg-line);
 
-  /* overflow: hidden; */
   box-sizing: border-box;
 }
 .ribbon--minimized {
