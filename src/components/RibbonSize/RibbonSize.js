@@ -3,6 +3,7 @@ import css from './RibbonSize.module.css';
 
 import BigButton from "../BigButton/BigButton";
 import useOutsideClick from '../../hooks/useOutsideClick';
+import { toggleBoolState } from "../../utils/utils";
 
 import size32 from './assets/size-32.png';
 
@@ -14,19 +15,12 @@ function RibbonSize() {
   const sizes = [8, 16, 30, 40];
   const currentSize = 16;
 
-  function toggleDropdown() {
-    if(isDropdownOpen)
-      setIsDropdownOpen(false);
-    else
-      setTimeout(() => setIsDropdownOpen(true));
-  }
-  
   return (
     <BigButton 
       icon={size32}
       name="Size"
       showChildren={isDropdownOpen}
-      onPointerDown={toggleDropdown}
+      onPointerDown={() => toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
     >
       <div className={css['container']} ref={dropdownRef}>
         {

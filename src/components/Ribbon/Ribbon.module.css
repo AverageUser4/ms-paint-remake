@@ -31,6 +31,6 @@
   visibility: visible;
 }
 
-.ribbon * {
+.ribbon > * {
   flex-shrink: 0;
 }

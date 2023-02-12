@@ -52,4 +52,14 @@
     padding-top: 3px;
   }
 
+  .dropdown-container {
+    position: relative;
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+
 }

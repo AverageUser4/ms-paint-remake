@@ -12,7 +12,6 @@ function BigButton({
   hasArrow = true,
   children,
   showChildren,
-  onClick,
   onPointerDown
 }) {
   const buttonClasses = `${css['button']} ${css[`button--${iconSize}`]}`;
@@ -25,7 +24,6 @@ function BigButton({
     <div className={css['container']}>
       <button 
         className={buttonClasses}
-        onClick={onClick ? onClick : ()=>0}
         onPointerDown={onPointerDown ? onPointerDown : ()=>0}
       >
 
@@ -60,7 +58,6 @@ BigButton.propTypes = {
   hasArrow: PropTypes.bool,
   children: PropTypes.element,
   showChildren: PropTypes.bool,
-  onClick: PropTypes.func,
   onPointerDown: PropTypes.func,
 };
 

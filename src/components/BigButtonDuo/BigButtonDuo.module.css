@@ -7,9 +7,17 @@
   min-width: 42px;
 
   background-color: transparent;
+
+  position: relative;
 }
 .container:hover {
   background-color: var(--selected-light);
+}
+
+.children-container {
+  position: absolute;
+  top: 100%;
+  left: 0;
 }
 
 .top {

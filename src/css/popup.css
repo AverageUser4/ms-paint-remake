@@ -1,0 +1,78 @@
+.popup {
+  position: relative;
+  z-index: 5;
+
+  padding: 2px;
+  
+  border: 1px solid rgb(220, 221, 222);
+  border-radius: 3px;
+  background-color: rgb(251, 252, 253);
+  box-shadow: 2px 2px 4px rgb(190, 190, 190);
+}
+
+.popup__head {
+  padding: 3px 8px;
+  
+  background-color: rgb(246, 247, 248);
+  border-bottom: 1px solid rgb(220, 221, 222);
+}
+
+.popup__line {
+  height: 1px;
+  width: 100%;
+  
+  background-color: rgb(220, 221, 222);
+}
+
+.popup__button {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+
+  position: relative;
+
+  min-width: 100%;
+  padding: 3px 26px 3px 4px;
+
+  background-color: transparent;
+  border: none;
+
+  box-sizing: border-box;
+}
+.popup__button::after {
+  content: '';
+
+  position: absolute;
+  top: 0;
+  left: 24px;
+  
+  display: block;
+  width: 1px;
+  height: 100%;
+  
+  background-color: rgb(220, 221, 222);
+}
+.popup__button:hover::after {
+  display: none;
+}
+.popup__button:hover {
+  background-color: rgb(219, 235, 252);
+  outline: 1px solid rgb(168, 210, 253);
+}
+.popup__button--active {
+  background-color: rgb(206, 229, 252);
+  outline: 1px solid rgb(100, 165, 230);
+}
+.popup__button:active div {
+  opacity: 0.4;
+}
+
+.popup__image {
+  width: 16px;
+  height: 16px;
+}
+
+.popup__button--selected .popup__image {
+  background-color: rgb(205, 230, 250);
+  outline: 1px solid rgb(100, 165, 230);
+}
