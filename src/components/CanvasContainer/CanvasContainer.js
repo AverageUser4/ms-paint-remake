@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './CanvasContainer.module.css';
 
+import Canvas from '../Canvas/Canvas';
+
 function CanvasContainer({ toolbarData, ribbonData }) {
   const style = {
     height: `calc(
@@ -16,7 +18,7 @@ function CanvasContainer({ toolbarData, ribbonData }) {
 
   return (
     <div style={style} className={css['container']}>
-
+      <Canvas/>
     </div>
   );
 }
