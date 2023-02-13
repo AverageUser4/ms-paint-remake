@@ -14,12 +14,6 @@
   background-color: var(--selected-light);
 }
 
-.children-container {
-  position: absolute;
-  top: 100%;
-  left: 0;
-}
-
 .top {
   display: flex;
   justify-content: center;

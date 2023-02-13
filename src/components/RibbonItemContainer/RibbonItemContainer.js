@@ -54,13 +54,10 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
 
       </button>
 
-      {
-        isDropdownOpen &&
-          <div className={css['dropdown']}>
-            {children}
-          </div>
-      }
-      
+      <div className={`${css['dropdown']} ${!isDropdownOpen ? css['dropdown--hidden'] : ''}`}>
+        {children}
+      </div>
+
     </div>
   );
 }

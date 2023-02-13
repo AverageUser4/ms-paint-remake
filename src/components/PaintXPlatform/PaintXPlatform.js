@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Window from '../Window/Window';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
@@ -26,6 +26,25 @@ function PaintXPlatform() {
     size: { width: 300, height: 200 },
     outlineSize: null,
   });
+
+  const [containerTemp, setContainerTemp] = useState();
+  useEffect(() => {
+    if(!containerTemp) {
+      const { width, height } = document.body.getBoundingClientRect();
+      setContainerTemp({ width, height });
+    }
+
+    function onResize() {
+      const { width, height } = document.body.getBoundingClientRect();
+      setContainerTemp({ width, height });
+    }
+
+    window.addEventListener('resize', onResize);
+
+    return () => {
+      window.removeEventListener('resize', onResize);
+    };
+  }, [containerTemp]);
   
   const items = [
     {
@@ -79,11 +98,16 @@ function PaintXPlatform() {
   ];
 
   return (
-    <div onContextMenu={(e) => e.preventDefault()}>
+    <div 
+      onContextMenu={(e) => e.preventDefault()}
+    >
       <Window 
         items={items}
         minWidth={460}
         minHeight={300}
+        // will be dimensions of user provided container
+        containerWidth={containerTemp?.width}
+        containerHeight={containerTemp?.height}
       />
     </div>
   );

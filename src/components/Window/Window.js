@@ -4,7 +4,15 @@ import css from './Window.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 
-function Window({ items, minWidth, minHeight }) {
+function Window({ 
+  items,
+  minWidth,
+  minHeight,
+  containerWidth,
+  containerHeight,
+  isConstrained = true,
+  isAutoShrink = true,
+}) {
   const [position, setPosition] = useState({ x: 200, y: 100 });
   const [positionDifference, setPositionDifference] = useState(null);
   const [size, setSize] = useState({ width: 600, height: 500 });
@@ -12,6 +20,32 @@ function Window({ items, minWidth, minHeight }) {
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef();
   useOutsideClick(windowRef, () => isFocused && setIsFocused(false));
+
+  useEffect(() => {
+    if(!isAutoShrink)
+      return;
+    
+    let newX = position.x;
+    let newY = position.y;
+    let newWidth = size.width;
+    let newHeight = size.height;
+
+    if(position.x + size.width > containerWidth) {
+      newX = Math.max(containerWidth - size.width, 0);
+      if(newX === 0)
+        newWidth = Math.max(containerWidth - position.x, minWidth);
+    }
+    if(position.y + size.height > containerHeight) {
+      newY = Math.max(containerHeight - size.height, 0);
+      if(newY === 0)
+        newHeight = Math.max(containerHeight - position.y, minHeight);
+    }
+
+    if(newX !== position.x || newY !== position.y)
+      setPosition({ x: newX, y: newY });
+    if(newWidth !== size.width || newHeight !== size.height)
+      setSize({ width: newWidth, height: newHeight });
+  }, [containerHeight, containerWidth, size, position, minWidth, minHeight, isAutoShrink]);
 
   useEffect(() => {
     function onPointerUp() {
@@ -22,8 +56,14 @@ function Window({ items, minWidth, minHeight }) {
       if(!positionDifference)
         return;
   
-      const x = event.clientX - positionDifference.x;
-      const y = event.clientY - positionDifference.y;
+      let x = event.clientX - positionDifference.x;
+      let y = event.clientY - positionDifference.y;
+
+      if(isConstrained) {
+        x = Math.max(Math.min(x, containerWidth - size.width), 0);
+        y = Math.max(Math.min(y, containerHeight - size.height), 0);
+      }
+      
       setPosition({ x, y });
     }
 
@@ -34,7 +74,7 @@ function Window({ items, minWidth, minHeight }) {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [positionDifference]);
+  }, [positionDifference, size, isConstrained, containerHeight, containerWidth]);
 
   useEffect(() => {
     function onPointerUp() {
@@ -45,8 +85,15 @@ function Window({ items, minWidth, minHeight }) {
       if(!resizeData)
         return;
 
-      let diffX = event.clientX - resizeData.initialX;
-      let diffY = event.clientY - resizeData.initialY;
+      let { clientX, clientY } = event;
+      if(isConstrained) {
+        clientX = Math.max(0, clientX);
+        clientY = Math.max(0, clientY);
+      }
+        
+      let diffX = clientX - resizeData.initialX;
+      let diffY = clientY - resizeData.initialY;
+
       let newWidth = size.width;
       let newHeight = size.height;
       let newX = position.x;
@@ -54,11 +101,11 @@ function Window({ items, minWidth, minHeight }) {
 
       if(resizeData.type.includes('left')) {
         diffX *= -1;
-        newX = event.clientX;
+        newX = clientX;
       }
       if(resizeData.type.includes('top')) {
         diffY *= -1;
-        newY = event.clientY;
+        newY = clientY;
       }
       if(resizeData.type.includes('left') || resizeData.type.includes('right'))
         newWidth = resizeData.initialWidth + diffX;
@@ -80,6 +127,15 @@ function Window({ items, minWidth, minHeight }) {
         newHeight = minHeight;
       }
 
+      if(isConstrained) {
+        if(newX + newWidth > containerWidth) {
+          newWidth = containerWidth - newX;
+        }
+        if(newY + newHeight > containerHeight) {
+          newHeight = containerHeight - newY;
+        }
+      }
+
       if(newWidth !== size.width || newHeight !== size.height)
         setSize({ width: newWidth, height: newHeight });
       if(newX !== position.x || newY !== position.y)
@@ -93,7 +149,7 @@ function Window({ items, minWidth, minHeight }) {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size, position, minHeight, minWidth]);
+  }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth]);
   
   function onPointerDownMove(event) {
     const x = event.clientX - position.x;
@@ -161,6 +217,10 @@ Window.propTypes = {
   items: PropTypes.array.isRequired,
   minWidth: PropTypes.number.isRequired,
   minHeight: PropTypes.number.isRequired,
+  isConstrained: PropTypes.bool,
+  containerWidth: PropTypes.number,
+  containerHeight: PropTypes.number,
+  isAutoShrink: PropTypes.bool,
 };
 
 export default Window;

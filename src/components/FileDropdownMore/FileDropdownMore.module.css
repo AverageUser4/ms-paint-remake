@@ -48,7 +48,7 @@
   opacity: 1;
 
   box-sizing: border-box;
-  transition: opacity 300ms;
+  /* transition: opacity 300ms; */
 }
 .dropdown--hidden {
   opacity: 0;

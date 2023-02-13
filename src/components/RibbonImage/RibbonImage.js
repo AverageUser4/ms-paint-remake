@@ -105,37 +105,34 @@ function RibbonImage({ ribbonWidth }) {
                   <TriangleDown/>
                 </button>
 
-                {
-                  isRotateDropdownOpen &&
-                    <div className="dropdown">
-                      <div className="popup" ref={rotateDropdownRef}>
-                        <button className="popup__button text text--4 text--nowrap">
-                          <img className="popup__image" src={rotate16} alt=""/>
-                          <span>Rotate <span className="text--underline">r</span>ight 90°</span>
-                        </button>
+                <div className={`dropdown ${!isRotateDropdownOpen ? 'dropdown--hidden' : ''}`}>
+                  <div className="popup" ref={rotateDropdownRef}>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={rotate16} alt=""/>
+                      <span>Rotate <span className="text--underline">r</span>ight 90°</span>
+                    </button>
 
-                        <button className="popup__button text text--4 text--nowrap">
-                          <img className="popup__image" src={rotateLeft16} alt=""/>
-                          <span>Rotate <span className="text--underline">l</span>eft 90°</span>
-                        </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={rotateLeft16} alt=""/>
+                      <span>Rotate <span className="text--underline">l</span>eft 90°</span>
+                    </button>
 
-                        <button className="popup__button text text--4 text--nowrap">
-                          <img className="popup__image" src={rotate18016} alt=""/>
-                          <span>Ro<span className="text--underline">t</span>ate 180°</span>
-                        </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={rotate18016} alt=""/>
+                      <span>Ro<span className="text--underline">t</span>ate 180°</span>
+                    </button>
 
-                        <button className="popup__button text text--4 text--nowrap">
-                          <img className="popup__image" src={filpVertical16} alt=""/>
-                          <span>Flip <span className="text--underline">v</span>ertical</span>
-                        </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={filpVertical16} alt=""/>
+                      <span>Flip <span className="text--underline">v</span>ertical</span>
+                    </button>
 
-                        <button className="popup__button text text--4 text--nowrap">
-                          <img className="popup__image" src={filpHorizontal16} alt=""/>
-                          <span>Flip <span className="text--underline">h</span>orizontal</span>
-                        </button>
-                      </div>
-                    </div>
-                }
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={filpHorizontal16} alt=""/>
+                      <span>Flip <span className="text--underline">h</span>orizontal</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

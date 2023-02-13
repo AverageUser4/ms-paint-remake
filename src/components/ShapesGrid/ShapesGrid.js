@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import PropTypes from 'prop-types';
 import css from './ShapesGrid.module.css';
 
@@ -31,151 +31,146 @@ import upArrow16 from './assets/up-arrow-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
-function ShapesGrid() {
+const shapesData = [
+  { src: line16 },
+  { src: curve16 },
+  { src: oval16 },
+  { src: rectangle16 },
+  { src: roundedRectangle16 },
+  { src: polygon16 },
+  { src: triangle16 },
+  { src: rightTriangle16 },
+  { src: diamond16 },
+  { src: pentagon16 },
+  { src: hexagon16 },
+  { src: rightArrow16 },
+  { src: leftArrow16 },
+  { src: upArrow16 },
+  { src: downArrow16 },
+  { src: fourPointStar16 },
+  { src: fivePointStar16 },
+  { src: sixPointStar16 },
+  { src: callout16 },
+  { src: ovalCallout16 },
+  { src: cloudCallout16 },
+  { src: heart16 },
+  { src: lightning16 },
+];
+
+function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
+  const [currentRow, setCurrentRow] = useState(0);
+  const gridRef = useRef();
+  const lastColumnCount = useRef(4);
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
   
+  let columns = 4;
+  if(ribbonWidth >= 1060) columns = 5;
+  if(ribbonWidth >= 1080) columns = 6;
+  if(ribbonWidth >= 1100) columns = 7;
+  const rows = Math.ceil(shapesData.length / columns);
+  const maxRow = rows - 3;
+
+  const shapes = shapesData.map(shape => 
+    <button className="button" key={shape.src}>
+      <img src={shape.src} alt=""/>
+    </button>
+  );
+
+  useEffect(() => {
+    if(lastColumnCount.current !== columns) {
+      setCurrentRow(0);
+      lastColumnCount.current = columns;
+    }
+  }, [columns]);
+  
+  useEffect(() => {
+    const gridCellHeight = 22;
+
+    if(gridRef.current)
+      gridRef.current.scrollTo({ behavior: 'smooth', top: gridCellHeight * currentRow });
+  }, [currentRow]);
+
+  function changeCurrentRow(decrease = false) {
+    let newRow = currentRow + (decrease ? -1 : 1);
+
+    if(newRow < 0 || newRow > maxRow)
+      return;
+
+    setCurrentRow(newRow);
+  }
+
   return (
     <div className={css['container']}>
-      <div className={css['grid']}>
-        <Shapes/>
-      </div>
-
-      <div>
-        <button className={`${css['button']} ${css['button--disabled']}`}>
-          <TriangleDown className="rotate-180"/>
-        </button>
-        <button className={css['button']}>
-          <TriangleDown/>
-        </button>
-        <button 
-          className={css['button']}
-          onPointerDown={() => toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-        >
-          <TriangleLine/>
-        </button>
-      </div>
-
       {
-        isDropdownOpen &&
-          <div className={`${css['dropdown']} popup`} ref={dropdownRef}>
-            <div className={css['expanded']}>
-              <div className={css['expanded__grid']}>
-                <Shapes/>
-              </div>
-
-              <div className={css['expanded__scrollbar']}>
-                <button className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
-                  <TriangleDown className="rotate-180"/>
-                </button>
-                <button className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
-                  <TriangleDown/>
-                </button>
-              </div>
+        !isOnlyDropdown &&
+          <>
+            <div 
+              className={css['grid']}
+              style={{ gridTemplateColumns: `repeat(${columns}, auto)`}}
+              ref={gridRef}
+            >
+              {shapes}
             </div>
-          </div>
+
+            <div>
+              <button 
+                className={`
+                  ${css['button']}
+                  ${currentRow === 0 ? css['button--disabled'] : ''}
+                  ${currentRow === maxRow ? css['button--has-border'] : ''}
+                `}
+                onClick={() => changeCurrentRow(true)}
+              >
+                <TriangleDown className="rotate-180"/>
+              </button>
+              <button 
+                className={`
+                  ${css['button']}
+                  ${currentRow === maxRow ? css['button--disabled'] : ''}
+                `}
+                onClick={() => changeCurrentRow(false)}
+              >
+                <TriangleDown/>
+              </button>
+              <button 
+                className={`
+                  ${css['button']}
+                  ${currentRow === maxRow ? css['button--has-border'] : ''}
+                `}
+                onPointerDown={() => toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              >
+                <TriangleLine/>
+              </button>
+            </div>
+          </>
       }
+
+      <div key="1" className={`${css['dropdown']} ${!isDropdownOpen && !isOnlyDropdown ? css['dropdown--hidden'] : ''} popup`} ref={dropdownRef}>
+        <div className={css['expanded']}>
+          <div className={css['expanded__grid']}>
+            {shapes}
+          </div>
+
+          <div className={css['expanded__scrollbar']}>
+            <button className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
+              <TriangleDown className="rotate-180"/>
+            </button>
+            <button className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
+              <TriangleDown/>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
 
-function Shapes() {
-  return (
-    <>
-      <button className="button">
-        <img src={line16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={curve16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={oval16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={rectangle16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={roundedRectangle16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={polygon16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={triangle16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={rightTriangle16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={diamond16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={pentagon16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={hexagon16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={rightArrow16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={leftArrow16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={upArrow16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={downArrow16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={fourPointStar16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={fivePointStar16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={sixPointStar16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={callout16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={ovalCallout16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={cloudCallout16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={heart16} alt=""/>
-      </button>
-
-      <button className="button">
-        <img src={lightning16} alt=""/>
-      </button>
-    </>
-  );
-}
+ShapesGrid.propTypes = {
+  ribbonWidth: PropTypes.number.isRequired,
+  isOnlyDropdown: PropTypes.bool,
+};
 
 export default ShapesGrid;

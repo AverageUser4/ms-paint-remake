@@ -8,7 +8,6 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 function BigButtonDuo({ name, icon, onPointerDownTop, onPointerDownBottom, children, showChildren }) {
   return (
     <div className={css['container']}>
-
       <button 
         className={css['top']}
         onPointerDown={onPointerDownTop ? onPointerDownTop : ()=>0}
@@ -24,13 +23,9 @@ function BigButtonDuo({ name, icon, onPointerDownTop, onPointerDownBottom, child
         <TriangleDown className={css['triangle']}/>
       </button>
       
-      {
-        showChildren &&
-          <div className={css['children-container']}>
-            {children}
-          </div>
-      }
-
+      <div className={`dropdown ${!showChildren ? 'dropdown--hidden' : ''}`}>
+        {children}
+      </div>
     </div>
   );
 }

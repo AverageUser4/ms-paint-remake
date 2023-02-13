@@ -44,12 +44,9 @@ function BigButton({
 
       </button>
 
-      {
-        showChildren &&
-          <div className="dropdown">
-            {children}
-          </div>
-      }
+      <div className={`dropdown ${!showChildren ? 'dropdown--hidden' : ''}`}>
+        {children}
+      </div>
     </div>
   );
 }
