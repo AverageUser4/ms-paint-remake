@@ -1,7 +1,8 @@
 .container {
   display: flex;
   align-items: center;
-  
+  justify-content: space-between;
+
   padding: 1px 0;
   height: var(--bottombar-height);
   
@@ -14,6 +15,13 @@
   box-sizing: border-box;
 }
 
+.left {
+  display: flex;
+  align-items: center;
+
+  height: 100%;
+}
+
 .data {
   display: flex;
   align-items: center;
@@ -23,4 +31,108 @@
   padding-left: 6px;
   width: 155px;
   border-right: 1px solid var(--line-medium);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+
+  padding: 0 23px;
+  height: 100%;
+
+  border-left: 1px solid var(--line-medium);
+}
+
+.range {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  width: 100px;
+  height: calc(100% - 2px);
+}
+.range::before {
+  content: '';
+
+  display: block;
+  width: 86px;
+  height: 4px;
+
+  background-color: rgb(231, 234, 234);
+  border: 1px solid rgb(214, 214, 214);
+
+  box-sizing: border-box;
+}
+
+.range-control {
+  --range-control-bg: rgb(0, 120, 215);
+  
+  position: absolute;
+  top: 2px;
+  
+  width: 10px;
+  height: 13px;
+
+  background-color: var(--range-control-bg);
+}
+.range-control::after {
+  content: '';
+
+  position: absolute;
+  top: 100%;
+  
+  display: block;
+  width: 0;
+  height: 0;
+
+  border: 5px solid transparent;
+  border-top-color: var(--range-control-bg);
+}
+.range-control:hover {
+  --range-control-bg: rgb(23, 23, 23);
+}
+.range-control:active {
+  --range-control-bg: rgb(204, 204, 204);
+}
+
+.minus,
+.plus {
+  width: 16px;
+  height: 16px;
+
+  border: none;
+  background-color: transparent;
+  background-repeat: no-repeat;
+}
+
+.minus {
+  display: block;
+  margin-left: 4px;
+
+  background-image: url(./assets/minus-16.ico);
+}
+.minus:focus {
+  background-image: url(./assets/minus-focus-16.ico);
+}
+.minus:hover {
+  background-image: url(./assets/minus-hover-16.ico);
+}
+.minus:active {
+  background-image: url(./assets/minus-press-16.ico);
+}
+
+.plus {
+  background-image: url(./assets/plus-16.ico);
+}
+.plus:focus {
+  background-image: url(./assets/plus-focus-16.ico);
+}
+.plus:hover {
+  background-image: url(./assets/plus-hover-16.ico);
+}
+.plus:active {
+  background-image: url(./assets/plus-press-16.ico);
 }
