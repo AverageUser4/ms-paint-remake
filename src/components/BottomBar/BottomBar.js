@@ -10,14 +10,17 @@ import fileSize16 from './assets/file-size-16.ico';
 import selection16 from './assets/selection-16.ico';
 import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
-function BottomBar({ windowWidth }) {
+function BottomBar({ windowWidth, canvasData }) {
   return (
     <footer className={css['container']}>
       
       <div className={css['left']}>
         <div className={css['data']}>
           <img draggable="false" src={cursor16} alt="Canvas position."/>
-          <span className="text">100, 100px</span>
+          {
+            canvasData.mousePosition && !canvasData.outlineSize &&
+              <span className="text">{canvasData.mousePosition.x}, {canvasData.mousePosition.y}px</span>
+          }
         </div>
         
         {
@@ -32,7 +35,12 @@ function BottomBar({ windowWidth }) {
           windowWidth >= 720 && 
             <div className={css['data']}>
               <img draggable="false" src={canvas16} alt="Canvas size."/>
-              <span className="text">100 <Cross/> 100px</span>
+              {
+                canvasData.outlineSize ?
+                  <span className="text">{canvasData.outlineSize.width} <Cross/> {canvasData.outlineSize.height}px</span>
+                :
+                  <span className="text">{canvasData.size.width} <Cross/> {canvasData.size.height}px</span>
+              }
             </div>
         }
 
@@ -54,7 +62,8 @@ function BottomBar({ windowWidth }) {
 }
 
 BottomBar.propTypes = {
-  windowWidth: PropTypes.number.isRequired
+  windowWidth: PropTypes.number.isRequired,
+  canvasData: PropTypes.object.isRequired,  
 }
 
 export default BottomBar;

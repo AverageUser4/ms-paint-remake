@@ -4,7 +4,7 @@ import css from './CanvasContainer.module.css';
 
 import Canvas from '../Canvas/Canvas';
 
-function CanvasContainer({ toolbarData, ribbonData }) {
+function CanvasContainer({ toolbarData, ribbonData, canvasData, setCanvasData }) {
   const style = {
     height: `calc(
       100%
@@ -18,14 +18,19 @@ function CanvasContainer({ toolbarData, ribbonData }) {
 
   return (
     <div style={style} className={css['container']}>
-      <Canvas/>
+      <Canvas
+        canvasData={canvasData}
+        setCanvasData={setCanvasData}
+      />
     </div>
   );
 }
 
 CanvasContainer.propTypes = {
   ribbonData: PropTypes.object.isRequired,
-  toolbarData: PropTypes.object.isRequired
+  toolbarData: PropTypes.object.isRequired,
+  canvasData: PropTypes.object.isRequired,
+  setCanvasData: PropTypes.func.isRequired,
 }
 
 export default CanvasContainer;

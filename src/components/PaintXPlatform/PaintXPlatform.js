@@ -10,6 +10,7 @@ import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 
 function PaintXPlatform() {
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
+
   const [ribbonData, setRibbonData] = useState({ 
     minimize: false,
     activeTab: 'home',
@@ -18,6 +19,12 @@ function PaintXPlatform() {
     stopExpanding: () => setRibbonData(prev => ({ ...prev, expand: false })),
     // uses setTimeout so it does not get closed immediately after being open due to event listener on window
     setTab: (tabName) => setTimeout(() => setRibbonData(prev => ({ ...prev, activeTab: tabName, expand: true })))
+  });
+
+  const [canvasData, setCanvasData] = useState({
+    mousePosition: null,
+    size: { width: 300, height: 200 },
+    outlineSize: null,
   });
   
   const items = [
@@ -58,21 +65,27 @@ function PaintXPlatform() {
       Component: CanvasContainer,
       props: { 
         toolbarData,
-        ribbonData
+        ribbonData,
+        canvasData,
+        setCanvasData
       }
     },
     { 
       Component: BottomBar,
-      props: {} 
+      props: { 
+        canvasData 
+      } 
     }
   ];
 
   return (
-    <Window 
-      items={items}
-      minWidth={460}
-      minHeight={300}
-    />
+    <div onContextMenu={(e) => e.preventDefault()}>
+      <Window 
+        items={items}
+        minWidth={460}
+        minHeight={300}
+      />
+    </div>
   );
 }
 
