@@ -1,0 +1,143 @@
+.container {
+  position: absolute;
+
+  border: 1px solid var(--window-border);
+  box-shadow: 0 0 20px var(--window-shadow);
+
+  box-sizing: border-box;
+  user-select: none;
+}
+.container--focused {
+  border-color: rgb(255, 255, 255);
+}
+
+.top {
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  
+  /* background-color: red; */
+  width: calc(100% - 16px);
+  height: 8px;
+}
+.top:hover {
+  cursor: ns-resize;
+}
+
+.bottom {
+  position: absolute;
+  bottom: -8px;
+  left: 8px;
+  
+  /* background-color: blue; */
+  width: calc(100% - 16px);
+  height: 8px;
+}
+.bottom:hover {
+  cursor: ns-resize;
+}
+
+.left {
+  position: absolute;
+  top: 8px;
+  left: -8px;
+  
+  /* background-color: green; */
+  width: 8px;
+  height: calc(100% - 16px);
+}
+.left:hover {
+  cursor: ew-resize;
+}
+
+.right {
+  position: absolute;
+  top: 8px;
+  right: -8px;
+  
+  /* background-color: cyan; */
+  width: 8px;
+  height: calc(100% - 16px);
+}
+.right:hover {
+  cursor: ew-resize;
+}
+
+.top-left::before, .top-left::after,
+.top-right::before, .top-right::after,
+.bottom-left::before, .bottom-left::after,
+.bottom-right::before, .bottom-right::after {
+  content: '';
+
+  position: absolute;
+
+  display: block;
+  width: 8px;
+  height: 8px;
+
+  /* background-color: gold; */
+}
+
+.top-left:hover {
+  cursor: nw-resize;
+}
+.top-left::before,
+.top-left::after {
+  top: -8px;
+  left: -8px;
+}
+.top-left::before {
+  /* made bigger purposefully, remove width to make it like other corners */
+  /* width: 16px; */
+  height: 16px;
+}
+.top-left::after {
+  width: 16px;
+}
+
+.top-right:hover {
+  cursor: ne-resize;
+}
+.top-right::before,
+.top-right::after {
+  top: -8px;
+  right: -8px;
+}
+.top-right::before {
+  height: 16px;
+}
+.top-right::after {
+  width: 16px;
+}
+
+.bottom-left:hover {
+  cursor: ne-resize;
+}
+.bottom-left::before,
+.bottom-left::after {
+  bottom: -8px;
+  left: -8px;
+}
+.bottom-left::before {
+  height: 16px;
+}
+.bottom-left::after {
+  width: 16px;
+}
+
+.bottom-right:hover {
+  cursor: nw-resize;
+}
+.bottom-right::before,
+.bottom-right::after {
+  bottom: -8px;
+  right: -8px;
+}
+.bottom-right::before {
+  /* made bigger purposefully, remove width to make it like other corners */
+  width: 16px;
+  height: 16px;
+}
+.bottom-right::after {
+  width: 16px;
+}

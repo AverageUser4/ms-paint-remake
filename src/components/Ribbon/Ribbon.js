@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { memo, useRef } from "react";
 import PropTypes from 'prop-types';
 import css from './Ribbon.module.css';
 
@@ -14,7 +14,9 @@ import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-function Ribbon({ windowWidth, ribbonData }) {
+const Ribbon = memo(function Ribbon({ windowWidth, ribbonData }) {
+  console.log('Ribbon')
+  
   const containerRef = useRef();
   useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(), 'ribbon');
   
@@ -52,7 +54,7 @@ function Ribbon({ windowWidth, ribbonData }) {
       </div>
     </div>
   );
-}
+});
 
 Ribbon.propTypes = {
   windowWidth: PropTypes.number.isRequired,

@@ -18,18 +18,18 @@ const TopBar = memo(function TopBar({
   console.log('TopBar')
   const containerRef = useRef();
   const textRef = useRef();
-  const { openContextMenu } = useContextMenuContext();
+  // const { openContextMenu } = useContextMenuContext();
   
-  function onContextMenu(event) {
-    if(event.button !== 2)
-      return;
+  // function onContextMenu(event) {
+  //   if(event.button !== 2)
+  //     return;
 
-    if(
-      event.target === containerRef.current ||
-      event.target === textRef.current
-    )
-      openContextMenu({ x: event.clientX, y: event.clientY }, <h1>hello, world!</h1>);
-  }
+  //   if(
+  //     event.target === containerRef.current ||
+  //     event.target === textRef.current
+  //   )
+  //     openContextMenu({ x: event.clientX, y: event.clientY }, <h1>hello, world!</h1>);
+  // }
 
   function onPointerDown(event) {
     if(
@@ -43,7 +43,7 @@ const TopBar = memo(function TopBar({
     <header 
       className={css['container']} 
       onPointerDown={onPointerDown}
-      onContextMenu={onContextMenu}
+      // onContextMenu={onContextMenu}
       ref={containerRef}
     >
 

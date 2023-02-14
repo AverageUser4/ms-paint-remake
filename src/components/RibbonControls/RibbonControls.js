@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './RibbonControls.module.css';
 
@@ -10,7 +10,9 @@ import info from './assets/info.png';
 import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
 import pin from '../../assets/global/pin.png';
 
-function RibbonControls({ ribbonData }) {
+const RibbonControls = memo(function RibbonControls({ ribbonData }) {
+  console.log('RibbonControls')
+  
   const dropdownRef = useRef();
   const [isFileDropdownOpen, setIsFileDropdownOpen] = useState(false);
   useOutsideClick(dropdownRef, () => isFileDropdownOpen && setIsFileDropdownOpen(false));
@@ -71,7 +73,7 @@ function RibbonControls({ ribbonData }) {
       
     </div>
   );
-}
+});
 
 RibbonControls.propTypes = {
   ribbonData: PropTypes.object.isRequired,

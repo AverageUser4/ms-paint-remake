@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from  './QuickAccessToolbar.module.css';
+
+import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 
@@ -14,11 +16,11 @@ import redoEn from './assets/redo-en.png';
 import save from './assets/save.png';
 import undoDis from './assets/undo-dis.png';
 import undoEn from './assets/undo-en.png';
-
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
-import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
-function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
+const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
+  console.log('QuickAccessToolbar')
+  
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => showDropdown && setShowDropdown(false));
@@ -108,7 +110,7 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
       
     </div>
   );
-}
+});
 
 QuickAccessToolbar.propTypes = {
   ribbonData: PropTypes.object.isRequired,
