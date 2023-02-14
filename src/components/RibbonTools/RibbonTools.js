@@ -47,6 +47,9 @@ function RibbonTools({ ribbonWidth }) {
         </div>
 
       </RibbonItemExpanded>
+
+      <div className="vertical-line"></div>
+
     </RibbonItemContainer>
   );
 }

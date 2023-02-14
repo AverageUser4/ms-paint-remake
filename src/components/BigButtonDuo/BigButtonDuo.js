@@ -35,7 +35,7 @@ BigButtonDuo.propTypes = {
   icon: PropTypes.string.isRequired,
   onPointerDownTop: PropTypes.func,
   onPointerDownBottom: PropTypes.func,
-  children: PropTypes.element,
+  children: PropTypes.node,
   showChildren: PropTypes.bool,
 };
 

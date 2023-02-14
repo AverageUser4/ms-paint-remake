@@ -34,9 +34,12 @@ function Ribbon({ windowWidth, ribbonData }) {
               <RibbonImage ribbonWidth={windowWidth}/>
               <RibbonTools ribbonWidth={windowWidth}/>
               <RibbonBrushes/>
+              <div className="vertical-line"></div>
               <RibbonShapes ribbonWidth={windowWidth}/>
               <RibbonSize/>
+              <div className="vertical-line"></div>
               <RibbonColors ribbonWidth={windowWidth}/>
+              <div className="vertical-line"></div>
             </>
           :
             <>

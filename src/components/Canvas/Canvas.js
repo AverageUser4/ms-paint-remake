@@ -2,12 +2,13 @@ import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import css from './Canvas.module.css';
 
+import useResizeCursor from "../../hooks/useResizeCursor";
+
 function Canvas({ canvasData, setCanvasData }) {
-  // const [size, setSize] = useState({ width: 300, height: 200 });
-  // const [outlineSize, setOutlineSize] = useState(null);
   const [resizeData, setResizeData] = useState(null);
   const minWidth = 1;
   const minHeight = 1;
+  useResizeCursor(resizeData);
 
   useEffect(() => {
     function onMouseDown(event) {

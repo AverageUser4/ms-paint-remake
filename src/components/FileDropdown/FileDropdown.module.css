@@ -11,7 +11,7 @@
   border: 1px solid rgb(132, 146, 166);
   border-radius: 3px;
 
-  z-index: 6;
+  z-index: 2;
 }
 .container--hidden {
   opacity: 0;

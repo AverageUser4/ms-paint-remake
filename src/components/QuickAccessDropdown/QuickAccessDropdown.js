@@ -20,7 +20,10 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
   }
 
   return (
-    <div className={`${css['container']} ${!isVisible ? css['container--hidden'] : ''}`}>
+    <div 
+      className={`${css['container']} ${!isVisible ? css['container--hidden'] : ''}`}
+      data-cy="QuickAccessDropdown"
+    >
       
       <div className={css['top']}>
         <h3 className="head head--dark">Customize Quick Access Toolbar</h3>
@@ -30,6 +33,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-newFile"
             className={css['checkbox']}
             type="checkbox"
             name="newFile"
@@ -41,6 +45,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-open"
             className={css['checkbox']}
             type="checkbox"
             name="open"
@@ -52,6 +57,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-save"
             className={css['checkbox']}
             type="checkbox"
             name="save"
@@ -63,6 +69,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-print"
             className={css['checkbox']}
             type="checkbox"
             name="print"
@@ -74,6 +81,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-printPreview"
             className={css['checkbox']}
             type="checkbox"
             name="printPreview"
@@ -85,6 +93,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-email"
             className={css['checkbox']}
             type="checkbox"
             name="email"
@@ -96,6 +105,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-undo"
             className={css['checkbox']}
             type="checkbox"
             name="undo"
@@ -107,6 +117,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <label className={css['label']}>
           <input 
+            data-cy="qad-toggle-redo"
             className={css['checkbox']}
             type="checkbox"
             name="redo"
@@ -118,7 +129,11 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 
         <div className={css['line']}></div>
 
-        <button className={`text text--1 ${css['button']}`} onClick={() => setToolbarData(prev => ({ ...prev, reposition: !prev.reposition }))}>
+        <button 
+          className={`text text--1 ${css['button']}`}
+          onClick={() => setToolbarData(prev => ({ ...prev, reposition: !prev.reposition }))}
+          data-cy="qad-toggle-position"
+        >
           <span className={css['checkbox']}></span>
           <span>
             <span className="text--underline">S</span>how {toolbarData.reposition ? 'above' : 'below'} the Ribbon
@@ -133,6 +148,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
             type="checkbox"
             checked={ribbonData.minimize}
             onChange={() => ribbonData.toggleMinimize()}
+            data-cy="qad-toggle-ribbon"
           />
           <span className="text text--1">Mi<span className="text--underline">n</span>imize the Ribbon</span>
         </label>

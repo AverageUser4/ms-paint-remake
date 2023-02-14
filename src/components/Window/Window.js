@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
+import useResizeCursor from '../../hooks/useResizeCursor';
 
 function Window({ 
   items,
@@ -20,7 +21,8 @@ function Window({
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef();
   useOutsideClick(windowRef, () => isFocused && setIsFocused(false));
-
+  useResizeCursor(resizeData);
+  
   useEffect(() => {
     if(!isAutoShrink)
       return;
@@ -48,8 +50,10 @@ function Window({
   }, [containerHeight, containerWidth, size, position, minWidth, minHeight, isAutoShrink]);
 
   useEffect(() => {
+    // move window
     function onPointerUp() {
-      setPositionDifference(null);
+      if(positionDifference)
+        setPositionDifference(null);
     }
 
     function onPointerMove(event) {
@@ -77,10 +81,22 @@ function Window({
   }, [positionDifference, size, isConstrained, containerHeight, containerWidth]);
 
   useEffect(() => {
+    // resize window, moved to different effect because it could happen that
+    // pointerup event was not registered when moving mouse
     function onPointerUp() {
-      setResizeData(null);
+      if(resizeData)
+        setResizeData(null);
     }
 
+    window.addEventListener('pointerup', onPointerUp);
+
+    return () => {
+      window.removeEventListener('pointerup', onPointerUp);
+    }
+  }, [resizeData])
+  
+  useEffect(() => {
+    // resize window
     function onPointerMove(event) {
       if(!resizeData)
         return;
@@ -142,11 +158,9 @@ function Window({
         setPosition({ x: newX, y: newY });
     }
 
-    window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointermove', onPointerMove);
 
     return () => {
-      window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
   }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth]);
@@ -205,7 +219,7 @@ function Window({
         };
 
         if(index === 0)
-          itemProps.onPointerDown = onPointerDownMove;
+          itemProps.onPointerDownMove = onPointerDownMove;
 
         return <Component key={index} {...itemProps}/>
       })}

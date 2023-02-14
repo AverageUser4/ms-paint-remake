@@ -1,6 +1,6 @@
 .container {
   position: relative;
-  z-index: 5;
+  z-index: 2;
 
   width: 132px;
   padding: 1px 1px 2px 1px;

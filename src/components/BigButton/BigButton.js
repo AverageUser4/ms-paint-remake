@@ -57,7 +57,7 @@ BigButton.propTypes = {
   backgroundColor: PropTypes.string,
   iconSize: PropTypes.oneOf(['', 'small']),
   hasArrow: PropTypes.bool,
-  children: PropTypes.element,
+  children: PropTypes.node,
   showChildren: PropTypes.bool,
   onPointerDown: PropTypes.func,
   isOnlyChildren: PropTypes.bool,

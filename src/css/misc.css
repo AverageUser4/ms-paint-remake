@@ -71,4 +71,11 @@
     transform: rotate(180deg);
   }
 
+  .vertical-line {
+    width: 1px;
+    height: 100%;
+  
+    background-color: rgb(227, 228, 229);
+  }
+  
 }

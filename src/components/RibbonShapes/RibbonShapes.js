@@ -170,6 +170,9 @@ function RibbonShapes({ ribbonWidth }) {
           </div>
 
       </RibbonItemExpanded>
+
+      <div className="vertical-line"></div>
+
     </RibbonItemContainer>
   );
 }

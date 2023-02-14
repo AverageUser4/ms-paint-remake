@@ -111,7 +111,7 @@
 }
 
 .bottom-left:hover {
-  cursor: sw-resize;
+  cursor: ne-resize;
 }
 .bottom-left::before,
 .bottom-left::after {
@@ -126,7 +126,7 @@
 }
 
 .bottom-right:hover {
-  cursor: se-resize;
+  cursor: nw-resize;
 }
 .bottom-right::before,
 .bottom-right::after {

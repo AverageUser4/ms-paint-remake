@@ -72,7 +72,12 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
       throw new Error(`de_Unexpected item in 'toolbarData.buttons' array: '${item}'`);
 
     return (
-      <button key={data.id} className="button" onClick={data.onClick}>
+      <button 
+        key={data.id}
+        className="button"
+        onClick={data.onClick}
+        data-cy={`qat-${data.id}`}
+      >
         <img draggable="false" src={data.src} alt={data.id}/>
       </button>
     );
@@ -84,7 +89,11 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
       {buttonElements}
 
       <div ref={dropdownRef} className={css['dropdown-container']}>
-        <button onPointerDown={() => setShowDropdown(prev => !prev)} className="button button--height-20">
+        <button 
+          onPointerDown={() => setShowDropdown(prev => !prev)}
+          className="button button--height-20"
+          data-cy="qat-open-qad"
+        >
           <TriangleLine/>
         </button>
 

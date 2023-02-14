@@ -1,3 +1,1 @@
-- cursor filckers when resizing window (as it gets out of reach of the element that is used to resizing)
-- there should be lines between ribbon items
-- figure out z-index
+- using only visibility hidden to hide elements is bad

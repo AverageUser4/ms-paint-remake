@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './TopBar.module.css';
 
@@ -7,9 +7,24 @@ import WindowControls from '../WindowControls/WindowControls';
 
 import logoMini from './assets/logo-mini.png';
 
-function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ribbonData }) {
+function TopBar({ onPointerDownMove, windowHasFocus, toolbarData, setToolbarData, ribbonData }) {
+  const containerRef = useRef();
+  const textRef = useRef();
+
+  function onPointerDown(event) {
+    if(
+        event.target === containerRef.current ||
+        event.target === textRef.current
+      )
+      onPointerDownMove(event);
+  }
+  
   return (
-    <header className={css['container']} onPointerDown={onPointerDown}>
+    <header 
+      className={css['container']} 
+      onPointerDown={onPointerDown}
+      ref={containerRef}
+    >
 
       <div className={css['items']}>
 
@@ -24,7 +39,10 @@ function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ri
             />
         }
 
-        <h1 className={`text ${!windowHasFocus ? 'text--disabled' : ''}`}>Untitled - Paint</h1>
+        <h1 
+          className={`text ${!windowHasFocus ? 'text--disabled' : ''}`}
+          ref={textRef}
+        >Untitled - Paint</h1>
         
       </div>
 
@@ -35,7 +53,7 @@ function TopBar({ onPointerDown, windowHasFocus, toolbarData, setToolbarData, ri
 }
 
 TopBar.propTypes = {
-  onPointerDown: PropTypes.func.isRequired,
+  onPointerDownMove: PropTypes.func.isRequired,
   windowHasFocus: PropTypes.bool.isRequired,
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,

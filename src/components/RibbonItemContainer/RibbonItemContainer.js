@@ -65,7 +65,7 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
 RibbonItemContainer.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  children: PropTypes.element.isRequired,
+  children: PropTypes.node.isRequired,
   isOnlyContent: PropTypes.bool.isRequired,
 };
 
