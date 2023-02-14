@@ -8,7 +8,7 @@ import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import Dropdown from "../Dropdown/Dropdown";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../utils/utils";
+import { toggleBoolState } from "../../misc/utils";
 
 import shapes16 from './assets/shapes-16.png';
 import shapes32 from './assets/shapes-32.png';

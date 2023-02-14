@@ -7,7 +7,7 @@ import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Dropdown from "../Dropdown/Dropdown";
-import { toggleBoolState } from "../../utils/utils";
+import { toggleBoolState } from "../../misc/utils";
 
 import image16 from './assets/image-16.png';
 import image32 from './assets/image-32.png';

@@ -5,7 +5,7 @@ import css from './ShapesGrid.module.css';
 import Dropdown from '../Dropdown/Dropdown';
 
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../utils/utils";
+import { toggleBoolState } from "../../misc/utils";
 
 import callout16 from './assets/callout-16.png';
 import cloudCallout16 from './assets/cloud-callout-16.png';

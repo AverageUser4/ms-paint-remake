@@ -3,7 +3,7 @@ import css from './RibbonSize.module.css';
 
 import BigButton from "../BigButton/BigButton";
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { toggleBoolState } from "../../utils/utils";
+import { toggleBoolState } from "../../misc/utils";
 
 import size32 from './assets/size-32.png';
 

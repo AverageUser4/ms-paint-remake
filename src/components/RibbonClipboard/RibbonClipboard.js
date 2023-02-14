@@ -6,7 +6,7 @@ import BigButtonDuo from '../BigButtonDuo/BigButtonDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../utils/utils";
+import { toggleBoolState } from "../../misc/utils";
 
 import clipboard32 from './assets/clipboard-32.png';
 import clipboard16 from './assets/clipboard-16.png';

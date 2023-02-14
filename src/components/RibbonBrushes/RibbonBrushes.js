@@ -3,7 +3,7 @@ import css from './RibbonBrushes.module.css';
 
 import BigButtonDuo from "../BigButtonDuo/BigButtonDuo";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../utils/utils";
+import { toggleBoolState } from "../../misc/utils";
 
 import air32 from './assets/air-32.png';
 import brush32 from './assets/brush-32.png';
