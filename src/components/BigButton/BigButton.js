@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import css from './BigButton.module.css';
 
+import Dropdown from "../Dropdown/Dropdown";
+
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function BigButton({ 
@@ -11,7 +13,7 @@ function BigButton({
   iconSize = '',
   hasArrow = true,
   children,
-  showChildren,
+  showChildren = false,
   onPointerDown,
   isOnlyChildren = false
 }) {
@@ -44,9 +46,12 @@ function BigButton({
 
       </button>
 
-      <div className={`dropdown ${!showChildren ? 'dropdown--hidden' : ''}`}>
-        {children}
-      </div>
+      {
+        children &&
+          <Dropdown isVisible={showChildren}>
+            {children}
+          </Dropdown>
+      }
     </div>
   );
 }

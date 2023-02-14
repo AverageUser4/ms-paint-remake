@@ -45,13 +45,6 @@
   border-radius: 3px;
   background-color: rgb(251, 252, 253);
   box-shadow: 2px 2px 4px rgb(220, 220, 220);
-  opacity: 1;
 
   box-sizing: border-box;
-  /* transition: opacity 300ms; */
-}
-.dropdown--hidden {
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility 0s linear 300ms, opacity 300ms;
 }

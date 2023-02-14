@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './FileDropdown.module.css';
 
 import FileDropdownMore from '../FileDropdownMore/FileDropdownMore';
+import Dropdown from '../Dropdown/Dropdown';
 
 import about32 from './assets/about-32.png';
 import email32 from './assets/email-32.png';
@@ -38,8 +39,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
   }
   
   return (
-    <div className={`${css['container']} ${!isShown ? css['container--hidden'] : ''}`} ref={ref}>
-  
+    <Dropdown isVisible={isShown} classes={css['container']} ref={ref}>
       <div className={css['top']}>
         <button onPointerDown={close} className="ribbon-button ribbon-button--blue">File</button>
       </div>
@@ -154,8 +154,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
       </div>
   
       <div className={css['bottom']}></div>
-  
-    </div>
+    </Dropdown>
   );
 });
 

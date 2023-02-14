@@ -29,11 +29,4 @@ it('passes', () => {
   cy.get('[data-cy="qat-open-qad"]').click();
   cy.get('[data-cy="qad-toggle-open"]').click();
   cy.get('[data-cy="qat-open"]');
-
-  // cy.get('[data-cy="qad-toggle-open"]').click();
-
-  // cy.get('[data-cy="qat-save"]').should('not.exist');
-  // cy.get('[data-cy="qat-open"]');
-
-
 });

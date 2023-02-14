@@ -6,6 +6,7 @@ import BigButtonDuo from '../BigButtonDuo/BigButtonDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 import useOutsideClick from "../../hooks/useOutsideClick";
+import Dropdown from "../Dropdown/Dropdown";
 import { toggleBoolState } from "../../utils/utils";
 
 import image16 from './assets/image-16.png';
@@ -105,7 +106,7 @@ function RibbonImage({ ribbonWidth }) {
                   <TriangleDown/>
                 </button>
 
-                <div className={`dropdown ${!isRotateDropdownOpen ? 'dropdown--hidden' : ''}`}>
+                <Dropdown isVisible={isRotateDropdownOpen}>
                   <div className="popup" ref={rotateDropdownRef}>
                     <button className="popup__button text text--4 text--nowrap">
                       <img className="popup__image" src={rotate16} alt=""/>
@@ -132,7 +133,8 @@ function RibbonImage({ ribbonWidth }) {
                       <span>Flip <span className="text--underline">h</span>orizontal</span>
                     </button>
                   </div>
-                </div>
+                </Dropdown>
+
               </div>
             </div>
           </div>

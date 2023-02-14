@@ -1,0 +1,13 @@
+@layer {
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+  .dropdown--hidden {
+    opacity: 0;
+    transition: opacity 300ms linear;
+  }
+  
+}

@@ -3,9 +3,18 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './BigButtonDuo.module.css';
 
+import Dropdown from "../Dropdown/Dropdown";
+
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function BigButtonDuo({ name, icon, onPointerDownTop, onPointerDownBottom, children, showChildren }) {
+function BigButtonDuo({ 
+  name,
+  icon,
+  onPointerDownTop,
+  onPointerDownBottom,
+  children,
+  showChildren = false 
+}) {
   return (
     <div className={css['container']}>
       <button 
@@ -23,9 +32,12 @@ function BigButtonDuo({ name, icon, onPointerDownTop, onPointerDownBottom, child
         <TriangleDown className={css['triangle']}/>
       </button>
       
-      <div className={`dropdown ${!showChildren ? 'dropdown--hidden' : ''}`}>
-        {children}
-      </div>
+      {
+        children &&
+          <Dropdown isVisible={showChildren}>
+            {children}
+          </Dropdown>
+      }
     </div>
   );
 }

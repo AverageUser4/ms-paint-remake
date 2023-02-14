@@ -52,6 +52,7 @@ function RibbonControls({ ribbonData }) {
             ${ribbonData.activeTab === 'home' && (!ribbonData.minimize || ribbonData.expand) ? 'ribbon-button--active' : ''}
             ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
           }
+          data-control="ribbon"
           onPointerDown={() => ribbonData.setTab('home')}
         >
           Home
@@ -63,6 +64,7 @@ function RibbonControls({ ribbonData }) {
             ${ribbonData.activeTab === 'view' && (!ribbonData.minimize || ribbonData.expand) ? 'ribbon-button--active' : ''}
             ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
           }
+          data-control="ribbon"
           onPointerDown={() => ribbonData.setTab('view')}
         >
           View

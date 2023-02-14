@@ -16,14 +16,15 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 
 function Ribbon({ windowWidth, ribbonData }) {
   const containerRef = useRef();
-  useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding());
+  useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(), 'ribbon');
   
   let ribbonClasses = css['ribbon'];
   if(ribbonData.minimize)
     ribbonClasses += ` ${css['ribbon--minimized']}`;
-  if(ribbonData.expand)
-    ribbonClasses += ` ${css['ribbon--expanded']}`;
-  
+
+  if(ribbonData.minimize && !ribbonData.expand)
+    return null;
+    
   return (
     <div className={css['container']} ref={containerRef}>
       <div id="ribbon" className={ribbonClasses}>

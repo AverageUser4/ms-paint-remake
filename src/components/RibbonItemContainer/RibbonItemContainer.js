@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonItemContainer.module.css';
 
+import Dropdown from '../Dropdown/Dropdown';
+
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
@@ -54,10 +56,10 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
 
       </button>
 
-      <div className={`${css['dropdown']} ${!isDropdownOpen ? css['dropdown--hidden'] : ''}`}>
+      <Dropdown isVisible={isDropdownOpen} classes={css['dropdown']}>
         {children}
-      </div>
-
+      </Dropdown>
+      
     </div>
   );
 }

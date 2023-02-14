@@ -20,16 +20,6 @@
 }
 .ribbon--minimized {
   position: absolute;
-  
-  opacity: 0;
-
-  visibility: hidden;
-  transition: opacity 200ms, visibility 200ms;
-}
-.ribbon--expanded {
-  opacity: 1;
-  
-  visibility: visible;
 }
 
 .ribbon > * {

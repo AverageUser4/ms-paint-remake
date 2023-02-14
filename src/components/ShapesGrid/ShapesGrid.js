@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import PropTypes from 'prop-types';
 import css from './ShapesGrid.module.css';
 
+import Dropdown from '../Dropdown/Dropdown';
+
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../utils/utils";
 
@@ -148,7 +150,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
           </>
       }
 
-      <div key="1" className={`${css['dropdown']} ${!isDropdownOpen && !isOnlyDropdown ? css['dropdown--hidden'] : ''} popup`} ref={dropdownRef}>
+      <Dropdown isVisible={(isDropdownOpen || isOnlyDropdown) ? true : false} classes={`${css['dropdown']} popup`} ref={dropdownRef}>
         <div className={css['expanded']}>
           <div className={css['expanded__grid']}>
             {shapes}
@@ -163,7 +165,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
             </button>
           </div>
         </div>
-      </div>
+      </Dropdown>
     </div>
   );
 }

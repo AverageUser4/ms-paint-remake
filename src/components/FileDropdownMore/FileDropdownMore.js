@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './FileDropdownMore.module.css';
 
+import Dropdown from '../Dropdown/Dropdown';
+
 import bmp32 from './assets/bmp-32.png';
 import center32 from './assets/center-32.png';
 import fill32 from './assets/fill-32.png';
@@ -157,7 +159,7 @@ function FileDropdownMore({ currentMore }) {
 
       </ul>
 
-      <div className={`${css['dropdown']} ${currentMore === 'recent' ? css['dropdown--hidden'] : ''}`}>
+      <Dropdown isVisible={currentMore !== 'recent'} classes={css['dropdown']}>
         <div className={`${css['top']} ${css['top--alt']}`}>
           <h3 className="head">{moreData.name}</h3>
         </div>
@@ -165,7 +167,7 @@ function FileDropdownMore({ currentMore }) {
         <ul className="clean-list">
           {moreData.items}
         </ul>
-      </div>
+      </Dropdown>
       
     </div>
   );

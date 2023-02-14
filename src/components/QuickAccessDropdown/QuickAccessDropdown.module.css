@@ -10,16 +10,9 @@
   border-radius: 3px;
   background-color: rgb(251, 252, 253);
   box-shadow: 3px 3px rgba(190, 190, 190, 0.2);
-  opacity: 1;
 
   box-sizing: border-box;
-  /* transition: opacity 300ms; */
   z-index: 2;
-}
-.container--hidden {
-  opacity: 0;
-  visibility: hidden;
-  transition: visibility 0s linear 300ms, opacity 300ms;
 }
 
 .top {
