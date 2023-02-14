@@ -4,12 +4,25 @@ import css from './TopBar.module.css';
 
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
+import { useContextMenuContext } from '../../misc/ContextMenuContext';
 
 import logoMini from './assets/logo-mini.png';
 
 function TopBar({ onPointerDownMove, windowHasFocus, toolbarData, setToolbarData, ribbonData }) {
   const containerRef = useRef();
   const textRef = useRef();
+  const { openContextMenu } = useContextMenuContext();
+
+  function onContextMenu(event) {
+    if(event.button !== 2)
+      return;
+
+    if(
+      event.target === containerRef.current ||
+      event.target === textRef.current
+    )
+      openContextMenu({ x: event.clientX, y: event.clientY }, <h1>hello, world!</h1>);
+  }
 
   function onPointerDown(event) {
     if(
@@ -23,6 +36,7 @@ function TopBar({ onPointerDownMove, windowHasFocus, toolbarData, setToolbarData
     <header 
       className={css['container']} 
       onPointerDown={onPointerDown}
+      onContextMenu={onContextMenu}
       ref={containerRef}
     >
 

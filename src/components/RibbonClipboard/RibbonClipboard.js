@@ -31,7 +31,7 @@ function RibbonClipboard({ ribbonWidth }) {
               icon={clipboard32} 
               name="Paste"
               showChildren={isDropdownOpen}
-              onPointerDownBottom={() => toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
             >
               <div className="popup" ref={dropdownRef}>
                 <button className="popup__button text text--4 text--nowrap">

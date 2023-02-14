@@ -45,7 +45,7 @@ function RibbonImage({ ribbonWidth }) {
               icon={image32} 
               name="Select"
               showChildren={isDropdownOpen}
-              onPointerDownBottom={() => toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
             >
               <div className="popup" ref={dropdownRef}>
                 <h3 className="popup__head head head--2">Selection shapes</h3>
@@ -99,7 +99,7 @@ function RibbonImage({ ribbonWidth }) {
               <div className="dropdown-container">
                 <button 
                   className="button"
-                  onPointerDown={() => toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
+                  onPointerDown={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
                 >
                   <img draggable="false" src={rotate16} alt="Rotate."/>
                   {showText && <span className="text text--1">Rotate</span>}

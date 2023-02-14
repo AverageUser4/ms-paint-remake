@@ -50,7 +50,7 @@ function RibbonShapes({ ribbonWidth }) {
               icon={shapes32}
               name="Shapes"
               isOnlyChildren={isBigButtonHidden}
-              onPointerDown={() => toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
+              onPointerDown={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
             >
               <ShapesGrid
                 ribbonWidth={ribbonWidth}
@@ -71,7 +71,7 @@ function RibbonShapes({ ribbonWidth }) {
             <div className="dropdown-container">
               <button 
                 className="button"
-                onPointerDown={() => toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
+                onPointerDown={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
               >
                 <img draggable="false" src={outline16} alt="Outline."/>
                 {showText && <span className="text text--1">Outline</span>}
@@ -121,7 +121,7 @@ function RibbonShapes({ ribbonWidth }) {
             <div className="dropdown-container">
               <button 
                 className="button"
-                onPointerDown={() => toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
+                onPointerDown={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
               >
                 <img draggable="false" src={fill16} alt="Fill."/>
                 {showText && <span className="text text--1">Fill</span>}

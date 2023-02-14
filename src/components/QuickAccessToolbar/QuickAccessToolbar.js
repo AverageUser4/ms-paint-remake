@@ -90,7 +90,7 @@ function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
 
       <div ref={dropdownRef} className={css['dropdown-container']}>
         <button 
-          onPointerDown={() => setShowDropdown(prev => !prev)}
+          onPointerDown={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
           className="button button--height-20"
           data-cy="qat-open-qad"
         >

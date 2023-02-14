@@ -72,7 +72,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               <span className="text text--1">Save <span className="text--underline">a</span>s</span>
             </button>
   
-            <button onPointerDown={() => (setCurrentMore('save'))} className={css['arrow-button']}>
+            <button onPointerDown={(e) => e.button === 0 && setCurrentMore('save')} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
@@ -89,7 +89,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               <span className="text text--1"><span className="text--underline">P</span>rint</span>
             </button>
   
-            <button onPointerDown={() => (setCurrentMore('print'))} className={css['arrow-button']}>
+            <button onPointerDown={(e) => e.button === 0 && setCurrentMore('print')} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>
@@ -116,7 +116,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
             </button>
   
-            <button onPointerDown={() => (setCurrentMore('set'))} className={css['arrow-button']}>
+            <button onPointerDown={(e) => e.button === 0 && setCurrentMore('set')} className={css['arrow-button']}>
               <ArrowRight/>
             </button>
           </div>

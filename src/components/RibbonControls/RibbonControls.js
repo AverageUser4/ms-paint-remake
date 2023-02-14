@@ -1,8 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './RibbonControls.module.css';
 
 import FileDropdown from '../FileDropdown/FileDropdown';
+import useOutsideClick from '../../hooks/useOutsideClick';
+import { toggleBoolState } from '../../misc/utils';
 
 import info from './assets/info.png';
 import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
@@ -10,39 +12,16 @@ import pin from '../../assets/global/pin.png';
 
 function RibbonControls({ ribbonData }) {
   const dropdownRef = useRef();
-  const [showFile, setShowFile] = useState(false);
+  const [isFileDropdownOpen, setIsFileDropdownOpen] = useState(false);
+  useOutsideClick(dropdownRef, () => isFileDropdownOpen && setIsFileDropdownOpen(false));
 
-  useEffect(() => {
-    function onPointerDown(event) {
-      if(
-          !dropdownRef.current ||
-          dropdownRef.current === event.target ||
-          dropdownRef.current.contains(event.target)
-        )
-        return;
-
-      if(showFile)
-        setShowFile(false);
-    }
-
-    window.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [showFile]);
-
-  function openFileDropdown() {
-    setTimeout(() => setShowFile(true));
-  }
-  
   return (
     <div className={css['container']}>
 
       <div className={css['left']}>
         <button
           className="ribbon-button ribbon-button--blue"
-          onPointerDown={openFileDropdown}
+          onPointerDown={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
         >
           File
         </button>
@@ -53,7 +32,7 @@ function RibbonControls({ ribbonData }) {
             ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
           }
           data-control="ribbon"
-          onPointerDown={() => ribbonData.setTab('home')}
+          onPointerDown={(e) => e.button === 0 && ribbonData.setTab('home')}
         >
           Home
         </button>
@@ -65,7 +44,7 @@ function RibbonControls({ ribbonData }) {
             ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
           }
           data-control="ribbon"
-          onPointerDown={() => ribbonData.setTab('view')}
+          onPointerDown={(e) => e.button === 0 && ribbonData.setTab('view')}
         >
           View
         </button>
@@ -74,7 +53,7 @@ function RibbonControls({ ribbonData }) {
       <div className={css['right']}>
         <button 
           className="button button--height-20"
-          onPointerDown={() => ribbonData.toggleMinimize()}
+          onPointerDown={(e) => e.button === 0 && ribbonData.toggleMinimize()}
         >
           {
             ribbonData.minimize && ribbonData.expand ?
@@ -88,7 +67,7 @@ function RibbonControls({ ribbonData }) {
         </a>
       </div>
 
-      <FileDropdown ref={dropdownRef} isShown={showFile} setIsShown={setShowFile}/>
+      <FileDropdown ref={dropdownRef} isShown={isFileDropdownOpen} setIsShown={setIsFileDropdownOpen}/>
       
     </div>
   );

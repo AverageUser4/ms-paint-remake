@@ -86,7 +86,7 @@ function ZoomRange() {
         <div 
           style={{ left: getOffsetForPercent(zoomPercent) }} 
           className={css['range-control']}
-          onPointerDown={() => setIsControlFocused(true)}
+          onPointerDown={(e) => e.button === 0 && setIsControlFocused(true)}
         ></div>
       </div>
 

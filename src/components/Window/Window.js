@@ -166,12 +166,18 @@ function Window({
   }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth]);
   
   function onPointerDownMove(event) {
+    if(event.button !== 0)
+      return;
+      
     const x = event.clientX - position.x;
     const y = event.clientY - position.y;
     setPositionDifference({ x, y });
   }
 
   function onPointerDownResize(event) {
+    if(event.button !== 0)
+      return;
+
     setResizeData({
       type: event.target.dataset.name,
       initialX: event.clientX,

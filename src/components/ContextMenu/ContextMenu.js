@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import css from './ContextMenu.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
+import { useContextMenuContext } from '../../misc/ContextMenuContext';
 
 function ContextMenu() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, setIsOpen, contents, position } = useContextMenuContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
   
@@ -13,8 +14,12 @@ function ContextMenu() {
     return null;
   
   return (
-    <div className={css['container']} ref={containerRef}>
-
+    <div 
+      className={css['container']} 
+      ref={containerRef}
+      style={{ left: position.x, top: position.y }}
+    >
+      {contents}
     </div>
   )
 }

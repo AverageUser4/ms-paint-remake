@@ -142,7 +142,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
                   ${css['button']}
                   ${currentRow === maxRow ? css['button--has-border'] : ''}
                 `}
-                onPointerDown={() => toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+                onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
               >
                 <TriangleLine/>
               </button>

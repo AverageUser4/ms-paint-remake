@@ -3,38 +3,21 @@ import PropTypes from 'prop-types';
 import css from './RibbonItemContainer.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
+import useOutsideClick from "../../hooks/useOutsideClick";
+import { toggleBoolState } from "../../misc/utils";
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
   const containerRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  useOutsideClick(containerRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   useEffect(() => {
     if(isDropdownOpen && isOnlyContent)
       setIsDropdownOpen(false);
   }, [isDropdownOpen, isOnlyContent]);
 
-  useEffect(() => {
-    function onPointerDown(event) {
-      if(
-          !containerRef.current ||
-          containerRef.current === event.target ||
-          containerRef.current.contains(event.target)
-        )
-        return;
-      
-      if(isDropdownOpen)
-        setIsDropdownOpen(false);
-    }
-
-    window.addEventListener('pointerdown', onPointerDown);
-
-    return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
-    };
-  }, [isDropdownOpen]);
-  
   if(isOnlyContent)
     return children;
   
@@ -44,7 +27,7 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
       ref={containerRef}
     >
 
-      <button className={css['button']} onClick={() => setIsDropdownOpen(prev => !prev)}>
+      <button className={css['button']} onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}>
 
         <div className={css['image-container']}>
           <img draggable="false" src={icon} alt=""/>
