@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
@@ -22,7 +22,7 @@ function Window({
   const windowRef = useRef();
   useOutsideClick(windowRef, () => isFocused && setIsFocused(false));
   useResizeCursor(resizeData);
-  
+
   useEffect(() => {
     if(!isAutoShrink)
       return;
@@ -165,14 +165,16 @@ function Window({
     }
   }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth]);
   
-  function onPointerDownMove(event) {
-    if(event.button !== 0)
-      return;
-      
-    const x = event.clientX - position.x;
-    const y = event.clientY - position.y;
-    setPositionDifference({ x, y });
-  }
+  const onPointerDownMove = useCallback(
+    function onPointerDownMove(event) {
+      if(event.button !== 0)
+        return;
+        
+      const x = event.clientX - position.x;
+      const y = event.clientY - position.y;
+      setPositionDifference({ x, y });
+    }, [position]
+  );
 
   function onPointerDownResize(event) {
     if(event.button !== 0)

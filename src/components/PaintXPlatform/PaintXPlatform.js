@@ -23,12 +23,16 @@ function PaintXPlatform() {
     // uses setTimeout so it does not get closed immediately after being open due to event listener on window
     setTab: (tabName) => setTimeout(() => setRibbonData(prev => ({ ...prev, activeTab: tabName, expand: true })))
   });
-
+  
   const [canvasData, setCanvasData] = useState({
     mousePosition: null,
     size: { width: 300, height: 200 },
     outlineSize: null,
   });
+
+  useEffect(() => { console.log('toolbarData' )}, [toolbarData]);
+  useEffect(() => { console.log('ribbonData' )}, [ribbonData]);
+  useEffect(() => { console.log('canvasData' )}, [canvasData]);
 
   const [containerTemp, setContainerTemp] = useState();
   useEffect(() => {

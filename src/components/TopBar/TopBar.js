@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import PropTypes from 'prop-types';
 import css from './TopBar.module.css';
 
@@ -8,7 +8,14 @@ import { useContextMenuContext } from '../../misc/ContextMenuContext';
 
 import logoMini from './assets/logo-mini.png';
 
-function TopBar({ onPointerDownMove, windowHasFocus, toolbarData, setToolbarData, ribbonData }) {
+const TopBar = memo(function TopBar({ 
+  onPointerDownMove,
+  windowHasFocus,
+  toolbarData,
+  setToolbarData,
+  ribbonData 
+}) {
+  console.log('topbar renders')
   const containerRef = useRef();
   const textRef = useRef();
   const { openContextMenu } = useContextMenuContext();
@@ -64,7 +71,7 @@ function TopBar({ onPointerDownMove, windowHasFocus, toolbarData, setToolbarData
 
     </header>
   );
-}
+});
 
 TopBar.propTypes = {
   onPointerDownMove: PropTypes.func.isRequired,
