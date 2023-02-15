@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import Window from '../Window/Window';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
@@ -9,6 +9,8 @@ import BottomBar from '../BottomBar/BottomBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
+
+const minimal = { width: 460, height: 300 };
 
 function PaintXPlatform() {
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(true);
@@ -49,7 +51,7 @@ function PaintXPlatform() {
       window.removeEventListener('resize', onResize);
     };
   }, [containerTemp]);
-  
+
   const items = [
     {
       Component: TopBar, 
@@ -103,19 +105,6 @@ function PaintXPlatform() {
       Component: ContextMenu,
       props: {}
     },
-    (
-      isResizeWindowOpen ?
-        {
-          Component: ResizeWindow,
-          props: {
-            // will be dimensions of user provided container
-            containerWidth: containerTemp?.width,
-            containerHeight: containerTemp?.height,
-          }
-        }
-      : 
-        null
-    ),
   ];
 
   return (
@@ -124,12 +113,17 @@ function PaintXPlatform() {
     >
       <Window 
         items={items}
-        minWidth={460}
-        minHeight={300}
+        minimal={minimal}
         // will be dimensions of user provided container
-        containerWidth={containerTemp?.width}
-        containerHeight={containerTemp?.height}
+        containerDimensions={containerTemp}
       />
+
+      {
+        isResizeWindowOpen &&
+          <ResizeWindow
+            containerDimensions={containerTemp}
+          />
+      }
     </div>
   );
 }

@@ -1,0 +1,41 @@
+.body {
+  padding: 12px;
+  height: calc(100% - var(--inner-window-topbar-height));
+  
+  background-color: rgb(240, 240, 240);
+
+  box-sizing: border-box;
+}
+
+.group {
+  position: relative;
+  
+  padding: 12px;
+  
+  border: 1px solid rgb(220, 220, 220);
+}
+
+.group-label {
+  position: absolute;
+  top: 0;
+  left: 6px;
+
+  padding: 0 2px;
+  
+  background-color: rgb(240, 240, 240);
+
+  transform: translateY(-55%);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+}
+
+.input-text {
+  width: 60px;
+}
+
+.label {
+  margin: 0 auto 0 30px;
+}

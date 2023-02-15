@@ -1,8 +1,10 @@
 .container {
   display: flex;
+  align-items: center;
   justify-content: space-between;
 
-  height: 30px;
+  height: var(--inner-window-topbar-height);
+  padding-left: 8px;
   
   background-color: rgb(255, 255, 255);
 }

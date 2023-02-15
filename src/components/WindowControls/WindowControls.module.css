@@ -32,3 +32,6 @@
 .button--disabled {
   color: rgb(153, 153, 153);
 }
+.button--only {
+  width: 30px;
+}

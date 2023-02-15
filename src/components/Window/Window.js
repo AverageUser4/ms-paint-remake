@@ -7,22 +7,18 @@ import useResizeCursor from '../../hooks/useResizeCursor';
 
 function Window({ 
   items,
+  containerDimensions,
+  minimal = { width: 1, height: 1 },
+  initialSize = { width: 600, height: 500 },
+  initialPosition = { x: 200, y: 100 },
   isResizable = true,
-  minWidth,
-  minHeight,
-  containerWidth,
-  containerHeight,
   isConstrained = true,
   isAutoShrink = true,
-  initialWidth = 600,
-  initialHeight = 500,
-  initialX = 200,
-  initialY = 100,
-  isInnerWindow = false
+  isInnerWindow = false,
 }) {
-  const [position, setPosition] = useState({ x: initialX, y: initialY });
+  const [position, setPosition] = useState({ x: initialPosition.x, y: initialPosition.y });
   const [positionDifference, setPositionDifference] = useState(null);
-  const [size, setSize] = useState({ width: initialWidth, height: initialHeight });
+  const [size, setSize] = useState({ width: initialSize.width, height: initialSize.height });
   const [resizeData, setResizeData] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef();
@@ -30,7 +26,7 @@ function Window({
   useResizeCursor(resizeData);
 
   useEffect(() => {
-    if(!isAutoShrink || !isResizable)
+    if(!isAutoShrink || !isResizable || !containerDimensions)
       return;
     
     let newX = position.x;
@@ -38,22 +34,22 @@ function Window({
     let newWidth = size.width;
     let newHeight = size.height;
 
-    if(position.x + size.width > containerWidth) {
-      newX = Math.max(containerWidth - size.width, 0);
+    if(position.x + size.width > containerDimensions.width) {
+      newX = Math.max(containerDimensions.width - size.width, 0);
       if(newX === 0)
-        newWidth = Math.max(containerWidth - position.x, minWidth);
+        newWidth = Math.max(containerDimensions.width - position.x, minimal.width);
     }
-    if(position.y + size.height > containerHeight) {
-      newY = Math.max(containerHeight - size.height, 0);
+    if(position.y + size.height > containerDimensions.height) {
+      newY = Math.max(containerDimensions.height - size.height, 0);
       if(newY === 0)
-        newHeight = Math.max(containerHeight - position.y, minHeight);
+        newHeight = Math.max(containerDimensions.height - position.y, minimal.height);
     }
 
     if(newX !== position.x || newY !== position.y)
       setPosition({ x: newX, y: newY });
     if(newWidth !== size.width || newHeight !== size.height)
       setSize({ width: newWidth, height: newHeight });
-  }, [containerHeight, containerWidth, size, position, minWidth, minHeight, isAutoShrink, isResizable]);
+  }, [containerDimensions, size, position, minimal, isAutoShrink, isResizable]);
 
   useEffect(() => {
     // move window
@@ -66,14 +62,12 @@ function Window({
       if(!positionDifference)
         return;
   
-        console.log(positionDifference)
-        
       let x = event.clientX - positionDifference.x;
       let y = event.clientY - positionDifference.y;
 
       if(isConstrained) {
-        x = Math.max(Math.min(x, containerWidth - size.width), 0);
-        y = Math.max(Math.min(y, containerHeight - size.height), 0);
+        x = Math.max(Math.min(x, containerDimensions.width - size.width), 0);
+        y = Math.max(Math.min(y, containerDimensions.height - size.height), 0);
       }
       
       setPosition({ x, y });
@@ -86,7 +80,7 @@ function Window({
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [positionDifference, size, isConstrained, containerHeight, containerWidth]);
+  }, [positionDifference, size, isConstrained, containerDimensions]);
 
   useEffect(() => {
     if(!isResizable)
@@ -142,27 +136,27 @@ function Window({
       if(resizeData.type.includes('top') || resizeData.type.includes('bottom'))
         newHeight = resizeData.initialHeight + diffY;
 
-      if(newWidth < minWidth) {
+      if(newWidth < minimal.width) {
         if(resizeData.type.includes('left')) {
-          const diffW = minWidth - newWidth;
+          const diffW = minimal.width - newWidth;
           newX -= diffW;
         }
-        newWidth = minWidth;
+        newWidth = minimal.width;
       }
-      if(newHeight < minHeight) {
+      if(newHeight < minimal.height) {
         if(resizeData.type.includes('top')) {
-          const diffH = minHeight - newHeight;
+          const diffH = minimal.height - newHeight;
           newY -= diffH;
         }
-        newHeight = minHeight;
+        newHeight = minimal.height;
       }
 
       if(isConstrained) {
-        if(newX + newWidth > containerWidth) {
-          newWidth = containerWidth - newX;
+        if(newX + newWidth > containerDimensions.width) {
+          newWidth = containerDimensions.width - newX;
         }
-        if(newY + newHeight > containerHeight) {
-          newHeight = containerHeight - newY;
+        if(newY + newHeight > containerDimensions.height) {
+          newHeight = containerDimensions.height - newY;
         }
       }
 
@@ -177,7 +171,7 @@ function Window({
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth, isResizable]);
+  }, [resizeData, size, position, minimal, isConstrained, containerDimensions, isResizable]);
   
   const onPointerDownMove = useCallback(
     function onPointerDownMove(event) {
@@ -221,14 +215,19 @@ function Window({
       }} 
        className={`${css['container']} ${isFocused ? css['container--focused'] : ''}`}
     >
-      <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
-      <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
-      <div data-name="left" onPointerDown={onPointerDownResize} className={css['left']}></div>
-      <div data-name="right" onPointerDown={onPointerDownResize} className={css['right']}></div>
-      <div data-name="top-left" onPointerDown={onPointerDownResize} className={css['top-left']}></div>
-      <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
-      <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
-      <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
+      {
+        isResizable &&
+          <>
+            <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
+            <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
+            <div data-name="left" onPointerDown={onPointerDownResize} className={css['left']}></div>
+            <div data-name="right" onPointerDown={onPointerDownResize} className={css['right']}></div>
+            <div data-name="top-left" onPointerDown={onPointerDownResize} className={css['top-left']}></div>
+            <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
+            <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
+            <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
+          </>
+      }
       
       {items.map((item, index) => {
         if(!item)
@@ -253,16 +252,24 @@ function Window({
 
 Window.propTypes = {
   items: PropTypes.array.isRequired,
+  minimal: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number
+  }),
+  containerDimensions: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number
+  }),
+  initialSize: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number
+  }),
+  initialPosition: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number
+  }),
   isResizable: PropTypes.bool,
-  minWidth: PropTypes.number,
-  minHeight: PropTypes.number,
   isConstrained: PropTypes.bool,
-  containerWidth: PropTypes.number,
-  containerHeight: PropTypes.number,
-  initialX: PropTypes.number,
-  initialY: PropTypes.number,
-  initialWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  initialHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   isAutoShrink: PropTypes.bool,
   isInnerWindow: PropTypes.bool,
 };
