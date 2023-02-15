@@ -8,8 +8,6 @@ import TopBar from '../TopBar/TopBar';
 import BottomBar from '../BottomBar/BottomBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
-import { ContextMenuProvider } from '../../misc/ContextMenuContext';
-
 
 function PaintXPlatform() {
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
@@ -105,20 +103,18 @@ function PaintXPlatform() {
   ];
 
   return (
-    <ContextMenuProvider>
-      <div 
-        onContextMenu={(e) => e.preventDefault()}
-      >
-        <Window 
-          items={items}
-          minWidth={460}
-          minHeight={300}
-          // will be dimensions of user provided container
-          containerWidth={containerTemp?.width}
-          containerHeight={containerTemp?.height}
-        />
-      </div>
-    </ContextMenuProvider>
+    <div 
+      onContextMenu={(e) => e.preventDefault()}
+    >
+      <Window 
+        items={items}
+        minWidth={460}
+        minHeight={300}
+        // will be dimensions of user provided container
+        containerWidth={containerTemp?.width}
+        containerHeight={containerTemp?.height}
+      />
+    </div>
   );
 }
 

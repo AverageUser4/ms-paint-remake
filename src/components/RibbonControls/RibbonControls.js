@@ -11,8 +11,6 @@ import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
 import pin from '../../assets/global/pin.png';
 
 const RibbonControls = memo(function RibbonControls({ ribbonData }) {
-  console.log('RibbonControls')
-  
   const dropdownRef = useRef();
   const [isFileDropdownOpen, setIsFileDropdownOpen] = useState(false);
   useOutsideClick(dropdownRef, () => isFileDropdownOpen && setIsFileDropdownOpen(false));

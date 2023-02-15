@@ -15,7 +15,6 @@ const TopBar = memo(function TopBar({
   setToolbarData,
   ribbonData 
 }) {
-  console.log('TopBar')
   const containerRef = useRef();
   const textRef = useRef();
   const { openContextMenu } = useContextMenuContext();
@@ -28,7 +27,7 @@ const TopBar = memo(function TopBar({
       event.target === containerRef.current ||
       event.target === textRef.current
     )
-      openContextMenu({ x: event.clientX, y: event.clientY }, <h1>hello, world!</h1>);
+      openContextMenu(event);
   }
 
   function onPointerDown(event) {

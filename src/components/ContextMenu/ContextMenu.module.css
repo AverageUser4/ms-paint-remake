@@ -1,10 +1,40 @@
 .container {
   position: fixed;
-  
-  width: 100px;
-  height: 100px;
-
-  background-color: red;
-
   z-index: 3;
+}
+
+.default {
+  width: 180px;
+  padding: 2px;
+  
+  background-color: rgb(242, 242, 242);
+  border: 1px solid rgb(204, 204, 240);
+  box-shadow: 2px 2px 2px rgba(30, 30, 30, 0.5);
+
+  box-sizing: border-box;
+}
+
+.button {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+
+  padding: 6px 12px;
+  width: 100%;
+
+  border: none;
+  background-color: transparent;
+  color: var(--black);
+  font-size: 11.4px;
+  line-height: 1;
+
+  user-select: none;
+  box-sizing: border-box;
+}
+.button:hover {
+  background-color: rgb(145, 200, 250);
+}
+
+.icon {
+  width: 8px;
 }

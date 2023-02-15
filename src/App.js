@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 
 import PaintXPlatform from './components/PaintXPlatform/PaintXPlatform';
+import { ContextMenuProvider } from './misc/ContextMenuContext';
 
 function App() {
   /* TEMPORARY */
@@ -18,7 +19,9 @@ function App() {
   
   return (
     <div className="app">
-      <PaintXPlatform/>
+      <ContextMenuProvider>
+        <PaintXPlatform/>
+      </ContextMenuProvider>
     </div>
   );
 }

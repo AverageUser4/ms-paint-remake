@@ -8,8 +8,13 @@ function ContextMenuProvider({ children }) {
   const [contents, setContents] = useState(null);
   const [position, setPosition] = useState(null);
   
-  function openContextMenu(position, contents) {
-    setPosition(position);
+  function openContextMenu(event, contents) {
+    if(event.type === 'contextmenu') {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    
+    setPosition({ x: event.clientX, y: event.clientY });
     setContents(contents);
     setIsOpen(true);
   }

@@ -15,8 +15,6 @@ import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
 const Ribbon = memo(function Ribbon({ windowWidth, ribbonData }) {
-  console.log('Ribbon')
-  
   const containerRef = useRef();
   useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(), 'ribbon');
   

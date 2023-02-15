@@ -19,8 +19,6 @@ import undoEn from './assets/undo-en.png';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
-  console.log('QuickAccessToolbar')
-  
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => showDropdown && setShowDropdown(false));
