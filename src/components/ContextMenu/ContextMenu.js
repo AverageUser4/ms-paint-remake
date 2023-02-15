@@ -28,7 +28,7 @@ function ContextMenu() {
           contents
         :
           <div className={css['default']}>
-            <button className={`${css['button']}`}>
+            <button className={`${css['button']} ${css['button--disabled']}`}>
               <img className={css['icon']} src={restore} alt=""/>
               <span>Restore</span>
             </button>
@@ -53,7 +53,9 @@ function ContextMenu() {
               <span>Maximize</span>
             </button>
 
-            <button className={`${css['button']}`}>
+            <div className={css['line']}></div>
+
+            <button className={`${css['button']} ${css['button--close']}`}>
               <img className={css['icon']} src={close} alt=""/>
               <span>Close</span>
             </button>

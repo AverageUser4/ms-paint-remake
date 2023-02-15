@@ -8,8 +8,11 @@ import TopBar from '../TopBar/TopBar';
 import BottomBar from '../BottomBar/BottomBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
+import ResizeWindow from '../ResizeWindow/ResizeWindow';
 
 function PaintXPlatform() {
+  const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(true);
+  
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
   const [ribbonData, setRibbonData] = useState({ 
@@ -99,7 +102,20 @@ function PaintXPlatform() {
     {
       Component: ContextMenu,
       props: {}
-    }
+    },
+    (
+      isResizeWindowOpen ?
+        {
+          Component: ResizeWindow,
+          props: {
+            // will be dimensions of user provided container
+            containerWidth: containerTemp?.width,
+            containerHeight: containerTemp?.height,
+          }
+        }
+      : 
+        null
+    ),
   ];
 
   return (

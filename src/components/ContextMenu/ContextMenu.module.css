@@ -31,10 +31,38 @@
   user-select: none;
   box-sizing: border-box;
 }
+.button--close {
+  position: relative;
+  
+  font-weight: bold;
+}
+.button--close::after {
+  content: 'Alt+F4';
+
+  position: absolute;
+  right: 16px;
+}
 .button:hover {
   background-color: rgb(145, 200, 250);
+}
+.button--disabled {
+  color: rgb(109, 109, 109);
+}
+.button--disabled:hover {
+  background-color: rgb(230, 230, 230);
+}
+.button--disabled .icon {
+  opacity: 0.5;
 }
 
 .icon {
   width: 8px;
+}
+
+.line {
+  width: 82%;
+  height: 1px;
+  margin: 2px 0 2px auto;
+
+  background-color: rgb(215, 215, 215);
 }

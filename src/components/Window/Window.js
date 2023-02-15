@@ -7,16 +7,22 @@ import useResizeCursor from '../../hooks/useResizeCursor';
 
 function Window({ 
   items,
+  isResizable = true,
   minWidth,
   minHeight,
   containerWidth,
   containerHeight,
   isConstrained = true,
   isAutoShrink = true,
+  initialWidth = 600,
+  initialHeight = 500,
+  initialX = 200,
+  initialY = 100,
+  isInnerWindow = false
 }) {
-  const [position, setPosition] = useState({ x: 200, y: 100 });
+  const [position, setPosition] = useState({ x: initialX, y: initialY });
   const [positionDifference, setPositionDifference] = useState(null);
-  const [size, setSize] = useState({ width: 600, height: 500 });
+  const [size, setSize] = useState({ width: initialWidth, height: initialHeight });
   const [resizeData, setResizeData] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef();
@@ -24,7 +30,7 @@ function Window({
   useResizeCursor(resizeData);
 
   useEffect(() => {
-    if(!isAutoShrink)
+    if(!isAutoShrink || !isResizable)
       return;
     
     let newX = position.x;
@@ -47,7 +53,7 @@ function Window({
       setPosition({ x: newX, y: newY });
     if(newWidth !== size.width || newHeight !== size.height)
       setSize({ width: newWidth, height: newHeight });
-  }, [containerHeight, containerWidth, size, position, minWidth, minHeight, isAutoShrink]);
+  }, [containerHeight, containerWidth, size, position, minWidth, minHeight, isAutoShrink, isResizable]);
 
   useEffect(() => {
     // move window
@@ -60,6 +66,8 @@ function Window({
       if(!positionDifference)
         return;
   
+        console.log(positionDifference)
+        
       let x = event.clientX - positionDifference.x;
       let y = event.clientY - positionDifference.y;
 
@@ -81,6 +89,9 @@ function Window({
   }, [positionDifference, size, isConstrained, containerHeight, containerWidth]);
 
   useEffect(() => {
+    if(!isResizable)
+      return;
+    
     // resize window, moved to different effect because it could happen that
     // pointerup event was not registered when moving mouse
     function onPointerUp() {
@@ -93,9 +104,12 @@ function Window({
     return () => {
       window.removeEventListener('pointerup', onPointerUp);
     }
-  }, [resizeData])
+  }, [resizeData, isResizable])
   
   useEffect(() => {
+    if(!isResizable)
+      return;
+    
     // resize window
     function onPointerMove(event) {
       if(!resizeData)
@@ -163,13 +177,13 @@ function Window({
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth]);
+  }, [resizeData, size, position, minHeight, minWidth, isConstrained, containerHeight, containerWidth, isResizable]);
   
   const onPointerDownMove = useCallback(
     function onPointerDownMove(event) {
       if(event.button !== 0)
         return;
-        
+
       const x = event.clientX - position.x;
       const y = event.clientY - position.y;
       setPositionDifference({ x, y });
@@ -177,7 +191,7 @@ function Window({
   );
 
   function onPointerDownResize(event) {
-    if(event.button !== 0)
+    if(!isResizable || event.button !== 0)
       return;
 
     setResizeData({
@@ -202,7 +216,8 @@ function Window({
         top: position.y,
         left: position.x,
         width: size.width,
-        height: size.height
+        height: size.height,
+        zIndex: isInnerWindow ? '4' : 'auto'
       }} 
        className={`${css['container']} ${isFocused ? css['container--focused'] : ''}`}
     >
@@ -238,12 +253,18 @@ function Window({
 
 Window.propTypes = {
   items: PropTypes.array.isRequired,
-  minWidth: PropTypes.number.isRequired,
-  minHeight: PropTypes.number.isRequired,
+  isResizable: PropTypes.bool,
+  minWidth: PropTypes.number,
+  minHeight: PropTypes.number,
   isConstrained: PropTypes.bool,
   containerWidth: PropTypes.number,
   containerHeight: PropTypes.number,
+  initialX: PropTypes.number,
+  initialY: PropTypes.number,
+  initialWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  initialHeight: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   isAutoShrink: PropTypes.bool,
+  isInnerWindow: PropTypes.bool,
 };
 
 export default Window;

@@ -2,7 +2,7 @@
   position: absolute;
 
   border: 1px solid var(--window-border);
-  box-shadow: 0 0 20px var(--window-shadow);
+  box-shadow: 0 0 15px rgba(30, 40, 50, 0.8);
 
   box-sizing: border-box;
   user-select: none;
