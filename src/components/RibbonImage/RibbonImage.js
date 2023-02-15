@@ -24,7 +24,7 @@ import filpVertical16 from './assets/flip-vertical-16.png';
 import rotateLeft16 from './assets/rotate-left-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonImage({ ribbonWidth }) {
+function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -91,7 +91,7 @@ function RibbonImage({ ribbonWidth }) {
                 {showText && <span className="text text--1">Crop</span>}
               </button>
 
-              <button className="button">
+              <button className="button" onClick={() => setIsResizeWindowOpen(true)}>
                 <img draggable="false" src={resize16} alt="Resize."/>
                 {showText && <span className="text text--1">Resize</span>}
               </button>
@@ -149,6 +149,7 @@ function RibbonImage({ ribbonWidth }) {
 
 RibbonImage.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,
+  setIsResizeWindowOpen: PropTypes.func.isRequired,
 };
 
 export default RibbonImage;

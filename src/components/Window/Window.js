@@ -10,13 +10,14 @@ function Window({
   containerDimensions,
   minimal = { width: 1, height: 1 },
   initialSize = { width: 600, height: 500 },
-  initialPosition = { x: 200, y: 100 },
+  position,
+  setPosition,
   isResizable = true,
   isConstrained = true,
   isAutoShrink = true,
+  isAutoFit = true,
   isInnerWindow = false,
 }) {
-  const [position, setPosition] = useState({ x: initialPosition.x, y: initialPosition.y });
   const [positionDifference, setPositionDifference] = useState(null);
   const [size, setSize] = useState({ width: initialSize.width, height: initialSize.height });
   const [resizeData, setResizeData] = useState(null);
@@ -26,7 +27,7 @@ function Window({
   useResizeCursor(resizeData);
 
   useEffect(() => {
-    if(!isAutoShrink || !isResizable || !containerDimensions)
+    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isResizable) || !containerDimensions)
       return;
     
     let newX = position.x;
@@ -35,21 +36,23 @@ function Window({
     let newHeight = size.height;
 
     if(position.x + size.width > containerDimensions.width) {
-      newX = Math.max(containerDimensions.width - size.width, 0);
-      if(newX === 0)
+      if(isAutoFit)
+        newX = Math.max(containerDimensions.width - size.width, 0);
+      if(newX === 0 || !isAutoFit)
         newWidth = Math.max(containerDimensions.width - position.x, minimal.width);
     }
     if(position.y + size.height > containerDimensions.height) {
-      newY = Math.max(containerDimensions.height - size.height, 0);
-      if(newY === 0)
+      if(isAutoFit)
+        newY = Math.max(containerDimensions.height - size.height, 0);
+      if(newY === 0 || !isAutoFit)
         newHeight = Math.max(containerDimensions.height - position.y, minimal.height);
     }
 
     if(newX !== position.x || newY !== position.y)
       setPosition({ x: newX, y: newY });
-    if(newWidth !== size.width || newHeight !== size.height)
+    if(isResizable && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
-  }, [containerDimensions, size, position, minimal, isAutoShrink, isResizable]);
+  }, [containerDimensions, size, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition]);
 
   useEffect(() => {
     // move window
@@ -80,7 +83,7 @@ function Window({
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [positionDifference, size, isConstrained, containerDimensions]);
+  }, [positionDifference, size, isConstrained, containerDimensions, setPosition]);
 
   useEffect(() => {
     if(!isResizable)
@@ -171,7 +174,7 @@ function Window({
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size, position, minimal, isConstrained, containerDimensions, isResizable]);
+  }, [resizeData, size, position, minimal, isConstrained, containerDimensions, isResizable, setPosition]);
   
   const onPointerDownMove = useCallback(
     function onPointerDownMove(event) {
@@ -264,13 +267,15 @@ Window.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number
   }),
-  initialPosition: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number
-  }),
+  position: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }).isRequired,
+  setPosition: PropTypes.func.isRequired,
   isResizable: PropTypes.bool,
   isConstrained: PropTypes.bool,
   isAutoShrink: PropTypes.bool,
+  isAutoFit: PropTypes.bool,
   isInnerWindow: PropTypes.bool,
 };
 

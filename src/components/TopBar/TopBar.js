@@ -66,7 +66,10 @@ const TopBar = memo(function TopBar({
         
       </div>
 
-      <WindowControls windowHasFocus={windowHasFocus}/>
+      <WindowControls 
+        windowHasFocus={windowHasFocus}
+        close={()=>0}
+      />
 
     </header>
   );

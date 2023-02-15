@@ -1,1 +1,2 @@
-figure out z-index
+- z-index
+- font-family

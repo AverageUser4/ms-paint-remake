@@ -13,7 +13,8 @@ import ResizeWindow from '../ResizeWindow/ResizeWindow';
 const minimal = { width: 460, height: 300 };
 
 function PaintXPlatform() {
-  const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(true);
+  const [mainWindowPosition, setMainWindowPosition] = useState({ x: 200, y: 100 });
+  const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
   
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -71,6 +72,7 @@ function PaintXPlatform() {
       Component: Ribbon,
       props: { 
         ribbonData,
+        setIsResizeWindowOpen
       }
     },
     (
@@ -116,12 +118,16 @@ function PaintXPlatform() {
         minimal={minimal}
         // will be dimensions of user provided container
         containerDimensions={containerTemp}
+        position={mainWindowPosition}
+        setPosition={setMainWindowPosition}
       />
 
       {
         isResizeWindowOpen &&
           <ResizeWindow
             containerDimensions={containerTemp}
+            setIsResizeWindowOpen={setIsResizeWindowOpen}
+            mainWindowPosition={mainWindowPosition}
           />
       }
     </div>

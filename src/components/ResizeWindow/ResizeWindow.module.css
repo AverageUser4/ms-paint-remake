@@ -140,3 +140,23 @@
   justify-content: flex-end;
   gap: 8px;
 }
+
+.button {
+  width: 85px;
+  height: 23px;
+  padding: 0 0 1px;
+
+  background-color: rgb(225, 225, 225);
+  border: 1px solid rgb(173, 173, 173);
+  font-size: 12.5px;
+  font-family: 'segoe';
+
+  box-sizing: border-box;
+}
+.button--active {
+  border: 2px solid rgb(0, 120, 215);
+}
+.button:hover {
+  background-color: rgb(229, 241, 251);
+  border: 1px solid rgb(0, 120, 215);
+}

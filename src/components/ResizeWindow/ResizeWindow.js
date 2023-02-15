@@ -11,17 +11,22 @@ import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 
-const ResizeWindow = memo(function ResizeWindow({ containerDimensions }) {
+const ResizeWindow = memo(function ResizeWindow({ containerDimensions, setIsResizeWindowOpen, mainWindowPosition }) {
+  const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
+  
   const items = [
     {
       Component: InnerWindowTopBar, 
       props: {
-        text: 'Resize and Skew'
+        text: 'Resize and Skew',
+        close: () => setIsResizeWindowOpen(false)
       }
     },
     {
       Component: ResizeWindowBody, 
-      props: {}
+      props: {
+        setIsResizeWindowOpen
+      }
     },
   ];
 
@@ -32,10 +37,8 @@ const ResizeWindow = memo(function ResizeWindow({ containerDimensions }) {
         width: 280,
         height: 400
       }}
-      initialPosition={{
-        x: 40,
-        y: 80
-      }}
+      position={position}
+      setPosition={setPosition}
       containerDimensions={containerDimensions}
       isResizable={false}
       isInnerWindow={true}
@@ -46,11 +49,16 @@ const ResizeWindow = memo(function ResizeWindow({ containerDimensions }) {
 ResizeWindow.propTypes = {
   containerDimensions: PropTypes.shape({
     width: PropTypes.number,
-    height: PropTypes.number
+    height: PropTypes.number,
   }),
+  setIsResizeWindowOpen: PropTypes.func.isRequired,
+  mainWindowPosition: PropTypes.shape({
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired,
+  }).isRequired,
 };
 
-function ResizeWindowBody() {
+function ResizeWindowBody({ setIsResizeWindowOpen }) {
   const [tempMaintain, setTempMaintain] = useState(false);
 
   return (
@@ -153,12 +161,28 @@ function ResizeWindowBody() {
       </div>
 
       <div className={css['buttons-container']}>
-        <button type="button">OK</button>
-        <button type="button">Cancel</button>
+        <button 
+          className={`${css['button']} ${css['button--active']}`} 
+          type="button"
+          onClick={() => setIsResizeWindowOpen(false)}
+        >
+          OK
+        </button>
+        <button 
+          className={`${css['button']}`} 
+          type="button"
+          onClick={() => setIsResizeWindowOpen(false)}
+        >
+          Cancel
+        </button>
       </div>
 
     </form>
   );
 }
+
+ResizeWindowBody.propTypes = {
+  setIsResizeWindowOpen: PropTypes.func.isRequired,
+};
 
 export default ResizeWindow;

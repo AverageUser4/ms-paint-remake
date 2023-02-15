@@ -6,18 +6,20 @@ import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
 import { ReactComponent as Minimize } from './assets/minimize.svg';
 
-function WindowControls({ windowHasFocus, isOnlyClose = false }) {
+function WindowControls({ windowHasFocus, isOnlyClose = false, close }) {
   if(isOnlyClose) {
     return (
-       <button 
+      <button 
         className={`
           ${css['button']} 
           ${css['button--danger']}
           ${css['button--only']}
-          ${!windowHasFocus ? css['button--disabled'] : ''}`}
-        >
-         <Close draggable="false"/>
-       </button>
+          ${!windowHasFocus ? css['button--disabled'] : ''}
+        `}
+        onClick={close}
+      >
+        <Close draggable="false"/>
+      </button>
     );
   }
   
@@ -40,8 +42,10 @@ function WindowControls({ windowHasFocus, isOnlyClose = false }) {
       <button 
         className={`
           ${css['button']} ${css['button--danger']} 
-          ${!windowHasFocus ? css['button--disabled'] : ''}`}
-        >
+          ${!windowHasFocus ? css['button--disabled'] : ''}
+        `}
+        onClick={close}
+      >
         <Close draggable="false"/>
       </button>
     </div>  
@@ -50,7 +54,8 @@ function WindowControls({ windowHasFocus, isOnlyClose = false }) {
 
 WindowControls.propTypes = {
   windowHasFocus: PropTypes.bool.isRequired,
-  isOnlyClose: PropTypes.bool
+  isOnlyClose: PropTypes.bool,
+  close: PropTypes.func.isRequired,
 };
 
 export default WindowControls;
