@@ -1,0 +1,8 @@
+<svg viewBox="0 0 11 11" width="11" height="11" xmlns="http://www.w3.org/2000/svg">
+  <path 
+    fill="transparent" 
+    stroke="currentColor"
+    d="M 2,6 L 5,9 10,3"
+    stroke-width="1.5"
+  />
+</svg>

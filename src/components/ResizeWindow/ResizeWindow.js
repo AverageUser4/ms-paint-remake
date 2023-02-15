@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './ResizeWindow.module.css';
 
@@ -9,6 +9,7 @@ import resizeHorizontal from './assets/resize-horizontal.ico';
 import resizeVertical from './assets/resize-vertical.ico';
 import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
+import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 
 const ResizeWindow = memo(function ResizeWindow({ containerDimensions }) {
   const items = [
@@ -50,6 +51,8 @@ ResizeWindow.propTypes = {
 };
 
 function ResizeWindowBody() {
+  const [tempMaintain, setTempMaintain] = useState(false);
+
   return (
     <form className={css['body']}>
 
@@ -59,13 +62,21 @@ function ResizeWindowBody() {
         <div className={css['row']}>
           <span className='text'>By:</span>
 
-          <label>
-            <input type="radio"/>
+          <label className={css['radio-label']}>
+            <input 
+              type="radio"
+              className={css['radio']}
+              name="resize-type"
+            />
             <span className="text">Percentage</span>
           </label>
           
-          <label>
-            <input type="radio"/>
+          <label className={css['radio-label']}>
+            <input 
+              type="radio"
+              className={css['radio']}
+              name="resize-type"
+            />
             <span className="text">Pixels</span>
           </label>
         </div>
@@ -73,7 +84,7 @@ function ResizeWindowBody() {
         <div className={css['row']}>
           <img src={resizeHorizontal} alt=""/>
 
-          <label htmlFor="rw-resize-horizontal" className={`text ${css['label']}`}>
+          <label htmlFor="rw-resize-horizontal" className={`text ${css['text-label']}`}>
             Horizontal:
           </label>
 
@@ -86,7 +97,7 @@ function ResizeWindowBody() {
         <div className={css['row']}>
           <img src={resizeVertical} alt=""/>
 
-          <label htmlFor="rw-resize-vertical" className={`text ${css['label']}`}>
+          <label htmlFor="rw-resize-vertical" className={`text ${css['text-label']}`}>
             Vertical:
           </label>
 
@@ -96,7 +107,54 @@ function ResizeWindowBody() {
           />
         </div>
 
+        <label className={css['checkbox-label']}>
+          <input 
+            className={css['checkbox']} 
+            type="checkbox"
+            checked={tempMaintain}
+            onChange={() => setTempMaintain(prev => !prev)}
+          />
+          {
+            tempMaintain &&
+              <Checkmark className={css['checkmark']}/>
+          }
+          <span className="text">Maintain aspect ratio</span>
+        </label>
+      </div>
 
+      <div className={css['group']}>
+        <h3 className={`text ${css['group-label']}`}>Skew (Degrees)</h3>
+
+        <div className={css['row']}>
+          <img src={skewHorizontal} alt=""/>
+
+          <label htmlFor="rw-skew-horizontal" className={`text ${css['text-label']}`}>
+            Horizontal:
+          </label>
+
+          <input 
+            className={css['input-text']}
+            id="rw-skew-horizontal"
+          />
+        </div>
+
+        <div className={css['row']}>
+          <img src={skewVertical} alt=""/>
+
+          <label htmlFor="rw-skew-vertical" className={`text ${css['text-label']}`}>
+            Vertical:
+          </label>
+
+          <input 
+            className={css['input-text']}
+            id="rw-skew-vertical"
+          />
+        </div>
+      </div>
+
+      <div className={css['buttons-container']}>
+        <button type="button">OK</button>
+        <button type="button">Cancel</button>
       </div>
 
     </form>
