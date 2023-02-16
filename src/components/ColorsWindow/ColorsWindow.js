@@ -4,11 +4,12 @@ import css from './ColorsWindow.module.css';
 
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
+import ColorPicker from '../ColorPicker/ColorPicker';
 
 import duoArrow from './assets/duo-arrow.png';
 
 const WIDTH = 448;
-const HEIGHT = 330;
+const HEIGHT = 340;
 
 const ColorsWindow = memo(function ColorsWindow({ containerDimensions, setIsColorsWindowOpen, mainWindowPosition, mainWindowSize }) {
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
@@ -92,23 +93,23 @@ function ResizeWindowBody({ setIsColorsWindowOpen }) {
         </div>
 
         <div>
-          <button disabled className="form-button form-button--full-width">
+          <button type="button" disabled className="form-button form-button--full-width">
             Define Custom Colors
             <img className="form-button__icon" src={duoArrow} alt=""/>
           </button>
 
           <div className={css['buttons-container']}>
-            <button className="form-button form-button--active">OK</button>
-            <button className="form-button">Cancel</button>
+            <button type="button" className="form-button form-button--active">OK</button>
+            <button type="button" className="form-button">Cancel</button>
           </div>
         </div>
       </div>
 
-      <div className="right">
-        
-        <div className={css['color-picker-container']}>
-          <div className={css['color-picker']}></div>
-        </div>
+      <div className={css['right']}>
+
+        <ColorPicker/>
+
+        <button type="button" className="form-button form-button--full-width">Add to Custom Colors</button>
           
       </div>
       

@@ -45,6 +45,10 @@
   border-color: rgb(0, 120, 215);
   outline: none;
 }
+.form-input-text--small {
+  width: 28px;
+  height: 19px;
+}
 
 .form-radio {
   display: flex;
