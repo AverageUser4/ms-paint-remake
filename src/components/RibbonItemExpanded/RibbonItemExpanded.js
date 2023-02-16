@@ -10,7 +10,7 @@ function RibbonItemExpanded({ name, children }) {
         {children}
       </div>
 
-      <h3 className="text text--2">{name}</h3>
+      <h3 className="text text--2 text--centered">{name}</h3>
 
     </div>
   );

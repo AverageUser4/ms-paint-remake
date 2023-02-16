@@ -15,7 +15,6 @@ function App() {
   /* TEMPORARY */
   /* TEMPORARY */
   /* TEMPORARY */
-
   
   return (
     <div className="app" ref={containerRef}>

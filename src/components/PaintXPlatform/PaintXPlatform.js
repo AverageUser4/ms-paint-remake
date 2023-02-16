@@ -12,9 +12,9 @@ import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
+import { useContainerContext, ContainerProvider } from '../../misc/ContainerProvider';
 
 function Logic({ 
-  containerRef,
   initialPosition = { x: 200, y: 100 },
   initialSize = { width: 600, height: 500 },
   minimalSize = { width: 460, height: 300 },
@@ -23,9 +23,9 @@ function Logic({
   isAutoShrink = true,
   isAutoFit = true,
 }) {
-
-  const [mainWindowPosition, setMainWindowPosition] = useState({ x: 200, y: 100 });
-  const [mainWindowSize, setMainWindowSize] = useState({ width: 600, height: 500 });
+  const { containerDimensions } = useContainerContext();
+  const [mainWindowPosition, setMainWindowPosition] = useState(initialPosition);
+  const [mainWindowSize, setMainWindowSize] = useState(initialSize);
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
   const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
@@ -47,28 +47,6 @@ function Logic({
     size: { width: 300, height: 200 },
     outlineSize: null,
   });
-
-  const [containerDimensions, setContainerDimensions] = useState();
-  useEffect(() => {
-    if(!containerRef.current)
-      return;
-
-    if(!containerDimensions) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setContainerDimensions({ width, height });
-    }
-
-    function onResize() {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setContainerDimensions({ width, height });
-    }
-
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-    };
-  }, [containerDimensions, containerRef]);
 
   const items = [
     {
@@ -168,7 +146,6 @@ function Logic({
 }
 
 Logic.propTypes = {
-  containerRef: PropTypes.object.isRequired,
   initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
   initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
   minimalSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
@@ -180,10 +157,16 @@ Logic.propTypes = {
 
 function PaintXPlatform(props) {
   return (
-    <ContextMenuProvider>
-      <Logic {...props}/>
-    </ContextMenuProvider>
+    <ContainerProvider containerRef={props.containerRef}>
+      <ContextMenuProvider>
+        <Logic {...props}/>
+      </ContextMenuProvider>
+    </ContainerProvider>
   );
 }
+
+PaintXPlatform.propTypes = {
+  containerRef: PropTypes.object.isRequired,
+};
 
 export default PaintXPlatform;

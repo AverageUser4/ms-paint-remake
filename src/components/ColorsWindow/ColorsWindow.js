@@ -5,6 +5,7 @@ import css from './ColorsWindow.module.css';
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
+import { getWindowCenteredPosition } from '../../misc/utils';
 
 import duoArrow from './assets/duo-arrow.png';
 
@@ -13,10 +14,7 @@ const HEIGHT = 340;
 
 const ColorsWindow = memo(function ColorsWindow({ containerDimensions, setIsColorsWindowOpen, mainWindowPosition, mainWindowSize }) {
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
-  const [position, setPosition] = useState({ 
-    x: mainWindowPosition.x + 40,
-    y: mainWindowPosition.y + 80
-  });
+  const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   
   const items = [
     {

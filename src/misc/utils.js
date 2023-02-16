@@ -88,3 +88,12 @@ export function RGBtoHSL({ r, g, b }) {
 
   return { h, s, l };
 }
+
+export function getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size) {
+  const mainWindowCenterX = mainWindowPosition.x + mainWindowSize.width / 2;
+  const mainWindowCenterY = mainWindowPosition.y + mainWindowSize.height / 2;
+  const x = mainWindowCenterX - size.width / 2;
+  const y = mainWindowCenterY - size.height / 2;
+
+  return { x, y };
+}
