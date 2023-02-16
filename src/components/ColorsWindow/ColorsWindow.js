@@ -99,8 +99,20 @@ function ResizeWindowBody({ setIsColorsWindowOpen }) {
           </button>
 
           <div className={css['buttons-container']}>
-            <button type="button" className="form-button form-button--active">OK</button>
-            <button type="button" className="form-button">Cancel</button>
+            <button 
+              type="button"
+              className="form-button form-button--medium form-button--active"
+              onClick={() => setIsColorsWindowOpen(false)}
+            >
+              OK
+            </button>
+            <button 
+              type="button"
+              className="form-button form-button--medium"
+              onClick={() => setIsColorsWindowOpen(false)}
+            >
+              Cancel
+            </button>
           </div>
         </div>
       </div>

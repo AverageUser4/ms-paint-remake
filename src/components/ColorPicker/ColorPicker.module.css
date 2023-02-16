@@ -1,6 +1,4 @@
-.color-picker {
-  position: relative;
-  
+.color-picker {  
   display: flex;
   justify-content: space-between;
 
@@ -15,10 +13,22 @@
   border: 1px solid rgb(160, 160, 160);
   border-bottom-color: rgb(255, 255, 255);
   border-right-color: rgb(255, 255, 255);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.cursor {
+  display: block;
+
+  position: absolute;
+  pointer-events: none;
 }
 
 .color-bar-container {
   padding: 0 10px;
+
+  position: relative;
 }
 
 .color-bar {

@@ -76,7 +76,8 @@ function PaintXPlatform() {
       Component: Ribbon,
       props: { 
         ribbonData,
-        setIsResizeWindowOpen
+        setIsResizeWindowOpen,
+        setIsColorsWindowOpen,
       }
     },
     (

@@ -5,13 +5,16 @@
 
   background-color: rgb(225, 225, 225);
   border: 1px solid rgb(173, 173, 173);
-  font-size: 12.5px;
+  font-size: 12px;
   font-family: 'segoe';
 
   box-sizing: border-box;
 }
 .form-button--active {
   border: 2px solid rgb(0, 120, 215);
+}
+.form-button--medium {
+  width: 63px;
 }
 .form-button--full-width {
   width: 100%
@@ -24,6 +27,9 @@
 .form-button:hover:not(:disabled) {
   background-color: rgb(229, 241, 251);
   border: 1px solid rgb(0, 120, 215);
+}
+.form-button:active:not(:disabled) {
+  background-color: rgb(204, 228, 247);
 }
 .form-button__icon {
   margin-left: 4px;

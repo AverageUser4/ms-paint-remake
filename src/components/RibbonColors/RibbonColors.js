@@ -9,7 +9,7 @@ import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import colors16 from './assets/colors-16.png';
 import colors32 from './assets/colors-32.png';
 
-function RibbonColors({ ribbonWidth }) {
+function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
   const isOnlyContent = ribbonWidth >= 725;
 
   const colorsTemp = [];
@@ -22,14 +22,28 @@ function RibbonColors({ ribbonWidth }) {
       <RibbonItemExpanded name="Colors">
 
           <div className={css['container']}>
-            <BigButton backgroundColor="red" hasArrow={false} name={<div>Color <div className="line-break"></div> 1</div>}/>
-            <BigButton backgroundColor="blue" hasArrow={false} name={<div>Color <div className="line-break"></div> 2</div>} iconSize="small"/>
+            <BigButton 
+              backgroundColor="red"
+              hasArrow={false}
+              name={<div>Color <div className="line-break"></div> 1</div>}
+            />
+            <BigButton 
+              backgroundColor="blue"
+              hasArrow={false}
+              name={<div>Color <div className="line-break"></div> 2</div>} 
+              iconSize="small"
+            />
 
             <div className={css['colors-grid']}>
               {colorsTemp}
             </div>
 
-            <BigButton icon={colors32} hasArrow={false} name={<div>Edit <div className="line-break"></div> colors</div>}/>
+            <BigButton 
+              icon={colors32}
+              hasArrow={false}
+              name={<div>Edit <div className="line-break"></div> colors</div>}
+              onPointerDown={() => setIsColorsWindowOpen(true)}
+            />
           </div>
 
       </RibbonItemExpanded>
@@ -39,6 +53,7 @@ function RibbonColors({ ribbonWidth }) {
 
 RibbonColors.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,
+  setIsColorsWindowOpen: PropTypes.func.isRequired,
 };
 
 export default RibbonColors;

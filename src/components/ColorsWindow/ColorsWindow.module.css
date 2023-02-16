@@ -23,8 +23,8 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(8, auto);
-  justify-content: start;
-  gap: 6px;
+  justify-content: end;
+  gap: 7.5px;
 
   margin-top: 6px;
 }
@@ -32,8 +32,8 @@
 .grid-button {
   position: relative;
   
-  width: 16px;
-  height: 16px;
+  width: 18px;
+  height: 18px;
 
   background-color: red;
   
@@ -54,8 +54,8 @@
   left: -4px;
   
   display: block;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
 
   border: 1px dotted black;
   border-radius: 2px;
@@ -70,8 +70,8 @@
   left: 0;
   
   display: block;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
 
   border: 1px solid rgb(105, 105, 105);
   border-bottom-color: rgb(227, 227, 227);

@@ -14,7 +14,7 @@ import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindowOpen }) {
+const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindowOpen, setIsColorsWindowOpen }) {
   const containerRef = useRef();
   useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(), 'ribbon');
   
@@ -31,21 +31,45 @@ const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindow
         {
           ribbonData.activeTab === 'home' ?
             <>
-              <RibbonClipboard ribbonWidth={windowWidth}/>
-              <RibbonImage ribbonWidth={windowWidth} setIsResizeWindowOpen={setIsResizeWindowOpen}/>
-              <RibbonTools ribbonWidth={windowWidth}/>
+              <RibbonClipboard 
+                ribbonWidth={windowWidth}
+              />
+
+              <RibbonImage 
+                ribbonWidth={windowWidth} setIsResizeWindowOpen={setIsResizeWindowOpen}
+              />
+
+              <RibbonTools 
+                ribbonWidth={windowWidth}
+              />
+
               <RibbonBrushes/>
+
               <div className="vertical-line"></div>
-              <RibbonShapes ribbonWidth={windowWidth}/>
+
+              <RibbonShapes 
+                ribbonWidth={windowWidth}
+              />
+
               <RibbonSize/>
+
               <div className="vertical-line"></div>
-              <RibbonColors ribbonWidth={windowWidth}/>
+
+              <RibbonColors 
+                ribbonWidth={windowWidth}
+                setIsColorsWindowOpen={setIsColorsWindowOpen}
+              />
+
               <div className="vertical-line"></div>
             </>
           :
             <>
-              <RibbonZoom ribbonWidth={windowWidth}/>
+              <RibbonZoom 
+                ribbonWidth={windowWidth}
+              />
+
               <RibbonShowOrHide/>
+
               <RibbonDisplay/>
             </>
         }
@@ -58,6 +82,7 @@ Ribbon.propTypes = {
   windowWidth: PropTypes.number.isRequired,
   ribbonData: PropTypes.object.isRequired,
   setIsResizeWindowOpen: PropTypes.func.isRequired,
+  setIsColorsWindowOpen: PropTypes.func.isRequired,
 };
 
 export default Ribbon;
