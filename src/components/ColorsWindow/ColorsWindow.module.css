@@ -1,0 +1,93 @@
+.body {
+  display: flex;
+  
+  padding: 6px;
+  height: calc(100% - var(--inner-window-topbar-height));
+  
+  background-color: rgb(240, 240, 240);
+
+  box-sizing: border-box;
+}
+
+.left {
+  display: grid;
+  align-content: space-between;
+
+  height: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(8, auto);
+  justify-content: start;
+  gap: 6px;
+
+  margin-top: 6px;
+}
+
+.grid-button {
+  position: relative;
+  
+  width: 16px;
+  height: 16px;
+
+  background-color: red;
+  border: 1px solid rgb(160, 160, 160);
+  border-bottom-color: rgb(255, 255, 255);
+  border-right-color: rgb(255, 255, 255);
+
+  box-sizing: border-box;
+}
+.grid-button:focus {
+  outline: 1px solid black;
+}
+.grid-button:focus::before {
+  content: '';
+  
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  
+  display: block;
+  width: 22px;
+  height: 22px;
+
+  border: 1px dotted black;
+  border-radius: 2px;
+
+  box-sizing: border-box;  
+}
+.grid-button::after {
+  content: '';
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  display: block;
+  width: 14px;
+  height: 14px;
+
+  border: 1px solid rgb(105, 105, 105);
+  border-bottom-color: rgb(227, 227, 227);
+  border-right-color: rgb(227, 227, 227);
+
+  box-sizing: border-box;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 8px;
+
+  margin-top: 8px;
+}
+
+.color-picker {
+  width: 175px;
+  height: 187px;
+  
+  background-image: url(./assets//color-picker.png);
+  border: 1px solid rgb(160, 160, 160);
+  border-bottom-color: rgb(255, 255, 255);
+  border-right-color: rgb(255, 255, 255);
+}

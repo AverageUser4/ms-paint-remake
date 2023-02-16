@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import Window from '../Window/Window';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
@@ -9,12 +9,16 @@ import BottomBar from '../BottomBar/BottomBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
+import ColorsWindow from '../ColorsWindow/ColorsWindow';
 
 const minimal = { width: 460, height: 300 };
 
 function PaintXPlatform() {
   const [mainWindowPosition, setMainWindowPosition] = useState({ x: 200, y: 100 });
+  const [mainWindowSize, setMainWindowSize] = useState({ width: 600, height: 500 });
+
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
+  const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(true);
   
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -120,6 +124,8 @@ function PaintXPlatform() {
         containerDimensions={containerTemp}
         position={mainWindowPosition}
         setPosition={setMainWindowPosition}
+        size={mainWindowSize}
+        setSize={setMainWindowSize}
       />
 
       {
@@ -128,6 +134,16 @@ function PaintXPlatform() {
             containerDimensions={containerTemp}
             setIsResizeWindowOpen={setIsResizeWindowOpen}
             mainWindowPosition={mainWindowPosition}
+          />
+      }
+
+      {
+        isColorsWindowOpen &&
+          <ColorsWindow
+            containerDimensions={containerTemp}
+            setIsColorsWindowOpen={setIsColorsWindowOpen}
+            mainWindowPosition={mainWindowPosition}
+            mainWindowSize={mainWindowSize}
           />
       }
     </div>

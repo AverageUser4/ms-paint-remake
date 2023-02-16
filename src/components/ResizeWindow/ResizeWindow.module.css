@@ -43,19 +43,6 @@
   margin-bottom: 0;
 }
 
-.input-text {
-  width: 60px;
-  height: 22px;
-
-  border: 1px solid rgb(122, 122, 122);
-  
-  box-sizing: border-box;
-  transition: border-color 300ms;
-}
-.input-text:hover {
-  border-color: rgb(23, 23, 23);
-}
-
 .text-label {
   margin: 0 auto 0 30px;
 }
@@ -103,60 +90,9 @@
   margin-left: 28px;
 }
 
-.radio {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  width: 12px;
-  height: 12px;
-  margin: 0 3px 0 0;
-
-  color: rgb(51, 51, 51);
-  border: 1px solid currentColor;
-  background-color: rgb(255, 255, 255);
-  border-radius: 50%;
-
-  transition: color 300ms;
-  box-sizing: border-box;
-  appearance: none;
-}
-.radio:checked::after {
-  content: '';
-
-  display: block;
-  width: 6px;
-  height: 6px;
-
-  background-color: currentColor;
-  border-radius: 50%;
-}
-.radio:hover {
-  color: rgb(0, 120, 215);
-}
-
 .buttons-container {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
 }
 
-.button {
-  width: 85px;
-  height: 23px;
-  padding: 0 0 1px;
-
-  background-color: rgb(225, 225, 225);
-  border: 1px solid rgb(173, 173, 173);
-  font-size: 12.5px;
-  font-family: 'segoe';
-
-  box-sizing: border-box;
-}
-.button--active {
-  border: 2px solid rgb(0, 120, 215);
-}
-.button:hover {
-  background-color: rgb(229, 241, 251);
-  border: 1px solid rgb(0, 120, 215);
-}

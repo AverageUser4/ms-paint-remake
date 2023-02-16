@@ -12,6 +12,7 @@ import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 
 const ResizeWindow = memo(function ResizeWindow({ containerDimensions, setIsResizeWindowOpen, mainWindowPosition }) {
+  const [size, setSize] = useState({ width: 280, height: 400 });
   const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
   
   const items = [
@@ -33,10 +34,8 @@ const ResizeWindow = memo(function ResizeWindow({ containerDimensions, setIsResi
   return (
     <Window
       items={items}
-      initialSize={{
-        width: 280,
-        height: 400
-      }}
+      size={size}
+      setSize={setSize}
       position={position}
       setPosition={setPosition}
       containerDimensions={containerDimensions}
@@ -73,7 +72,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
           <label className={css['radio-label']}>
             <input 
               type="radio"
-              className={css['radio']}
+              className="form-raadio"
               name="resize-type"
             />
             <span className="text">Percentage</span>
@@ -82,7 +81,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
           <label className={css['radio-label']}>
             <input 
               type="radio"
-              className={css['radio']}
+              className="form-raadio"
               name="resize-type"
             />
             <span className="text">Pixels</span>
@@ -97,7 +96,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
           </label>
 
           <input 
-            className={css['input-text']}
+            className="form-input-text"
             id="rw-resize-horizontal"
           />
         </div>
@@ -110,7 +109,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
           </label>
 
           <input 
-            className={css['input-text']}
+            className="form-input-text"
             id="rw-resize-vertical"
           />
         </div>
@@ -141,7 +140,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
           </label>
 
           <input 
-            className={css['input-text']}
+            className="form-input-text"
             id="rw-skew-horizontal"
           />
         </div>
@@ -154,7 +153,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
           </label>
 
           <input 
-            className={css['input-text']}
+            className="form-input-text"
             id="rw-skew-vertical"
           />
         </div>
@@ -162,14 +161,14 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
 
       <div className={css['buttons-container']}>
         <button 
-          className={`${css['button']} ${css['button--active']}`} 
+          className={`form-button form-button--active`} 
           type="button"
           onClick={() => setIsResizeWindowOpen(false)}
         >
           OK
         </button>
         <button 
-          className={`${css['button']}`} 
+          className={`form-button`} 
           type="button"
           onClick={() => setIsResizeWindowOpen(false)}
         >

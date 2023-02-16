@@ -7,7 +7,7 @@
     font-weight: normal;
     line-height: 1;
     color: var(--text-color-4);
-    text-align: center;
+    /* text-align: center; */
   
     user-select: none;
   }

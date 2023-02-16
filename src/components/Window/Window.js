@@ -9,7 +9,8 @@ function Window({
   items,
   containerDimensions,
   minimal = { width: 1, height: 1 },
-  initialSize = { width: 600, height: 500 },
+  size,
+  setSize,
   position,
   setPosition,
   isResizable = true,
@@ -19,7 +20,6 @@ function Window({
   isInnerWindow = false,
 }) {
   const [positionDifference, setPositionDifference] = useState(null);
-  const [size, setSize] = useState({ width: initialSize.width, height: initialSize.height });
   const [resizeData, setResizeData] = useState(null);
   const [isFocused, setIsFocused] = useState(false);
   const windowRef = useRef();
@@ -52,7 +52,7 @@ function Window({
       setPosition({ x: newX, y: newY });
     if(isResizable && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
-  }, [containerDimensions, size, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition]);
+  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition]);
 
   useEffect(() => {
     // move window
@@ -174,7 +174,7 @@ function Window({
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
     }
-  }, [resizeData, size, position, minimal, isConstrained, containerDimensions, isResizable, setPosition]);
+  }, [resizeData, size, setSize, position, minimal, isConstrained, containerDimensions, isResizable, setPosition]);
   
   const onPointerDownMove = useCallback(
     function onPointerDownMove(event) {
@@ -263,10 +263,11 @@ Window.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number
   }),
-  initialSize: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number
-  }),
+  size: PropTypes.shape({
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+  }).isRequired,
+  setSize: PropTypes.func.isRequired,
   position: PropTypes.shape({
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
