@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
 import Window from '../Window/Window';
 import CanvasContainer from '../CanvasContainer/CanvasContainer';
@@ -10,15 +11,24 @@ import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
+import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 
-const minimal = { width: 460, height: 300 };
+function Logic({ 
+  containerRef,
+  initialPosition = { x: 200, y: 100 },
+  initialSize = { width: 600, height: 500 },
+  minimalSize = { width: 460, height: 300 },
+  isResizable = true,
+  isConstrained = true,
+  isAutoShrink = true,
+  isAutoFit = true,
+}) {
 
-function PaintXPlatform() {
   const [mainWindowPosition, setMainWindowPosition] = useState({ x: 200, y: 100 });
   const [mainWindowSize, setMainWindowSize] = useState({ width: 600, height: 500 });
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
-  const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(true);
+  const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
   
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -38,16 +48,19 @@ function PaintXPlatform() {
     outlineSize: null,
   });
 
-  const [containerTemp, setContainerTemp] = useState();
+  const [containerDimensions, setContainerDimensions] = useState();
   useEffect(() => {
-    if(!containerTemp) {
-      const { width, height } = document.body.getBoundingClientRect();
-      setContainerTemp({ width, height });
+    if(!containerRef.current)
+      return;
+
+    if(!containerDimensions) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setContainerDimensions({ width, height });
     }
 
     function onResize() {
-      const { width, height } = document.body.getBoundingClientRect();
-      setContainerTemp({ width, height });
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setContainerDimensions({ width, height });
     }
 
     window.addEventListener('resize', onResize);
@@ -55,7 +68,7 @@ function PaintXPlatform() {
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [containerTemp]);
+  }, [containerDimensions, containerRef]);
 
   const items = [
     {
@@ -120,19 +133,22 @@ function PaintXPlatform() {
     >
       <Window 
         items={items}
-        minimal={minimal}
-        // will be dimensions of user provided container
-        containerDimensions={containerTemp}
+        minimal={minimalSize}
+        containerDimensions={containerDimensions}
         position={mainWindowPosition}
         setPosition={setMainWindowPosition}
         size={mainWindowSize}
         setSize={setMainWindowSize}
+        isResizable={isResizable}
+        isConstrained={isConstrained}
+        isAutoFit={isAutoFit}
+        isAutoShrink={isAutoShrink}
       />
 
       {
         isResizeWindowOpen &&
           <ResizeWindow
-            containerDimensions={containerTemp}
+            containerDimensions={containerDimensions}
             setIsResizeWindowOpen={setIsResizeWindowOpen}
             mainWindowPosition={mainWindowPosition}
           />
@@ -141,13 +157,32 @@ function PaintXPlatform() {
       {
         isColorsWindowOpen &&
           <ColorsWindow
-            containerDimensions={containerTemp}
+            containerDimensions={containerDimensions}
             setIsColorsWindowOpen={setIsColorsWindowOpen}
             mainWindowPosition={mainWindowPosition}
             mainWindowSize={mainWindowSize}
           />
       }
     </div>
+  );
+}
+
+Logic.propTypes = {
+  containerRef: PropTypes.object.isRequired,
+  initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
+  initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
+  minimalSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
+  isResizable: PropTypes.bool,
+  isConstrained: PropTypes.bool,
+  isAutoShrink: PropTypes.bool,
+  isAutoFit: PropTypes.bool,
+};
+
+function PaintXPlatform(props) {
+  return (
+    <ContextMenuProvider>
+      <Logic {...props}/>
+    </ContextMenuProvider>
   );
 }
 

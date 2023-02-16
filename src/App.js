@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import PaintXPlatform from './components/PaintXPlatform/PaintXPlatform';
-import { ContextMenuProvider } from './misc/ContextMenuContext';
 
 function App() {
+  const containerRef = useRef();
   /* TEMPORARY */
   /* TEMPORARY */
   /* TEMPORARY */
@@ -18,10 +18,10 @@ function App() {
 
   
   return (
-    <div className="app">
-      <ContextMenuProvider>
-        <PaintXPlatform/>
-      </ContextMenuProvider>
+    <div className="app" ref={containerRef}>
+      <PaintXPlatform
+        containerRef={containerRef}
+      />
     </div>
   );
 }
