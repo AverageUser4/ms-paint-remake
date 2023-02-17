@@ -26,7 +26,8 @@ function Logic({
   const { 
     isMainWindowFocused, setIsMainWindowFocused,
     mainWindowPosition, setMainWindowPosition,
-    mainWindowSize, setMainWindowSize
+    mainWindowSize, setMainWindowSize,
+    isMainWindowMaximized
   } = useMainWindowContext();
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
@@ -133,7 +134,7 @@ function Logic({
         isAutoFit={isAutoFit}
         isAutoShrink={isAutoShrink}
         isLocked={isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen}
-        // isMaximized={true}
+        isMaximized={isMainWindowMaximized}
       />
 
       <ResizeWindow

@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 
-function usePointerTrack(onPointerMoveCallback, onPointerDownCallback) {
+function usePointerTrack(onPointerMoveCallback, onPointerDownCallback, onPointerUpCallback) {
   const [isPressed, setIsPressed] = useState(false);
 
   useEffect(() => {
-    function onPointerUp() {
+    function onPointerUp(event) {
       setIsPressed(false);
+      onPointerUpCallback && onPointerUpCallback(event);
     }
 
     if(isPressed) {
@@ -17,7 +18,7 @@ function usePointerTrack(onPointerMoveCallback, onPointerDownCallback) {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMoveCallback);
     };
-  }, [isPressed, onPointerMoveCallback]);
+  }, [isPressed, onPointerMoveCallback, onPointerUpCallback]);
   
   function onPointerDown(event) {
     if(event.button !== 0)

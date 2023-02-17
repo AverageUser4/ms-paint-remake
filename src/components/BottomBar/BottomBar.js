@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './BottomBar.module.css';
 
 import ZoomRange from "../ZoomRange/ZoomRange";
+import { useMainWindowContext } from "../../misc/MainWindowContext";
 
 import canvas16 from './assets/canvas-16.ico';
 import cursor16 from './assets/cursor-16.ico';
@@ -11,8 +12,15 @@ import selection16 from './assets/selection-16.ico';
 import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
 function BottomBar({ windowWidth, canvasData }) {
+  const { isMainWindowMaximized } = useMainWindowContext();
+  
   return (
-    <footer className={css['container']}>
+    <footer 
+      className={`
+        ${css['container']}
+        ${isMainWindowMaximized ? css['container--maximized'] : ''}
+      `}
+    >
       
       <div className={css['left']}>
         <div className={css['data']}>

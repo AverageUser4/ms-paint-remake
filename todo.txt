@@ -1,4 +1,4 @@
 - z-index
 - font-family
-- animate window appearing / disappearing
 - hovering mouse over canvas still causes some unwanted rerenders
+- Dropdown for some reason now have both appearance and disappearance animated, although only disappearance should be animated

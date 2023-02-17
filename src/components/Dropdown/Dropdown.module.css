@@ -5,7 +5,6 @@
     top: 100%;
     /* left: 0; */
     z-index: 3;
-
     transition: opacity 300ms linear;
   }
   .dropdown--hidden {

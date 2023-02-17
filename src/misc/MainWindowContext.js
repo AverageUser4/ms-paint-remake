@@ -6,8 +6,23 @@ const MainWindowContext = createContext();
 function MainWindowProvider({ children, initialPosition, initialSize }) {
   const [mainWindowPosition, setMainWindowPosition] = useState(initialPosition);
   const [mainWindowSize, setMainWindowSize] = useState(initialSize);
+  const [mainWindowLatestSize, setMainWindowLatestSize] = useState(initialSize);
+  const [mainWindowLatestPosition, setMainWindowLatestPosition] = useState(initialPosition);
   const [isMainWindowFocused, setIsMainWindowFocused] = useState(false);
+  const [isMainWindowMaximized, setIsMainWindowMaximized] = useState(false);
 
+  function mainWindowMinimize() {
+    setIsMainWindowMaximized(false);
+    setMainWindowSize(mainWindowLatestSize);
+    setMainWindowPosition(mainWindowLatestPosition);
+  }
+
+  function mainWindowMaximize() {
+    setIsMainWindowMaximized(true);
+    setMainWindowLatestSize(mainWindowSize);
+    setMainWindowLatestPosition(mainWindowPosition);
+  }
+  
   return (
     <MainWindowContext.Provider
       value={{ 
@@ -17,6 +32,9 @@ function MainWindowProvider({ children, initialPosition, initialSize }) {
         setMainWindowSize,
         isMainWindowFocused,
         setIsMainWindowFocused,
+        isMainWindowMaximized,
+        mainWindowMinimize,
+        mainWindowMaximize,
      }}
     >
       {children}

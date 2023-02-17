@@ -32,6 +32,32 @@ function Window({
   const windowRef = useRef();
   useResizeCursor(resizeData);
 
+  useOutsideClick(windowRef, () => { 
+    if(!isInnerWindow && isFocused) {
+      setIsFocused(false);
+    }
+    else if(isInnerWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
+      setIsAttentionAnimated(true);
+      setTimeout(() => setIsAttentionAnimated(false), 1000);
+    }
+  });
+
+  useEffect(() => {
+    if(isMaximized && containerDimensions) {
+      setSize(containerDimensions);
+      setPosition({ x: 0, y: 0 });
+    }
+  }, [isMaximized, containerDimensions, setSize, setPosition]);
+  
+  useEffect(() => {
+    if(isOpen && !isActuallyOpen) {
+      setIsActuallyOpen(true);
+    }
+    if(!isOpen && isActuallyOpen) {
+      setTimeout(() => setIsActuallyOpen(false), 150);
+    }
+  }, [isOpen, isActuallyOpen]);
+
   const onPointerDownMove = usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback);
 
   function onPointerDownMoveCallback(event) {
@@ -53,31 +79,79 @@ function Window({
     setPosition({ x, y });
   }
 
-  useOutsideClick(windowRef, () => { 
-    if(!isInnerWindow && isFocused) {
-      setIsFocused(false);
-    }
-    else if(isInnerWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
-      setIsAttentionAnimated(true);
-      setTimeout(() => setIsAttentionAnimated(false), 1000);
-    }
-  });
+  const onPointerDownResize = usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
 
-  useEffect(() => {
-    if(isMaximized && containerDimensions) {
-      setSize(containerDimensions);
-      setPosition({ x: 0, y: 0 });
+  function onPointerMoveResizeCallback(event) {
+    let { clientX, clientY } = event;
+    if(isConstrained) {
+      clientX = Math.max(0, clientX);
+      clientY = Math.max(0, clientY);
     }
-  }, [isMaximized, containerDimensions, setSize, setPosition]);
+      
+    let diffX = clientX - resizeData.initialX;
+    let diffY = clientY - resizeData.initialY;
 
-  useEffect(() => {
-    if(isOpen && !isActuallyOpen) {
-      setIsActuallyOpen(true);
+    let newWidth = size.width;
+    let newHeight = size.height;
+    let newX = position.x;
+    let newY = position.y;
+
+    if(resizeData.type.includes('left')) {
+      diffX *= -1;
+      newX = clientX;
     }
-    if(!isOpen && isActuallyOpen) {
-      setTimeout(() => setIsActuallyOpen(false), 150);
+    if(resizeData.type.includes('top')) {
+      diffY *= -1;
+      newY = clientY;
     }
-  }, [isOpen, isActuallyOpen]);
+    if(resizeData.type.includes('left') || resizeData.type.includes('right')) {
+      newWidth = resizeData.initialWidth + diffX;
+    }
+    if(resizeData.type.includes('top') || resizeData.type.includes('bottom')) {
+      newHeight = resizeData.initialHeight + diffY;
+    }
+
+    if(newWidth < minimal.width) {
+      if(resizeData.type.includes('left')) {
+        const diffW = minimal.width - newWidth;
+        newX -= diffW;
+      }
+      newWidth = minimal.width;
+    }
+    if(newHeight < minimal.height) {
+      if(resizeData.type.includes('top')) {
+        const diffH = minimal.height - newHeight;
+        newY -= diffH;
+      }
+      newHeight = minimal.height;
+    }
+
+    if(isConstrained) {
+      if(newX + newWidth > containerDimensions.width) {
+        newWidth = containerDimensions.width - newX;
+      }
+      if(newY + newHeight > containerDimensions.height) {
+        newHeight = containerDimensions.height - newY;
+      }
+    }
+
+    if(newWidth !== size.width || newHeight !== size.height) {
+      setSize({ width: newWidth, height: newHeight });
+    }
+    if(newX !== position.x || newY !== position.y) {
+      setPosition({ x: newX, y: newY });
+    }
+  }
+  
+  function onPointerDownResizeCallback(event) {
+    setResizeData({
+      type: event.target.dataset.name,
+      initialX: event.clientX,
+      initialY: event.clientY,
+      initialWidth: size.width,
+      initialHeight: size.height
+    });
+  }
 
   useEffect(() => {
     if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isResizable) || !containerDimensions)
@@ -106,112 +180,6 @@ function Window({
     if(isResizable && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
   }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition]);
-
-  useEffect(() => {
-    // resize window, moved to different effect because it could happen that
-    // pointerup event was not registered when moving mouse
-
-    if(!isResizable)
-      return;
-  
-    function onPointerUp() {
-      if(resizeData)
-        setResizeData(null);
-    }
-
-    window.addEventListener('pointerup', onPointerUp);
-
-    return () => {
-      window.removeEventListener('pointerup', onPointerUp);
-    }
-  }, [resizeData, isResizable])
-  
-  useEffect(() => {
-    // resize window
-
-    if(!isResizable)
-      return;
-    
-    function onPointerMove(event) {
-      if(!resizeData)
-        return;
-
-      let { clientX, clientY } = event;
-      if(isConstrained) {
-        clientX = Math.max(0, clientX);
-        clientY = Math.max(0, clientY);
-      }
-        
-      let diffX = clientX - resizeData.initialX;
-      let diffY = clientY - resizeData.initialY;
-
-      let newWidth = size.width;
-      let newHeight = size.height;
-      let newX = position.x;
-      let newY = position.y;
-
-      if(resizeData.type.includes('left')) {
-        diffX *= -1;
-        newX = clientX;
-      }
-      if(resizeData.type.includes('top')) {
-        diffY *= -1;
-        newY = clientY;
-      }
-      if(resizeData.type.includes('left') || resizeData.type.includes('right'))
-        newWidth = resizeData.initialWidth + diffX;
-      if(resizeData.type.includes('top') || resizeData.type.includes('bottom'))
-        newHeight = resizeData.initialHeight + diffY;
-
-      if(newWidth < minimal.width) {
-        if(resizeData.type.includes('left')) {
-          const diffW = minimal.width - newWidth;
-          newX -= diffW;
-        }
-        newWidth = minimal.width;
-      }
-      if(newHeight < minimal.height) {
-        if(resizeData.type.includes('top')) {
-          const diffH = minimal.height - newHeight;
-          newY -= diffH;
-        }
-        newHeight = minimal.height;
-      }
-
-      if(isConstrained) {
-        if(newX + newWidth > containerDimensions.width) {
-          newWidth = containerDimensions.width - newX;
-        }
-        if(newY + newHeight > containerDimensions.height) {
-          newHeight = containerDimensions.height - newY;
-        }
-      }
-
-      if(newWidth !== size.width || newHeight !== size.height)
-        setSize({ width: newWidth, height: newHeight });
-      if(newX !== position.x || newY !== position.y)
-        setPosition({ x: newX, y: newY });
-    }
-
-    window.addEventListener('pointermove', onPointerMove);
-
-    return () => {
-      window.removeEventListener('pointermove', onPointerMove);
-    }
-  }, [resizeData, size, setSize, position, minimal, isConstrained, containerDimensions, isResizable, setPosition]);
-
-  function onPointerDownResize(event) {
-    if(!isResizable || event.button !== 0)
-      return;
-
-    setResizeData({
-      type: event.target.dataset.name,
-      initialX: event.clientX,
-      initialY: event.clientY,
-      initialWidth: size.width,
-      initialHeight: size.height
-    });
-  }
 
   function onPointerDownFocus() {
     if(!isInnerWindow && !isFocused)
