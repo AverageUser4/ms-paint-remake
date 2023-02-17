@@ -49,4 +49,12 @@
     color: rgb(170, 170, 170);
   }
 
+  @keyframes text-attention {
+    100% {
+      color: rgb(170, 170, 170);
+    }
+  }
+  .text--attention {
+    animation: text-attention var(--attention-animation);
+  }
 }

@@ -20,6 +20,7 @@ function RibbonSize() {
       icon={size32}
       name="Size"
       showChildren={isDropdownOpen}
+      setShowChildren={setIsDropdownOpen}
       onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
     >
       <div className={css['container']} ref={dropdownRef}>

@@ -6,7 +6,7 @@ import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
 import { ReactComponent as Minimize } from './assets/minimize.svg';
 
-function WindowControls({ windowHasFocus, isOnlyClose = false, close }) {
+function WindowControls({ windowHasFocus, isAttentionAnimated, isOnlyClose = false, close }) {
   if(isOnlyClose) {
     return (
       <button 
@@ -15,6 +15,7 @@ function WindowControls({ windowHasFocus, isOnlyClose = false, close }) {
           ${css['button--danger']}
           ${css['button--only']}
           ${!windowHasFocus ? css['button--disabled'] : ''}
+          ${isAttentionAnimated ? css['button--attention'] : ''}
         `}
         onClick={close}
       >
@@ -53,9 +54,10 @@ function WindowControls({ windowHasFocus, isOnlyClose = false, close }) {
 }
 
 WindowControls.propTypes = {
-  windowHasFocus: PropTypes.bool.isRequired,
+  windowHasFocus: PropTypes.bool,
   isOnlyClose: PropTypes.bool,
   close: PropTypes.func.isRequired,
+  isAttentionAnimated: PropTypes.bool,
 };
 
 export default WindowControls;

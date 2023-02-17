@@ -13,7 +13,8 @@ function BigButtonDuo({
   onPointerDownTop,
   onPointerDownBottom,
   children,
-  showChildren = false 
+  showChildren = false,
+  setShowChildren,
 }) {
   const dropdownContainerRef = useRef();
   
@@ -38,6 +39,7 @@ function BigButtonDuo({
         children &&
           <Dropdown 
             isVisible={showChildren}
+            setIsVisible={setShowChildren}
             dropdownContainerRef={dropdownContainerRef}
           >
             {children}
@@ -54,6 +56,7 @@ BigButtonDuo.propTypes = {
   onPointerDownBottom: PropTypes.func,
   children: PropTypes.node,
   showChildren: PropTypes.bool,
+  setShowChildren: PropTypes.func,
 };
 
 export default BigButtonDuo;

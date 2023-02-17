@@ -1,9 +1,9 @@
-@font-face {
-  font-family: 'segoe';
-  src: url(../assets/segoe.ttf) format('truetype');
-}
-
 @layer {
+
+  @font-face {
+    font-family: 'segoe';
+    src: url(../assets/segoe.ttf) format('truetype');
+  }
   
   body {
     margin: 0;

@@ -4,7 +4,14 @@ import css from './QuickAccessDropdown.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
 
-function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ribbonData }) {
+function QuickAccessDropdown({ 
+  isVisible,
+  setIsVisible,
+  close,
+  toolbarData,
+  setToolbarData,
+  ribbonData
+}) {
   const dropdownContainerRef = useRef();
   
   function onChange(event) {
@@ -26,6 +33,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
   return (
     <Dropdown 
       isVisible={isVisible} 
+      setIsVisible={setIsVisible}
       classes={css['container']}
       dropdownContainerRef={dropdownContainerRef}
       ref={dropdownContainerRef}
@@ -172,6 +180,7 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
 QuickAccessDropdown.propTypes = {
   close: PropTypes.func.isRequired,
   isVisible: PropTypes.bool.isRequired,
+  setIsVisible: PropTypes.func,
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,

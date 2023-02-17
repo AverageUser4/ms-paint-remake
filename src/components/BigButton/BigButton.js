@@ -14,8 +14,9 @@ function BigButton({
   hasArrow = true,
   children,
   showChildren = false,
+  setShowChildren,
   onPointerDown,
-  isOnlyChildren = false
+  isOnlyChildren = false,
 }) {
   const dropdownContainerRef = useRef();
   const buttonClasses = `${css['button']} ${css[`button--${iconSize}`]}`;
@@ -51,6 +52,7 @@ function BigButton({
         children &&
           <Dropdown 
             isVisible={showChildren}
+            setIsVisible={setShowChildren}
             dropdownContainerRef={dropdownContainerRef}
           >
             {children}
@@ -68,6 +70,7 @@ BigButton.propTypes = {
   hasArrow: PropTypes.bool,
   children: PropTypes.node,
   showChildren: PropTypes.bool,
+  setShowChildren: PropTypes.func,
   onPointerDown: PropTypes.func,
   isOnlyChildren: PropTypes.bool,
 };

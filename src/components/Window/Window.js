@@ -13,18 +13,40 @@ function Window({
   setSize,
   position,
   setPosition,
+  isFocused,
+  setIsFocused,
   isResizable = true,
   isConstrained = true,
   isAutoShrink = true,
   isAutoFit = true,
   isInnerWindow = false,
+  isOpen = true,
+  isLocked = false,
 }) {
+  const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [positionDifference, setPositionDifference] = useState(null);
   const [resizeData, setResizeData] = useState(null);
-  const [isFocused, setIsFocused] = useState(false);
+  const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
-  useOutsideClick(windowRef, () => isFocused && setIsFocused(false));
+  useOutsideClick(windowRef, () => { 
+    if(!isInnerWindow && isFocused) {
+      setIsFocused(false);
+    }
+    else if(isInnerWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
+      setIsAttentionAnimated(true);
+      setTimeout(() => setIsAttentionAnimated(false), 1000);
+    }
+  });
   useResizeCursor(resizeData);
+
+  useEffect(() => {
+    if(isOpen && !isActuallyOpen) {
+      setIsActuallyOpen(true);
+    }
+    if(!isOpen && isActuallyOpen) {
+      setTimeout(() => setIsActuallyOpen(false), 150);
+    }
+  }, [isOpen, isActuallyOpen]);
 
   useEffect(() => {
     if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isResizable) || !containerDimensions)
@@ -86,11 +108,12 @@ function Window({
   }, [positionDifference, size, isConstrained, containerDimensions, setPosition]);
 
   useEffect(() => {
-    if(!isResizable)
-      return;
-    
     // resize window, moved to different effect because it could happen that
     // pointerup event was not registered when moving mouse
+
+    if(!isResizable)
+      return;
+  
     function onPointerUp() {
       if(resizeData)
         setResizeData(null);
@@ -104,10 +127,11 @@ function Window({
   }, [resizeData, isResizable])
   
   useEffect(() => {
+    // resize window
+
     if(!isResizable)
       return;
     
-    // resize window
     function onPointerMove(event) {
       if(!resizeData)
         return;
@@ -205,6 +229,9 @@ function Window({
       setIsFocused(true);
   }
   
+  if(!isOpen && !isActuallyOpen)
+    return null;
+  
   return (
     <article
       onPointerDown={onPointerDownFocus}
@@ -214,9 +241,16 @@ function Window({
         left: position.x,
         width: size.width,
         height: size.height,
-        zIndex: isInnerWindow ? '4' : 'auto'
+        zIndex: isInnerWindow ? '4' : 'auto',
       }} 
-       className={`${css['container']} ${isFocused ? css['container--focused'] : ''}`}
+       className={`
+        ${css['container']}
+        ${isFocused ? css['container--focused'] : ''}
+        ${isInnerWindow ? css['container--inner'] : ''}
+        ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
+        ${isAttentionAnimated ? css['container--attention'] : ''}
+        ${isLocked ? css['container--locked'] : ''}
+      `}
     >
       {
         isResizable &&
@@ -244,8 +278,10 @@ function Window({
           windowHasFocus: isFocused
         };
 
-        if(index === 0)
+        if(index === 0) {
           itemProps.onPointerDownMove = onPointerDownMove;
+          itemProps.isAttentionAnimated = isAttentionAnimated;
+        }
 
         return <Component key={index} {...itemProps}/>
       })}
@@ -272,12 +308,16 @@ Window.propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
   }).isRequired,
+  isFocused: PropTypes.bool.isRequired,
+  setIsFocused: PropTypes.func.isRequired,
   setPosition: PropTypes.func.isRequired,
   isResizable: PropTypes.bool,
   isConstrained: PropTypes.bool,
   isAutoShrink: PropTypes.bool,
   isAutoFit: PropTypes.bool,
   isInnerWindow: PropTypes.bool,
+  isOpen: PropTypes.bool,
+  isLocked: PropTypes.bool,
 };
 
 export default Window;

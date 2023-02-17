@@ -63,4 +63,6 @@
   --bottombar-height: 26px;
   --window-shadow: rgb(30, 40, 50);
   --window-border: rgb(150, 155, 161);
+
+  --attention-animation: alternate 75ms infinite;
 }

@@ -98,7 +98,8 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
         </button>
 
         <QuickAccessDropdown 
-          isVisible={showDropdown} 
+          isVisible={showDropdown}
+          setIsVisible={setShowDropdown}
           close={() => setShowDropdown(false)}
           toolbarData={toolbarData}
           setToolbarData={setToolbarData}

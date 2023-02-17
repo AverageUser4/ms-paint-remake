@@ -47,6 +47,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               icon={image32} 
               name="Select"
               showChildren={isDropdownOpen}
+              setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
             >
               <div className="popup" ref={dropdownRef}>
@@ -110,6 +111,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
 
                 <Dropdown 
                   isVisible={isRotateDropdownOpen}
+                  setIsVisible={setIsRotateDropdownOpen}
                   dropdownContainerRef={dropdownContainerRef}
                 >
                   <div className="popup" ref={rotateDropdownRef}>

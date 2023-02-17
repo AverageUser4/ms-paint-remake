@@ -60,7 +60,11 @@ function RibbonShapes({ ribbonWidth }) {
               />
             </BigButton>
 
-            <Dropdown isVisible={isGridDropdownOpen} dropdownContainerRef={gridDropdownContainerRef}>
+            <Dropdown 
+              isVisible={isGridDropdownOpen}
+              setIsVisible={setIsGridDropdownOpen}
+              dropdownContainerRef={gridDropdownContainerRef}
+            >
               <div className="popup" ref={gridDropdownRef}>
                 <ShapesGrid
                   ribbonWidth={ribbonWidth}
@@ -81,7 +85,11 @@ function RibbonShapes({ ribbonWidth }) {
                 <TriangleDown/>
               </button>
 
-              <Dropdown isVisible={isOutlineDropdownOpen} dropdownContainerRef={outlineDropdownContainerRef}>
+              <Dropdown 
+                isVisible={isOutlineDropdownOpen}
+                setIsVisible={setIsOutlineDropdownOpen}
+                dropdownContainerRef={outlineDropdownContainerRef}
+              >
                 <div className="popup" ref={outlineDropdownRef}>
                   <button className="popup__button text text--4 text--nowrap">
                     <img className="popup__image" src={none16} alt=""/>
@@ -131,7 +139,11 @@ function RibbonShapes({ ribbonWidth }) {
                 <TriangleDown/>
               </button>
 
-              <Dropdown isVisible={isFillDropdownOpen} dropdownContainerRef={fillDropdownContainerRef}>
+              <Dropdown 
+                isVisible={isFillDropdownOpen}
+                setIsVisible={setIsFillDropdownOpen}
+                dropdownContainerRef={fillDropdownContainerRef}
+              >
                 <div className="popup" ref={fillDropdownRef}>
                 <button className="popup__button text text--4 text--nowrap">
                     <img className="popup__image" src={none16} alt=""/>

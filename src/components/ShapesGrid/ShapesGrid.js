@@ -152,6 +152,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
 
       <Dropdown 
         isVisible={(isDropdownOpen || isOnlyDropdown) ? true : false}
+        setIsVisible={isOnlyDropdown ? null : setIsDropdownOpen}
         classes={`${css['dropdown']} popup`}
         ref={dropdownRef}
         dropdownContainerRef={dropdownRef}

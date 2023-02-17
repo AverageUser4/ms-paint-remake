@@ -11,8 +11,16 @@ function RibbonDisplay() {
   return (
     <RibbonItemExpanded name="Display">
       <div className={css['container']}>
-        <BigButton icon={full32} hasArrow={false} name={<div>Full <div className="line-break"></div> screen</div>}/>
-        <BigButton icon={thumb32} hasArrow={false} name="Thumbnail"/>
+        <BigButton 
+          icon={full32}
+          hasArrow={false}
+          name={<div>Full <div className="line-break"></div> screen</div>}
+        />
+        <BigButton 
+          icon={thumb32}
+          hasArrow={false}
+          name="Thumbnail"
+        />
       </div>
     </RibbonItemExpanded>
   );

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import css from './ColorsWindow.module.css';
 
@@ -6,34 +6,44 @@ import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import { getWindowCenteredPosition } from '../../misc/utils';
+import { useMainWindowContext } from '../../misc/MainWindowContext';
 
 import duoArrow from './assets/duo-arrow.png';
 
 const WIDTH = 448;
 const HEIGHT = 340;
 
-const ColorsWindow = memo(function ColorsWindow({ containerDimensions, setIsColorsWindowOpen, mainWindowPosition, mainWindowSize }) {
+const ColorsWindow = memo(function ColorsWindow({ containerDimensions, isOpen, setIsOpen }) {
+  const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   
+  useEffect(() => {
+    if(isOpen) {
+      setSize({ width: WIDTH, height: HEIGHT });
+      setPosition(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, { width: size.width, height: size.height }));
+    }
+  }, [isOpen, mainWindowPosition, mainWindowSize, size.width, size.height]);
+
   const items = [
     {
       Component: InnerWindowTopBar, 
       props: {
         text: 'Edit Colors',
-        close: () => setIsColorsWindowOpen(false)
+        close: () => setIsOpen(false)
       }
     },
     {
       Component: ResizeWindowBody, 
       props: {
-        setIsColorsWindowOpen
+        setIsOpen
       }
     },
   ];
 
   return (
     <Window
+      isOpen={isOpen}
       items={items}
       size={size}
       setSize={setSize}
@@ -51,18 +61,11 @@ ColorsWindow.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
   }),
-  setIsColorsWindowOpen: PropTypes.func.isRequired,
-  mainWindowPosition: PropTypes.shape({
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }).isRequired,
-  mainWindowSize: PropTypes.shape({
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired,
-  }).isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
-function ResizeWindowBody({ setIsColorsWindowOpen }) {
+function ResizeWindowBody({ setIsOpen }) {
   const tempColors = [];
   for(let i = 0; i < 48; i++) {
     tempColors.push(
@@ -100,14 +103,14 @@ function ResizeWindowBody({ setIsColorsWindowOpen }) {
             <button 
               type="button"
               className="form-button form-button--medium form-button--active"
-              onClick={() => setIsColorsWindowOpen(false)}
+              onClick={() => setIsOpen(false)}
             >
               OK
             </button>
             <button 
               type="button"
               className="form-button form-button--medium"
-              onClick={() => setIsColorsWindowOpen(false)}
+              onClick={() => setIsOpen(false)}
             >
               Cancel
             </button>
@@ -128,7 +131,7 @@ function ResizeWindowBody({ setIsColorsWindowOpen }) {
 }
 
 ResizeWindowBody.propTypes = {
-  setIsColorsWindowOpen: PropTypes.func.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
 export default ColorsWindow;

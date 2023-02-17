@@ -1,9 +1,10 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './ResizeWindow.module.css';
 
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
+import { useMainWindowContext } from '../../misc/MainWindowContext';
 
 import resizeHorizontal from './assets/resize-horizontal.ico';
 import resizeVertical from './assets/resize-vertical.ico';
@@ -11,28 +12,40 @@ import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 
-const ResizeWindow = memo(function ResizeWindow({ containerDimensions, setIsResizeWindowOpen, mainWindowPosition }) {
-  const [size, setSize] = useState({ width: 280, height: 400 });
+const WIDTH = 280;
+const HEIGHT = 400;
+
+const ResizeWindow = memo(function ResizeWindow({ containerDimensions, isOpen, setIsOpen }) {
+  const { mainWindowPosition } = useMainWindowContext();
+  const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
-  
+
+  useEffect(() => {
+    if(isOpen) {
+      setSize({ width: WIDTH, height: HEIGHT });
+      setPosition({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
+    }
+  }, [isOpen, mainWindowPosition]);
+
   const items = [
     {
       Component: InnerWindowTopBar, 
       props: {
         text: 'Resize and Skew',
-        close: () => setIsResizeWindowOpen(false)
+        close: () => setIsOpen(false)
       }
     },
     {
       Component: ResizeWindowBody, 
       props: {
-        setIsResizeWindowOpen
+        setIsOpen
       }
     },
   ];
 
   return (
     <Window
+      isOpen={isOpen}
       items={items}
       size={size}
       setSize={setSize}
@@ -50,14 +63,11 @@ ResizeWindow.propTypes = {
     width: PropTypes.number,
     height: PropTypes.number,
   }),
-  setIsResizeWindowOpen: PropTypes.func.isRequired,
-  mainWindowPosition: PropTypes.shape({
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }).isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
-function ResizeWindowBody({ setIsResizeWindowOpen }) {
+function ResizeWindowBody({ setIsOpen }) {
   const [tempMaintain, setTempMaintain] = useState(false);
 
   return (
@@ -163,14 +173,14 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
         <button 
           className={`form-button form-button--active`} 
           type="button"
-          onClick={() => setIsResizeWindowOpen(false)}
+          onClick={() => setIsOpen(false)}
         >
           OK
         </button>
         <button 
           className={`form-button`} 
           type="button"
-          onClick={() => setIsResizeWindowOpen(false)}
+          onClick={() => setIsOpen(false)}
         >
           Cancel
         </button>
@@ -181,7 +191,7 @@ function ResizeWindowBody({ setIsResizeWindowOpen }) {
 }
 
 ResizeWindowBody.propTypes = {
-  setIsResizeWindowOpen: PropTypes.func.isRequired,
+  setIsOpen: PropTypes.func.isRequired,
 };
 
 export default ResizeWindow;

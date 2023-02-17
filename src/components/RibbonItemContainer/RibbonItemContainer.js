@@ -5,10 +5,12 @@ import css from './RibbonItemContainer.module.css';
 import Dropdown from '../Dropdown/Dropdown';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
+import { useMainWindowContext } from "../../misc/MainWindowContext";
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
+  const { isMainWindowFocused } = useMainWindowContext();
   const containerRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(containerRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -17,6 +19,11 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
     if(isDropdownOpen && isOnlyContent)
       setIsDropdownOpen(false);
   }, [isDropdownOpen, isOnlyContent]);
+
+  useEffect(() => {
+    if(isDropdownOpen && !isMainWindowFocused)
+      setIsDropdownOpen(false);
+  }, [isDropdownOpen, isMainWindowFocused]);
 
   if(isOnlyContent)
     return children;
@@ -40,7 +47,8 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
       </button>
 
       <Dropdown 
-        isVisible={isDropdownOpen} 
+        isVisible={isDropdownOpen}
+        setIsVisible={setIsDropdownOpen}
         classes={css['dropdown']}
         dropdownContainerRef={containerRef}
       >

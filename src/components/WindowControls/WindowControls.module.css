@@ -32,6 +32,14 @@
 .button--disabled {
   color: rgb(153, 153, 153);
 }
+@keyframes attention {
+  100% {
+    color: rgb(153, 153, 153);
+  }
+}
+.button--attention {
+  animation: attention var(--attention-animation);
+}
 .button--only {
   width: 30px;
 }

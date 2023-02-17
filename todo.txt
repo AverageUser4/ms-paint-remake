@@ -1,3 +1,4 @@
 - z-index
 - font-family
 - animate window appearing / disappearing
+- hovering mouse over canvas still causes some unwanted rerenders

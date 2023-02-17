@@ -2,10 +2,12 @@ import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './Dropdown.module.css';
 
-import { useContainerContext } from '../../misc/ContainerProvider';
+import { useContainerContext } from '../../misc/ContainerContext';
+import { useMainWindowContext } from "../../misc/MainWindowContext";
 
 const Dropdown = forwardRef(function Dropdown(props, ref) {
-  const { isVisible, classes, children, adjustPosition = true, dropdownContainerRef } = props;
+  const { isVisible, setIsVisible, classes, children, adjustPosition = true, dropdownContainerRef } = props;
+  const { isMainWindowFocused } = useMainWindowContext();
   const { containerRef: paintContainerRef, containerDimensions: paintContainerDimensions } = useContainerContext();
   const dropdownRef = useRef();
   const [position, setPosition] = useState(adjustPosition ? { left: 0, right: 'auto', top: '100%', bottom: 'auto' } : {});
@@ -13,6 +15,12 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
   const [isPositionAdjusted, setIsPositionAdjusted] = useState(false);
   
   useEffect(() => {
+    if(isVisible && !isMainWindowFocused)
+      setIsVisible && setIsVisible(false);
+  }, [isVisible, isMainWindowFocused, setIsVisible]);
+
+  useEffect(() => {
+    // animation
     if(isVisible && !isActuallyVisible) {
       setIsActuallyVisible(true);
       setIsPositionAdjusted(false);
@@ -53,7 +61,7 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
   return (
     <div className={`
         ${css['dropdown']}
-        ${!isVisible || !isPositionAdjusted ? css['dropdown--hidden'] : ''}
+        ${!isVisible || (adjustPosition && !isPositionAdjusted) ? css['dropdown--hidden'] : ''}
         ${classes ? classes : ''}
       `}
       ref={(element) => {
@@ -71,6 +79,7 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
 Dropdown.propTypes = {
   children: PropTypes.node.isRequired,
   isVisible: PropTypes.bool.isRequired,
+  setIsVisible: PropTypes.func,
   classes: PropTypes.string,
   adjustPosition: PropTypes.bool,
   dropdownContainerRef: PropTypes.object,

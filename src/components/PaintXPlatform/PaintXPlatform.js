@@ -12,11 +12,10 @@ import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
-import { useContainerContext, ContainerProvider } from '../../misc/ContainerProvider';
+import { useContainerContext, ContainerProvider } from '../../misc/ContainerContext';
+import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
 
 function Logic({ 
-  initialPosition = { x: 200, y: 100 },
-  initialSize = { width: 600, height: 500 },
   minimalSize = { width: 460, height: 300 },
   isResizable = true,
   isConstrained = true,
@@ -24,11 +23,15 @@ function Logic({
   isAutoFit = true,
 }) {
   const { containerDimensions } = useContainerContext();
-  const [mainWindowPosition, setMainWindowPosition] = useState(initialPosition);
-  const [mainWindowSize, setMainWindowSize] = useState(initialSize);
+  const { 
+    isMainWindowFocused, setIsMainWindowFocused,
+    mainWindowPosition, setMainWindowPosition,
+    mainWindowSize, setMainWindowSize
+  } = useMainWindowContext();
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
   const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
+  const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
   
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -47,6 +50,12 @@ function Logic({
     size: { width: 300, height: 200 },
     outlineSize: null,
   });
+
+  useEffect(() => {
+    if((isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen) && isMainWindowFocused) {
+      setIsMainWindowFocused(false);
+    }
+  }, [isResizeWindowOpen, isColorsWindowOpen, isPromptWindowOpen, isMainWindowFocused, setIsMainWindowFocused]);
 
   const items = [
     {
@@ -117,37 +126,31 @@ function Logic({
         setPosition={setMainWindowPosition}
         size={mainWindowSize}
         setSize={setMainWindowSize}
+        isFocused={isMainWindowFocused}
+        setIsFocused={setIsMainWindowFocused}
         isResizable={isResizable}
         isConstrained={isConstrained}
         isAutoFit={isAutoFit}
         isAutoShrink={isAutoShrink}
+        isLocked={isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen}
       />
 
-      {
-        isResizeWindowOpen &&
-          <ResizeWindow
-            containerDimensions={containerDimensions}
-            setIsResizeWindowOpen={setIsResizeWindowOpen}
-            mainWindowPosition={mainWindowPosition}
-          />
-      }
+      <ResizeWindow
+        isOpen={isResizeWindowOpen}
+        setIsOpen={setIsResizeWindowOpen}
+        containerDimensions={containerDimensions}
+      />
 
-      {
-        isColorsWindowOpen &&
-          <ColorsWindow
-            containerDimensions={containerDimensions}
-            setIsColorsWindowOpen={setIsColorsWindowOpen}
-            mainWindowPosition={mainWindowPosition}
-            mainWindowSize={mainWindowSize}
-          />
-      }
+      <ColorsWindow
+        isOpen={isColorsWindowOpen}
+        setIsOpen={setIsColorsWindowOpen}
+        containerDimensions={containerDimensions}
+      />
     </div>
   );
 }
 
 Logic.propTypes = {
-  initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
-  initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
   minimalSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
   isResizable: PropTypes.bool,
   isConstrained: PropTypes.bool,
@@ -158,15 +161,22 @@ Logic.propTypes = {
 function PaintXPlatform(props) {
   return (
     <ContainerProvider containerRef={props.containerRef}>
-      <ContextMenuProvider>
-        <Logic {...props}/>
-      </ContextMenuProvider>
+      <MainWindowProvider
+        initialPosition={props.initialPosition || { x: 200, y: 100 }}
+        initialSize={props.initialSize || { width: 600, height: 500 }}
+      >
+        <ContextMenuProvider>
+          <Logic {...props}/>
+        </ContextMenuProvider>
+      </MainWindowProvider>
     </ContainerProvider>
   );
 }
 
 PaintXPlatform.propTypes = {
   containerRef: PropTypes.object.isRequired,
+  initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
+  initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
 };
 
 export default PaintXPlatform;
