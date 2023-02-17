@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 import useResizeCursor from '../../hooks/useResizeCursor';
+import usePointerTrack from '../../hooks/usePointerTrack';
 
 function Window({ 
   items,
@@ -22,12 +23,36 @@ function Window({
   isInnerWindow = false,
   isOpen = true,
   isLocked = false,
+  isMaximized = false,
 }) {
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [positionDifference, setPositionDifference] = useState(null);
   const [resizeData, setResizeData] = useState(null);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
+  useResizeCursor(resizeData);
+
+  const onPointerDownMove = usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback);
+
+  function onPointerDownMoveCallback(event) {
+    const x = event.clientX - position.x;
+    const y = event.clientY - position.y;
+    
+    setPositionDifference({ x, y });
+  }
+  
+  function onPointerMoveMoveCallback(event) {
+    let x = event.clientX - positionDifference.x;
+    let y = event.clientY - positionDifference.y;
+
+    if(isConstrained) {
+      x = Math.max(Math.min(x, containerDimensions.width - size.width), 0);
+      y = Math.max(Math.min(y, containerDimensions.height - size.height), 0);
+    }
+    
+    setPosition({ x, y });
+  }
+
   useOutsideClick(windowRef, () => { 
     if(!isInnerWindow && isFocused) {
       setIsFocused(false);
@@ -37,7 +62,13 @@ function Window({
       setTimeout(() => setIsAttentionAnimated(false), 1000);
     }
   });
-  useResizeCursor(resizeData);
+
+  useEffect(() => {
+    if(isMaximized && containerDimensions) {
+      setSize(containerDimensions);
+      setPosition({ x: 0, y: 0 });
+    }
+  }, [isMaximized, containerDimensions, setSize, setPosition]);
 
   useEffect(() => {
     if(isOpen && !isActuallyOpen) {
@@ -75,37 +106,6 @@ function Window({
     if(isResizable && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
   }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition]);
-
-  useEffect(() => {
-    // move window
-    function onPointerUp() {
-      if(positionDifference)
-        setPositionDifference(null);
-    }
-
-    function onPointerMove(event) {
-      if(!positionDifference)
-        return;
-  
-      let x = event.clientX - positionDifference.x;
-      let y = event.clientY - positionDifference.y;
-
-      if(isConstrained) {
-        x = Math.max(Math.min(x, containerDimensions.width - size.width), 0);
-        y = Math.max(Math.min(y, containerDimensions.height - size.height), 0);
-      }
-      
-      setPosition({ x, y });
-    }
-
-    window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointermove', onPointerMove);
-
-    return () => {
-      window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointermove', onPointerMove);
-    }
-  }, [positionDifference, size, isConstrained, containerDimensions, setPosition]);
 
   useEffect(() => {
     // resize window, moved to different effect because it could happen that
@@ -199,17 +199,6 @@ function Window({
       window.removeEventListener('pointermove', onPointerMove);
     }
   }, [resizeData, size, setSize, position, minimal, isConstrained, containerDimensions, isResizable, setPosition]);
-  
-  const onPointerDownMove = useCallback(
-    function onPointerDownMove(event) {
-      if(event.button !== 0)
-        return;
-
-      const x = event.clientX - position.x;
-      const y = event.clientY - position.y;
-      setPositionDifference({ x, y });
-    }, [position]
-  );
 
   function onPointerDownResize(event) {
     if(!isResizable || event.button !== 0)
@@ -225,7 +214,7 @@ function Window({
   }
 
   function onPointerDownFocus() {
-    if(!isFocused)
+    if(!isInnerWindow && !isFocused)
       setIsFocused(true);
   }
   
@@ -308,8 +297,8 @@ Window.propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
   }).isRequired,
-  isFocused: PropTypes.bool.isRequired,
-  setIsFocused: PropTypes.func.isRequired,
+  isFocused: PropTypes.bool,
+  setIsFocused: PropTypes.func,
   setPosition: PropTypes.func.isRequired,
   isResizable: PropTypes.bool,
   isConstrained: PropTypes.bool,
@@ -318,6 +307,7 @@ Window.propTypes = {
   isInnerWindow: PropTypes.bool,
   isOpen: PropTypes.bool,
   isLocked: PropTypes.bool,
+  isMaximized: PropTypes.bool,
 };
 
 export default Window;

@@ -11,9 +11,8 @@ function InnerWindowTopBar({ onPointerDownMove, text, close, isAttentionAnimated
     >
       <span className={`text ${isAttentionAnimated ? 'text--attention' : ''}`}>{text}</span>
       <WindowControls 
-        isOnlyClose={true}
+        isInnerWindow={true}
         close={close}
-        windowHasFocus={true}
         isAttentionAnimated={isAttentionAnimated}
       />
     </header>

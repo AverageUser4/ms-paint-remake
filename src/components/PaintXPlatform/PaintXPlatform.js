@@ -133,6 +133,7 @@ function Logic({
         isAutoFit={isAutoFit}
         isAutoShrink={isAutoShrink}
         isLocked={isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen}
+        // isMaximized={true}
       />
 
       <ResizeWindow

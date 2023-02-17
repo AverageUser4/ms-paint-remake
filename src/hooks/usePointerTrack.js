@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-function usePointerTrack(onPointerMove) {
+function usePointerTrack(onPointerMoveCallback, onPointerDownCallback) {
   const [isPressed, setIsPressed] = useState(false);
 
   useEffect(() => {
@@ -10,20 +10,21 @@ function usePointerTrack(onPointerMove) {
 
     if(isPressed) {
       window.addEventListener('pointerup', onPointerUp);
-      window.addEventListener('pointermove', onPointerMove);
+      window.addEventListener('pointermove', onPointerMoveCallback);
     }
 
     return () => {
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('pointermove', onPointerMoveCallback);
     };
-  }, [isPressed, onPointerMove]);
+  }, [isPressed, onPointerMoveCallback]);
   
   function onPointerDown(event) {
     if(event.button !== 0)
       return;
 
     setIsPressed(true);
+    onPointerDownCallback && onPointerDownCallback(event);
   }
 
   return onPointerDown;

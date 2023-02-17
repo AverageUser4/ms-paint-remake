@@ -2,19 +2,24 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './WindowControls.module.css';
 
+import { useMainWindowContext } from "../../misc/MainWindowContext";
+
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
 import { ReactComponent as Minimize } from './assets/minimize.svg';
+import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 
-function WindowControls({ windowHasFocus, isAttentionAnimated, isOnlyClose = false, close }) {
-  if(isOnlyClose) {
+function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
+  const { isMainWindowFocused } = useMainWindowContext();
+  
+  // inner window
+  if(isInnerWindow) {
     return (
       <button 
         className={`
           ${css['button']} 
           ${css['button--danger']}
           ${css['button--only']}
-          ${!windowHasFocus ? css['button--disabled'] : ''}
           ${isAttentionAnimated ? css['button--attention'] : ''}
         `}
         onClick={close}
@@ -24,28 +29,28 @@ function WindowControls({ windowHasFocus, isAttentionAnimated, isOnlyClose = fal
     );
   }
   
+  // main window
   return (
     <div className={css['container']}>
       <button 
         className={`
           ${css['button']} 
-          ${!windowHasFocus ? css['button--disabled'] : ''}`}
+          ${!isMainWindowFocused ? css['button--disabled'] : ''}`}
         >
         <Minimize draggable="false"/>
       </button>
       <button 
         className={`
           ${css['button']} 
-          ${!windowHasFocus ? css['button--disabled'] : ''}`}
+          ${!isMainWindowFocused ? css['button--disabled'] : ''}`}
         >
         <Maximize draggable="false"/>
       </button>
       <button 
         className={`
           ${css['button']} ${css['button--danger']} 
-          ${!windowHasFocus ? css['button--disabled'] : ''}
+          ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
-        onClick={close}
       >
         <Close draggable="false"/>
       </button>
@@ -54,8 +59,7 @@ function WindowControls({ windowHasFocus, isAttentionAnimated, isOnlyClose = fal
 }
 
 WindowControls.propTypes = {
-  windowHasFocus: PropTypes.bool,
-  isOnlyClose: PropTypes.bool,
+  isInnerWindow: PropTypes.bool,
   close: PropTypes.func.isRequired,
   isAttentionAnimated: PropTypes.bool,
 };
