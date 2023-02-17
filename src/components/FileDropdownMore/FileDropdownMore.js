@@ -159,7 +159,7 @@ function FileDropdownMore({ currentMore }) {
 
       </ul>
 
-      <Dropdown isVisible={currentMore !== 'recent'} classes={css['dropdown']}>
+      <Dropdown adjustPosition={false} isVisible={currentMore !== 'recent'} classes={css['dropdown']}>
         <div className={`${css['top']} ${css['top--alt']}`}>
           <h3 className="head">{moreData.name}</h3>
         </div>

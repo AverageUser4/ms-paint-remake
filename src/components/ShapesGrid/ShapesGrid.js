@@ -150,7 +150,12 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
           </>
       }
 
-      <Dropdown isVisible={(isDropdownOpen || isOnlyDropdown) ? true : false} classes={`${css['dropdown']} popup`} ref={dropdownRef}>
+      <Dropdown 
+        isVisible={(isDropdownOpen || isOnlyDropdown) ? true : false}
+        classes={`${css['dropdown']} popup`}
+        ref={dropdownRef}
+        dropdownContainerRef={dropdownRef}
+      >
         <div className={css['expanded']}>
           <div className={css['expanded__grid']}>
             {shapes}

@@ -25,6 +25,8 @@ import rotateLeft16 from './assets/rotate-left-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
+  const dropdownContainerRef = useRef();
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -96,7 +98,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                 {showText && <span className="text text--1">Resize</span>}
               </button>
 
-              <div className="dropdown-container">
+              <div className="dropdown-container" ref={dropdownContainerRef}>
                 <button 
                   className="button"
                   onPointerDown={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
@@ -106,7 +108,10 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                   <TriangleDown/>
                 </button>
 
-                <Dropdown isVisible={isRotateDropdownOpen}>
+                <Dropdown 
+                  isVisible={isRotateDropdownOpen}
+                  dropdownContainerRef={dropdownContainerRef}
+                >
                   <div className="popup" ref={rotateDropdownRef}>
                     <button className="popup__button text text--4 text--nowrap">
                       <img className="popup__image" src={rotate16} alt=""/>

@@ -26,14 +26,17 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 function RibbonShapes({ ribbonWidth }) {
   const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);
   const fillDropdownRef = useRef();
+  const fillDropdownContainerRef = useRef();
   useOutsideClick(fillDropdownRef, () => isFillDropdownOpen && setIsFillDropdownOpen(false));
 
   const [isOutlineDropdownOpen, setIsOutlineDropdownOpen] = useState(false);
   const outlineDropdownRef = useRef();
+  const outlineDropdownContainerRef = useRef();
   useOutsideClick(outlineDropdownRef, () => isOutlineDropdownOpen && setIsOutlineDropdownOpen(false));
 
   const [isGridDropdownOpen, setIsGridDropdownOpen] = useState(false);
   const gridDropdownRef = useRef();
+  const gridDropdownContainerRef = useRef();
   useOutsideClick(gridDropdownRef, () => isGridDropdownOpen && setIsGridDropdownOpen(false));
   
   const isOnlyContent = ribbonWidth >= 800;
@@ -45,7 +48,7 @@ function RibbonShapes({ ribbonWidth }) {
       <RibbonItemExpanded name="Shapes">
 
         <div className={css['container']}>
-          <div className="dropdown-container">
+          <div className="dropdown-container" ref={gridDropdownContainerRef}>
             <BigButton 
               icon={shapes32}
               name="Shapes"
@@ -57,7 +60,7 @@ function RibbonShapes({ ribbonWidth }) {
               />
             </BigButton>
 
-            <Dropdown isVisible={isGridDropdownOpen}>
+            <Dropdown isVisible={isGridDropdownOpen} dropdownContainerRef={gridDropdownContainerRef}>
               <div className="popup" ref={gridDropdownRef}>
                 <ShapesGrid
                   ribbonWidth={ribbonWidth}
@@ -68,7 +71,7 @@ function RibbonShapes({ ribbonWidth }) {
           </div>
 
           <div>
-            <div className="dropdown-container">
+            <div className="dropdown-container" ref={outlineDropdownContainerRef}>
               <button 
                 className="button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
@@ -78,7 +81,7 @@ function RibbonShapes({ ribbonWidth }) {
                 <TriangleDown/>
               </button>
 
-              <Dropdown isVisible={isOutlineDropdownOpen}>
+              <Dropdown isVisible={isOutlineDropdownOpen} dropdownContainerRef={outlineDropdownContainerRef}>
                 <div className="popup" ref={outlineDropdownRef}>
                   <button className="popup__button text text--4 text--nowrap">
                     <img className="popup__image" src={none16} alt=""/>
@@ -118,7 +121,7 @@ function RibbonShapes({ ribbonWidth }) {
               </Dropdown>
             </div>
 
-            <div className="dropdown-container">
+            <div className="dropdown-container" ref={fillDropdownContainerRef}>
               <button 
                 className="button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
@@ -128,7 +131,7 @@ function RibbonShapes({ ribbonWidth }) {
                 <TriangleDown/>
               </button>
 
-              <Dropdown isVisible={isFillDropdownOpen}>
+              <Dropdown isVisible={isFillDropdownOpen} dropdownContainerRef={fillDropdownContainerRef}>
                 <div className="popup" ref={fillDropdownRef}>
                 <button className="popup__button text text--4 text--nowrap">
                     <img className="popup__image" src={none16} alt=""/>

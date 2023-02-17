@@ -39,7 +39,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
   }
   
   return (
-    <Dropdown isVisible={isShown} classes={css['container']} ref={ref}>
+    <Dropdown adjustPosition={false} isVisible={isShown} classes={css['container']} ref={ref}>
       <div className={css['top']}>
         <button onPointerDown={close} className="ribbon-button ribbon-button--blue">File</button>
       </div>

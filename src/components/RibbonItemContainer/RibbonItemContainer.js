@@ -39,7 +39,11 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
 
       </button>
 
-      <Dropdown isVisible={isDropdownOpen} classes={css['dropdown']}>
+      <Dropdown 
+        isVisible={isDropdownOpen} 
+        classes={css['dropdown']}
+        dropdownContainerRef={containerRef}
+      >
         {children}
       </Dropdown>
       

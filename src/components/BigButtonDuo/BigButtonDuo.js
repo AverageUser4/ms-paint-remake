@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from 'prop-types';
 import css from './BigButtonDuo.module.css';
 
@@ -15,8 +15,10 @@ function BigButtonDuo({
   children,
   showChildren = false 
 }) {
+  const dropdownContainerRef = useRef();
+  
   return (
-    <div className={css['container']}>
+    <div className={css['container']} ref={dropdownContainerRef}>
       <button 
         className={css['top']}
         onPointerDown={onPointerDownTop ? onPointerDownTop : ()=>0}
@@ -34,7 +36,10 @@ function BigButtonDuo({
       
       {
         children &&
-          <Dropdown isVisible={showChildren}>
+          <Dropdown 
+            isVisible={showChildren}
+            dropdownContainerRef={dropdownContainerRef}
+          >
             {children}
           </Dropdown>
       }

@@ -20,6 +20,7 @@ function App() {
     <div className="app" ref={containerRef}>
       <PaintXPlatform
         containerRef={containerRef}
+        minimalSize={{ width: 1, height: 1 }}
       />
     </div>
   );

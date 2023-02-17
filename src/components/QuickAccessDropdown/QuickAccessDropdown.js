@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './QuickAccessDropdown.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
 
 function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ribbonData }) {
+  const dropdownContainerRef = useRef();
+  
   function onChange(event) {
     const { name } = event.target;
     
@@ -22,7 +24,12 @@ function QuickAccessDropdown({ isVisible, close, toolbarData, setToolbarData, ri
   }
   
   return (
-    <Dropdown isVisible={isVisible} classes={css['container']}>
+    <Dropdown 
+      isVisible={isVisible} 
+      classes={css['container']}
+      dropdownContainerRef={dropdownContainerRef}
+      ref={dropdownContainerRef}
+    >
       <div 
         data-cy="QuickAccessDropdown"
       >

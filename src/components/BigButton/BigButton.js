@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import css from './BigButton.module.css';
 
@@ -17,6 +17,7 @@ function BigButton({
   onPointerDown,
   isOnlyChildren = false
 }) {
+  const dropdownContainerRef = useRef();
   const buttonClasses = `${css['button']} ${css[`button--${iconSize}`]}`;
   let iconClasses = `${css['icon']} ${css[`icon--${iconSize}`]}`;
 
@@ -27,7 +28,7 @@ function BigButton({
     return children;
   
   return (
-    <div className={css['container']}>
+    <div className={css['container']} ref={dropdownContainerRef}>
       <button 
         className={buttonClasses}
         onPointerDown={onPointerDown ? onPointerDown : ()=>0}
@@ -48,7 +49,10 @@ function BigButton({
 
       {
         children &&
-          <Dropdown isVisible={showChildren}>
+          <Dropdown 
+            isVisible={showChildren}
+            dropdownContainerRef={dropdownContainerRef}
+          >
             {children}
           </Dropdown>
       }
