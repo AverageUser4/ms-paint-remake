@@ -15,7 +15,7 @@ import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 const WIDTH = 280;
 const HEIGHT = 400;
 
-const ResizeWindow = memo(function ResizeWindow({ containerDimensions, isOpen, setIsOpen }) {
+const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   const { mainWindowPosition } = useMainWindowContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
@@ -51,7 +51,6 @@ const ResizeWindow = memo(function ResizeWindow({ containerDimensions, isOpen, s
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      containerDimensions={containerDimensions}
       isResizable={false}
       isInnerWindow={true}
     />

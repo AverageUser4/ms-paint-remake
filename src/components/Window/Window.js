@@ -5,10 +5,11 @@ import css from './Window.module.css';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import useResizeCursor from '../../hooks/useResizeCursor';
 import usePointerTrack from '../../hooks/usePointerTrack';
+import { useMainWindowContext } from '../../misc/MainWindowContext';
+import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
   items,
-  containerDimensions,
   minimal = { width: 1, height: 1 },
   size,
   setSize,
@@ -22,15 +23,19 @@ function Window({
   isAutoFit = true,
   isInnerWindow = false,
   isOpen = true,
-  isLocked = false,
+  isIgnorePointerEvents = false,
   isMaximized = false,
 }) {
+  const { containerDimensions, containerRef } = useContainerContext();
+  const { mainWindowRestoreSize } = useMainWindowContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [positionDifference, setPositionDifference] = useState(null);
   const [resizeData, setResizeData] = useState(null);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
   useResizeCursor(resizeData);
+
+  const isAllowResize = isResizable && !isMaximized;
 
   useOutsideClick(windowRef, () => { 
     if(!isInnerWindow && isFocused) {
@@ -70,13 +75,26 @@ function Window({
   function onPointerMoveMoveCallback(event) {
     let x = event.clientX - positionDifference.x;
     let y = event.clientY - positionDifference.y;
-
+    
     if(isConstrained) {
       x = Math.max(Math.min(x, containerDimensions.width - size.width), 0);
       y = Math.max(Math.min(y, containerDimensions.height - size.height), 0);
     }
+
+    if(!isInnerWindow && isMaximized && containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const pointerContainerX = event.pageX - containerRect.x;
+      const pointerContainerY = event.pageY - containerRect.y;
+
+      // const x = position.x - pointerContainerX;
+      // const y = position.y - pointerContainerY;
+      
+      mainWindowRestoreSize();
+      setPosition({ x, y })
+    } else {
+      setPosition({ x, y });
+    }
     
-    setPosition({ x, y });
   }
 
   const onPointerDownResize = usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
@@ -154,7 +172,7 @@ function Window({
   }
 
   useEffect(() => {
-    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isResizable) || !containerDimensions)
+    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isAllowResize) || !containerDimensions)
       return;
     
     let newX = position.x;
@@ -177,9 +195,9 @@ function Window({
 
     if(newX !== position.x || newY !== position.y)
       setPosition({ x: newX, y: newY });
-    if(isResizable && (newWidth !== size.width || newHeight !== size.height))
+    if(isAllowResize && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
-  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition]);
+  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isAllowResize, setPosition]);
 
   function onPointerDownFocus() {
     if(!isInnerWindow && !isFocused)
@@ -206,11 +224,11 @@ function Window({
         ${isInnerWindow ? css['container--inner'] : ''}
         ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
         ${isAttentionAnimated ? css['container--attention'] : ''}
-        ${isLocked ? css['container--locked'] : ''}
+        ${isIgnorePointerEvents ? css['container--locked'] : ''}
       `}
     >
       {
-        isResizable &&
+        isAllowResize &&
           <>
             <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
             <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
@@ -274,7 +292,7 @@ Window.propTypes = {
   isAutoFit: PropTypes.bool,
   isInnerWindow: PropTypes.bool,
   isOpen: PropTypes.bool,
-  isLocked: PropTypes.bool,
+  isIgnorePointerEvents: PropTypes.bool,
   isMaximized: PropTypes.bool,
 };
 

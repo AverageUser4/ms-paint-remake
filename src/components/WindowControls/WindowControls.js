@@ -10,7 +10,7 @@ import { ReactComponent as Minimize } from './assets/minimize.svg';
 import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 
 function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
-  const { isMainWindowFocused, isMainWindowMaximized, mainWindowMaximize, mainWindowMinimize } = useMainWindowContext();
+  const { isMainWindowFocused, isMainWindowMaximized, mainWindowToggleMaximize } = useMainWindowContext();
   
   // inner window
   if(isInnerWindow) {
@@ -45,12 +45,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
-        onClick={() => {
-          if(isMainWindowMaximized)
-            mainWindowMinimize();
-          else
-            mainWindowMaximize();
-        }}
+        onClick={mainWindowToggleMaximize}
       >
         {
           isMainWindowMaximized ?

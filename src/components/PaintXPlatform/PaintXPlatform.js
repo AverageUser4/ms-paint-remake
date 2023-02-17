@@ -12,7 +12,7 @@ import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
-import { useContainerContext, ContainerProvider } from '../../misc/ContainerContext';
+import { ContainerProvider } from '../../misc/ContainerContext';
 import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
 
 function Logic({ 
@@ -22,7 +22,6 @@ function Logic({
   isAutoShrink = true,
   isAutoFit = true,
 }) {
-  const { containerDimensions } = useContainerContext();
   const { 
     isMainWindowFocused, setIsMainWindowFocused,
     mainWindowPosition, setMainWindowPosition,
@@ -122,7 +121,6 @@ function Logic({
       <Window 
         items={items}
         minimal={minimalSize}
-        containerDimensions={containerDimensions}
         position={mainWindowPosition}
         setPosition={setMainWindowPosition}
         size={mainWindowSize}
@@ -133,20 +131,18 @@ function Logic({
         isConstrained={isConstrained}
         isAutoFit={isAutoFit}
         isAutoShrink={isAutoShrink}
-        isLocked={isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen}
+        isIgnorePointerEvents={isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen}
         isMaximized={isMainWindowMaximized}
       />
 
       <ResizeWindow
         isOpen={isResizeWindowOpen}
         setIsOpen={setIsResizeWindowOpen}
-        containerDimensions={containerDimensions}
       />
 
       <ColorsWindow
         isOpen={isColorsWindowOpen}
         setIsOpen={setIsColorsWindowOpen}
-        containerDimensions={containerDimensions}
       />
     </div>
   );

@@ -13,7 +13,7 @@ import duoArrow from './assets/duo-arrow.png';
 const WIDTH = 448;
 const HEIGHT = 340;
 
-const ColorsWindow = memo(function ColorsWindow({ containerDimensions, isOpen, setIsOpen }) {
+const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
@@ -49,7 +49,6 @@ const ColorsWindow = memo(function ColorsWindow({ containerDimensions, isOpen, s
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      containerDimensions={containerDimensions}
       isResizable={false}
       isInnerWindow={true}
     />

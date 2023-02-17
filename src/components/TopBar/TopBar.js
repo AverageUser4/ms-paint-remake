@@ -5,6 +5,7 @@ import css from './TopBar.module.css';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
 import { useContextMenuContext } from '../../misc/ContextMenuContext';
+import { useMainWindowContext } from '../../misc/MainWindowContext';
 
 import logoMini from './assets/logo-mini.png';
 
@@ -18,31 +19,18 @@ const TopBar = memo(function TopBar({
   const containerRef = useRef();
   const textRef = useRef();
   const { openContextMenu } = useContextMenuContext();
+  const { mainWindowToggleMaximize } = useMainWindowContext();
   
-  function onContextMenu(event) {
-    if(event.button !== 2)
-      return;
-
-    if(
-      event.target === containerRef.current ||
-      event.target === textRef.current
-    )
-      openContextMenu(event);
-  }
-
-  function onPointerDown(event) {
-    if(
-        event.target === containerRef.current ||
-        event.target === textRef.current
-      )
-      onPointerDownMove(event);
+  function isExpectedTarget(event) {
+    return event.target === containerRef.current || event.target === textRef.current;
   }
   
   return (
     <header 
       className={css['container']} 
-      onPointerDown={onPointerDown}
-      onContextMenu={onContextMenu}
+      onPointerDown={(e) => isExpectedTarget(e) && onPointerDownMove(e)}
+      onContextMenu={(e) => isExpectedTarget(e) && openContextMenu(e)}
+      onDoubleClick={(e) => isExpectedTarget(e) && mainWindowToggleMaximize(e)}
       ref={containerRef}
     >
 

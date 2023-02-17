@@ -4,37 +4,51 @@ import PropTypes from 'prop-types';
 const MainWindowContext = createContext();
 
 function MainWindowProvider({ children, initialPosition, initialSize }) {
-  const [mainWindowPosition, setMainWindowPosition] = useState(initialPosition);
-  const [mainWindowSize, setMainWindowSize] = useState(initialSize);
-  const [mainWindowLatestSize, setMainWindowLatestSize] = useState(initialSize);
-  const [mainWindowLatestPosition, setMainWindowLatestPosition] = useState(initialPosition);
-  const [isMainWindowFocused, setIsMainWindowFocused] = useState(false);
-  const [isMainWindowMaximized, setIsMainWindowMaximized] = useState(false);
+  const [position, setPosition] = useState(initialPosition);
+  const [size, setSize] = useState(initialSize);
+  const [LatestSize, setLatestSize] = useState(initialSize);
+  const [LatestPosition, setLatestPosition] = useState(initialPosition);
+  const [isFocused, setIsFocused] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
 
-  function mainWindowMinimize() {
-    setIsMainWindowMaximized(false);
-    setMainWindowSize(mainWindowLatestSize);
-    setMainWindowPosition(mainWindowLatestPosition);
+  function minimize() {
+    setIsMaximized(false);
+    setSize(LatestSize);
+    setPosition(LatestPosition);
   }
 
-  function mainWindowMaximize() {
-    setIsMainWindowMaximized(true);
-    setMainWindowLatestSize(mainWindowSize);
-    setMainWindowLatestPosition(mainWindowPosition);
+  function maximize() {
+    setIsMaximized(true);
+    setLatestSize(size);
+    setLatestPosition(position);
+  }
+
+  function toggleMaximize() {
+    if(isMaximized)
+      minimize();
+    else
+      maximize();
+  }
+  
+  function restoreSize() {
+    setSize(LatestSize);
+    setIsMaximized(false);
   }
   
   return (
     <MainWindowContext.Provider
       value={{ 
-        mainWindowPosition,
-        setMainWindowPosition,
-        mainWindowSize,
-        setMainWindowSize,
-        isMainWindowFocused,
-        setIsMainWindowFocused,
-        isMainWindowMaximized,
-        mainWindowMinimize,
-        mainWindowMaximize,
+        mainWindowPosition: position,
+        setMainWindowPosition: setPosition,
+        mainWindowSize: size,
+        setMainWindowSize: setSize,
+        isMainWindowFocused: isFocused,
+        setIsMainWindowFocused: setIsFocused,
+        isMainWindowMaximized: isMaximized,
+        mainWindowMinimize: minimize,
+        mainWindowMaximize: maximize,
+        mainWindowToggleMaximize: toggleMaximize,
+        mainWindowRestoreSize: restoreSize,
      }}
     >
       {children}
