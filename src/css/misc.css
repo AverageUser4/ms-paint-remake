@@ -9,7 +9,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 150vh;
+    height: 100vh;
+    /* height: 150vh;
+    width: 150vw; */
     
     margin: 0;
     font-family: 'segoe', 'Segoe UI', sans-serif;

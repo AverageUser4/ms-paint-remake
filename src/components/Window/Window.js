@@ -35,9 +35,6 @@ function Window({
   const windowRef = useRef();
   useResizeCursor(resizeData);
 
-  if(!isInnerWindow)
-    console.log(isConstrained)
-
   const isAllowResize = isResizable && !isMaximized;
 
   useOutsideClick(windowRef, () => { 
@@ -69,12 +66,6 @@ function Window({
   const onPointerDownMove = usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback);
 
   function onPointerDownMoveCallback(event) {
-    const containerRect = containerRef.current.getBoundingClientRect();
-    const containerX = event.pageX - containerRect.x;
-    const containerY = event.pageY - containerRect.y;
-
-    console.log(containerX, event.clientX - position.x)
-    
     const x = event.clientX - position.x;
     const y = event.clientY - position.y;
     
@@ -91,23 +82,17 @@ function Window({
     }
 
     if(!isInnerWindow && isMaximized && containerRef.current) {
-      console.log('??!!')
-      
       const containerRect = containerRef.current.getBoundingClientRect();
-      const pointerContainerX = event.pageX - containerRect.x;
+      const pointerContainerX = event.clientX - containerRect.x;
       const pointerRatioX = pointerContainerX / containerRect.width;
 
       const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
-      // const pointerContainerY = event.pageY - containerRect.y;
 
       const adjustedX = pointerContainerX - widthBeforeCursor;
-      const adjustedY = 0;
 
-      console.log(mainWindowLatestSize, pointerRatioX, widthBeforeCursor)
-
-      
       mainWindowRestoreSize();
-      setPosition({ x: adjustedX, y: adjustedY })
+      setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
+      setPosition({ x: adjustedX, y: 0 })
     } else {
       setPosition({ x, y });
     }
@@ -117,9 +102,16 @@ function Window({
 
   function onPointerMoveResizeCallback(event) {
     let { clientX, clientY } = event;
+
+    const containerRect = containerRef.current.getBoundingClientRect();
+    let containerOffsetX = event.clientX - containerRect.x;
+    let containerOffsetY = event.clientY - containerRect.y;
+
     if(isConstrained) {
       clientX = Math.max(0, clientX);
       clientY = Math.max(0, clientY);
+      containerOffsetX = Math.max(0, containerOffsetX);
+      containerOffsetY = Math.max(0, containerOffsetY);
     }
       
     let diffX = clientX - resizeData.initialX;
@@ -132,11 +124,11 @@ function Window({
 
     if(resizeData.type.includes('left')) {
       diffX *= -1;
-      newX = clientX;
+      newX = containerOffsetX;
     }
     if(resizeData.type.includes('top')) {
       diffY *= -1;
-      newY = clientY;
+      newY = containerOffsetY;
     }
     if(resizeData.type.includes('left') || resizeData.type.includes('right')) {
       newWidth = resizeData.initialWidth + diffX;

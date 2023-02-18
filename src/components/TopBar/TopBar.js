@@ -14,7 +14,8 @@ const TopBar = memo(function TopBar({
   windowHasFocus,
   toolbarData,
   setToolbarData,
-  ribbonData 
+  ribbonData,
+  setIsPromptWindowOpen,
 }) {
   const containerRef = useRef();
   const textRef = useRef();
@@ -55,7 +56,7 @@ const TopBar = memo(function TopBar({
       </div>
 
       <WindowControls 
-        close={()=>0}
+        close={() => setIsPromptWindowOpen(true)}
       />
 
     </header>
@@ -68,6 +69,7 @@ TopBar.propTypes = {
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
+  setIsPromptWindowOpen: PropTypes.func.isRequired,
 };
 
 export default TopBar;

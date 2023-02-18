@@ -59,6 +59,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
           ${css['button']} ${css['button--danger']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
+        onClick={close}
       >
         <Close draggable="false"/>
       </button>

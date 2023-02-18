@@ -3,3 +3,4 @@
 - hovering mouse over canvas still causes some unwanted rerenders
 - Dropdown for some reason now have both appearance and disappearance animated, although only disappearance should be animated
 - the way some flags are passed to Window (through PainXPlatform) is somewhat confusing (default values)
+- if buttons werent able to receive click events when window is not focused that would get rid of minor visual glitches and be consistent with OG paint

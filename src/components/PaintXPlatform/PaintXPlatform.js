@@ -11,6 +11,7 @@ import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
+import PromptWindow from '../PromptWindow/PromptWindow';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 import { ContainerProvider } from '../../misc/ContainerContext';
 import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
@@ -31,7 +32,9 @@ function Logic({
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
   const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
-  const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
+  const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(true);
+
+  const isAnyInnerWindowOpen = isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen;
   
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -52,10 +55,10 @@ function Logic({
   });
 
   useEffect(() => {
-    if((isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen) && isMainWindowFocused) {
+    if(isAnyInnerWindowOpen && isMainWindowFocused) {
       setIsMainWindowFocused(false);
     }
-  }, [isResizeWindowOpen, isColorsWindowOpen, isPromptWindowOpen, isMainWindowFocused, setIsMainWindowFocused]);
+  }, [isAnyInnerWindowOpen, isMainWindowFocused, setIsMainWindowFocused]);
 
   const items = [
     {
@@ -64,6 +67,7 @@ function Logic({
         toolbarData,
         setToolbarData,
         ribbonData,
+        setIsPromptWindowOpen,
       }
     },
     { 
@@ -131,7 +135,7 @@ function Logic({
         isConstrained={isConstrained}
         isAutoFit={isAutoFit}
         isAutoShrink={isAutoShrink}
-        isIgnorePointerEvents={isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen}
+        isIgnorePointerEvents={isAnyInnerWindowOpen}
         isMaximized={isMainWindowMaximized}
       />
 
@@ -143,6 +147,11 @@ function Logic({
       <ColorsWindow
         isOpen={isColorsWindowOpen}
         setIsOpen={setIsColorsWindowOpen}
+      />
+
+      <PromptWindow
+        isOpen={isPromptWindowOpen}
+        setIsOpen={setIsPromptWindowOpen}
       />
     </div>
   );
