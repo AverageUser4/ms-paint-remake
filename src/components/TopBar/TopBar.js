@@ -16,6 +16,7 @@ const TopBar = memo(function TopBar({
   setToolbarData,
   ribbonData,
   setIsPromptWindowOpen,
+  doSetWindowToMinimalSize,
 }) {
   const containerRef = useRef();
   const textRef = useRef();
@@ -57,6 +58,7 @@ const TopBar = memo(function TopBar({
 
       <WindowControls 
         close={() => setIsPromptWindowOpen(true)}
+        doSetWindowToMinimalSize={doSetWindowToMinimalSize}
       />
 
     </header>
@@ -70,6 +72,7 @@ TopBar.propTypes = {
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
   setIsPromptWindowOpen: PropTypes.func.isRequired,
+  doSetWindowToMinimalSize: PropTypes.func.isRequired,
 };
 
 export default TopBar;

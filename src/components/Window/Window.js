@@ -29,11 +29,12 @@ function Window({
   isMaximized = false,
 }) {
   const { containerDimensions, containerRef } = useContainerContext();
-  const { mainWindowRestoreSize, mainWindowLatestSize } = useMainWindowContext();
+  const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [positionDifference, setPositionDifference] = useState(null);
   const [resizeData, setResizeData] = useState(null);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
+  const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const windowRef = useRef();
   useResizeCursor(resizeData);
 
@@ -65,7 +66,8 @@ function Window({
     }
   }, [isOpen, isActuallyOpen]);
 
-  const onPointerDownMove = usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback);
+  const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 
+    usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback, onPointerUpMoveCallback);
 
   function onPointerDownMoveCallback(event) {
     const x = event.clientX - position.x;
@@ -100,7 +102,20 @@ function Window({
     }
   }
 
-  const onPointerDownResize = usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
+  function onPointerUpMoveCallback(event) {
+    if(indicatorData.strPosition) {
+      if(indicatorData.strPosition === 'full') {
+        mainWindowMaximize();
+      } else {
+        setPosition(indicatorData.position);
+        setSize(indicatorData.size);
+      }
+    }
+    setPositionDifference(null);
+  }
+
+  const { onPointerDown: onPointerDownResize } = 
+    usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
 
   function onPointerMoveResizeCallback(event) {
     let { clientX, clientY } = event;
@@ -279,6 +294,10 @@ function Window({
             position={position}
             isConstrained={isConstrained}
             isMaximized={isMaximized}
+            isBeingMoved={isMovePressed}
+            containerRef={containerRef}
+            indicatorData={indicatorData}
+            setIndicatorData={setIndicatorData}
           />
       }
     </>

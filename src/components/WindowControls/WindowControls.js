@@ -9,7 +9,7 @@ import { ReactComponent as Maximize } from './assets/maximize.svg';
 import { ReactComponent as Minimize } from './assets/minimize.svg';
 import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 
-function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
+function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doSetWindowToMinimalSize }) {
   const { isMainWindowFocused, isMainWindowMaximized, mainWindowToggleMaximize } = useMainWindowContext();
   
   // inner window
@@ -37,6 +37,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
+        onClick={doSetWindowToMinimalSize}
       >
         <Minimize draggable="false"/>
       </button>
@@ -70,6 +71,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close }) {
 WindowControls.propTypes = {
   isInnerWindow: PropTypes.bool,
   close: PropTypes.func.isRequired,
+  doSetWindowToMinimalSize: PropTypes.func,
   isAttentionAnimated: PropTypes.bool,
 };
 

@@ -45,6 +45,7 @@ function MainWindowProvider({ children, initialPosition, initialSize }) {
         isMainWindowFocused: isFocused,
         setIsMainWindowFocused: setIsFocused,
         isMainWindowMaximized: isMaximized,
+        setIsMainWindowMaximized: setIsMaximized,
         mainWindowMinimize: minimize,
         mainWindowMaximize: maximize,
         mainWindowToggleMaximize: toggleMaximize,

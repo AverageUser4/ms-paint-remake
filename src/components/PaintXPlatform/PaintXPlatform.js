@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Window from '../Window/Window';
@@ -27,8 +27,13 @@ function Logic({
     isMainWindowFocused, setIsMainWindowFocused,
     mainWindowPosition, setMainWindowPosition,
     mainWindowSize, setMainWindowSize,
-    isMainWindowMaximized
+    isMainWindowMaximized, setIsMainWindowMaximized
   } = useMainWindowContext();
+
+  const doSetWindowToMinimalSize = useCallback(() => {
+    setMainWindowSize(minimalSize);
+    setIsMainWindowMaximized(false);
+  }, [setMainWindowSize, minimalSize, setIsMainWindowMaximized]);
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
   const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
@@ -68,6 +73,7 @@ function Logic({
         setToolbarData,
         ribbonData,
         setIsPromptWindowOpen,
+        doSetWindowToMinimalSize
       }
     },
     { 
