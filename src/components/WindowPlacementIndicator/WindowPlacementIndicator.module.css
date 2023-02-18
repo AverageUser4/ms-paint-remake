@@ -1,0 +1,16 @@
+.container {
+  position: absolute;
+  z-index: 5;
+  
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(30, 40, 50, 0.8);
+}
+
+.container--top-left {
+  top: 8px;
+  left: 8px;
+
+  width: calc(50% - 16px);
+  height: calc(50% - 16px);
+}

@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
+import WindowPlacementIndicator from '../WindowPlacementIndicator/WindowPlacementIndicator';
+
 import useOutsideClick from '../../hooks/useOutsideClick';
 import useResizeCursor from '../../hooks/useResizeCursor';
 import usePointerTrack from '../../hooks/usePointerTrack';
@@ -216,59 +218,70 @@ function Window({
     return null;
   
   return (
-    <article
-      onPointerDown={onPointerDownFocus}
-      ref={windowRef}
-      style={{ 
-        top: position.y,
-        left: position.x,
-        width: size.width,
-        height: size.height,
-        zIndex: isInnerWindow ? '4' : 'auto',
-      }} 
-       className={`
-        ${css['container']}
-        ${isFocused ? css['container--focused'] : ''}
-        ${isInnerWindow ? css['container--inner'] : ''}
-        ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
-        ${isAttentionAnimated ? css['container--attention'] : ''}
-        ${isIgnorePointerEvents ? css['container--locked'] : ''}
-      `}
-    >
-      {
-        isAllowResize &&
-          <>
-            <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
-            <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
-            <div data-name="left" onPointerDown={onPointerDownResize} className={css['left']}></div>
-            <div data-name="right" onPointerDown={onPointerDownResize} className={css['right']}></div>
-            <div data-name="top-left" onPointerDown={onPointerDownResize} className={css['top-left']}></div>
-            <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
-            <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
-            <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
-          </>
-      }
-      
-      {items.map((item, index) => {
-        if(!item)
-          return null;
-        
-        const { Component, props } = item;
-
-        const itemProps = { 
-          ...props, 
-          windowWidth: size.width, 
-          windowHasFocus: isFocused
-        };
-
-        if(index === 0) {
-          itemProps.onPointerDownMove = onPointerDownMove;
-          itemProps.isAttentionAnimated = isAttentionAnimated;
+    <>
+      <article
+        onPointerDown={onPointerDownFocus}
+        ref={windowRef}
+        style={{ 
+          top: position.y,
+          left: position.x,
+          width: size.width,
+          height: size.height,
+          zIndex: isInnerWindow ? '4' : 'auto',
+        }} 
+        className={`
+          ${css['container']}
+          ${isFocused ? css['container--focused'] : ''}
+          ${isInnerWindow ? css['container--inner'] : ''}
+          ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
+          ${isAttentionAnimated ? css['container--attention'] : ''}
+          ${isIgnorePointerEvents ? css['container--locked'] : ''}
+        `}
+      >
+        {
+          isAllowResize &&
+            <>
+              <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
+              <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
+              <div data-name="left" onPointerDown={onPointerDownResize} className={css['left']}></div>
+              <div data-name="right" onPointerDown={onPointerDownResize} className={css['right']}></div>
+              <div data-name="top-left" onPointerDown={onPointerDownResize} className={css['top-left']}></div>
+              <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
+              <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
+              <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
+            </>
         }
+        
+        {items.map((item, index) => {
+          if(!item)
+            return null;
+          
+          const { Component, props } = item;
 
-        return <Component key={index} {...itemProps}/>
-      })}
-    </article>
+          const itemProps = { 
+            ...props, 
+            windowWidth: size.width, 
+            windowHasFocus: isFocused
+          };
+
+          if(index === 0) {
+            itemProps.onPointerDownMove = onPointerDownMove;
+            itemProps.isAttentionAnimated = isAttentionAnimated;
+          }
+
+          return <Component key={index} {...itemProps}/>
+        })}
+      </article>
+
+      {
+        !isInnerWindow &&
+          <WindowPlacementIndicator
+            position={position}
+            isConstrained={isConstrained}
+            isMaximized={isMaximized}
+          />
+      }
+    </>
   );
 }
 
