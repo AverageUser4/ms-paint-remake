@@ -27,13 +27,16 @@ function Window({
   isMaximized = false,
 }) {
   const { containerDimensions, containerRef } = useContainerContext();
-  const { mainWindowRestoreSize } = useMainWindowContext();
+  const { mainWindowRestoreSize, mainWindowLatestSize } = useMainWindowContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [positionDifference, setPositionDifference] = useState(null);
   const [resizeData, setResizeData] = useState(null);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
   useResizeCursor(resizeData);
+
+  if(!isInnerWindow)
+    console.log(isConstrained)
 
   const isAllowResize = isResizable && !isMaximized;
 
@@ -66,6 +69,12 @@ function Window({
   const onPointerDownMove = usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback);
 
   function onPointerDownMoveCallback(event) {
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerX = event.pageX - containerRect.x;
+    const containerY = event.pageY - containerRect.y;
+
+    console.log(containerX, event.clientX - position.x)
+    
     const x = event.clientX - position.x;
     const y = event.clientY - position.y;
     
@@ -82,19 +91,26 @@ function Window({
     }
 
     if(!isInnerWindow && isMaximized && containerRef.current) {
+      console.log('??!!')
+      
       const containerRect = containerRef.current.getBoundingClientRect();
       const pointerContainerX = event.pageX - containerRect.x;
-      const pointerContainerY = event.pageY - containerRect.y;
+      const pointerRatioX = pointerContainerX / containerRect.width;
 
-      // const x = position.x - pointerContainerX;
-      // const y = position.y - pointerContainerY;
+      const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
+      // const pointerContainerY = event.pageY - containerRect.y;
+
+      const adjustedX = pointerContainerX - widthBeforeCursor;
+      const adjustedY = 0;
+
+      console.log(mainWindowLatestSize, pointerRatioX, widthBeforeCursor)
+
       
       mainWindowRestoreSize();
-      setPosition({ x, y })
+      setPosition({ x: adjustedX, y: adjustedY })
     } else {
       setPosition({ x, y });
     }
-    
   }
 
   const onPointerDownResize = usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
@@ -172,7 +188,7 @@ function Window({
   }
 
   useEffect(() => {
-    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isAllowResize) || !containerDimensions)
+    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isAllowResize) || !containerDimensions || !isConstrained)
       return;
     
     let newX = position.x;
@@ -197,7 +213,7 @@ function Window({
       setPosition({ x: newX, y: newY });
     if(isAllowResize && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
-  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isAllowResize, setPosition]);
+  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isAllowResize, setPosition, isConstrained]);
 
   function onPointerDownFocus() {
     if(!isInnerWindow && !isFocused)

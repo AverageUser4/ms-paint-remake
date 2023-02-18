@@ -6,8 +6,28 @@
   }
   
   body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 150vh;
+    
     margin: 0;
     font-family: 'segoe', 'Segoe UI', sans-serif;
+  }
+    
+  .app {
+    position: relative;
+    
+    width: 100%;
+    height: 100vh;
+
+    width: 800px;
+    height: 600px;
+
+    background-image: url(../assets/global/background.jpg);
+    background-position: bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 
   .head {
@@ -36,16 +56,6 @@
     padding: 0;
 
     list-style: none;
-  }
-  
-  .app {
-    width: 100%;
-    height: 100vh;
-
-    background-image: url(../assets/global/background.jpg);
-    background-position: bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
   }
 
   .line-break {

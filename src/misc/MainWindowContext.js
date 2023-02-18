@@ -6,15 +6,15 @@ const MainWindowContext = createContext();
 function MainWindowProvider({ children, initialPosition, initialSize }) {
   const [position, setPosition] = useState(initialPosition);
   const [size, setSize] = useState(initialSize);
-  const [LatestSize, setLatestSize] = useState(initialSize);
-  const [LatestPosition, setLatestPosition] = useState(initialPosition);
+  const [latestSize, setLatestSize] = useState(initialSize);
+  const [latestPosition, setLatestPosition] = useState(initialPosition);
   const [isFocused, setIsFocused] = useState(false);
   const [isMaximized, setIsMaximized] = useState(false);
 
   function minimize() {
     setIsMaximized(false);
-    setSize(LatestSize);
-    setPosition(LatestPosition);
+    setSize(latestSize);
+    setPosition(latestPosition);
   }
 
   function maximize() {
@@ -31,7 +31,7 @@ function MainWindowProvider({ children, initialPosition, initialSize }) {
   }
   
   function restoreSize() {
-    setSize(LatestSize);
+    setSize(latestSize);
     setIsMaximized(false);
   }
   
@@ -49,6 +49,8 @@ function MainWindowProvider({ children, initialPosition, initialSize }) {
         mainWindowMaximize: maximize,
         mainWindowToggleMaximize: toggleMaximize,
         mainWindowRestoreSize: restoreSize,
+        mainWindowLatestSize: latestSize,
+        mainWindowLatestPosition: latestPosition
      }}
     >
       {children}
