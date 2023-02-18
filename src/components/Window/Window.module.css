@@ -31,6 +31,9 @@
 .container--locked {
   pointer-events: none;
 }
+.container--fixed {
+  position: fixed;
+}
 
 .top {
   position: absolute;

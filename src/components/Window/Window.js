@@ -27,6 +27,7 @@ function Window({
   isOpen = true,
   isIgnorePointerEvents = false,
   isMaximized = false,
+  isAllowWindowToLeaveViewport = false,
 }) {
   const { containerDimensions, containerRef } = useContainerContext();
   const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
@@ -38,7 +39,7 @@ function Window({
   const windowRef = useRef();
   useResizeCursor(resizeData);
 
-  const isAllowResize = isResizable && !isMaximized;
+  isResizable = isResizable && !isMaximized;
 
   useOutsideClick(windowRef, () => { 
     if(!isInnerWindow && isFocused) {
@@ -52,10 +53,15 @@ function Window({
 
   useEffect(() => {
     if(isMaximized && containerDimensions) {
-      setSize(containerDimensions);
+      if(isConstrained) {
+        setSize(containerDimensions);
+      } else {
+        const { width, height } = document.body.getBoundingClientRect();
+        setSize({ width, height });
+      }
       setPosition({ x: 0, y: 0 });
     }
-  }, [isMaximized, containerDimensions, setSize, setPosition]);
+  }, [isMaximized, containerDimensions, setSize, setPosition, isConstrained]);
   
   useEffect(() => {
     if(isOpen && !isActuallyOpen) {
@@ -80,9 +86,13 @@ function Window({
     let x = event.clientX - positionDifference.x;
     let y = event.clientY - positionDifference.y;
     
-    if(isConstrained) {
-      x = Math.max(Math.min(x, containerDimensions.width - size.width), 0);
-      y = Math.max(Math.min(y, containerDimensions.height - size.height), 0);
+    if(!isAllowWindowToLeaveViewport) {
+      const actualContainerRect = isConstrained ? 
+        containerRef.current.getBoundingClientRect() :
+        document.body.getBoundingClientRect();
+    
+      x = Math.max(Math.min(x, actualContainerRect.width - size.width), 0);
+      y = Math.max(Math.min(y, actualContainerRect.height - size.height), 0);
     }
 
     if(!isInnerWindow && isMaximized && containerRef.current) {
@@ -197,7 +207,7 @@ function Window({
   }
 
   useEffect(() => {
-    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isAllowResize) || !containerDimensions || !isConstrained)
+    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isResizable) || !containerDimensions || !isConstrained)
       return;
     
     let newX = position.x;
@@ -220,9 +230,9 @@ function Window({
 
     if(newX !== position.x || newY !== position.y)
       setPosition({ x: newX, y: newY });
-    if(isAllowResize && (newWidth !== size.width || newHeight !== size.height))
+    if(isResizable && (newWidth !== size.width || newHeight !== size.height))
       setSize({ width: newWidth, height: newHeight });
-  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isAllowResize, setPosition, isConstrained]);
+  }, [containerDimensions, size, setSize, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition, isConstrained]);
 
   function onPointerDownFocus() {
     if(!isInnerWindow && !isFocused)
@@ -251,10 +261,11 @@ function Window({
           ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
           ${isAttentionAnimated ? css['container--attention'] : ''}
           ${isIgnorePointerEvents ? css['container--locked'] : ''}
+          ${!isConstrained ? css['container--fixed'] : ''}
         `}
       >
         {
-          isAllowResize &&
+          isResizable &&
             <>
               <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
               <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
@@ -334,6 +345,7 @@ Window.propTypes = {
   isOpen: PropTypes.bool,
   isIgnorePointerEvents: PropTypes.bool,
   isMaximized: PropTypes.bool,
+  isAllowWindowToLeaveViewport: PropTypes.bool,
 };
 
 export default Window;

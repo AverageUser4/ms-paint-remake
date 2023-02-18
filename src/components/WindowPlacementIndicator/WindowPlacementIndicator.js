@@ -13,12 +13,13 @@ function WindowPlacementIndicator({
   
   useEffect(() => {
     function onPointerMove(event) {
-      if(!containerRef.current) {
+      if(isConstrained && !containerRef.current) {
         return;
       }
 
       const SPACE = 10;
-      const containerRect = containerRef.current.getBoundingClientRect();
+      const containerRect = !isConstrained ? 
+        document.body.getBoundingClientRect() : containerRef.current.getBoundingClientRect();
       let containerOffsetX = event.clientX - containerRect.x;
       let containerOffsetY = event.clientY - containerRect.y;
       let endX = containerRect.width - SPACE;
@@ -47,7 +48,7 @@ function WindowPlacementIndicator({
       } else if(containerOffsetX > endX) {
         indicatorData.strPosition !== 'right' && setIndicatorData({ strPosition: 'right', size: barSize, position: { x: xRight, y: 0 } });
       } else if(indicatorData.strPosition) {
-        setIndicatorData({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
+        setIndicatorData(prev => ({ ...prev, strPosition: '' }));
       }
     }
 
@@ -58,7 +59,7 @@ function WindowPlacementIndicator({
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
     };
-  }, [isBeingMoved, containerRef, indicatorData, setIndicatorData]);
+  }, [isBeingMoved, containerRef, indicatorData, setIndicatorData, isConstrained]);
 
   if(!isBeingMoved)
     return null;
@@ -67,9 +68,15 @@ function WindowPlacementIndicator({
     <div 
       className={`
         ${css['container']}
+        ${!indicatorData.strPosition ? css['container--hidden'] : ''}
         ${!isConstrained ? css['container--fixed'] : ''}
-        ${css[`container--${indicatorData.strPosition}`]}
       `}
+      style={{
+        width: indicatorData.size.width - 16,
+        height: indicatorData.size.height - 16,
+        left: indicatorData.position.x + 8,
+        top: indicatorData.position.y + 8
+      }}
     ></div>
   );
 }

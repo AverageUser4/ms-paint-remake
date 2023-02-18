@@ -15,52 +15,6 @@
 .container--fixed {
   position: fixed;
 }
-
-.container--full {
-  top: 8px;
-  left: 8px;
-  width: calc(100% - 16px);
-  height: calc(100% - 16px);
-}
-
-.container--left {
-  top: 8px;
-  left: 8px;
-  width: calc(50% - 16px);
-  height: calc(100% - 16px);
-}
-
-.container--right {
-  top: 8px;
-  right: 8px;
-  width: calc(50% - 16px);
-  height: calc(100% - 16px);
-}
-
-.container--top-left {
-  top: 8px;
-  left: 8px;
-  width: calc(50% - 16px);
-  height: calc(50% - 16px);
-}
-
-.container--top-right {
-  top: 8px;
-  right: 8px;
-  width: calc(50% - 16px);
-  height: calc(50% - 16px);
-}
-
-.container--bottom-left {
-  bottom: 8px;
-  left: 8px;
-  width: calc(50% - 16px);
-  height: calc(50% - 16px);
-}
-
-.container--bottom-right {
-  bottom: 8px;
-  right: 8px;
-  width: calc(50% - 16px);
-  height: calc(50% - 16px);
+.container--hidden {
+  opacity: 0;
 }

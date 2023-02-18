@@ -9,7 +9,7 @@ function App() {
     <div className="app" ref={containerRef}>
       <PaintXPlatform
         containerRef={containerRef}
-        // isConstrained={false}
+        isConstrained={false}
       />
     </div>
   );
