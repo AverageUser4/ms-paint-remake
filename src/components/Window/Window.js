@@ -86,19 +86,18 @@ function Window({
     let x = event.clientX - positionDifference.x;
     let y = event.clientY - positionDifference.y;
     
+    const actualContainerRect = isConstrained ? 
+      containerRef.current.getBoundingClientRect() :
+      document.body.getBoundingClientRect();
+
     if(!isAllowWindowToLeaveViewport) {
-      const actualContainerRect = isConstrained ? 
-        containerRef.current.getBoundingClientRect() :
-        document.body.getBoundingClientRect();
-    
       x = Math.max(Math.min(x, actualContainerRect.width - size.width), 0);
       y = Math.max(Math.min(y, actualContainerRect.height - size.height), 0);
     }
 
-    if(!isInnerWindow && isMaximized && containerRef.current) {
-      const containerRect = containerRef.current.getBoundingClientRect();
-      const pointerContainerX = event.clientX - containerRect.x;
-      const pointerRatioX = pointerContainerX / containerRect.width;
+    if(!isInnerWindow && isMaximized) {
+      const pointerContainerX = event.clientX - actualContainerRect.x;
+      const pointerRatioX = pointerContainerX / actualContainerRect.width;
 
       const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
 
@@ -134,9 +133,12 @@ function Window({
     let containerOffsetX = event.clientX - containerRect.x;
     let containerOffsetY = event.clientY - containerRect.y;
 
-    if(isConstrained) {
+    if(!isAllowWindowToLeaveViewport) {
       clientX = Math.max(0, clientX);
       clientY = Math.max(0, clientY);
+    }
+    
+    if(isConstrained) {
       containerOffsetX = Math.max(0, containerOffsetX);
       containerOffsetY = Math.max(0, containerOffsetY);
     }
@@ -151,11 +153,11 @@ function Window({
 
     if(resizeData.type.includes('left')) {
       diffX *= -1;
-      newX = containerOffsetX;
+      newX = isConstrained ? containerOffsetX : clientX;
     }
     if(resizeData.type.includes('top')) {
       diffY *= -1;
-      newY = containerOffsetY;
+      newY = isConstrained ? containerOffsetY : clientY;
     }
     if(resizeData.type.includes('left') || resizeData.type.includes('right')) {
       newWidth = resizeData.initialWidth + diffX;
