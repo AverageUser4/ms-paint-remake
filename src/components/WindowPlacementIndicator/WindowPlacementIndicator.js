@@ -2,24 +2,24 @@ import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import css from './WindowPlacementIndicator.module.css';
 
+import { useContainerContext } from "../../misc/ContainerContext";
+
 function WindowPlacementIndicator({ 
   isConstrained,
   isMaximized,
   isBeingMoved,
-  containerRef,
   indicatorData,
   setIndicatorData 
 }) {
+  const { containerRect } = useContainerContext();
   
   useEffect(() => {
     function onPointerMove(event) {
-      if(isConstrained && !containerRef.current) {
+      if(isConstrained && !containerRect) {
         return;
       }
 
       const SPACE = 10;
-      const containerRect = !isConstrained ? 
-        document.body.getBoundingClientRect() : containerRef.current.getBoundingClientRect();
       let containerOffsetX = event.clientX - containerRect.x;
       let containerOffsetY = event.clientY - containerRect.y;
       let endX = containerRect.width - SPACE;
@@ -59,7 +59,7 @@ function WindowPlacementIndicator({
     return () => {
       window.removeEventListener('pointermove', onPointerMove);
     };
-  }, [isBeingMoved, containerRef, indicatorData, setIndicatorData, isConstrained]);
+  }, [isBeingMoved, containerRect, indicatorData, setIndicatorData, isConstrained]);
 
   if(!isBeingMoved)
     return null;
@@ -89,7 +89,6 @@ WindowPlacementIndicator.propTypes = {
   isConstrained: PropTypes.bool.isRequired,
   isMaximized: PropTypes.bool.isRequired,
   isBeingMoved: PropTypes.bool.isRequired,
-  containerRef: PropTypes.object.isRequired,
   indicatorData: PropTypes.shape({
     strPosition: PropTypes.string.isRequired,
     size: PropTypes.shape({

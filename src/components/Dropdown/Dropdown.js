@@ -8,7 +8,7 @@ import { useMainWindowContext } from "../../misc/MainWindowContext";
 const Dropdown = forwardRef(function Dropdown(props, ref) {
   const { isVisible, setIsVisible, classes, children, adjustPosition = true, dropdownContainerRef } = props;
   const { isMainWindowFocused } = useMainWindowContext();
-  const { containerRef: paintContainerRef, containerDimensions: paintContainerDimensions } = useContainerContext();
+  const { containerRect: paintContainerRect } = useContainerContext();
   const dropdownRef = useRef();
   const [position, setPosition] = useState(adjustPosition ? { left: 0, right: 'auto', top: '100%', bottom: 'auto' } : {});
   const [isActuallyVisible, setIsActuallyVisible] = useState(isVisible);
@@ -30,10 +30,9 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
   }, [isVisible, isActuallyVisible]);
 
   useEffect(() => {
-    if(!adjustPosition || !dropdownContainerRef || !paintContainerRef.current || !dropdownRef.current)
+    if(!adjustPosition || !dropdownContainerRef.current || !paintContainerRect || !dropdownRef.current)
       return;
 
-    const paintContainerRect = paintContainerRef.current.getBoundingClientRect();
     const dropdownContainerRect = dropdownContainerRef.current.getBoundingClientRect();
     const dropdownRect = dropdownRef.current.getBoundingClientRect();
 
@@ -53,7 +52,7 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
 
     if(!isPositionAdjusted)
       setIsPositionAdjusted(true);
-  }, [paintContainerDimensions, paintContainerRef, position, isActuallyVisible, adjustPosition, dropdownContainerRef, isPositionAdjusted]);
+  }, [paintContainerRect, position, isActuallyVisible, adjustPosition, dropdownContainerRef, isPositionAdjusted]);
 
   if(!isActuallyVisible)
     return null;

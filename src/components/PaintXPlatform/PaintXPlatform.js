@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import Window from '../Window/Window';
@@ -172,22 +172,36 @@ Logic.propTypes = {
 };
 
 function PaintXPlatform(props) {
+  const containerRef = useRef();
+
   return (
-    <ContainerProvider containerRef={props.containerRef}>
-      <MainWindowProvider
-        initialPosition={props.initialPosition || { x: 200, y: 100 }}
-        initialSize={props.initialSize || { width: 600, height: 500 }}
+    <div 
+      style={{ 
+        width: '100%',
+        height: '100%',
+        position: 'relative'
+      }} 
+      ref={containerRef}
+    >
+      <ContainerProvider 
+        containerRef={containerRef}
+        isConstrained={props.isConstrained || false}
       >
-        <ContextMenuProvider>
-          <Logic {...props}/>
-        </ContextMenuProvider>
-      </MainWindowProvider>
-    </ContainerProvider>
+        <MainWindowProvider
+          initialPosition={props.initialPosition || { x: 200, y: 100 }}
+          initialSize={props.initialSize || { width: 600, height: 500 }}
+        >
+          <ContextMenuProvider>
+            <Logic {...props}/>
+          </ContextMenuProvider>
+        </MainWindowProvider>
+      </ContainerProvider>
+    </div>
   );
 }
 
 PaintXPlatform.propTypes = {
-  containerRef: PropTypes.object.isRequired,
+  isConstrained: PropTypes.bool,
   initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
   initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
 };

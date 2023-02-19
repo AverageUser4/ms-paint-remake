@@ -3,21 +3,21 @@ import PropTypes from 'prop-types';
 
 const ContainerContext = createContext();
 
-function ContainerProvider({ children, containerRef }) {
-  const [containerDimensions, setContainerDimensions] = useState();
+function ContainerProvider({ children, containerRef, isConstrained = true }) {
+  /* only dimensions can be read from this state reliably, changes to position only will not cause the state to change */
+  const [containerRect, setContainerRect] = useState();
 
   useEffect(() => {
-    if(!containerRef.current)
-      return;
-
-    if(!containerDimensions) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setContainerDimensions({ width, height });
+    if(!containerRect) {
+      onResize();
     }
 
     function onResize() {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setContainerDimensions({ width, height });
+      if(isConstrained && containerRef.current) {
+        setContainerRect(containerRef.current.getBoundingClientRect());
+      } else if(!isConstrained) {
+        setContainerRect(document.body.getBoundingClientRect());
+      }
     }
 
     window.addEventListener('resize', onResize);
@@ -25,13 +25,12 @@ function ContainerProvider({ children, containerRef }) {
     return () => {
       window.removeEventListener('resize', onResize);
     };
-  }, [containerDimensions, containerRef]);
+  }, [containerRef, isConstrained, containerRect]);
 
   return (
     <ContainerContext.Provider
       value={{
-        containerRef,
-        containerDimensions,
+        containerRect
       }}
     >
       {children}
@@ -42,6 +41,7 @@ function ContainerProvider({ children, containerRef }) {
 ContainerProvider.propTypes = {
   children: PropTypes.node.isRequired,
   containerRef: PropTypes.object.isRequired,
+  isConstrained: PropTypes.bool.isRequired,
 };
 
 function useContainerContext() {

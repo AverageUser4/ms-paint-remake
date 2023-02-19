@@ -1,15 +1,12 @@
-import React, { useRef } from 'react';
+import React from 'react';
 
 import PaintXPlatform from './components/PaintXPlatform/PaintXPlatform';
 
 function App() {
-  const containerRef = useRef();
-  
   return (
-    <div className="app" ref={containerRef}>
+    <div className="app">
       <PaintXPlatform
-        containerRef={containerRef}
-        isConstrained={false}
+        isConstrained={true}
       />
     </div>
   );
