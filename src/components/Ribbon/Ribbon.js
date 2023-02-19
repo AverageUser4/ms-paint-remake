@@ -26,7 +26,11 @@ const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindow
     return null;
     
   return (
-    <div className={css['container']} ref={containerRef}>
+    <div 
+      className={css['container']}
+      ref={containerRef}
+      data-cy="Ribbon"
+    >
       <div id="ribbon" className={ribbonClasses}>
         {
           ribbonData.activeTab === 'home' ?

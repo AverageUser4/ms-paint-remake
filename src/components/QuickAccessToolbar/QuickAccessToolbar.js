@@ -84,7 +84,11 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
   });
   
   return (
-    <div className={`${css['container']} ${toolbarData.reposition ? css['container--repositioned'] : ''}`}>
+    <div 
+      className={`${css['container']}
+      ${toolbarData.reposition ? css['container--repositioned'] : ''}`}
+      data-cy="QuickAccessToolbar"
+    >
 
       {buttonElements}
 

@@ -34,6 +34,7 @@ const TopBar = memo(function TopBar({
       onContextMenu={(e) => isExpectedTarget(e) && openContextMenu(e)}
       onDoubleClick={(e) => isExpectedTarget(e) && mainWindowToggleMaximize(e)}
       ref={containerRef}
+      data-cy="TopBar"
     >
 
       <div className={css['items']}>
