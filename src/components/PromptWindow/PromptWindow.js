@@ -46,7 +46,6 @@ const PromptWindow = memo(function PromptWindow({ isOpen, setIsOpen }) {
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      isResizable={false}
       isInnerWindow={true}
     />
   );

@@ -18,23 +18,24 @@
     font-family: 'segoe', 'Segoe UI', sans-serif;
   }
     
-  #root {
-    /* width: 100%;
-    height: 100%; */
+  .full #root {
+    width: 100%;
+    height: 100%;
   }
   
   .app {
     width: 800px;
     height: 600px;
-    
-    /* width: 100%;
-    height: 100vh;
-    overflow: hidden; */
 
     background-image: url(../assets/global/background.jpg);
     background-position: bottom;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+  .full .app {
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
   }
 
   .head {

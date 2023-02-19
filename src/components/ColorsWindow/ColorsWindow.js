@@ -49,7 +49,6 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      isResizable={false}
       isInnerWindow={true}
     />
   );

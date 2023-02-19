@@ -12,24 +12,22 @@ import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
   items,
-  minimal = { width: 1, height: 1 },
+  minimalSize,
   size,
   setSize,
   position,
   setPosition,
   isFocused,
   setIsFocused,
-  isResizable = true,
-  isConstrained = true,
-  isAutoShrink = true,
-  isAutoFit = true,
-  isInnerWindow = false,
-  isOpen = true,
-  isIgnorePointerEvents = false,
-  isMaximized = false,
-  isAllowWindowToLeaveViewport = false,
+  isResizable,
+  isAutoShrink,
+  isInnerWindow,
+  isOpen,
+  isIgnorePointerEvents,
+  isMaximized,
+  isAllowToLeaveViewport,
 }) {
-  const { containerRect } = useContainerContext();
+  const { containerRect, isConstrained, isAutoFit } = useContainerContext();
   const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [positionDifference, setPositionDifference] = useState(null);
@@ -39,8 +37,7 @@ function Window({
   const windowRef = useRef();
   useResizeCursor(resizeData);
 
-  console.log(containerRect)
-  isResizable = isResizable && !isMaximized;
+  isResizable = isResizable && !isMaximized && !isInnerWindow;
 
   useOutsideClick(windowRef, () => { 
     if(!isInnerWindow && isFocused) {
@@ -54,12 +51,7 @@ function Window({
 
   useEffect(() => {
     if(isMaximized && containerRect) {
-      if(isConstrained) {
-        setSize({ width: containerRect.width, height: containerRect.height });
-      } else {
-        const { width, height } = document.body.getBoundingClientRect();
-        setSize({ width, height });
-      }
+      setSize({ width: containerRect.width, height: containerRect.height });
       setPosition({ x: 0, y: 0 });
     }
   }, [isMaximized, containerRect, setSize, setPosition, isConstrained]);
@@ -91,7 +83,7 @@ function Window({
     let x = event.clientX - positionDifference.x;
     let y = event.clientY - positionDifference.y;
     
-    if(!isAllowWindowToLeaveViewport) {
+    if(!isAllowToLeaveViewport) {
       x = Math.max(Math.min(x, containerRect.width - size.width), 0);
       y = Math.max(Math.min(y, containerRect.height - size.height), 0);
     }
@@ -137,7 +129,7 @@ function Window({
     let containerOffsetX = event.clientX - containerRect.x;
     let containerOffsetY = event.clientY - containerRect.y;
 
-    if(!isAllowWindowToLeaveViewport) {
+    if(!isAllowToLeaveViewport) {
       clientX = Math.max(0, clientX);
       clientY = Math.max(0, clientY);
     }
@@ -170,19 +162,19 @@ function Window({
       newHeight = resizeData.initialHeight + diffY;
     }
 
-    if(newWidth < minimal.width) {
+    if(newWidth < minimalSize.width) {
       if(resizeData.type.includes('left')) {
-        const diffW = minimal.width - newWidth;
+        const diffW = minimalSize.width - newWidth;
         newX -= diffW;
       }
-      newWidth = minimal.width;
+      newWidth = minimalSize.width;
     }
-    if(newHeight < minimal.height) {
+    if(newHeight < minimalSize.height) {
       if(resizeData.type.includes('top')) {
-        const diffH = minimal.height - newHeight;
+        const diffH = minimalSize.height - newHeight;
         newY -= diffH;
       }
-      newHeight = minimal.height;
+      newHeight = minimalSize.height;
     }
 
     if(isConstrained) {
@@ -203,42 +195,56 @@ function Window({
   }
   
   function onPointerDownResizeCallback(event) {
-    setResizeData({
-      type: event.target.dataset.name,
-      initialX: event.clientX,
-      initialY: event.clientY,
-      initialWidth: size.width,
-      initialHeight: size.height
-    });
+    if(isResizable) {
+      setResizeData({
+        type: event.target.dataset.name,
+        initialX: event.clientX,
+        initialY: event.clientY,
+        initialWidth: size.width,
+        initialHeight: size.height
+      });
+    }
   }
 
   useEffect(() => {
-    if((!isAutoShrink && !isAutoFit) || (!isAutoFit && !isResizable) || !containerRect)
+    if(!isAutoFit || !containerRect) {
       return;
+    }
 
     let newX = position.x;
     let newY = position.y;
+
+    if(position.x + size.width > containerRect.width) {
+      newX = Math.max(containerRect.width - size.width, 0);
+    }
+    if(position.y + size.height > containerRect.height) {
+      newY = Math.max(containerRect.height - size.height, 0);
+    }
+
+    if(newX !== position.x || newY !== position.y) {
+      setPosition({ x: newX, y: newY });
+    }
+  }, [containerRect, size, position, isAutoFit, setPosition]);
+
+  useEffect(() => {
+    if(!isAutoShrink || !isResizable || !containerRect) {
+      return;
+    }
+
     let newWidth = size.width;
     let newHeight = size.height;
 
-    if(position.x + size.width > containerRect.width) {
-      if(isAutoFit)
-        newX = Math.max(containerRect.width - size.width, 0);
-      if(newX === 0 || !isAutoFit)
-        newWidth = Math.max(containerRect.width - position.x, minimal.width);
+    if((position.x === 0 || !isAutoFit) && position.x + size.width > containerRect.width) {
+      newWidth = Math.max(containerRect.width - position.x, minimalSize.width);
     }
-    if(position.y + size.height > containerRect.height) {
-      if(isAutoFit)
-        newY = Math.max(containerRect.height - size.height, 0);
-      if(newY === 0 || !isAutoFit)
-        newHeight = Math.max(containerRect.height - position.y, minimal.height);
+    if((position.y === 0 || !isAutoFit) && position.y + size.height > containerRect.height) {
+      newHeight = Math.max(containerRect.height - position.y, minimalSize.height);
     }
 
-    if(newX !== position.x || newY !== position.y)
-      setPosition({ x: newX, y: newY });
-    if(isResizable && (newWidth !== size.width || newHeight !== size.height))
+    if(isResizable && (newWidth !== size.width || newHeight !== size.height)) {
       setSize({ width: newWidth, height: newHeight });
-  }, [containerRect, size, setSize, position, minimal, isAutoShrink, isAutoFit, isResizable, setPosition, isConstrained]);
+    }
+  }, [containerRect, size, setSize, position, minimalSize, isAutoShrink, isAutoFit, isResizable]);
 
   function onPointerDownFocus() {
     if(!isInnerWindow && !isFocused)
@@ -293,13 +299,10 @@ function Window({
           const itemProps = { 
             ...props, 
             windowWidth: size.width, 
-            windowHasFocus: isFocused
+            windowHasFocus: isFocused,
+            onPointerDownMove,
+            isAttentionAnimated
           };
-
-          if(index === 0) {
-            itemProps.onPointerDownMove = onPointerDownMove;
-            itemProps.isAttentionAnimated = isAttentionAnimated;
-          }
 
           return <Component key={index} {...itemProps}/>
         })}
@@ -322,7 +325,7 @@ function Window({
 
 Window.propTypes = {
   items: PropTypes.array.isRequired,
-  minimal: PropTypes.shape({
+  minimalSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number
   }),
@@ -343,14 +346,12 @@ Window.propTypes = {
   setIsFocused: PropTypes.func,
   setPosition: PropTypes.func.isRequired,
   isResizable: PropTypes.bool,
-  isConstrained: PropTypes.bool,
   isAutoShrink: PropTypes.bool,
-  isAutoFit: PropTypes.bool,
   isInnerWindow: PropTypes.bool,
   isOpen: PropTypes.bool,
   isIgnorePointerEvents: PropTypes.bool,
   isMaximized: PropTypes.bool,
-  isAllowWindowToLeaveViewport: PropTypes.bool,
+  isAllowToLeaveViewport: PropTypes.bool,
 };
 
 export default Window;

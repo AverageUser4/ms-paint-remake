@@ -17,11 +17,11 @@ import { ContainerProvider } from '../../misc/ContainerContext';
 import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
 
 function Logic({ 
-  minimalSize = { width: 460, height: 300 },
-  isResizable = true,
-  isConstrained = true,
-  isAutoShrink = true,
-  isAutoFit = true,
+  minimalSize,
+  isResizable,
+  isAutoShrink,
+  isOpen,
+  isAllowToLeaveViewport
 }) {
   const { 
     isMainWindowFocused, setIsMainWindowFocused,
@@ -130,7 +130,7 @@ function Logic({
     >
       <Window 
         items={items}
-        minimal={minimalSize}
+        minimalSize={minimalSize}
         position={mainWindowPosition}
         setPosition={setMainWindowPosition}
         size={mainWindowSize}
@@ -138,11 +138,11 @@ function Logic({
         isFocused={isMainWindowFocused}
         setIsFocused={setIsMainWindowFocused}
         isResizable={isResizable}
-        isConstrained={isConstrained}
-        isAutoFit={isAutoFit}
         isAutoShrink={isAutoShrink}
         isIgnorePointerEvents={isAnyInnerWindowOpen}
         isMaximized={isMainWindowMaximized}
+        isOpen={isOpen}
+        isAllowToLeaveViewport={isAllowToLeaveViewport}
       />
 
       <ResizeWindow
@@ -164,14 +164,28 @@ function Logic({
 }
 
 Logic.propTypes = {
-  minimalSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
-  isResizable: PropTypes.bool,
-  isConstrained: PropTypes.bool,
-  isAutoShrink: PropTypes.bool,
-  isAutoFit: PropTypes.bool,
+  minimalSize: PropTypes.shape({ 
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired 
+  }).isRequired,
+  isResizable: PropTypes.bool.isRequired,
+  isAutoShrink: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  isAllowToLeaveViewport: PropTypes.bool.isRequired,
 };
 
-function PaintXPlatform(props) {
+function PaintXPlatform({
+  minimalSize = { width: 460, height: 300 },
+  initialPosition = { x: 200, y: 100 },
+  initialSize = { width: 600, height: 500 },
+  isResizable = true,
+  isConstrained = true,
+  isAutoShrink = true,
+  isAutoFit = true,
+  isOpen = true,
+  isInitiallyMaximized = false,
+  isAllowToLeaveViewport = false,
+}) {
   const containerRef = useRef();
 
   return (
@@ -180,19 +194,27 @@ function PaintXPlatform(props) {
         width: '100%',
         height: '100%',
         position: 'relative'
-      }} 
+      }}
       ref={containerRef}
     >
       <ContainerProvider 
         containerRef={containerRef}
-        isConstrained={props.isConstrained || false}
+        isConstrained={isConstrained}
+        isAutoFit={isAutoFit}
       >
         <MainWindowProvider
-          initialPosition={props.initialPosition || { x: 200, y: 100 }}
-          initialSize={props.initialSize || { width: 600, height: 500 }}
+          initialPosition={initialPosition}
+          initialSize={initialSize}
+          isInitiallyMaximized={isInitiallyMaximized}
         >
           <ContextMenuProvider>
-            <Logic {...props}/>
+            <Logic 
+              minimalSize={minimalSize}
+              isResizable={isResizable}
+              isAutoShrink={isAutoShrink}
+              isOpen={isOpen}
+              isAllowToLeaveViewport={isAllowToLeaveViewport}
+            />
           </ContextMenuProvider>
         </MainWindowProvider>
       </ContainerProvider>
@@ -202,8 +224,24 @@ function PaintXPlatform(props) {
 
 PaintXPlatform.propTypes = {
   isConstrained: PropTypes.bool,
-  initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
-  initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
+  isResizable: PropTypes.bool,
+  isAutoShrink: PropTypes.bool,
+  isAutoFit: PropTypes.bool,
+  isOpen: PropTypes.bool,
+  isInitiallyMaximized: PropTypes.bool,
+  isAllowToLeaveViewport: PropTypes.bool,
+  initialPosition: PropTypes.shape({ 
+    x: PropTypes.number.isRequired,
+    y: PropTypes.number.isRequired 
+  }),
+  initialSize: PropTypes.shape({ 
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired 
+  }),
+  minimalSize: PropTypes.shape({ 
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired 
+  }),
 };
 
 export default PaintXPlatform;

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const ContainerContext = createContext();
 
-function ContainerProvider({ children, containerRef, isConstrained = true }) {
+function ContainerProvider({ children, containerRef, isConstrained, isAutoFit }) {
   /* only dimensions can be read from this state reliably, changes to position only will not cause the state to change */
   const [containerRect, setContainerRect] = useState();
 
@@ -30,7 +30,9 @@ function ContainerProvider({ children, containerRef, isConstrained = true }) {
   return (
     <ContainerContext.Provider
       value={{
-        containerRect
+        containerRect,
+        isConstrained,
+        isAutoFit
       }}
     >
       {children}
@@ -41,7 +43,8 @@ function ContainerProvider({ children, containerRef, isConstrained = true }) {
 ContainerProvider.propTypes = {
   children: PropTypes.node.isRequired,
   containerRef: PropTypes.object.isRequired,
-  isConstrained: PropTypes.bool.isRequired,
+  isConstrained: PropTypes.bool,
+  isAutoFit: PropTypes.bool
 };
 
 function useContainerContext() {

@@ -51,7 +51,6 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      isResizable={false}
       isInnerWindow={true}
     />
   );

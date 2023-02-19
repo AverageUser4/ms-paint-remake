@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 
 const MainWindowContext = createContext();
 
-function MainWindowProvider({ children, initialPosition, initialSize }) {
+function MainWindowProvider({ children, initialPosition, initialSize, isInitiallyMaximized }) {
   const [position, setPosition] = useState(initialPosition);
   const [size, setSize] = useState(initialSize);
   const [latestSize, setLatestSize] = useState(initialSize);
   const [latestPosition, setLatestPosition] = useState(initialPosition);
   const [isFocused, setIsFocused] = useState(false);
-  const [isMaximized, setIsMaximized] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(isInitiallyMaximized);
 
   function minimize() {
     setIsMaximized(false);
@@ -61,6 +61,7 @@ function MainWindowProvider({ children, initialPosition, initialSize }) {
 
 MainWindowProvider.propTypes = {
   children: PropTypes.node.isRequired,
+  isInitiallyMaximized: PropTypes.bool.isRequired,
   initialPosition: PropTypes.shape({ x: PropTypes.number.isRequired, y: PropTypes.number.isRequired }),
   initialSize: PropTypes.shape({ width: PropTypes.number.isRequired, height: PropTypes.number.isRequired }),
 };
