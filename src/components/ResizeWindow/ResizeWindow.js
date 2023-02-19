@@ -5,6 +5,7 @@ import css from './ResizeWindow.module.css';
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import { useMainWindowContext } from '../../misc/MainWindowContext';
+import { innerWindowConfig } from '../../misc/data';
 
 import resizeHorizontal from './assets/resize-horizontal.ico';
 import resizeVertical from './assets/resize-vertical.ico';
@@ -29,6 +30,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
 
   return (
     <Window
+      {...innerWindowConfig}
       isOpen={isOpen}
       size={size}
       setSize={setSize}

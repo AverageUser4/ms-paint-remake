@@ -21,7 +21,6 @@ function Logic({
   isResizable,
   isAutoShrink,
   isOpen,
-  isAllowToLeaveViewport
 }) {
   const { 
     isMainWindowFocused, setIsMainWindowFocused,
@@ -82,7 +81,7 @@ function Logic({
         isIgnorePointerEvents={isAnyInnerWindowOpen}
         isMaximized={isMainWindowMaximized}
         isOpen={isOpen}
-        isAllowToLeaveViewport={isAllowToLeaveViewport}
+        isInnerWindow={false}
         render={(isAttentionAnimated, onPointerDownMove) => {
           return (
             <>
@@ -92,29 +91,17 @@ function Logic({
                 ribbonData={ribbonData}
                 setIsPromptWindowOpen={setIsPromptWindowOpen}
                 doSetWindowToMinimalSize={doSetWindowToMinimalSize}
-
-                windowWidth={mainWindowSize.width}
                 windowHasFocus={isMainWindowFocused}
-                isAttentionAnimated={isAttentionAnimated}
                 onPointerDownMove={onPointerDownMove}
               />
               <RibbonControls
                 ribbonData={ribbonData}
-      
-                windowWidth={mainWindowSize.width}
-                windowHasFocus={isMainWindowFocused}
-                isAttentionAnimated={isAttentionAnimated}
-                onPointerDownMove={onPointerDownMove}
               />
               <Ribbon
                 ribbonData={ribbonData}
                 setIsResizeWindowOpen={setIsResizeWindowOpen}
                 setIsColorsWindowOpen={setIsColorsWindowOpen}
-      
                 windowWidth={mainWindowSize.width}
-                windowHasFocus={isMainWindowFocused}
-                isAttentionAnimated={isAttentionAnimated}
-                onPointerDownMove={onPointerDownMove}
               />
               {
                 toolbarData.reposition &&
@@ -122,11 +109,6 @@ function Logic({
                     toolbarData={toolbarData}
                     setToolbarData={setToolbarData}
                     ribbonData={ribbonData} 
-      
-                    windowWidth={mainWindowSize.width}
-                    windowHasFocus={isMainWindowFocused}
-                    isAttentionAnimated={isAttentionAnimated}
-                    onPointerDownMove={onPointerDownMove}
                   />
               }
               <CanvasContainer
@@ -134,27 +116,12 @@ function Logic({
                 ribbonData={ribbonData}
                 canvasData={canvasData}
                 setCanvasData={setCanvasData}
-      
-                windowWidth={mainWindowSize.width}
-                windowHasFocus={isMainWindowFocused}
-                isAttentionAnimated={isAttentionAnimated}
-                onPointerDownMove={onPointerDownMove}
               />
               <BottomBar
                 canvasData={canvasData}
-      
                 windowWidth={mainWindowSize.width}
-                windowHasFocus={isMainWindowFocused}
-                isAttentionAnimated={isAttentionAnimated}
-                onPointerDownMove={onPointerDownMove}
               />
-              <ContextMenu
-              
-                windowWidth={mainWindowSize.width}
-                windowHasFocus={isMainWindowFocused}
-                isAttentionAnimated={isAttentionAnimated}
-                onPointerDownMove={onPointerDownMove}
-              />
+              <ContextMenu/>
             </>
           );
         }}
@@ -186,7 +153,6 @@ Logic.propTypes = {
   isResizable: PropTypes.bool.isRequired,
   isAutoShrink: PropTypes.bool.isRequired,
   isOpen: PropTypes.bool.isRequired,
-  isAllowToLeaveViewport: PropTypes.bool.isRequired,
 };
 
 function PaintXPlatform({
@@ -216,6 +182,7 @@ function PaintXPlatform({
         containerRef={containerRef}
         isConstrained={isConstrained}
         isAutoFit={isAutoFit}
+        isAllowToLeaveViewport={isAllowToLeaveViewport}
       >
         <MainWindowProvider
           initialPosition={initialPosition}
@@ -228,7 +195,6 @@ function PaintXPlatform({
               isResizable={isResizable}
               isAutoShrink={isAutoShrink}
               isOpen={isOpen}
-              isAllowToLeaveViewport={isAllowToLeaveViewport}
             />
           </ContextMenuProvider>
         </MainWindowProvider>

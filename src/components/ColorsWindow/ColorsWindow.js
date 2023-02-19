@@ -7,6 +7,7 @@ import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import { getWindowCenteredPosition } from '../../misc/utils';
 import { useMainWindowContext } from '../../misc/MainWindowContext';
+import { innerWindowConfig } from '../../misc/data';
 
 import duoArrow from './assets/duo-arrow.png';
 
@@ -27,6 +28,7 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
 
   return (
     <Window
+      {...innerWindowConfig}
       isOpen={isOpen}
       size={size}
       setSize={setSize}

@@ -2,12 +2,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
-import WindowPlacementIndicator from '../WindowPlacementIndicator/WindowPlacementIndicator';
-
+import WindowMovable from '../WindowMovable/WindowMovable';
+import WindowResizable from '../WindowResizable/WindowResizable';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import useResizeCursor from '../../hooks/useResizeCursor';
-import usePointerTrack from '../../hooks/usePointerTrack';
-import { useMainWindowContext } from '../../misc/MainWindowContext';
 import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
@@ -25,17 +22,11 @@ function Window({
   isOpen,
   isIgnorePointerEvents,
   isMaximized,
-  isAllowToLeaveViewport,
 }) {
-  const { containerRect, isConstrained, isAutoFit } = useContainerContext();
-  const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
+  const { containerRect, isConstrained, isAutoFit, isAllowToLeaveViewport } = useContainerContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
-  const [positionDifference, setPositionDifference] = useState(null);
-  const [resizeData, setResizeData] = useState(null);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
-  const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const windowRef = useRef();
-  useResizeCursor(resizeData);
 
   isResizable = isResizable && !isMaximized && !isInnerWindow;
 
@@ -65,187 +56,6 @@ function Window({
     }
   }, [isOpen, isActuallyOpen]);
 
-  const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 
-    usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback, onPointerUpMoveCallback);
-
-  function onPointerDownMoveCallback(event) {
-    const x = event.clientX - position.x;
-    const y = event.clientY - position.y;
-    
-    setPositionDifference({ x, y });
-  }
-  
-  function onPointerMoveMoveCallback(event) {
-    if(!containerRect) {
-      return;
-    }
-
-    let x = event.clientX - positionDifference.x;
-    let y = event.clientY - positionDifference.y;
-    
-    if(!isAllowToLeaveViewport) {
-      x = Math.max(Math.min(x, containerRect.width - size.width), 0);
-      y = Math.max(Math.min(y, containerRect.height - size.height), 0);
-    }
-
-    if(!isInnerWindow && isMaximized) {
-      const pointerContainerX = event.clientX - containerRect.x;
-      const pointerRatioX = pointerContainerX / containerRect.width;
-
-      const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
-
-      const adjustedX = pointerContainerX - widthBeforeCursor;
-
-      mainWindowRestoreSize();
-      setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
-      setPosition({ x: adjustedX, y: 0 })
-    } else {
-      setPosition({ x, y });
-    }
-  }
-
-  function onPointerUpMoveCallback() {
-    if(indicatorData.strPosition) {
-      if(indicatorData.strPosition === 'full') {
-        mainWindowMaximize();
-      } else {
-        setPosition(indicatorData.position);
-        setSize(indicatorData.size);
-      }
-    }
-    setPositionDifference(null);
-  }
-
-  const { onPointerDown: onPointerDownResize } = 
-    usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
-
-  function onPointerMoveResizeCallback(event) {
-    if(!containerRect) {
-      return;
-    }
-
-    let { clientX, clientY } = event;
-
-    let containerOffsetX = event.clientX - containerRect.x;
-    let containerOffsetY = event.clientY - containerRect.y;
-
-    if(!isAllowToLeaveViewport) {
-      clientX = Math.max(0, clientX);
-      clientY = Math.max(0, clientY);
-    }
-    
-    if(isConstrained) {
-      containerOffsetX = Math.max(0, containerOffsetX);
-      containerOffsetY = Math.max(0, containerOffsetY);
-    }
-      
-    let diffX = clientX - resizeData.initialX;
-    let diffY = clientY - resizeData.initialY;
-
-    let newWidth = size.width;
-    let newHeight = size.height;
-    let newX = position.x;
-    let newY = position.y;
-
-    if(resizeData.type.includes('left')) {
-      diffX *= -1;
-      newX = isConstrained ? containerOffsetX : clientX;
-    }
-    if(resizeData.type.includes('top')) {
-      diffY *= -1;
-      newY = isConstrained ? containerOffsetY : clientY;
-    }
-    if(resizeData.type.includes('left') || resizeData.type.includes('right')) {
-      newWidth = resizeData.initialWidth + diffX;
-    }
-    if(resizeData.type.includes('top') || resizeData.type.includes('bottom')) {
-      newHeight = resizeData.initialHeight + diffY;
-    }
-
-    if(newWidth < minimalSize.width) {
-      if(resizeData.type.includes('left')) {
-        const diffW = minimalSize.width - newWidth;
-        newX -= diffW;
-      }
-      newWidth = minimalSize.width;
-    }
-    if(newHeight < minimalSize.height) {
-      if(resizeData.type.includes('top')) {
-        const diffH = minimalSize.height - newHeight;
-        newY -= diffH;
-      }
-      newHeight = minimalSize.height;
-    }
-
-    if(isConstrained) {
-      if(newX + newWidth > containerRect.width) {
-        newWidth = containerRect.width - newX;
-      }
-      if(newY + newHeight > containerRect.height) {
-        newHeight = containerRect.height - newY;
-      }
-    }
-
-    if(newWidth !== size.width || newHeight !== size.height) {
-      setSize({ width: newWidth, height: newHeight });
-    }
-    if(newX !== position.x || newY !== position.y) {
-      setPosition({ x: newX, y: newY });
-    }
-  }
-  
-  function onPointerDownResizeCallback(event) {
-    if(isResizable) {
-      setResizeData({
-        type: event.target.dataset.name,
-        initialX: event.clientX,
-        initialY: event.clientY,
-        initialWidth: size.width,
-        initialHeight: size.height
-      });
-    }
-  }
-
-  useEffect(() => {
-    if(!isAutoFit || !containerRect) {
-      return;
-    }
-
-    let newX = position.x;
-    let newY = position.y;
-
-    if(position.x + size.width > containerRect.width) {
-      newX = Math.max(containerRect.width - size.width, 0);
-    }
-    if(position.y + size.height > containerRect.height) {
-      newY = Math.max(containerRect.height - size.height, 0);
-    }
-
-    if(newX !== position.x || newY !== position.y) {
-      setPosition({ x: newX, y: newY });
-    }
-  }, [containerRect, size, position, isAutoFit, setPosition]);
-
-  useEffect(() => {
-    if(!isAutoShrink || !isResizable || !containerRect) {
-      return;
-    }
-
-    let newWidth = size.width;
-    let newHeight = size.height;
-
-    if((position.x === 0 || !isAutoFit) && position.x + size.width > containerRect.width) {
-      newWidth = Math.max(containerRect.width - position.x, minimalSize.width);
-    }
-    if((position.y === 0 || !isAutoFit) && position.y + size.height > containerRect.height) {
-      newHeight = Math.max(containerRect.height - position.y, minimalSize.height);
-    }
-
-    if(isResizable && (newWidth !== size.width || newHeight !== size.height)) {
-      setSize({ width: newWidth, height: newHeight });
-    }
-  }, [containerRect, size, setSize, position, minimalSize, isAutoShrink, isAutoFit, isResizable]);
-
   function onPointerDownFocus() {
     if(!isInnerWindow && !isFocused)
       setIsFocused(true);
@@ -255,55 +65,60 @@ function Window({
     return null;
   
   return (
-    <>
-      <article
-        onPointerDown={onPointerDownFocus}
-        ref={windowRef}
-        style={{ 
-          top: position.y,
-          left: position.x,
-          width: size.width,
-          height: size.height,
-          zIndex: isInnerWindow ? '4' : 'auto',
-        }} 
-        className={`
-          ${css['container']}
-          ${isFocused ? css['container--focused'] : ''}
-          ${isInnerWindow ? css['container--inner'] : ''}
-          ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
-          ${isAttentionAnimated ? css['container--attention'] : ''}
-          ${isIgnorePointerEvents ? css['container--locked'] : ''}
-          ${!isConstrained ? css['container--fixed'] : ''}
-        `}
-      >
-        {
-          isResizable &&
-            <>
-              <div data-name="top" onPointerDown={onPointerDownResize} className={css['top']}></div>
-              <div data-name="bottom" onPointerDown={onPointerDownResize} className={css['bottom']}></div>
-              <div data-name="left" onPointerDown={onPointerDownResize} className={css['left']}></div>
-              <div data-name="right" onPointerDown={onPointerDownResize} className={css['right']}></div>
-              <div data-name="top-left" onPointerDown={onPointerDownResize} className={css['top-left']}></div>
-              <div data-name="top-right" onPointerDown={onPointerDownResize} className={css['top-right']}></div>
-              <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={css['bottom-left']}></div>
-              <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
-            </>
-        }
-        {render(isAttentionAnimated, onPointerDownMove)}
-      </article>
-
-      {
-        !isInnerWindow &&
-          <WindowPlacementIndicator
-            position={position}
+    <WindowMovable
+      position={position}
+      setPosition={setPosition}
+      isAllowToLeaveViewport={isAllowToLeaveViewport}
+      isInnerWindow={isInnerWindow}
+      isMaximized={isMaximized}
+      size={size}
+      setSize={setSize}
+      isConstrained ={isConstrained}
+      isAutoFit={isAutoFit}
+      render={(onPointerDownMove) => {
+        return (
+          <WindowResizable
+            position={position} 
+            setPosition={setPosition} 
+            isAllowToLeaveViewport={isAllowToLeaveViewport} 
+            size={size} 
+            setSize={setSize}
             isConstrained={isConstrained}
-            isMaximized={isMaximized}
-            isBeingMoved={isMovePressed}
-            indicatorData={indicatorData}
-            setIndicatorData={setIndicatorData}
+            minimalSize={minimalSize}
+            isResizable={isResizable}
+            isAutoFit={isAutoFit}
+            isAutoShrink={isAutoShrink}
+            render={(resizeElements) => {
+              return (
+                <article
+                  onPointerDown={onPointerDownFocus}
+                  ref={windowRef}
+                  style={{ 
+                    top: position.y,
+                    left: position.x,
+                    width: size.width,
+                    height: size.height,
+                    zIndex: isInnerWindow ? '4' : 'auto',
+                  }} 
+                  className={`
+                    ${css['container']}
+                    ${isFocused ? css['container--focused'] : ''}
+                    ${isInnerWindow ? css['container--inner'] : ''}
+                    ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
+                    ${isAttentionAnimated ? css['container--attention'] : ''}
+                    ${isIgnorePointerEvents ? css['container--locked'] : ''}
+                    ${!isConstrained ? css['container--fixed'] : ''}
+                  `}
+                >
+                  {resizeElements}
+                  {render(isAttentionAnimated, onPointerDownMove)}
+                </article>
+              );
+            }}
           />
-      }
-    </>
+        );
+      }}
+    />
   );
 }
 
@@ -312,11 +127,7 @@ Window.propTypes = {
   minimalSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number
-  }),
-  containerDimensions: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number
-  }),
+  }).isRequired,
   size: PropTypes.shape({
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired
@@ -326,16 +137,15 @@ Window.propTypes = {
     x: PropTypes.number.isRequired,
     y: PropTypes.number.isRequired,
   }).isRequired,
-  isFocused: PropTypes.bool,
-  setIsFocused: PropTypes.func,
   setPosition: PropTypes.func.isRequired,
-  isResizable: PropTypes.bool,
-  isAutoShrink: PropTypes.bool,
-  isInnerWindow: PropTypes.bool,
-  isOpen: PropTypes.bool,
-  isIgnorePointerEvents: PropTypes.bool,
-  isMaximized: PropTypes.bool,
-  isAllowToLeaveViewport: PropTypes.bool,
+  isInnerWindow: PropTypes.bool.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  isFocused: PropTypes.bool.isRequired,
+  setIsFocused: PropTypes.func.isRequired,
+  isResizable: PropTypes.bool.isRequired,
+  isAutoShrink: PropTypes.bool.isRequired,
+  isIgnorePointerEvents: PropTypes.bool.isRequired,
+  isMaximized: PropTypes.bool.isRequired,
 };
 
 export default Window;
