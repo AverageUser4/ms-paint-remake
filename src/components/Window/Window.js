@@ -11,7 +11,7 @@ import { useMainWindowContext } from '../../misc/MainWindowContext';
 import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
-  children,
+  render,
   minimalSize,
   size,
   setSize,
@@ -289,8 +289,7 @@ function Window({
               <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={css['bottom-right']}></div>
             </>
         }
-        
-        {children}
+        {render(isAttentionAnimated, onPointerDownMove)}
       </article>
 
       {
@@ -309,7 +308,7 @@ function Window({
 }
 
 Window.propTypes = {
-  children: PropTypes.node.isRequired,
+  render: PropTypes.func.isRequired,
   minimalSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number

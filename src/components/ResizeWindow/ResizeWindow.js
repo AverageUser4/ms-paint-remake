@@ -35,16 +35,23 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
       position={position}
       setPosition={setPosition}
       isInnerWindow={true}
-    >
-      <InnerWindowTopBar
-        text={'Resize and Skew'}
-        close={() => setIsOpen(false)}
-      />
-
-      <ResizeWindowBody
-        setIsOpen={setIsOpen}
-      />
-    </Window>
+      render={(isAttentionAnimated, onPointerDownMove) => {
+        return (
+          <>
+            <InnerWindowTopBar
+              text={'Resize and Skew'}
+              close={() => setIsOpen(false)}
+              isAttentionAnimated={isAttentionAnimated}
+              onPointerDownMove={onPointerDownMove}
+            />
+      
+            <ResizeWindowBody
+              setIsOpen={setIsOpen}
+            />
+          </>
+        );
+      }}
+    />
   );
 });
 

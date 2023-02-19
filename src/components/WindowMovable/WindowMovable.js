@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from 'prop-types';
-import css from './WindowMoveable.module.css';
+import css from './WindowMovable.module.css';
 
 import WindowPlacementIndicator from '../WindowPlacementIndicator/WindowPlacementIndicator';
 
@@ -8,7 +8,7 @@ import { useMainWindowContext } from '../../misc/MainWindowContext';
 import { useContainerContext } from '../../misc/ContainerContext';
 import usePointerTrack from "../../hooks/usePointerTrack";
 
-function WindowMoveable({ children, position, setPosition, isAllowToLeaveViewport, isInnerWindow, isMaximized, size, setSize, isConstrained }) {
+function WindowMovable({ children, position, setPosition, isAllowToLeaveViewport, isInnerWindow, isMaximized, size, setSize, isConstrained }) {
   const { containerRect } = useContainerContext();
   const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
   const [positionDifference, setPositionDifference] = useState(null);
@@ -81,7 +81,7 @@ function WindowMoveable({ children, position, setPosition, isAllowToLeaveViewpor
   );
 }
 
-WindowMoveable.propTypes = {
+WindowMovable.propTypes = {
   children: PropTypes.node.isRequired,
   size: PropTypes.shape({
     width: PropTypes.number.isRequired,
@@ -99,4 +99,4 @@ WindowMoveable.propTypes = {
   isConstrained: PropTypes.bool,
 }
 
-export default WindowMoveable;
+export default WindowMovable;

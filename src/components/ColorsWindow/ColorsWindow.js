@@ -33,16 +33,23 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
       position={position}
       setPosition={setPosition}
       isInnerWindow={true}
-    >
-      <InnerWindowTopBar
-        text={'Edit Colors'}
-        close={() => setIsOpen(false)}
-      />
-
-      <ResizeWindowBody
-        setIsOpen={setIsOpen}
-      />
-    </Window>
+      render={(isAttentionAnimated, onPointerDownMove) => {
+        return (
+          <>
+            <InnerWindowTopBar
+              text={'Edit Colors'}
+              close={() => setIsOpen(false)}
+              isAttentionAnimated={isAttentionAnimated}
+              onPointerDownMove={onPointerDownMove}
+            />
+      
+            <ResizeWindowBody
+              setIsOpen={setIsOpen}
+            />
+          </>
+        );
+      }}
+    />
   );
 });
 

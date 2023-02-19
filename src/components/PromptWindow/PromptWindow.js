@@ -22,41 +22,31 @@ const PromptWindow = memo(function PromptWindow({ isOpen, setIsOpen }) {
     }
   }, [isOpen, mainWindowPosition, mainWindowSize, size.width, size.height]);
 
-  const items = [
-    {
-      Component: InnerWindowTopBar, 
-      props: {
-        text: 'Paint',
-        close: () => setIsOpen(false)
-      }
-    },
-    {
-      Component: PromptWindowBody, 
-      props: {
-        setIsOpen
-      }
-    },
-  ];
-
   return (
     <Window
       isOpen={isOpen}
-      items={items}
       size={size}
       setSize={setSize}
       position={position}
       setPosition={setPosition}
       isInnerWindow={true}
-    >
-      <InnerWindowTopBar
-        text={'Paint'}
-        close={() => setIsOpen(false)}
-      />
-
-      <PromptWindowBody
-        setIsOpen={setIsOpen}
-      />
-    </Window>
+      render={(isAttentionAnimated, onPointerDownMove) => {
+        return (
+          <>
+            <InnerWindowTopBar
+              text={'Paint'}
+              close={() => setIsOpen(false)}
+              isAttentionAnimated={isAttentionAnimated}
+              onPointerDownMove={onPointerDownMove}
+            />
+      
+            <PromptWindowBody
+              setIsOpen={setIsOpen}
+            />
+          </>
+        );
+      }}
+    />
   );
 });
 
