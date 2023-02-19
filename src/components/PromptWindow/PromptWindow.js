@@ -47,7 +47,16 @@ const PromptWindow = memo(function PromptWindow({ isOpen, setIsOpen }) {
       position={position}
       setPosition={setPosition}
       isInnerWindow={true}
-    />
+    >
+      <InnerWindowTopBar
+        text={'Paint'}
+        close={() => setIsOpen(false)}
+      />
+
+      <PromptWindowBody
+        setIsOpen={setIsOpen}
+      />
+    </Window>
   );
 });
 

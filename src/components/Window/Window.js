@@ -11,7 +11,7 @@ import { useMainWindowContext } from '../../misc/MainWindowContext';
 import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
-  items,
+  children,
   minimalSize,
   size,
   setSize,
@@ -290,22 +290,7 @@ function Window({
             </>
         }
         
-        {items.map((item, index) => {
-          if(!item)
-            return null;
-          
-          const { Component, props } = item;
-
-          const itemProps = { 
-            ...props, 
-            windowWidth: size.width, 
-            windowHasFocus: isFocused,
-            onPointerDownMove,
-            isAttentionAnimated
-          };
-
-          return <Component key={index} {...itemProps}/>
-        })}
+        {children}
       </article>
 
       {
@@ -324,7 +309,7 @@ function Window({
 }
 
 Window.propTypes = {
-  items: PropTypes.array.isRequired,
+  children: PropTypes.node.isRequired,
   minimalSize: PropTypes.shape({
     width: PropTypes.number,
     height: PropTypes.number

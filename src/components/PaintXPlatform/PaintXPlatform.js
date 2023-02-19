@@ -65,71 +65,11 @@ function Logic({
     }
   }, [isAnyInnerWindowOpen, isMainWindowFocused, setIsMainWindowFocused]);
 
-  const items = [
-    {
-      Component: TopBar, 
-      props: { 
-        toolbarData,
-        setToolbarData,
-        ribbonData,
-        setIsPromptWindowOpen,
-        doSetWindowToMinimalSize
-      }
-    },
-    { 
-      Component: RibbonControls,
-      props: { 
-        ribbonData,
-      }
-    },
-    { 
-      Component: Ribbon,
-      props: { 
-        ribbonData,
-        setIsResizeWindowOpen,
-        setIsColorsWindowOpen,
-      }
-    },
-    (
-      toolbarData.reposition ?
-        { 
-          Component: QuickAccessToolbar,
-          props: { 
-            toolbarData,
-            setToolbarData,
-            ribbonData,
-          }
-        }
-      :
-        null
-    ),
-    { 
-      Component: CanvasContainer,
-      props: { 
-        toolbarData,
-        ribbonData,
-        canvasData,
-        setCanvasData
-      }
-    },
-    { 
-      Component: BottomBar,
-      props: { 
-        canvasData 
-      } 
-    },
-    {
-      Component: ContextMenu,
-      props: {}
-    },
-  ];
-
   return (
     <div 
       onContextMenu={(e) => e.preventDefault()}
     >
       <Window 
-        items={items}
         minimalSize={minimalSize}
         position={mainWindowPosition}
         setPosition={setMainWindowPosition}
@@ -143,7 +83,78 @@ function Logic({
         isMaximized={isMainWindowMaximized}
         isOpen={isOpen}
         isAllowToLeaveViewport={isAllowToLeaveViewport}
-      />
+      >
+        <TopBar
+          toolbarData={toolbarData}
+          setToolbarData={setToolbarData}
+          ribbonData={ribbonData}
+          setIsPromptWindowOpen={setIsPromptWindowOpen}
+          doSetWindowToMinimalSize={doSetWindowToMinimalSize}
+
+          windowWidth={mainWindowSize.width}
+          windowHasFocus={isMainWindowFocused}
+          isAttentionAnimated={false}
+          onPointerDownMove={()=>0}
+        />
+        <RibbonControls
+          ribbonData={ribbonData}
+
+          windowWidth={mainWindowSize.width}
+          windowHasFocus={isMainWindowFocused}
+          isAttentionAnimated={false}
+          onPointerDownMove={()=>0}
+        />
+        <Ribbon
+          ribbonData={ribbonData}
+          setIsResizeWindowOpen={setIsResizeWindowOpen}
+          setIsColorsWindowOpen={setIsColorsWindowOpen}
+
+          windowWidth={mainWindowSize.width}
+          windowHasFocus={isMainWindowFocused}
+          isAttentionAnimated={false}
+          onPointerDownMove={()=>0}
+        />
+        {
+          toolbarData.reposition &&
+            <QuickAccessToolbar
+              toolbarData={toolbarData}
+              setToolbarData={setToolbarData}
+              ribbonData={ribbonData} 
+
+              windowWidth={mainWindowSize.width}
+              windowHasFocus={isMainWindowFocused}
+              isAttentionAnimated={false}
+              onPointerDownMove={()=>0}
+            />
+        }
+        <CanvasContainer
+          toolbarData={toolbarData}
+          ribbonData={ribbonData}
+          canvasData={canvasData}
+          setCanvasData={setCanvasData}
+
+          windowWidth={mainWindowSize.width}
+          windowHasFocus={isMainWindowFocused}
+          isAttentionAnimated={false}
+          onPointerDownMove={()=>0}
+        />
+        <BottomBar
+          canvasData={canvasData}
+
+          windowWidth={mainWindowSize.width}
+          windowHasFocus={isMainWindowFocused}
+          isAttentionAnimated={false}
+          onPointerDownMove={()=>0}
+        />
+        <ContextMenu
+        
+          windowWidth={mainWindowSize.width}
+          windowHasFocus={isMainWindowFocused}
+          isAttentionAnimated={false}
+          onPointerDownMove={()=>0}
+        />
+
+      </Window>
 
       <ResizeWindow
         isOpen={isResizeWindowOpen}

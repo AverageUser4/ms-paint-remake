@@ -27,32 +27,24 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
     }
   }, [isOpen, mainWindowPosition]);
 
-  const items = [
-    {
-      Component: InnerWindowTopBar, 
-      props: {
-        text: 'Resize and Skew',
-        close: () => setIsOpen(false)
-      }
-    },
-    {
-      Component: ResizeWindowBody, 
-      props: {
-        setIsOpen
-      }
-    },
-  ];
-
   return (
     <Window
       isOpen={isOpen}
-      items={items}
       size={size}
       setSize={setSize}
       position={position}
       setPosition={setPosition}
       isInnerWindow={true}
-    />
+    >
+      <InnerWindowTopBar
+        text={'Resize and Skew'}
+        close={() => setIsOpen(false)}
+      />
+
+      <ResizeWindowBody
+        setIsOpen={setIsOpen}
+      />
+    </Window>
   );
 });
 

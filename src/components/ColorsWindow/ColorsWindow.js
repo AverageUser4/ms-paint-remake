@@ -25,32 +25,24 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
     }
   }, [isOpen, mainWindowPosition, mainWindowSize, size.width, size.height]);
 
-  const items = [
-    {
-      Component: InnerWindowTopBar, 
-      props: {
-        text: 'Edit Colors',
-        close: () => setIsOpen(false)
-      }
-    },
-    {
-      Component: ResizeWindowBody, 
-      props: {
-        setIsOpen
-      }
-    },
-  ];
-
   return (
     <Window
       isOpen={isOpen}
-      items={items}
       size={size}
       setSize={setSize}
       position={position}
       setPosition={setPosition}
       isInnerWindow={true}
-    />
+    >
+      <InnerWindowTopBar
+        text={'Edit Colors'}
+        close={() => setIsOpen(false)}
+      />
+
+      <ResizeWindowBody
+        setIsOpen={setIsOpen}
+      />
+    </Window>
   );
 });
 
