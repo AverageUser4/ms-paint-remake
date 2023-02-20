@@ -22,6 +22,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
         <button
           className="ribbon-button ribbon-button--blue"
           onPointerDown={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
+          data-cy="RibbonControls-toggle-FileDropdown"
         >
           File
         </button>

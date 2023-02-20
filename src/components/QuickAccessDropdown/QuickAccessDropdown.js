@@ -50,7 +50,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-newFile"
+              data-cy="QuickAccessDropdown-toggle-newFile"
               className={css['checkbox']}
               type="checkbox"
               name="newFile"
@@ -62,7 +62,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-open"
+              data-cy="QuickAccessDropdown-toggle-open"
               className={css['checkbox']}
               type="checkbox"
               name="open"
@@ -74,7 +74,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-save"
+              data-cy="QuickAccessDropdown-toggle-save"
               className={css['checkbox']}
               type="checkbox"
               name="save"
@@ -86,7 +86,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-print"
+              data-cy="QuickAccessDropdown-toggle-print"
               className={css['checkbox']}
               type="checkbox"
               name="print"
@@ -98,7 +98,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-printPreview"
+              data-cy="QuickAccessDropdown-toggle-printPreview"
               className={css['checkbox']}
               type="checkbox"
               name="printPreview"
@@ -110,7 +110,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-email"
+              data-cy="QuickAccessDropdown-toggle-email"
               className={css['checkbox']}
               type="checkbox"
               name="email"
@@ -122,7 +122,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-undo"
+              data-cy="QuickAccessDropdown-toggle-undo"
               className={css['checkbox']}
               type="checkbox"
               name="undo"
@@ -134,7 +134,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="qad-toggle-redo"
+              data-cy="QuickAccessDropdown-toggle-redo"
               className={css['checkbox']}
               type="checkbox"
               name="redo"
@@ -149,7 +149,7 @@ function QuickAccessDropdown({
           <button 
             className={`text text--1 ${css['button']}`}
             onClick={() => setToolbarData(prev => ({ ...prev, reposition: !prev.reposition }))}
-            data-cy="qad-toggle-position"
+            data-cy="QuickAccessDropdown-toggle-position"
           >
             <span className={css['checkbox']}></span>
             <span>
@@ -165,7 +165,7 @@ function QuickAccessDropdown({
               type="checkbox"
               checked={ribbonData.minimize}
               onChange={() => ribbonData.toggleMinimize()}
-              data-cy="qad-toggle-ribbon"
+              data-cy="QuickAccessDropdown-toggle-Ribbon"
             />
             <span className="text text--1">Mi<span className="text--underline">n</span>imize the Ribbon</span>
           </label>

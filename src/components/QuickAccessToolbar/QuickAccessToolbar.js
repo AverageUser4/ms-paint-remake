@@ -76,7 +76,7 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
         key={data.id}
         className="button"
         onClick={data.onClick}
-        data-cy={`qat-${data.id}`}
+        data-cy={`QuickAccessToolbar-element-${data.id}`}
       >
         <img draggable="false" src={data.src} alt={data.id}/>
       </button>
@@ -96,7 +96,7 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
         <button 
           onPointerDown={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
           className="button button--height-20"
-          data-cy="qat-open-qad"
+          data-cy="QuickAccessToolbar-toggle-QuickAccessDropdown"
         >
           <TriangleLine/>
         </button>

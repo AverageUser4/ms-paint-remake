@@ -141,7 +141,10 @@ function FileDropdownMore({ currentMore }) {
   }
   
   return (
-    <div className={css['container']}>
+    <div 
+      className={css['container']}
+      data-cy="FileDropdownMore"
+    >
 
       <div className={css['top']}>
         <h3 className="head">Recent pictures</h3>
@@ -163,13 +166,17 @@ function FileDropdownMore({ currentMore }) {
         adjustPosition={false}
         isVisible={currentMore !== 'recent'} classes={css['dropdown']}
       >
-        <div className={`${css['top']} ${css['top--alt']}`}>
-          <h3 className="head">{moreData.name}</h3>
-        </div>
+        <div 
+          data-cy={`FileDropdownMore-Dropdown-${currentMore}`}
+        >
+          <div className={`${css['top']} ${css['top--alt']}`}>
+            <h3 className="head">{moreData.name}</h3>
+          </div>
 
-        <ul className="clean-list">
-          {moreData.items}
-        </ul>
+          <ul className="clean-list">
+            {moreData.items}
+          </ul>
+        </div>
       </Dropdown>
       
     </div>
