@@ -50,7 +50,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-newFile"
+              data-cy="QuickAccessDropdown-toggle-element-newFile"
               className={css['checkbox']}
               type="checkbox"
               name="newFile"
@@ -62,7 +62,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-open"
+              data-cy="QuickAccessDropdown-toggle-element-open"
               className={css['checkbox']}
               type="checkbox"
               name="open"
@@ -74,7 +74,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-save"
+              data-cy="QuickAccessDropdown-toggle-element-save"
               className={css['checkbox']}
               type="checkbox"
               name="save"
@@ -86,7 +86,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-print"
+              data-cy="QuickAccessDropdown-toggle-element-print"
               className={css['checkbox']}
               type="checkbox"
               name="print"
@@ -98,7 +98,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-printPreview"
+              data-cy="QuickAccessDropdown-toggle-element-printPreview"
               className={css['checkbox']}
               type="checkbox"
               name="printPreview"
@@ -110,7 +110,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-email"
+              data-cy="QuickAccessDropdown-toggle-element-email"
               className={css['checkbox']}
               type="checkbox"
               name="email"
@@ -122,7 +122,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-undo"
+              data-cy="QuickAccessDropdown-toggle-element-undo"
               className={css['checkbox']}
               type="checkbox"
               name="undo"
@@ -134,7 +134,7 @@ function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              data-cy="QuickAccessDropdown-toggle-redo"
+              data-cy="QuickAccessDropdown-toggle-element-redo"
               className={css['checkbox']}
               type="checkbox"
               name="redo"
