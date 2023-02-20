@@ -4,7 +4,10 @@ import css from './RibbonItemExpanded.module.css';
 
 function RibbonItemExpanded({ name, children }) {
   return (
-    <div className={css['container']}>
+    <div 
+      className={css['container']}
+      data-cy={`RibbonItemExpanded-${name}`}
+    >
 
       <div>
         {children}

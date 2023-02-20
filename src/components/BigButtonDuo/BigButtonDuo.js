@@ -19,7 +19,11 @@ function BigButtonDuo({
   const dropdownContainerRef = useRef();
   
   return (
-    <div className={css['container']} ref={dropdownContainerRef}>
+    <div 
+      className={css['container']} 
+      ref={dropdownContainerRef}
+      data-cy={`BigButtonDuo-${name}`}
+    >
       <button 
         className={css['top']}
         onPointerDown={onPointerDownTop ? onPointerDownTop : ()=>0}

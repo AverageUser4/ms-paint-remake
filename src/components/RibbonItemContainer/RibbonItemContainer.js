@@ -32,6 +32,7 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
     <div 
       className={`${css['container']} ${isDropdownOpen ? css['container--active'] : ''}`}
       ref={containerRef}
+      data-cy={`RibbonItemContainer-${name}`}
     >
 
       <button className={css['button']} onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}>

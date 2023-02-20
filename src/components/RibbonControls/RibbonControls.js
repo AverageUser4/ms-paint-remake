@@ -34,6 +34,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           }
           data-control="ribbon"
           onPointerDown={(e) => e.button === 0 && ribbonData.setTab('home')}
+          data-cy="RibbonControls-setTab-home"
         >
           Home
         </button>
@@ -46,6 +47,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           }
           data-control="ribbon"
           onPointerDown={(e) => e.button === 0 && ribbonData.setTab('view')}
+          data-cy="RibbonControls-setTab-view"
         >
           View
         </button>
@@ -55,6 +57,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
         <button 
           className="button button--height-20"
           onPointerDown={(e) => e.button === 0 && ribbonData.toggleMinimize()}
+          data-cy="RibbonControls-toggle-Ribbon"
         >
           {
             ribbonData.minimize && ribbonData.expand ?

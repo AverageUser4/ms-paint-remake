@@ -40,5 +40,21 @@ export default {
   FileDropdownMore_Dropdown_print: '[data-cy="FileDropdownMore-Dropdown-print"]',
   FileDropdownMore_Dropdown_set: '[data-cy="FileDropdownMore-Dropdown-set"]',
 
+  RibbonControls_toggle_Ribbon: '[data-cy="RibbonControls-toggle-Ribbon"]',
   RibbonControls_toggle_FileDropdown: '[data-cy="RibbonControls-toggle-FileDropdown"]',
+  RibbonControls_setTab_home: '[data-cy="RibbonControls-setTab-home"]',
+  RibbonControls_setTab_view: '[data-cy="RibbonControls-setTab-view"]',
+
+  RibbonItemContainer_Clipboard: '[data-cy="RibbonItemContainer-Clipboard"]',
+  RibbonItemContainer_Image: '[data-cy="RibbonItemContainer-Image"]',
+  RibbonItemContainer_Tools: '[data-cy="RibbonItemContainer-Tools"]',
+  RibbonItemContainer_Shapes: '[data-cy="RibbonItemContainer-Shapes"]',
+  RibbonItemContainer_Colors: '[data-cy="RibbonItemContainer-Colors"]',
+
+  RibbonItemExpanded_Zoom: '[data-cy="RibbonItemExpanded-Zoom"]',
+  RibbonItemExpanded_ShowOrHide: '[data-cy="RibbonItemExpanded-Show or hide"]',
+  RibbonItemExpanded_Display: '[data-cy="RibbonItemExpanded-Display"]',
+  
+  BigButtonDuo_Brushes: '[data-cy="BigButtonDuo-Brushes"]',
+  BigButton_Size: '[data-cy="BigButton-Size"]',
 };

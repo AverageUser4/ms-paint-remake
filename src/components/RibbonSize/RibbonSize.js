@@ -19,6 +19,7 @@ function RibbonSize() {
     <BigButton 
       icon={size32}
       name="Size"
+      strName="Size"
       showChildren={isDropdownOpen}
       setShowChildren={setIsDropdownOpen}
       onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}

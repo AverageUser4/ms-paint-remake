@@ -41,16 +41,19 @@ function RibbonZoom({ ribbonWidth }) {
           icon={zoomIn32}
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> in</div>}
+          strName="Zoom-in"
         />
         <BigButton 
           icon={zoomOut32}
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> out</div>}
+          strName="Zoom-out"
         />
         <BigButton 
           icon={percent32}
           hasArrow={false}
           name={<div>100 <div className="line-break"></div> %</div>}
+          strName="100%"
         />
       </div>
     </RibbonItemExpanded>

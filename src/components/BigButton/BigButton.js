@@ -8,6 +8,7 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 
 function BigButton({ 
   name,
+  strName,
   icon,
   backgroundColor = '#ff00ff',
   iconSize = '',
@@ -29,7 +30,11 @@ function BigButton({
     return children;
   
   return (
-    <div className={css['container']} ref={dropdownContainerRef}>
+    <div 
+      className={css['container']}
+      ref={dropdownContainerRef}
+      data-cy={`BigButton-${strName}`}
+    >
       <button 
         className={buttonClasses}
         onPointerDown={onPointerDown ? onPointerDown : ()=>0}
@@ -64,6 +69,7 @@ function BigButton({
 
 BigButton.propTypes = {
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+  strName: PropTypes.string.isRequired,
   icon: PropTypes.string,
   backgroundColor: PropTypes.string,
   iconSize: PropTypes.oneOf(['', 'small']),

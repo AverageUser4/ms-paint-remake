@@ -26,12 +26,14 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
               backgroundColor="red"
               hasArrow={false}
               name={<div>Color <div className="line-break"></div> 1</div>}
+              strName="Color-1"
             />
             <BigButton 
               backgroundColor="blue"
               hasArrow={false}
               name={<div>Color <div className="line-break"></div> 2</div>} 
               iconSize="small"
+              strName="Color-2"
             />
 
             <div className={css['colors-grid']}>
@@ -42,6 +44,7 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
               icon={colors32}
               hasArrow={false}
               name={<div>Edit <div className="line-break"></div> colors</div>}
+              strName="Edit-colors"
               onPointerDown={() => setIsColorsWindowOpen(true)}
             />
           </div>

@@ -15,11 +15,13 @@ function RibbonDisplay() {
           icon={full32}
           hasArrow={false}
           name={<div>Full <div className="line-break"></div> screen</div>}
+          strName="Full-screen"
         />
         <BigButton 
           icon={thumb32}
           hasArrow={false}
           name="Thumbnail"
+          strName="Thumbnail"
         />
       </div>
     </RibbonItemExpanded>

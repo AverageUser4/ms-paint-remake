@@ -52,6 +52,7 @@ function RibbonShapes({ ribbonWidth }) {
             <BigButton 
               icon={shapes32}
               name="Shapes"
+              strName="Shapes"
               isOnlyChildren={isBigButtonHidden}
               onPointerDown={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
             >
