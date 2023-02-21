@@ -104,6 +104,7 @@ function ResizeWindowBody({ setIsOpen }) {
               type="button"
               className="form-button form-button--medium form-button--active"
               onClick={() => setIsOpen(false)}
+              data-cy="ColorsWindow-confirm"
             >
               OK
             </button>
@@ -111,6 +112,7 @@ function ResizeWindowBody({ setIsOpen }) {
               type="button"
               className="form-button form-button--medium"
               onClick={() => setIsOpen(false)}
+              data-cy="ColorsWindow-cancel"
             >
               Cancel
             </button>

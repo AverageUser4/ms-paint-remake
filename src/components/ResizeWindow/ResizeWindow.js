@@ -68,7 +68,7 @@ ResizeWindow.propTypes = {
 };
 
 function ResizeWindowBody({ setIsOpen }) {
-  const [tempMaintain, setTempMaintain] = useState(false);
+  const [tempMaintain, setTempMaintain] = useState(true);
 
   return (
     <form className={css['body']}>
@@ -84,6 +84,7 @@ function ResizeWindowBody({ setIsOpen }) {
               type="radio"
               className="form-raadio"
               name="resize-type"
+              data-cy="ResizeWindow-radio-percentage"
             />
             <span className="text">Percentage</span>
           </label>
@@ -93,6 +94,7 @@ function ResizeWindowBody({ setIsOpen }) {
               type="radio"
               className="form-raadio"
               name="resize-type"
+              data-cy="ResizeWindow-radio-pixels"
             />
             <span className="text">Pixels</span>
           </label>
@@ -108,6 +110,7 @@ function ResizeWindowBody({ setIsOpen }) {
           <input 
             className="form-input-text"
             id="rw-resize-horizontal"
+            data-cy="ResizeWindow-input-resize-horizontal"
           />
         </div>
 
@@ -121,6 +124,7 @@ function ResizeWindowBody({ setIsOpen }) {
           <input 
             className="form-input-text"
             id="rw-resize-vertical"
+            data-cy="ResizeWindow-input-resize-vertical"
           />
         </div>
 
@@ -130,6 +134,7 @@ function ResizeWindowBody({ setIsOpen }) {
             type="checkbox"
             checked={tempMaintain}
             onChange={() => setTempMaintain(prev => !prev)}
+            data-cy="ResizeWindow-checkbox-maintain"
           />
           {
             tempMaintain &&
@@ -152,6 +157,7 @@ function ResizeWindowBody({ setIsOpen }) {
           <input 
             className="form-input-text"
             id="rw-skew-horizontal"
+            data-cy="ResizeWindow-input-skew-horizontal"
           />
         </div>
 
@@ -165,6 +171,7 @@ function ResizeWindowBody({ setIsOpen }) {
           <input 
             className="form-input-text"
             id="rw-skew-vertical"
+            data-cy="ResizeWindow-input-skew-vertical"
           />
         </div>
       </div>
@@ -174,6 +181,7 @@ function ResizeWindowBody({ setIsOpen }) {
           className={`form-button form-button--active`} 
           type="button"
           onClick={() => setIsOpen(false)}
+          data-cy="ResizeWindow-confirm"
         >
           OK
         </button>
@@ -181,6 +189,7 @@ function ResizeWindowBody({ setIsOpen }) {
           className={`form-button`} 
           type="button"
           onClick={() => setIsOpen(false)}
+          data-cy="ResizeWindow-cancel"
         >
           Cancel
         </button>

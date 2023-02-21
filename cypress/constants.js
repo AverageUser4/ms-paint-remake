@@ -94,5 +94,32 @@ export default {
   BigButton_Color_1: '[data-cy="BigButton-Color-1"]',
   BigButton_Color_2: '[data-cy="BigButton-Color-2"]',
 
+  ColorsWindow: '[data-cy="ColorsWindow"]',
+  ColorsWindow_cancel: '[data-cy="ColorsWindow-cancel"]',
+  ColorsWindow_confirm: '[data-cy="ColorsWindow-confirm"]',
+
+  ColorPicker_field: '[data-cy="ColorPicker-field"]',
+  ColorPicker_bar: '[data-cy="ColorPicker-bar"]',
+  ColorPicker_input_h: '[data-cy="ColorPicker-input-h"]',
+  ColorPicker_input_s: '[data-cy="ColorPicker-input-s"]',
+  ColorPicker_input_l: '[data-cy="ColorPicker-input-l"]',
+  ColorPicker_input_r: '[data-cy="ColorPicker-input-r"]',
+  ColorPicker_input_g: '[data-cy="ColorPicker-input-g"]',
+  ColorPicker_input_b: '[data-cy="ColorPicker-input-b"]',
+
   ResizeWindow: '[data-cy="ResizeWindow"]',
+  ResizeWindow_confirm: '[data-cy="ResizeWindow-confirm"]',
+  ResizeWindow_cancel: '[data-cy="ResizeWindow-cancel"]',
+  ResizeWindow_radio_percentage: '[data-cy="ResizeWindow-radio-percentage"]',
+  ResizeWindow_radio_pixels: '[data-cy="ResizeWindow-radio-pixels"]',
+  ResizeWindow_input_resize_horizontal: '[data-cy="ResizeWindow-input-resize-horizontal"]',
+  ResizeWindow_input_resize_vertical: '[data-cy="ResizeWindow-input-resize-vertical"]',
+  ResizeWindow_input_skew_horizontal: '[data-cy="ResizeWindow-input-skew-horizontal"]',
+  ResizeWindow_input_skew_vertical: '[data-cy="ResizeWindow-input-skew-vertical"]',
+  ResizeWindow_checkbox_maintain: '[data-cy="ResizeWindow-checkbox-maintain"]',
+
+  PromptWindow: '[data-cy="PromptWindow"]',
+
+  WindowControls_InnerWindow_close: '[data-cy="WindowControls-InnerWindow-close"]',
+  WindowControls_close: '[data-cy="WindowControls-close"]',
 };

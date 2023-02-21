@@ -23,6 +23,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${isAttentionAnimated ? css['button--attention'] : ''}
         `}
         onClick={close}
+        data-cy="WindowControls-InnerWindow-close"
       >
         <Close draggable="false"/>
       </button>
@@ -61,6 +62,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
         onClick={close}
+        data-cy="WindowControls-close"
       >
         <Close draggable="false"/>
       </button>

@@ -7,7 +7,7 @@ import { HSLtoRGB, RGBtoHSL } from "../../misc/utils";
 import cursor from './assets/cursor.png';
 
 function ColorPicker() {
-  const [HSL, setHSL] = useState({ h: 0, s: 0, l: 0 });
+  const [HSL, setHSL] = useState({ h: 200, s: 60, l: 50 });
   const [RGB, setRGB] = useState(() => HSLtoRGB(HSL));
   const fieldRef = useRef();
   const barRef = useRef();
@@ -73,6 +73,7 @@ function ColorPicker() {
             className={css['color-field']}
             onPointerDown={(e) => { onPointerField(e); onPointerDownField(e); }}
             ref={fieldRef}
+            data-cy="ColorPicker-field"
           >
             <img 
               className={css['cursor']}
@@ -87,6 +88,7 @@ function ColorPicker() {
             className={css['color-bar-container']}
             onPointerDown={(e) => { onPointerBar(e); onPointerDownBar(e); }}
             ref={barRef}
+            data-cy="ColorPicker-bar"
           >
             <div 
               className={css['color-bar']}
@@ -122,6 +124,7 @@ function ColorPicker() {
                 value={HSL.h}
                 name="h"
                 onChange={onChange}
+                data-cy="ColorPicker-input-h"
               />
             </label>
 
@@ -132,6 +135,7 @@ function ColorPicker() {
                 value={HSL.s}
                 name="s"
                 onChange={onChange}
+                data-cy="ColorPicker-input-s"
               />
             </label>
 
@@ -142,6 +146,7 @@ function ColorPicker() {
                 value={HSL.l}
                 name="l"
                 onChange={onChange}
+                data-cy="ColorPicker-input-l"
               />
             </label>
           </div>
@@ -154,6 +159,7 @@ function ColorPicker() {
                 value={RGB.r}
                 name="r"
                 onChange={onChange}
+                data-cy="ColorPicker-input-r"
               />
             </label>
 
@@ -164,6 +170,7 @@ function ColorPicker() {
                 value={RGB.g}
                 name="g"
                 onChange={onChange}
+                data-cy="ColorPicker-input-g"
               />
             </label>
 
@@ -174,6 +181,7 @@ function ColorPicker() {
                 value={RGB.b}
                 name="b"
                 onChange={onChange}
+                data-cy="ColorPicker-input-b"
               />
             </label>
           </div>

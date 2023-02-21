@@ -89,6 +89,7 @@ function PromptWindowBody({ setIsOpen }) {
           type="button"
           className="form-button"
           onClick={() => setIsOpen(false)}
+          data-cy="PromptWindow-cancel"
         >
           Cancel
         </button>
