@@ -1,0 +1,130 @@
+.resize-top {
+  position: absolute;
+  top: -8px;
+  left: 8px;
+  
+  /* background-color: red; */
+  width: calc(100% - 16px);
+  height: 8px;
+}
+.resize-top:hover {
+  cursor: ns-resize;
+}
+
+.resize-bottom {
+  position: absolute;
+  bottom: -8px;
+  left: 8px;
+  
+  /* background-color: blue; */
+  width: calc(100% - 16px);
+  height: 8px;
+}
+.resize-bottom:hover {
+  cursor: ns-resize;
+}
+
+.resize-left {
+  position: absolute;
+  top: 8px;
+  left: -8px;
+  
+  /* background-color: green; */
+  width: 8px;
+  height: calc(100% - 16px);
+}
+.resize-left:hover {
+  cursor: ew-resize;
+}
+
+.resize-right {
+  position: absolute;
+  top: 8px;
+  right: -8px;
+  
+  /* background-color: cyan; */
+  width: 8px;
+  height: calc(100% - 16px);
+}
+.resize-right:hover {
+  cursor: ew-resize;
+}
+
+.resize-top-left::before, .resize-top-left::after,
+.resize-top-right::before, .resize-top-right::after,
+.resize-bottom-left::before, .resize-bottom-left::after,
+.resize-bottom-right::before, .resize-bottom-right::after {
+  content: '';
+
+  position: absolute;
+
+  display: block;
+  width: 8px;
+  height: 8px;
+
+  /* background-color: gold; */
+}
+
+.resize-top-left:hover {
+  cursor: nw-resize;
+}
+.resize-top-left::before,
+.resize-top-left::after {
+  top: -8px;
+  left: -8px;
+}
+.resize-top-left::before {
+  /* made bigger purposefully, remove width to make it like other corners */
+  /* width: 16px; */
+  height: 16px;
+}
+.resize-top-left::after {
+  width: 16px;
+}
+
+.resize-top-right:hover {
+  cursor: ne-resize;
+}
+.resize-top-right::before,
+.resize-top-right::after {
+  top: -8px;
+  right: -8px;
+}
+.resize-top-right::before {
+  height: 16px;
+}
+.resize-top-right::after {
+  width: 16px;
+}
+
+.resize-bottom-left:hover {
+  cursor: ne-resize;
+}
+.resize-bottom-left::before,
+.resize-bottom-left::after {
+  bottom: -8px;
+  left: -8px;
+}
+.resize-bottom-left::before {
+  height: 16px;
+}
+.resize-bottom-left::after {
+  width: 16px;
+}
+
+.resize-bottom-right:hover {
+  cursor: nw-resize;
+}
+.resize-bottom-right::before,
+.resize-bottom-right::after {
+  bottom: -8px;
+  right: -8px;
+}
+.resize-bottom-right::before {
+  /* made bigger purposefully, remove width to make it like other corners */
+  width: 16px;
+  height: 16px;
+}
+.resize-bottom-right::after {
+  width: 16px;
+}
