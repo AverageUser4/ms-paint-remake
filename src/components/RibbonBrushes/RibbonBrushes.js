@@ -28,7 +28,11 @@ function RibbonBrushes() {
       setShowChildren={setIsDropdownOpen}
       onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
     >
-      <div className="popup" ref={dropdownRef}>
+      <div 
+        className="popup"
+        ref={dropdownRef}
+        data-cy="Brushes-Dropdown"
+      >
         <div className={css['grid']}>
           <button className={css['button']}>
             <img src={brush32} alt=""/>

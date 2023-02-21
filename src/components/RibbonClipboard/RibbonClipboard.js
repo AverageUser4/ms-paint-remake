@@ -26,7 +26,10 @@ function RibbonClipboard({ ribbonWidth }) {
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={clipboard16} name="Clipboard">
       <RibbonItemExpanded name="Clipboard">
 
-          <div className={css['container']}>
+          <div 
+            className={css['container']}
+            data-cy="Clipboard"
+          >
             <BigButtonDuo 
               icon={clipboard32} 
               name="Paste"
@@ -34,7 +37,11 @@ function RibbonClipboard({ ribbonWidth }) {
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
             >
-              <div className="popup" ref={dropdownRef}>
+              <div 
+                className="popup"
+                ref={dropdownRef}
+                data-cy="Clipboard-Paste-Dropdown"
+              >
                 <button className="popup__button text text--4 text--nowrap">
                   <img className="popup__image" src={clipboard16} alt=""/>
                   <span><span className="text--underline">P</span>aste</span>
@@ -47,7 +54,7 @@ function RibbonClipboard({ ribbonWidth }) {
               </div>
             </BigButtonDuo>
 
-            <div>
+            <div data-cy="Clipboard-buttons">
               <button className="button">
                 <img draggable="false" src={cut16} alt="Cut."/>
                 {showText && <span className="text text--1">Cut</span>}

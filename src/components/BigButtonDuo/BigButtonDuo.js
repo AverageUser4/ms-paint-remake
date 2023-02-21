@@ -34,6 +34,7 @@ function BigButtonDuo({
       <button 
         className={css['bottom']}
         onPointerDown={onPointerDownBottom ? onPointerDownBottom : ()=>0}
+        data-cy={`BigButtonDuo-bottom-${name}`}
       >
         <span className="text text--1">{name}</span>
         <TriangleDown className={css['triangle']}/>

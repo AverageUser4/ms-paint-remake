@@ -30,6 +30,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
 
   return (
     <Window
+      ID="ResizeWindow"
       {...innerWindowConfig}
       isOpen={isOpen}
       size={size}

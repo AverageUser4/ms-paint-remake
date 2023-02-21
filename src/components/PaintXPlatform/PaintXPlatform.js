@@ -69,6 +69,7 @@ function Logic({
       onContextMenu={(e) => e.preventDefault()}
     >
       <Window 
+        ID="PaintWindow"
         minimalSize={minimalSize}
         position={mainWindowPosition}
         setPosition={setMainWindowPosition}

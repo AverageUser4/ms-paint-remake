@@ -21,7 +21,10 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={colors16} name="Colors">
       <RibbonItemExpanded name="Colors">
 
-          <div className={css['container']}>
+          <div 
+            className={css['container']}
+            data-cy="Colors"
+          >
             <BigButton 
               backgroundColor="red"
               hasArrow={false}
@@ -36,7 +39,10 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
               strName="Color-2"
             />
 
-            <div className={css['colors-grid']}>
+            <div 
+              className={css['colors-grid']}
+              data-cy="Colors-grid"
+            >
               {colorsTemp}
             </div>
 

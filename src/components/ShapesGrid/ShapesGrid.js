@@ -105,7 +105,10 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   }
 
   return (
-    <div className={css['container']}>
+    <div 
+      className={css['container']}
+      data-cy="ShapesGrid"
+    >
       {
         !isOnlyDropdown &&
           <>
@@ -143,6 +146,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
                   ${currentRow === maxRow ? css['button--has-border'] : ''}
                 `}
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+                data-cy="ShapesGrid-toggle-Dropdown"
               >
                 <TriangleLine/>
               </button>
@@ -157,7 +161,10 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
         ref={dropdownRef}
         dropdownContainerRef={dropdownRef}
       >
-        <div className={css['expanded']}>
+        <div 
+          className={css['expanded']}
+          data-cy="ShapesGrid-Dropdown"
+        >
           <div className={css['expanded__grid']}>
             {shapes}
           </div>

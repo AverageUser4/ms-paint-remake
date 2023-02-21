@@ -42,7 +42,10 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={image16} name="Image">
       <RibbonItemExpanded name="Image">
 
-          <div className={css['container']}>
+          <div 
+            className={css['container']}
+            data-cy="Image"
+          >
             <BigButtonDuo 
               icon={image32} 
               name="Select"
@@ -50,7 +53,11 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
             >
-              <div className="popup" ref={dropdownRef}>
+              <div 
+                className="popup" 
+                ref={dropdownRef}
+                data-cy="Image-Select-Dropdown"
+              >
                 <h3 className="popup__head head head--2">Selection shapes</h3>
 
                 <button className="popup__button popup__button--selected text text--4 text--nowrap">
@@ -88,13 +95,17 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               </div>
             </BigButtonDuo>
 
-            <div>
+            <div data-cy="Image-buttons">
               <button className="button">
                 <img draggable="false" src={crop16} alt="Crop."/>
                 {showText && <span className="text text--1">Crop</span>}
               </button>
 
-              <button className="button" onClick={() => setIsResizeWindowOpen(true)}>
+              <button 
+                className="button"
+                onClick={() => setIsResizeWindowOpen(true)}
+                data-cy="Image-open-ResizeWindow"
+              >
                 <img draggable="false" src={resize16} alt="Resize."/>
                 {showText && <span className="text text--1">Resize</span>}
               </button>
@@ -103,6 +114,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                 <button 
                   className="button"
                   onPointerDown={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
+                  data-cy="Image-toggle-Rotate"
                 >
                   <img draggable="false" src={rotate16} alt="Rotate."/>
                   {showText && <span className="text text--1">Rotate</span>}
@@ -114,7 +126,11 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                   setIsVisible={setIsRotateDropdownOpen}
                   dropdownContainerRef={dropdownContainerRef}
                 >
-                  <div className="popup" ref={rotateDropdownRef}>
+                  <div 
+                    className="popup"
+                    ref={rotateDropdownRef}
+                    data-cy="Image-Rotate-Dropdown"
+                  >
                     <button className="popup__button text text--4 text--nowrap">
                       <img className="popup__image" src={rotate16} alt=""/>
                       <span>Rotate <span className="text--underline">r</span>ight 90°</span>

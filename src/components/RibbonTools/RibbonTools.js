@@ -20,7 +20,10 @@ function RibbonTools({ ribbonWidth }) {
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={tools16} name="Tools">
       <RibbonItemExpanded name="Tools">
 
-        <div className={css['container']}>
+        <div 
+          className={css['container']}
+          data-cy="Tools"
+        >
           <button className="button">
             <img draggable="false" src={pencil16} alt="Pencil."/>
           </button>

@@ -47,7 +47,10 @@ function RibbonShapes({ ribbonWidth }) {
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={shapes16} name="Shapes">
       <RibbonItemExpanded name="Shapes">
 
-        <div className={css['container']}>
+        <div 
+          className={css['container']}
+          data-cy="Shapes"
+        >
           <div className="dropdown-container" ref={gridDropdownContainerRef}>
             <BigButton 
               icon={shapes32}
@@ -75,11 +78,12 @@ function RibbonShapes({ ribbonWidth }) {
             </Dropdown>
           </div>
 
-          <div>
+          <div data-cy="Shapes-buttons">
             <div className="dropdown-container" ref={outlineDropdownContainerRef}>
               <button 
                 className="button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
+                data-cy="Shapes-toggle-Outline"
               >
                 <img draggable="false" src={outline16} alt="Outline."/>
                 {showText && <span className="text text--1">Outline</span>}
@@ -91,7 +95,11 @@ function RibbonShapes({ ribbonWidth }) {
                 setIsVisible={setIsOutlineDropdownOpen}
                 dropdownContainerRef={outlineDropdownContainerRef}
               >
-                <div className="popup" ref={outlineDropdownRef}>
+                <div 
+                  className="popup"
+                  ref={outlineDropdownRef}
+                  data-cy="Shapes-Outline-Dropdown"
+                >
                   <button className="popup__button text text--4 text--nowrap">
                     <img className="popup__image" src={none16} alt=""/>
                     <span>No outline</span>
@@ -134,6 +142,7 @@ function RibbonShapes({ ribbonWidth }) {
               <button 
                 className="button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
+                data-cy="Shapes-toggle-Fill"
               >
                 <img draggable="false" src={fill16} alt="Fill."/>
                 {showText && <span className="text text--1">Fill</span>}
@@ -145,7 +154,11 @@ function RibbonShapes({ ribbonWidth }) {
                 setIsVisible={setIsFillDropdownOpen}
                 dropdownContainerRef={fillDropdownContainerRef}
               >
-                <div className="popup" ref={fillDropdownRef}>
+                <div 
+                  className="popup"
+                  ref={fillDropdownRef}
+                  data-cy="Shapes-Fill-Dropdown"
+                >
                 <button className="popup__button text text--4 text--nowrap">
                     <img className="popup__image" src={none16} alt=""/>
                     <span>No fill</span>

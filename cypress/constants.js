@@ -51,10 +51,48 @@ export default {
   RibbonItemContainer_Shapes: '[data-cy="RibbonItemContainer-Shapes"]',
   RibbonItemContainer_Colors: '[data-cy="RibbonItemContainer-Colors"]',
 
+  RibbonItemExpanded_Shapes: '[data-cy="RibbonItemExpanded-Shapes"]',
   RibbonItemExpanded_Zoom: '[data-cy="RibbonItemExpanded-Zoom"]',
   RibbonItemExpanded_ShowOrHide: '[data-cy="RibbonItemExpanded-Show or hide"]',
   RibbonItemExpanded_Display: '[data-cy="RibbonItemExpanded-Display"]',
   
+  Clipboard: '[data-cy="Clipboard"]',
+  Clipboard_Paste_Dropdown: '[data-cy="Clipboard-Paste-Dropdown"]',
+  Clipboard_buttons: '[data-cy="Clipboard-buttons"]',
+  BigButtonDuo_bottom_Paste: '[data-cy="BigButtonDuo-bottom-Paste"]',
+
+  Image: '[data-cy="Image"]',
+  Image_Select_Dropdown: '[data-cy="Image-Select-Dropdown"]',
+  Image_Rotate_Dropdown: '[data-cy="Image-Rotate-Dropdown"]',
+  Image_buttons: '[data-cy="Image-buttons"]',
+  Image_toggle_Rotate: '[data-cy="Image-toggle-Rotate"]',
+  BigButtonDuo_bottom_Select: '[data-cy="BigButtonDuo-bottom-Select"]',
+  Image_open_ResizeWindow: '[data-cy="Image-open-ResizeWindow"]',
+
+  Tools: '[data-cy="Tools"]',
+
+  Brushes_Dropdown: '[data-cy="Brushes-Dropdown"]',
   BigButtonDuo_Brushes: '[data-cy="BigButtonDuo-Brushes"]',
+  BigButtonDuo_bottom_Brushes: '[data-cy="BigButtonDuo-bottom-Brushes"]',
+
+  Shapes: '[data-cy="Shapes"]',
+  Shapes_Outline_Dropdown: '[data-cy="Shapes-Outline-Dropdown"]',
+  Shapes_Fill_Dropdown: '[data-cy="Shapes-Fill-Dropdown"]',
+  Shapes_buttons: '[data-cy="Shapes-buttons"]',
+  Shapes_toggle_Outline: '[data-cy="Shapes-toggle-Outline"]',
+  Shapes_toggle_Fill: '[data-cy="Shapes-toggle-Fill"]',
+  ShapesGrid: '[data-cy="ShapesGrid"]',
+  ShapesGrid_Dropdown: '[data-cy="ShapesGrid-Dropdown"]',
+  ShapesGrid_toggle_Dropdown: '[data-cy="ShapesGrid-toggle-Dropdown"]',
+
+  Size_Dropdown: '[data-cy="Size-Dropdown"]',
   BigButton_Size: '[data-cy="BigButton-Size"]',
+
+  Colors: '[data-cy="Colors"]',
+  Colors_grid: '[data-cy="Colors-grid"]',
+  BigButton_Edit_Colors: '[data-cy="BigButton-Edit-colors"]',
+  BigButton_Color_1: '[data-cy="BigButton-Color-1"]',
+  BigButton_Color_2: '[data-cy="BigButton-Color-2"]',
+
+  ResizeWindow: '[data-cy="ResizeWindow"]',
 };

@@ -25,6 +25,7 @@ const PromptWindow = memo(function PromptWindow({ isOpen, setIsOpen }) {
 
   return (
     <Window
+      ID="PromptWindow"
       {...innerWindowConfig}
       isOpen={isOpen}
       size={size}

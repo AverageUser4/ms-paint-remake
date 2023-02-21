@@ -28,6 +28,7 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
 
   return (
     <Window
+      ID="ColorsWindow"
       {...innerWindowConfig}
       isOpen={isOpen}
       size={size}

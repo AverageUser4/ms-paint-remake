@@ -8,6 +8,7 @@ import useOutsideClick from '../../hooks/useOutsideClick';
 import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
+  ID,
   render,
   minimalSize,
   size,
@@ -91,6 +92,7 @@ function Window({
             render={(resizeElements) => {
               return (
                 <article
+                  data-cy={ID}
                   onPointerDown={onPointerDownFocus}
                   ref={windowRef}
                   style={{ 
@@ -123,6 +125,7 @@ function Window({
 }
 
 Window.propTypes = {
+  ID: PropTypes.string.isRequired,
   render: PropTypes.func.isRequired,
   minimalSize: PropTypes.shape({
     width: PropTypes.number,

@@ -24,7 +24,11 @@ function RibbonSize() {
       setShowChildren={setIsDropdownOpen}
       onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
     >
-      <div className={css['container']} ref={dropdownRef}>
+      <div 
+        className={css['container']}
+        ref={dropdownRef}
+        data-cy="Size-Dropdown"
+      >
         {
           sizes.map(size => 
             <button 
