@@ -97,3 +97,16 @@ export function getWindowCenteredPosition(mainWindowPosition, mainWindowSize, si
 
   return { x, y };
 }
+
+export function checkArgs(args) {
+  if(!Array.isArray(args)) {
+    throw new Error(`${checkArgs.name} function takes array of object as it's only argument.`);
+  }
+
+  for(let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if(typeof arg.value !== arg.type) {
+      console.error(`Argument ${arg.name} has value ${arg.value} of type ${typeof arg.value}, while expected type is ${arg.type}`);
+    }
+  }
+}

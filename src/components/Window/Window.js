@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
-import WindowMovable from '../WindowMovable/WindowMovable';
-import WindowResizable from '../WindowResizable/WindowResizable';
 import useOutsideClick from '../../hooks/useOutsideClick';
+import useResize from '../../hooks/useResize';
+import useMove from '../../hooks/useMove';
+import useAutoFit from '../../hooks/useAutoFit';
+import useAutoShrink from '../../hooks/useAutoShrink';
 import { useContainerContext } from '../../misc/ContainerContext';
 
 function Window({ 
@@ -24,12 +26,15 @@ function Window({
   isIgnorePointerEvents,
   isMaximized,
 }) {
+  isResizable = isResizable && !isMaximized && !isInnerWindow;
   const { containerRect, isConstrained, isAutoFit, isAllowToLeaveViewport } = useContainerContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
-
-  isResizable = isResizable && !isMaximized && !isInnerWindow;
+  const { resizeElements } = useResize({ position, setPosition, isAllowToLeaveViewport, size, setSize, isConstrained, minimalSize, isResizable });
+  const { onPointerDownMove, tempElement } = useMove({ position, setPosition, isAllowToLeaveViewport, isInnerWindow, isMaximized, size, setSize, isConstrained });
+  useAutoFit({ containerRect, position, setPosition, size, setSize, isAutoFit });
+  useAutoShrink({ containerRect, minimalSize, position, size, setSize, isAutoShrink, isAutoFit, isResizable });
 
   useOutsideClick(windowRef, () => { 
     if(!isInnerWindow && isFocused) {
@@ -66,61 +71,31 @@ function Window({
     return null;
   
   return (
-    <WindowMovable
-      position={position}
-      setPosition={setPosition}
-      isAllowToLeaveViewport={isAllowToLeaveViewport}
-      isInnerWindow={isInnerWindow}
-      isMaximized={isMaximized}
-      size={size}
-      setSize={setSize}
-      isConstrained ={isConstrained}
-      isAutoFit={isAutoFit}
-      render={(onPointerDownMove) => {
-        return (
-          <WindowResizable
-            position={position} 
-            setPosition={setPosition} 
-            isAllowToLeaveViewport={isAllowToLeaveViewport} 
-            size={size} 
-            setSize={setSize}
-            isConstrained={isConstrained}
-            minimalSize={minimalSize}
-            isResizable={isResizable}
-            isAutoFit={isAutoFit}
-            isAutoShrink={isAutoShrink}
-            render={(resizeElements) => {
-              return (
-                <article
-                  data-cy={ID}
-                  onPointerDown={onPointerDownFocus}
-                  ref={windowRef}
-                  style={{ 
-                    top: position.y,
-                    left: position.x,
-                    width: size.width,
-                    height: size.height,
-                    zIndex: isInnerWindow ? '4' : 'auto',
-                  }} 
-                  className={`
-                    ${css['container']}
-                    ${isFocused ? css['container--focused'] : ''}
-                    ${isInnerWindow ? css['container--inner'] : ''}
-                    ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
-                    ${isAttentionAnimated ? css['container--attention'] : ''}
-                    ${isIgnorePointerEvents ? css['container--locked'] : ''}
-                    ${!isConstrained ? css['container--fixed'] : ''}
-                  `}
-                >
-                  {resizeElements}
-                  {render(isAttentionAnimated, onPointerDownMove)}
-                </article>
-              );
-            }}
-          />
-        );
-      }}
-    />
+    <article
+      data-cy={ID}
+      onPointerDown={onPointerDownFocus}
+      ref={windowRef}
+      style={{ 
+        top: position.y,
+        left: position.x,
+        width: size.width,
+        height: size.height,
+        zIndex: isInnerWindow ? '4' : 'auto',
+      }} 
+      className={`
+        ${css['container']}
+        ${isFocused ? css['container--focused'] : ''}
+        ${isInnerWindow ? css['container--inner'] : ''}
+        ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
+        ${isAttentionAnimated ? css['container--attention'] : ''}
+        ${isIgnorePointerEvents ? css['container--locked'] : ''}
+        ${!isConstrained ? css['container--fixed'] : ''}
+      `}
+    >
+      {isResizable && resizeElements}
+      {render(isAttentionAnimated, onPointerDownMove)}
+      {!isInnerWindow && tempElement}
+    </article>
   );
 }
 

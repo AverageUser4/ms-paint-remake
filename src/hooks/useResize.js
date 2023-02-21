@@ -3,17 +3,29 @@ import React, { useState } from "react";
 import useResizeCursor from './useResizeCursor';
 import usePointerTrack from './usePointerTrack';
 import { useContainerContext } from '../misc/ContainerContext';
+import { checkArgs } from "../misc/utils";
 
-export default function useResize(
+export default function useResize({
+  minimalSize,
   position, 
   setPosition, 
-  isAllowToLeaveViewport, 
   size, 
   setSize,
   isConstrained,
-  minimalSize,
   isResizable,
-) {
+  isAllowToLeaveViewport, 
+}) {
+  checkArgs([
+    { name: 'minimalSize', value: minimalSize, type: 'object' },
+    { name: 'position', value: position, type: 'object' },
+    { name: 'setPosition', value: setPosition, type: 'function' },
+    { name: 'size', value: size, type: 'object' },
+    { name: 'setSize', value: setSize, type: 'function' },
+    { name: 'isConstrained', value: isConstrained, type: 'boolean' },
+    { name: 'isResizable', value: isResizable, type: 'boolean' },
+    { name: 'isAllowToLeaveViewport', value: isAllowToLeaveViewport, type: 'boolean' },
+  ]);
+
   const { containerRect } = useContainerContext();
   const [resizeData, setResizeData] = useState(null);
   useResizeCursor(resizeData);

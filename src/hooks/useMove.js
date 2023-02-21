@@ -1,50 +1,39 @@
-import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
+import React, { useState } from "react";
 
-import WindowPlacementIndicator from '../WindowPlacementIndicator/WindowPlacementIndicator';
+import WindowPlacementIndicator from "../components/WindowPlacementIndicator/WindowPlacementIndicator";
 
-import { useMainWindowContext } from '../../misc/MainWindowContext';
-import { useContainerContext } from '../../misc/ContainerContext';
-import usePointerTrack from "../../hooks/usePointerTrack";
+import { useMainWindowContext } from '../misc/MainWindowContext';
+import { useContainerContext } from '../misc/ContainerContext';
+import usePointerTrack from "./usePointerTrack";
+import { checkArgs } from "../misc/utils";
 
-function WindowMovable({ 
-  render,
+export default function useMove({
   position,
   setPosition,
+  size,
+  setSize,
   isAllowToLeaveViewport,
   isInnerWindow,
   isMaximized,
-  size,
-  setSize,
   isConstrained,
-  isAutoFit
 }) {
+  checkArgs([
+    { name: 'position', value: position, type: 'object' },
+    { name: 'setPosition', value: setPosition, type: 'function' },
+    { name: 'size', value: size, type: 'object' },
+    { name: 'setSize', value: setSize, type: 'function' },
+    { name: 'isAllowToLeaveViewport', value: isAllowToLeaveViewport, type: 'boolean' },
+    { name: 'isInnerWindow', value: isInnerWindow, type: 'boolean' },
+    { name: 'isMaximized', value: isMaximized, type: 'boolean' },
+    { name: 'isConstrained', value: isConstrained, type: 'boolean' },
+  ]);
+
   const { containerRect } = useContainerContext();
   const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
   const [positionDifference, setPositionDifference] = useState(null);
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 
     usePointerTrack(onPointerMoveMoveCallback, onPointerDownMoveCallback, onPointerUpMoveCallback);
-
-  useEffect(() => {
-    if(!isAutoFit || !containerRect) {
-      return;
-    }
-
-    let newX = position.x;
-    let newY = position.y;
-
-    if(position.x + size.width > containerRect.width) {
-      newX = Math.max(containerRect.width - size.width, 0);
-    }
-    if(position.y + size.height > containerRect.height) {
-      newY = Math.max(containerRect.height - size.height, 0);
-    }
-
-    if(newX !== position.x || newY !== position.y) {
-      setPosition({ x: newX, y: newY });
-    }
-  }, [containerRect, size, position, isAutoFit, setPosition]);
 
   function onPointerDownMoveCallback(event) {
     const x = event.clientX - position.x;
@@ -94,41 +83,18 @@ function WindowMovable({
     setPositionDifference(null);
   }
 
-  return (
-    <>
-      {render(onPointerDownMove)}
-      {
-        !isInnerWindow &&
-          <WindowPlacementIndicator
-            position={position}
-            isConstrained={isConstrained}
-            isMaximized={isMaximized}
-            isBeingMoved={isMovePressed}
-            indicatorData={indicatorData}
-            setIndicatorData={setIndicatorData}
-          />
-      }
-    </>
-  );
-}
+  const tempElement = 
+    <WindowPlacementIndicator
+      position={position}
+      isConstrained={isConstrained}
+      isMaximized={isMaximized}
+      isBeingMoved={isMovePressed}
+      indicatorData={indicatorData}
+      setIndicatorData={setIndicatorData}
+    />;
 
-WindowMovable.propTypes = {
-  render: PropTypes.func.isRequired,
-  size: PropTypes.shape({
-    width: PropTypes.number.isRequired,
-    height: PropTypes.number.isRequired
-  }).isRequired,
-  setSize: PropTypes.func.isRequired,
-  position: PropTypes.shape({
-    x: PropTypes.number.isRequired,
-    y: PropTypes.number.isRequired,
-  }).isRequired,
-  setPosition: PropTypes.func.isRequired,
-  isInnerWindow: PropTypes.bool.isRequired,
-  isMaximized: PropTypes.bool.isRequired,
-  isAllowToLeaveViewport: PropTypes.bool.isRequired,
-  isConstrained: PropTypes.bool.isRequired,
-  isAutoFit: PropTypes.bool.isRequired,
+  return {
+    onPointerDownMove,
+    tempElement
+  };
 }
-
-export default WindowMovable;
