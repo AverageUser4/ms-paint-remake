@@ -62,9 +62,9 @@ it('after opening dropdown it does not disappear on its own', () => {
   cy.get(con.RibbonControls_toggle_FileDropdown).click();
   cy.get(con.FileDropdown_duo_arrow_print).click();
   cy.get(con.FileDropdownMore_Dropdown_print);
-  cy.wait(3000);
+  cy.wait(1000);
   cy.get(con.FileDropdownMore_Dropdown_print).click('bottom');
-  cy.wait(3000);
+  cy.wait(1000);
   cy.get(con.FileDropdownMore_Dropdown_print);
   cy.get(con.FileDropdown).click('topRight');
   cy.get(con.FileDropdownMore_Dropdown_print).should('not.exist');
