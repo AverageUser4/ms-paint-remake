@@ -131,6 +131,28 @@
 
 /**** point ****/
 
+.point-container {
+  --resizer-size: 30px;
+
+  position: relative;
+
+  width: max-content;
+}
+
+.point-outline {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  border: 1px dotted rgb(0, 0, 0);
+
+  pointer-events: none;
+  box-sizing: border-box;
+}
+
 .point-bottom,
 .point-right {
   display: flex;

@@ -34,7 +34,7 @@ export default function useResize({
   const [resizeData, setResizeData] = useState(null);
   useResizeCursor(resizeData);
 
-  const { onPointerDown: onPointerDownResize } = 
+  const { onPointerDown: onPointerDownResize, isPressed } = 
     usePointerTrack({ 
       onPointerMoveCallback: onPointerMoveCallback,
       onPointerDownCallback: onPointerDownCallback,
@@ -132,6 +132,14 @@ export default function useResize({
 
   const resizeElements = (
     <>
+      {
+        isPointBased && isPressed &&
+          <div 
+            className="point-outline"
+            style={{ width: size.width, height: size.height }}
+          ></div>
+      }
+
       <div data-name="bottom" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom' : 'resize-bottom'}></div>
       <div data-name="right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-right' : 'resize-right'}></div>
       <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom-right' : 'resize-bottom-right'}></div>

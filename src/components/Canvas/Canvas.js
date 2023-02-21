@@ -21,21 +21,13 @@ function Canvas({ canvasData, setCanvasData }) {
   });
 
   return (
-    <div className={css['container']}>
+    <div className="point-container">
       <div 
         className={css['canvas']}
         style={{ width: canvasData.size.width, height: canvasData.size.height }}
         onPointerMove={(e) => setCanvasData(prev => ({ ...prev, mousePosition: { x: e.clientX, y: e.clientY } }))}
         onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
       ></div>
-
-      {
-        canvasData.outlineSize &&
-          <div 
-            className={css['outline']}
-            style={{ width: canvasData.outlineSize.width, height: canvasData.outlineSize.height }}
-          ></div>
-      }
 
       {resizeElements}
     </div>
@@ -45,6 +37,6 @@ function Canvas({ canvasData, setCanvasData }) {
 Canvas.propTypes = {
   canvasData: PropTypes.object.isRequired,
   setCanvasData: PropTypes.func.isRequired,
-}
+};
 
 export default Canvas;
