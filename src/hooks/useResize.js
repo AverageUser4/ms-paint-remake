@@ -13,7 +13,11 @@ export default function useResize({
   setSize,
   isConstrained,
   isResizable,
-  isAllowToLeaveViewport, 
+  isAllowToLeaveViewport,
+  isOnlyThreeDirections,
+  isPointBased,
+  cancelOnRightMouseDown,
+  onPointerUpCallback,
 }) {
   checkArgs([
     { name: 'minimalSize', value: minimalSize, type: 'object' },
@@ -31,9 +35,15 @@ export default function useResize({
   useResizeCursor(resizeData);
 
   const { onPointerDown: onPointerDownResize } = 
-    usePointerTrack(onPointerMoveResizeCallback, onPointerDownResizeCallback, () => setResizeData(null));
+    usePointerTrack({ 
+      onPointerMoveCallback: onPointerMoveCallback,
+      onPointerDownCallback: onPointerDownCallback,
+      onPointerUpCallback: (e) => { setResizeData(null); onPointerUpCallback && onPointerUpCallback(e) },
+      onCancelCallback: () => setResizeData(null),
+      cancelOnRightMouseDown
+    });
 
-  function onPointerMoveResizeCallback(event) {
+  function onPointerMoveCallback(event) {
     if(!containerRect) {
       return;
     }
@@ -108,7 +118,7 @@ export default function useResize({
     }
   }
   
-  function onPointerDownResizeCallback(event) {
+  function onPointerDownCallback(event) {
     if(isResizable) {
       setResizeData({
         type: event.target.dataset.name,
@@ -120,17 +130,23 @@ export default function useResize({
     }
   }
 
-  const resizeElements = 
+  const resizeElements = (
     <>
-      <div data-name="top" onPointerDown={onPointerDownResize} className="resize-top"></div>
-      <div data-name="bottom" onPointerDown={onPointerDownResize} className="resize-bottom"></div>
-      <div data-name="left" onPointerDown={onPointerDownResize} className="resize-left"></div>
-      <div data-name="right" onPointerDown={onPointerDownResize} className="resize-right"></div>
-      <div data-name="top-left" onPointerDown={onPointerDownResize} className="resize-top-left"></div>
-      <div data-name="top-right" onPointerDown={onPointerDownResize} className="resize-top-right"></div>
-      <div data-name="bottom-left" onPointerDown={onPointerDownResize} className="resize-bottom-left"></div>
-      <div data-name="bottom-right" onPointerDown={onPointerDownResize} className="resize-bottom-right"></div>
-    </>;
+      <div data-name="bottom" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom' : 'resize-bottom'}></div>
+      <div data-name="right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-right' : 'resize-right'}></div>
+      <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom-right' : 'resize-bottom-right'}></div>
+      {
+        !isOnlyThreeDirections &&
+          <>
+            <div data-name="top" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-top' : 'resize-top'}></div>
+            <div data-name="left" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-left' : 'resize-left'}></div>
+            <div data-name="top-left" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-top-left' : 'resize-top-left'}></div>
+            <div data-name="top-right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-top-right' : 'resize-top-right'}></div>
+            <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom-left' : 'resize-bottom-left'}></div>
+          </>
+      }
+    </>
+  );
 
   return {
     resizeElements

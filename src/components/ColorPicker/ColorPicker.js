@@ -11,8 +11,8 @@ function ColorPicker() {
   const [RGB, setRGB] = useState(() => HSLtoRGB(HSL));
   const fieldRef = useRef();
   const barRef = useRef();
-  const { onPointerDown: onPointerDownField } = usePointerTrack(onPointerField);
-  const { onPointerDown: onPointerDownBar } = usePointerTrack(onPointerBar);
+  const { onPointerDown: onPointerDownField } = usePointerTrack({ onPointerMoveCallback: onPointerField });
+  const { onPointerDown: onPointerDownBar } = usePointerTrack({ onPointerMoveCallback: onPointerBar });
 
   const cursorPosition = { 
     top: `calc(${Math.round(100 - HSL.s)}% - 10px)`,

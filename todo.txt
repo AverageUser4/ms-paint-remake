@@ -5,3 +5,4 @@
 - if buttons werent able to receive click events when window is not focused that would get rid of minor visual glitches and be consistent with OG paint
 
 - the way some flags are passed to Window (through PainXPlatform) is somewhat confusing (default values), like really should be fixed NOW!!!!!!!!!!!!!
+- points used by useResize are not all implemented (only right, bottom and bottom-right)
