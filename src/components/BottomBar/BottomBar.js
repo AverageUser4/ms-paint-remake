@@ -4,6 +4,7 @@ import css from './BottomBar.module.css';
 
 import ZoomRange from "../ZoomRange/ZoomRange";
 import { useMainWindowContext } from "../../misc/MainWindowContext";
+import { usePaintContext } from "../../misc/PaintContext";
 
 import canvas16 from './assets/canvas-16.ico';
 import cursor16 from './assets/cursor-16.ico';
@@ -11,8 +12,9 @@ import fileSize16 from './assets/file-size-16.ico';
 import selection16 from './assets/selection-16.ico';
 import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
-function BottomBar({ windowWidth, canvasData }) {
+function BottomBar({ windowWidth }) {
   const { isMainWindowMaximized } = useMainWindowContext();
+  const { canvasData } = usePaintContext();
   
   return (
     <footer 
@@ -71,7 +73,6 @@ function BottomBar({ windowWidth, canvasData }) {
 
 BottomBar.propTypes = {
   windowWidth: PropTypes.number.isRequired,
-  canvasData: PropTypes.object.isRequired,  
-}
+};
 
 export default BottomBar;

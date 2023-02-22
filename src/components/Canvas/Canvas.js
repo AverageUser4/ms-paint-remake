@@ -1,16 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import PropTypes from 'prop-types';
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
 import usePointerTrack from '../../hooks/usePointerTrack';
+import { usePaintContext } from "../../misc/PaintContext";
 
-function Canvas({ canvasData, setCanvasData }) {
-  const tempZoom = 1;
-  const canvasStyle = {
-    width: canvasData.size.width * tempZoom,
-    height: canvasData.size.height * tempZoom,
-  };
+function Canvas() {
+  const { canvasData, setCanvasData } = usePaintContext();
   
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
@@ -18,6 +14,7 @@ function Canvas({ canvasData, setCanvasData }) {
   const secondaryCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
+  const lastZoomRef = useRef(canvasData.zoom);
 
   useEffect(() => {
     primaryCtxRef.current = primaryRef.current.getContext('2d');
@@ -51,6 +48,14 @@ function Canvas({ canvasData, setCanvasData }) {
     }
   }, [canvasData.size]);
 
+  useEffect(() => {
+    // primaryCtxRef.current.scale(1 / lastZoomRef.current, 1 / lastZoomRef.current);
+    // primaryCtxRef.current.scale(canvasData.zoom, canvasData.zoom);
+    secondaryCtxRef.current.scale(1 / lastZoomRef.current, 1 / lastZoomRef.current);
+    secondaryCtxRef.current.scale(canvasData.zoom, canvasData.zoom);
+    lastZoomRef.current = canvasData.zoom;
+  }, [canvasData.zoom]);
+
   const { onPointerDown } = usePointerTrack({ 
     onPointerMoveCallback,
     onPointerDownCallback: onPointerMoveCallback,
@@ -63,14 +68,16 @@ function Canvas({ canvasData, setCanvasData }) {
     const step = 1;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     let { x: curX, y: curY } = lastPointerPositionRef.current;
-
-    // curX *= tempZoom;
-    // curY *= tempZoom;
     
-    const desX = event.pageX - secondaryRect.x;
-    const desY = event.pageY - secondaryRect.y;
+    const desX = (event.pageX - secondaryRect.x) / canvasData.zoom;
+    const desY = (event.pageY - secondaryRect.y) / canvasData.zoom;
     lastPointerPositionRef.current = { x: desX, y: desY };
-    
+
+    if(typeof curX === 'undefined') {
+      curX = desX;
+      curY = desY;
+    }
+
     const diffX = desX - curX;
     const diffY = desY - curY;
 
@@ -83,7 +90,7 @@ function Canvas({ canvasData, setCanvasData }) {
       propY = propY * Math.abs(diffY / diffX);
     }
 
-    secondaryCtxRef.current.fillRect(curX, curY, 1, 1);
+    secondaryCtxRef.current.fillRect(Math.round(curX), Math.round(curY), 1, 1);
 
     while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
       curX += step * propX;
@@ -120,7 +127,6 @@ function Canvas({ canvasData, setCanvasData }) {
         onPointerMove={(e) => setCanvasData(prev => ({ ...prev, mousePosition: { x: e.clientX, y: e.clientY } }))}
         onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
         ref={primaryRef}
-        style={canvasStyle}
       ></canvas>
 
       <canvas
@@ -131,17 +137,11 @@ function Canvas({ canvasData, setCanvasData }) {
         onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
         onPointerDown={onPointerDown}
         ref={secondaryRef}
-        style={canvasStyle}
       ></canvas>
 
       {resizeElements}
     </div>
   );
 }
-
-Canvas.propTypes = {
-  canvasData: PropTypes.object.isRequired,
-  setCanvasData: PropTypes.func.isRequired,
-};
 
 export default Canvas;

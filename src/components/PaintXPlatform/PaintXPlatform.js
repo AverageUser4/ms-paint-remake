@@ -14,6 +14,7 @@ import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 import { ContainerProvider } from '../../misc/ContainerContext';
+import { PaintProvider } from '../../misc/PaintContext';
 import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
 
 function Logic({ 
@@ -50,12 +51,6 @@ function Logic({
     stopExpanding: () => setRibbonData(prev => ({ ...prev, expand: false })),
     // uses setTimeout so it does not get closed immediately after being open due to event listener on window
     setTab: (tabName) => setTimeout(() => setRibbonData(prev => ({ ...prev, activeTab: tabName, expand: true })))
-  });
-  
-  const [canvasData, setCanvasData] = useState({
-    mousePosition: null,
-    size: { width: 300, height: 200 },
-    outlineSize: null,
   });
 
   useEffect(() => {
@@ -115,11 +110,8 @@ function Logic({
               <CanvasContainer
                 toolbarData={toolbarData}
                 ribbonData={ribbonData}
-                canvasData={canvasData}
-                setCanvasData={setCanvasData}
               />
               <BottomBar
-                canvasData={canvasData}
                 windowWidth={mainWindowSize.width}
               />
               <ContextMenu/>
@@ -185,20 +177,22 @@ function PaintXPlatform({
         isAutoFit={isAutoFit}
         isAllowToLeaveViewport={isAllowToLeaveViewport}
       >
-        <MainWindowProvider
-          initialPosition={initialPosition}
-          initialSize={initialSize}
-          isInitiallyMaximized={isInitiallyMaximized}
-        >
-          <ContextMenuProvider>
-            <Logic 
-              minimalSize={minimalSize}
-              isResizable={isResizable}
-              isAutoShrink={isAutoShrink}
-              isOpen={isOpen}
-            />
-          </ContextMenuProvider>
-        </MainWindowProvider>
+        <PaintProvider>
+          <MainWindowProvider
+            initialPosition={initialPosition}
+            initialSize={initialSize}
+            isInitiallyMaximized={isInitiallyMaximized}
+          >
+            <ContextMenuProvider>
+              <Logic 
+                minimalSize={minimalSize}
+                isResizable={isResizable}
+                isAutoShrink={isAutoShrink}
+                isOpen={isOpen}
+              />
+            </ContextMenuProvider>
+          </MainWindowProvider>
+        </PaintProvider>
       </ContainerProvider>
     </div>
   );
