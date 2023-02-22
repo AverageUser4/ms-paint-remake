@@ -48,6 +48,7 @@ function usePointerTrack({
   function doCancel(isInvokeOnPointerUpCallback = false) {
     setIsPressed(false);
     isInvokeOnPointerUpCallback && onPointerUpCallback();
+    onCancelCallback && onCancelCallback();
   }
 
   return { onPointerDown, doCancel, isPressed };

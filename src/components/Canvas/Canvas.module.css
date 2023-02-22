@@ -1,5 +1,11 @@
 .canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  display: block;
+}
+.canvas--primary {
   background-color: white;
   box-shadow: 5px 5px 2px rgba(100, 100, 100, 0.2);
 }
-
