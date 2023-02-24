@@ -5,6 +5,7 @@ import css from  './QuickAccessToolbar.module.css';
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
+import { usePaintContext } from '../../misc/PaintContext';
 
 import email from './assets/email.png';
 import newFile from './assets/new.png';
@@ -19,6 +20,10 @@ import undoEn from './assets/undo-en.png';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
+  const { history, setHistory } = usePaintContext();
+  const isHistoryOnFirst = history.currentIndex === 0;
+  const isHistoryOnLast = history.currentIndex === history.dataArray.length - 1;
+  
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => showDropdown && setShowDropdown(false));
@@ -50,19 +55,27 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
       onClick: ()=>0
     },
     {
-      id: 'redo',
-      src: redoDis,
-      onClick: ()=>0
-    },
-    {
       id: 'save',
       src: save,
       onClick: ()=>0
     },
     {
       id: 'undo',
-      src: undoDis,
-      onClick: ()=>0
+      src: isHistoryOnFirst ? undoDis : undoEn,
+      onClick: () => {
+        if(!isHistoryOnFirst) {
+          setHistory(prev => ({ ...prev, currentIndex: prev.currentIndex - 1 }));
+        }
+      }
+    },
+    {
+      id: 'redo',
+      src: isHistoryOnLast ? redoDis : redoEn,
+      onClick: () => {
+        if(!isHistoryOnLast) {
+          setHistory(prev => ({ ...prev, currentIndex: prev.currentIndex + 1 }));
+        }
+      }
     },
   ];
 

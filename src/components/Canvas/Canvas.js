@@ -5,21 +5,40 @@ import useResize from "../../hooks/useResize";
 import usePointerTrack from '../../hooks/usePointerTrack';
 import { usePaintContext } from "../../misc/PaintContext";
 
+function doGetCanvasCopy(canvasRef) {
+  const newCanvas = document.createElement('canvas');
+  newCanvas.width = canvasRef.current.width;
+  newCanvas.height = canvasRef.current.height;
+  newCanvas.getContext('2d').drawImage(canvasRef.current, 0, 0);
+  return newCanvas;
+}
+
 function Canvas() {
-  const { canvasData, setCanvasData } = usePaintContext();
+  const { canvasData, setCanvasData, doHistoryAdd, history, setHistory } = usePaintContext();
   const canvasStyle = { 
     width: canvasData.size.width * canvasData.zoom,
     height: canvasData.size.height * canvasData.zoom,
   };
-  
+
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
   const secondaryRef = useRef();
   const secondaryCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
-  const lastZoomRef = useRef(canvasData.zoom);
+  const lastHistoryIndexRef = useRef(history.currentIndex);
 
+  useEffect(() => {
+    if(history.currentIndex === lastHistoryIndexRef.current) {
+      return;
+    }
+
+    primaryCtxRef.current.clearRect(0, 0, 9999, 9999);
+    primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex], 0, 0);
+
+    lastHistoryIndexRef.current = history.currentIndex;
+  }, [history]);
+  
   useEffect(() => {
     primaryCtxRef.current = primaryRef.current.getContext('2d');
     secondaryCtxRef.current = secondaryRef.current.getContext('2d');
@@ -46,9 +65,10 @@ function Canvas() {
 
   useEffect(() => {
     if(lastPrimaryStateRef.current) {
-      primaryCtxRef.current.putImageData(lastPrimaryStateRef.current, 0, 0);
+      primaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
+      primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
-      lastPrimaryStateRef.current = primaryCtxRef.current.getImageData(0, 0, canvasData.size.width, canvasData.size.height);
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
     }
   }, [canvasData.size]);
 
@@ -101,10 +121,8 @@ function Canvas() {
     primaryCtxRef.current.drawImage(secondaryRef.current, 0, 0);
     secondaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
 
-    lastPrimaryStateRef.current = primaryCtxRef.current.getImageData(0, 0, canvasData.size.width, canvasData.size.height);
-    // const imageData = secondaryCtxRef.current.getImageData(0, 0, canvasData.size.width, canvasData.size.height);
-    // primaryCtxRef.current.putImageData(imageData, 0, 0);
-    // secondaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height)
+    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
+    doHistoryAdd(doGetCanvasCopy(primaryRef));
   }
 
   function onCancelCallback() {

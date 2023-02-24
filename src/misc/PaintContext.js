@@ -11,11 +11,27 @@ function PaintProvider({ children }) {
     zoom: 1,
   });
 
+  const [history, setHistory] = useState({
+    dataArray: [document.createElement('canvas')],
+    currentIndex: 0
+  });
+
+  function doHistoryAdd(data) {
+    console.log('adding')
+    const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
+    newDataArray.push(data);
+
+    setHistory(prev => ({ ...prev, dataArray: newDataArray, currentIndex: prev.currentIndex + 1 }));
+  }
+  
   return (
     <PaintContext.Provider
       value={{
         canvasData,
-        setCanvasData
+        setCanvasData,
+        history,
+        setHistory,
+        doHistoryAdd
       }}
     >
       {children}
