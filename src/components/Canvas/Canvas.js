@@ -7,6 +7,10 @@ import { usePaintContext } from "../../misc/PaintContext";
 
 function Canvas() {
   const { canvasData, setCanvasData } = usePaintContext();
+  const canvasStyle = { 
+    width: canvasData.size.width * canvasData.zoom,
+    height: canvasData.size.height * canvasData.zoom,
+  };
   
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
@@ -47,14 +51,6 @@ function Canvas() {
       lastPrimaryStateRef.current = primaryCtxRef.current.getImageData(0, 0, canvasData.size.width, canvasData.size.height);
     }
   }, [canvasData.size]);
-
-  useEffect(() => {
-    // primaryCtxRef.current.scale(1 / lastZoomRef.current, 1 / lastZoomRef.current);
-    // primaryCtxRef.current.scale(canvasData.zoom, canvasData.zoom);
-    secondaryCtxRef.current.scale(1 / lastZoomRef.current, 1 / lastZoomRef.current);
-    secondaryCtxRef.current.scale(canvasData.zoom, canvasData.zoom);
-    lastZoomRef.current = canvasData.zoom;
-  }, [canvasData.zoom]);
 
   const { onPointerDown } = usePointerTrack({ 
     onPointerMoveCallback,
@@ -118,9 +114,10 @@ function Canvas() {
 
   return (
     <div className="point-container">
-      <div style={{ width: canvasData.size.width, height: canvasData.size.height }}></div>
+      <div style={canvasStyle}></div>
 
       <canvas
+        style={canvasStyle}
         className={`${css['canvas']} ${css['canvas--primary']}`}
         width={canvasData.size.width}
         height={canvasData.size.height}
@@ -130,6 +127,7 @@ function Canvas() {
       ></canvas>
 
       <canvas
+        style={canvasStyle}
         className={css['canvas']}
         width={canvasData.size.width}
         height={canvasData.size.height}

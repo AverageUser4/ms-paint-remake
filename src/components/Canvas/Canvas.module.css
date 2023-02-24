@@ -4,6 +4,8 @@
   left: 0;
   
   display: block;
+
+  image-rendering: crisp-edges;
 }
 .canvas--primary {
   background-color: white;
