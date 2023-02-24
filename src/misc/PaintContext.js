@@ -3,21 +3,23 @@ import PropTypes from 'prop-types';
 
 const PaintContext = createContext();
 
+const WIDTH = 300;
+const HEIGHT = 200;
+
 function PaintProvider({ children }) {
   const [canvasData, setCanvasData] = useState({
     mousePosition: null,
-    size: { width: 300, height: 200 },
+    size: { width: WIDTH, height: HEIGHT },
     outlineSize: null,
     zoom: 1,
   });
 
   const [history, setHistory] = useState({
-    dataArray: [document.createElement('canvas')],
+    dataArray: [{ element: document.createElement('canvas'), width: WIDTH, height: HEIGHT }],
     currentIndex: 0
   });
 
   function doHistoryAdd(data) {
-    console.log('adding')
     const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
     newDataArray.push(data);
 

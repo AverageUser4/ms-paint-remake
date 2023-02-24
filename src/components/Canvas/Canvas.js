@@ -28,16 +28,22 @@ function Canvas() {
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
+  console.log(history)
+  
   useEffect(() => {
     if(history.currentIndex === lastHistoryIndexRef.current) {
       return;
     }
 
     primaryCtxRef.current.clearRect(0, 0, 9999, 9999);
-    primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex], 0, 0);
+    setCanvasData(prev => ({ ...prev, size: { 
+      width: history.dataArray[history.currentIndex].width,
+      height: history.dataArray[history.currentIndex].height,
+    }}));
+    primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
 
     lastHistoryIndexRef.current = history.currentIndex;
-  }, [history]);
+  }, [history, setCanvasData]);
   
   useEffect(() => {
     primaryCtxRef.current = primaryRef.current.getContext('2d');
@@ -61,6 +67,11 @@ function Canvas() {
 
   function onPointerUpCallbackResize() {
     setCanvasData(prev => ({ ...prev, outlineSize: null, size: prev.outlineSize }));
+    doHistoryAdd({ 
+      element: doGetCanvasCopy(primaryRef),
+      width: canvasData.outlineSize.width,
+      height: canvasData.outlineSize.height
+    });
   }
 
   useEffect(() => {
@@ -122,7 +133,11 @@ function Canvas() {
     secondaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
 
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
-    doHistoryAdd(doGetCanvasCopy(primaryRef));
+    doHistoryAdd({ 
+      element: doGetCanvasCopy(primaryRef),
+      width: canvasData.size.width,
+      height: canvasData.size.height
+    });
   }
 
   function onCancelCallback() {
