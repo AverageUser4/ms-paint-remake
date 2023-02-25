@@ -7,6 +7,7 @@ import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
 import { usePaintContext } from "../../misc/PaintContext";
+import { RGBObjectToString } from "../../misc/utils";
 
 import colors16 from './assets/colors-16.png';
 import colors32 from './assets/colors-32.png';
@@ -16,10 +17,10 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
   const isOnlyContent = ribbonWidth >= 725;
 
   const [colorsDataArray, setColorsDataArray] = useState([
-    'rgb(0, 0, 0)', 'rgb(127, 127, 127)', 'rgb(136, 0, 21)', 'rgb(237, 28, 36)', 'rgb(255, 127, 39)',
-    'rgb(255, 242, 0)', 'rgb(34, 177, 76)', 'rgb(0, 162, 232)', 'rgb(63, 72, 204)', 'rgb(163, 73, 164)',
-    'rgb(255, 255, 255)', 'rgb(195, 195, 195)', 'rgb(185, 122, 87)', 'rgb(255, 174, 201)', 'rgb(255, 201, 14)',
-    'rgb(239, 228, 176)', 'rgb(181, 230, 29)', 'rgb(153, 217, 234)', 'rgb(112, 146, 190)', 'rgb(200, 191, 231)'
+    { r: 0, g: 0, b: 0 }, { r: 127, g: 127, b: 127 }, { r: 136, g: 0, b: 21 }, { r: 237, g: 28, b: 36 }, { r: 255, g: 127, b: 39 },
+    { r: 255, g: 242, b: 0 }, { r: 34, g: 177, b: 76 }, { r: 0, g: 162, b: 232 }, { r: 63, g: 72, b: 204 }, { r: 163, g: 73, b: 164 },
+    { r: 255, g: 255, b: 255 }, { r: 195, g: 195, b: 195 }, { r: 185, g: 122, b: 87 }, { r: 255, g: 174, b: 201 }, { r: 255, g: 201, b: 14 },
+    { r: 239, g: 228, b: 176 }, { r: 181, g: 230, b: 29 }, { r: 153, g: 217, b: 234 }, { r: 112, g: 146, b: 190 }, { r: 200, g: 191, b: 231 }
   ]);
   
   const colorButtons = [];
@@ -28,10 +29,10 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
     colorButtons.push(
       <button 
         key={i}
-        data-color={data}
-        style={{ color: data }}
+        data-color={data ? RGBObjectToString(data) : ''}
+        style={{ color: data ? RGBObjectToString(data) : '' }}
         className={`${css['color']} ${data && css['color--has-color']}`}
-        onClick={() => data && setColorData(prev => ({ ...prev, [prev.selected]: data }))}
+        onClick={() => data && setColorData(prev => ({ ...prev, [prev.selected]: RGBObjectToString(data) }))}
       ></button>
     );
   }

@@ -5,7 +5,7 @@ import css from './ColorsWindow.module.css';
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import { getWindowCenteredPosition, hexToRGB, RGBtoHSL } from '../../misc/utils';
+import { getWindowCenteredPosition, hexToRGB, RGBtoHSL, RGBObjectToString } from '../../misc/utils';
 import { useMainWindowContext } from '../../misc/MainWindowContext';
 import { usePaintContext } from '../../misc/PaintContext';
 import { innerWindowConfig } from '../../misc/data';
@@ -21,12 +21,12 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   const { customColors, setColorPickerData } = usePaintContext();
   const basicColors = [
-    '#ff8080', '#ffff80', '#80ff80', '#00ff80', '#80ffff', '#0080ff', '#ff80c0', '#ff80ff',
-    '#ff0000', '#ffff00', '#80ff00', '#00ff40', '#00ffff', '#0080c0', '#8080c0', '#ff00ff',
-    '#804040', '#ff8040', '#00ff00', '#008080', '#004080', '#8080ff', '#800040', '#ff0080',
-    '#800000', '#ff8000', '#008000', '#008040', '#0000ff', '#0000a0', '#800080', '#8000ff',
-    '#400000', '#804000', '#004000', '#004040', '#000080', '#000040', '#400040', '#400080',
-    '#000000', '#808000', '#808040', '#808080', '#408080', '#c0c0c0', '#400040', '#ffffff',
+    { r: 255, g: 128, b: 128 }, { r: 255, g: 255, b: 128 }, { r: 128, g: 255, b: 128 }, { r: 0, g: 255, b: 128 }, { r: 128, g: 255, b: 255 }, { r: 0, g: 128, b: 255 }, { r: 255, g: 128, b: 192 }, { r: 255, g: 128, b: 255 },
+    { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }, { r: 128, g: 255, b: 0 }, { r: 0, g: 255, b: 64 }, { r: 0, g: 255, b: 255 }, { r: 0, g: 128, b: 192 }, { r: 128, g: 128, b: 192 }, { r: 255, g: 0, b: 255 },
+    { r: 128, g: 64, b: 64 }, { r: 255, g: 128, b: 64 }, { r: 0, g: 255, b: 0 }, { r: 0, g: 128, b: 128 }, { r: 0, g: 64, b: 128 }, { r: 128, g: 128, b: 255 }, { r: 128, g: 0, b: 64 }, { r: 255, g: 0, b: 128 },
+    { r: 128, g: 0, b: 0 }, { r: 255, g: 128, b: 0 }, { r: 0, g: 128, b: 0 }, { r: 0, g: 128, b: 64 }, { r: 0, g: 0, b: 255 }, { r: 0, g: 0, b: 160 }, { r: 128, g: 0, b: 128 }, { r: 128, g: 0, b: 255 },
+    { r: 64, g: 0, b: 0 }, { r: 128, g: 64, b: 0 }, { r: 0, g: 64, b: 0 }, { r: 0, g: 64, b: 64 }, { r: 0, g: 0, b: 128 }, { r: 0, g: 0, b: 64 }, { r: 64, g: 0, b: 64 }, { r: 64, g: 0, b: 128 },
+    { r: 0, g: 0, b: 0 }, { r: 128, g: 128, b: 0 }, { r: 128, g: 128, b: 64 }, { r: 128, g: 128, b: 128 }, { r: 64, g: 128, b: 128 }, { r: 192, g: 192, b: 192 }, { r: 64, g: 0, b: 64 }, { r: 255, g: 255, b: 255 },
   ];
   const basicButtons = basicColors.map(mapToButtons);
   const customButtons = customColors.map(mapToButtons);
@@ -37,11 +37,8 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
         key={index}
         type="button"
         className={css['grid-button']}
-        style={{ backgroundColor: color }}
-        onClick={() => {
-          const newRGB = hexToRGB(color);
-          setColorPickerData(prev => ({ ...prev, RGB: newRGB, HSL: RGBtoHSL(newRGB) }));
-        }}
+        style={{ backgroundColor: RGBObjectToString(color) }}
+        onClick={() => setColorPickerData(prev =>  ({ ...prev, RGB: color, HSL: RGBtoHSL(color) }))}
       ></button>
     );
   }

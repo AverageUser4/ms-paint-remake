@@ -151,3 +151,17 @@ export function hexToRGB(hex) {
 
   return { r, g, b };
 }
+
+export function RGBObjectToString(obj) {
+  if(typeof obj !== 'object') {
+    console.error(`Expected object representing color in rgb format, received "${obj}" of type "${typeof obj}" instead.`);
+  } else if(!Number.isInteger(obj.r) || obj.r < 0 || obj.r > 255) {
+    console.error(`Expected "r" property of received object to be an integer between 0 and 255, received "${obj.r}" of type "${typeof obj.r}" instead.`);
+  } else if(!Number.isInteger(obj.g) || obj.g < 0 || obj.g > 255) {
+    console.error(`Expected "g" property of received object to be an integer between 0 and 255, received "${obj.g}" of type "${typeof obj.g}" instead.`);
+  } else if(!Number.isInteger(obj.b) || obj.b < 0 || obj.b > 255) {
+    console.error(`Expected "b" property of received object to be an integer between 0 and 255, received "${obj.b}" of type "${typeof obj.b}" instead.`);
+  }
+
+  return `rgb(${obj.r}, ${obj.g}, ${obj.b})`;
+}

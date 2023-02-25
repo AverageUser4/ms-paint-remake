@@ -4,7 +4,7 @@ import { HSLtoRGB } from "../misc/utils";
 
 const initialCustomColors = [];
 for(let i = 0; i < 16; i ++) {
-  initialCustomColors.push('#ffffff');
+  initialCustomColors.push({ r: 255, g: 255, b: 255 });
 }
 
 const PaintContext = createContext();
