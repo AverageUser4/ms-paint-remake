@@ -1,5 +1,11 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+import { HSLtoRGB } from "../misc/utils";
+
+const initialCustomColors = [];
+for(let i = 0; i < 16; i ++) {
+  initialCustomColors.push('#ffffff');
+}
 
 const PaintContext = createContext();
 
@@ -25,6 +31,12 @@ function PaintProvider({ children }) {
     selected: 'primary'
   });
 
+  const [customColors, setCustomColors] = useState(initialCustomColors);
+  const [colorPickerData, setColorPickerData] = useState({
+    HSL: { h: 200, s: 60, l: 50 },
+    RGB: HSLtoRGB({ h: 200, s: 60, l: 50 }),
+  })
+
   function doHistoryAdd(data) {
     const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
     newDataArray.push(data);
@@ -42,6 +54,10 @@ function PaintProvider({ children }) {
         doHistoryAdd,
         colorData,
         setColorData,
+        customColors,
+        setCustomColors,
+        colorPickerData,
+        setColorPickerData
       }}
     >
       {children}

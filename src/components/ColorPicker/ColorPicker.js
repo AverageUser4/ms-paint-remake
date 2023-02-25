@@ -1,14 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import css from './ColorPicker.module.css';
 
 import usePointerTrack from "../../hooks/usePointerTrack";
+import { usePaintContext } from "../../misc/PaintContext";
 import { HSLtoRGB, RGBtoHSL } from "../../misc/utils";
 
 import cursor from './assets/cursor.png';
 
 function ColorPicker() {
-  const [HSL, setHSL] = useState({ h: 200, s: 60, l: 50 });
-  const [RGB, setRGB] = useState(() => HSLtoRGB(HSL));
+  const { colorPickerData, setColorPickerData } = usePaintContext();
+  const { HSL, RGB } = colorPickerData;
+  
   const fieldRef = useRef();
   const barRef = useRef();
   const { onPointerDown: onPointerDownField } = usePointerTrack({ onPointerMoveCallback: onPointerField });
@@ -27,8 +29,7 @@ function ColorPicker() {
     const saturation = Math.max(Math.min(Math.round((rect.height - offsetY) / 1.87) - 1, 100), 0);
 
     const newHSL = { ...HSL, h: hue, s: saturation };
-    setHSL(newHSL);
-    setRGB(HSLtoRGB(newHSL));
+    setColorPickerData(prev => ({ ...prev, HSL: newHSL, RGB: HSLtoRGB(newHSL)}));
   }
 
   function onPointerBar(event) {
@@ -37,8 +38,7 @@ function ColorPicker() {
     const lightness = Math.max(Math.min(Math.round((rect.height - offsetY) / 1.87) - 1, 100), 0);
 
     const newHSL = { ...HSL, l: lightness };
-    setHSL(newHSL);
-    setRGB(HSLtoRGB(newHSL));
+    setColorPickerData(prev => ({ ...prev, HSL: newHSL, RGB: HSLtoRGB(newHSL)}));
   }
 
   function onChange(event) {
@@ -54,14 +54,12 @@ function ColorPicker() {
     if(name === 'h' || name === 's' || name === 'l') {
       value = Math.min(value, name === 'h' ? 359 : 100);
       const newHSL = { ...HSL, [name]: parseFloat(value) };
-      setHSL(newHSL);
-      setRGB(HSLtoRGB(newHSL));
+      setColorPickerData(prev => ({ ...prev, HSL: newHSL, RGB: HSLtoRGB(newHSL)}));
     }
     else {
       value = Math.min(value, 255);
       const newRGB = { ...RGB, [name]: parseFloat(value) };
-      setRGB(newRGB);
-      setHSL(RGBtoHSL(newRGB));
+      setColorPickerData(prev => ({ ...prev, RGB: newRGB, HSL: RGBtoHSL(newRGB)}));
     }
   }
   

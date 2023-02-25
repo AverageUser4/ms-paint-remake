@@ -110,3 +110,44 @@ export function checkArgs(args) {
     }
   }
 }
+
+export function hexToDec(hex) {
+  hex = hex.toLowerCase();
+  if(hex.match(/[^0-9a-f]/)) {
+    console.error('This function expects hexadeciamal number (consisting only of 0-9 and a-f)');
+  }
+
+  const values = { a: 10, b: 11, c: 12, d: 13, e: 14, f: 15 };
+
+  let dec = 0;
+  let exponent = 0;
+
+  for(let i = hex.length - 1; i >= 0; i--) {
+    let currentDigit = parseInt(hex[i]);
+    if(Number.isNaN(currentDigit)) {
+      currentDigit = values[hex[i]];
+    }
+
+    dec += currentDigit * Math.pow(16, exponent);
+    exponent++;
+  }
+
+  return dec;
+}
+
+export function hexToRGB(hex) {
+  hex = hex.toLowerCase();
+  if(
+      !typeof hex === 'string' ||
+      hex.lastIndexOf('#') !== 0 ||
+      hex.match(/[^#0-9a-f]/)
+    ) {
+      console.error('This function expects hexadecimal representation of color in this format "#xxxxxx".');
+    }
+
+  const r = hexToDec(hex.slice(1, 3));
+  const g = hexToDec(hex.slice(3, 5));
+  const b = hexToDec(hex.slice(5, 7));
+
+  return { r, g, b };
+}
