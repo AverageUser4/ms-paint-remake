@@ -13,32 +13,17 @@ export function HSLtoRGB({ h, s, l }) {
   if(!Number.isInteger(l) || l < 0 || l > 100)
     console.error(`Incorrect "l" provided, expected integer between 0 and 100, received: "${l}".`);
      
+  /* https://www.30secondsofcode.org/js/s/hsl-to-rgb */
   s /= 100;
   l /= 100;
-  
-  const C = (1 - Math.abs(2 * l - 1)) * s;
-  const X = C * (1 - Math.abs(h / 60) % 2 - 1);
-  const m = l - C / 2;
+  const k = n => (n + h / 30) % 12;
+  const a = s * Math.min(l, 1 - l);
+  const f = n =>
+    l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
 
-  let $r, $g, $b;
-
-  if(h < 60) {
-    $r = C; $g = X; $b = 0;
-  } else if(h < 120) {
-    $r = X; $g = C; $b = 0;
-  } else if(h < 180) {
-    $r = 0; $g = C; $b = X;
-  } else if(h < 240) {
-    $r = 0; $g = X; $b = C;
-  } else if(h < 300) {
-    $r = X; $g = 0; $b = C;
-  } else {
-    $r = C; $g = 0; $b = X;
-  }
-
-  const r = Math.round(Math.abs(($r + m) * 255));
-  const g = Math.round(Math.abs(($g + m) * 255));
-  const b = Math.round(Math.abs(($b + m) * 255));
+  const r = Math.round(255 * f(0));
+  const g = Math.round(255 * f(8));
+  const b = Math.round(255 * f(4));
 
   return { r, g, b };
 }
