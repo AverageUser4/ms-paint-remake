@@ -14,7 +14,7 @@ function doGetCanvasCopy(canvasRef) {
 }
 
 function Canvas() {
-  const { canvasData, setCanvasData, doHistoryAdd, history, setHistory } = usePaintContext();
+  const { canvasData, setCanvasData, doHistoryAdd, history, setHistory, colorData } = usePaintContext();
   const canvasStyle = { 
     width: canvasData.size.width * canvasData.zoom,
     height: canvasData.size.height * canvasData.zoom,
@@ -28,70 +28,15 @@ function Canvas() {
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
-  console.log(history)
-  
-  useEffect(() => {
-    if(history.currentIndex === lastHistoryIndexRef.current) {
-      return;
-    }
-
-    primaryCtxRef.current.clearRect(0, 0, 9999, 9999);
-    setCanvasData(prev => ({ ...prev, size: { 
-      width: history.dataArray[history.currentIndex].width,
-      height: history.dataArray[history.currentIndex].height,
-    }}));
-    primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
-
-    lastHistoryIndexRef.current = history.currentIndex;
-  }, [history, setCanvasData]);
-  
-  useEffect(() => {
-    primaryCtxRef.current = primaryRef.current.getContext('2d');
-    secondaryCtxRef.current = secondaryRef.current.getContext('2d');
-  }, []);
-  
-  const { resizeElements } = useResize({ 
-    position: { x: 0, y: 0 },
-    setPosition: ()=>0,
-    isAllowToLeaveViewport: true,
-    size: canvasData.outlineSize || canvasData.size,
-    setSize: (newSize) => setCanvasData(prev => ({ ...prev, outlineSize: newSize })),
-    isConstrained: false,
-    minimalSize: { width: 1, height: 1, },
-    isResizable: true,
-    isPointBased: true,
-    isOnlyThreeDirections: true,
+  const { onPointerDown, currentlyPressed } = usePointerTrack({ 
+    onPointerMoveCallback: onPointerMoveCallbackMove,
+    onPointerDownCallback: onPointerMoveCallbackMove,
+    onPointerUpCallback: onPointerUpCallbackMove,
+    onCancelCallback: onCancelCallbackMove,
     cancelOnRightMouseDown: true,
-    onPointerUpCallback: onPointerUpCallbackResize
+    isTrackAlsoRight: true
   });
-
-  function onPointerUpCallbackResize() {
-    setCanvasData(prev => ({ ...prev, outlineSize: null, size: prev.outlineSize }));
-    doHistoryAdd({ 
-      element: doGetCanvasCopy(primaryRef),
-      width: canvasData.outlineSize.width,
-      height: canvasData.outlineSize.height
-    });
-  }
-
-  useEffect(() => {
-    if(lastPrimaryStateRef.current) {
-      primaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
-      primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
-      // so the parts of image that end up outside the viewable are are cut off
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
-    }
-  }, [canvasData.size]);
-
-  const { onPointerDown } = usePointerTrack({ 
-    onPointerMoveCallback,
-    onPointerDownCallback: onPointerMoveCallback,
-    onPointerUpCallback,
-    onCancelCallback,
-    cancelOnRightMouseDown: true,
-  });
-
-  function onPointerMoveCallback(event) {
+  function onPointerMoveCallbackMove(event) {
     const step = 1;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     let { x: curX, y: curY } = lastPointerPositionRef.current;
@@ -117,6 +62,7 @@ function Canvas() {
       propY = propY * Math.abs(diffY / diffX);
     }
 
+    secondaryCtxRef.current.fillStyle = currentlyPressed === 0 ? colorData.primary : colorData.secondary;
     secondaryCtxRef.current.fillRect(Math.round(curX), Math.round(curY), 1, 1);
 
     while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
@@ -125,8 +71,7 @@ function Canvas() {
       secondaryCtxRef.current.fillRect(Math.round(curX), Math.round(curY), 1, 1);
     }
   }
-
-  function onPointerUpCallback() {
+  function onPointerUpCallbackMove() {
     lastPointerPositionRef.current = {};
 
     primaryCtxRef.current.drawImage(secondaryRef.current, 0, 0);
@@ -139,11 +84,63 @@ function Canvas() {
       height: canvasData.size.height
     });
   }
-
-  function onCancelCallback() {
+  function onCancelCallbackMove() {
     lastPointerPositionRef.current = {};
     secondaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
   }
+
+  const { resizeElements } = useResize({ 
+    position: { x: 0, y: 0 },
+    setPosition: ()=>0,
+    isAllowToLeaveViewport: true,
+    size: canvasData.outlineSize || canvasData.size,
+    setSize: (newSize) => setCanvasData(prev => ({ ...prev, outlineSize: newSize })),
+    isConstrained: false,
+    minimalSize: { width: 1, height: 1, },
+    isResizable: true,
+    isPointBased: true,
+    isOnlyThreeDirections: true,
+    cancelOnRightMouseDown: true,
+    onPointerUpCallback: onPointerUpCallbackResize
+  });
+  function onPointerUpCallbackResize() {
+    setCanvasData(prev => ({ ...prev, outlineSize: null, size: prev.outlineSize }));
+    doHistoryAdd({ 
+      element: doGetCanvasCopy(primaryRef),
+      width: canvasData.outlineSize.width,
+      height: canvasData.outlineSize.height
+    });
+  }
+
+  useEffect(() => {
+    primaryCtxRef.current = primaryRef.current.getContext('2d');
+    secondaryCtxRef.current = secondaryRef.current.getContext('2d');
+  }, []);
+
+  useEffect(() => {
+    if(history.currentIndex === lastHistoryIndexRef.current) {
+      return;
+    }
+
+    primaryCtxRef.current.clearRect(0, 0, 9999, 9999);
+    primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
+    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
+    setCanvasData(prev => ({ ...prev, size: { 
+      width: history.dataArray[history.currentIndex].width,
+      height: history.dataArray[history.currentIndex].height,
+    }}));
+
+    lastHistoryIndexRef.current = history.currentIndex;
+  }, [history, setCanvasData]);
+
+  useEffect(() => {
+    if(lastPrimaryStateRef.current) {
+      primaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
+      primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
+      // so the parts of image that end up outside the viewable are are cut off
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
+    }
+  }, [canvasData.size]);
 
   return (
     <div className="point-container">

@@ -5,19 +5,26 @@ function usePointerTrack({
   onPointerDownCallback,
   onPointerUpCallback,
   onCancelCallback,
-  cancelOnRightMouseDown = false
+  cancelOnRightMouseDown = false,
+  isTrackAlsoRight = false
 }) {
   const [isPressed, setIsPressed] = useState(false);
+  const [currentlyPressed, setCurrentlyPressed] = useState(-1);
 
   useEffect(() => {
     function onPointerUp(event) {
       setIsPressed(false);
+      setCurrentlyPressed(-1);
       onPointerUpCallback && onPointerUpCallback(event);
     }
 
     function onMouseDown(event) {
-      if(event.button === 2) {
+      if(
+          currentlyPressed === 0 && event.button === 2 ||
+          currentlyPressed === 2 && event.button === 0 
+        ) {
         setIsPressed(false);
+        setCurrentlyPressed(-1);
         onCancelCallback && onCancelCallback(event);
       }
     }
@@ -35,23 +42,24 @@ function usePointerTrack({
       window.removeEventListener('pointermove', onPointerMoveCallback);
       window.removeEventListener('mousedown', onMouseDown);
     };
-  }, [isPressed, onPointerMoveCallback, onPointerUpCallback, cancelOnRightMouseDown, onCancelCallback]);
+  }, [isPressed, currentlyPressed, onPointerMoveCallback, onPointerUpCallback, cancelOnRightMouseDown, onCancelCallback]);
   
   function onPointerDown(event) {
-    if(event.button !== 0)
-      return;
-
-    setIsPressed(true);
-    onPointerDownCallback && onPointerDownCallback(event);
+    if(event.button === 0 || (isTrackAlsoRight && event.button === 2)) {
+      setIsPressed(true);
+      setCurrentlyPressed(event.button);
+      onPointerDownCallback && onPointerDownCallback(event);
+    }
   }
 
   function doCancel(isInvokeOnPointerUpCallback = false) {
     setIsPressed(false);
+    setCurrentlyPressed(-1);
     isInvokeOnPointerUpCallback && onPointerUpCallback();
     onCancelCallback && onCancelCallback();
   }
 
-  return { onPointerDown, doCancel, isPressed };
+  return { onPointerDown, doCancel, isPressed, currentlyPressed };
 }
 
 export default usePointerTrack;

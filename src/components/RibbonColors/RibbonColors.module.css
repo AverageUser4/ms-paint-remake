@@ -18,10 +18,14 @@
   padding: 1px;
 
   border: 1px solid var(--line-darker);
-  background-color: transparent;
-  color: cyan;
+  background-color: rgb(255, 255, 255);
+  color: transparent;
   
   box-sizing: border-box;
+}
+.color--has-color:hover {
+  background-color: rgb(203, 228, 253);
+  border-color: rgb(100, 165, 231);
 }
 .color::after {
   content: '';

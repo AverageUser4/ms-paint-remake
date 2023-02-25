@@ -19,6 +19,12 @@ function PaintProvider({ children }) {
     currentIndex: 0
   });
 
+  const [colorData, setColorData] = useState({
+    primary: '#000',
+    secondary: '#fff',
+    selected: 'primary'
+  });
+
   function doHistoryAdd(data) {
     const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
     newDataArray.push(data);
@@ -33,7 +39,9 @@ function PaintProvider({ children }) {
         setCanvasData,
         history,
         setHistory,
-        doHistoryAdd
+        doHistoryAdd,
+        colorData,
+        setColorData,
       }}
     >
       {children}

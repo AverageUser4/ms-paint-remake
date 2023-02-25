@@ -18,9 +18,14 @@ function BigButton({
   setShowChildren,
   onPointerDown,
   isOnlyChildren = false,
+  isActive,
 }) {
   const dropdownContainerRef = useRef();
-  const buttonClasses = `${css['button']} ${css[`button--${iconSize}`]}`;
+  const buttonClasses = `
+    ${css['button']}
+    ${css[`button--${iconSize}`]}
+    ${isActive && css['button--active']}
+  `;
   let iconClasses = `${css['icon']} ${css[`icon--${iconSize}`]}`;
 
   if(!icon)
@@ -79,6 +84,7 @@ BigButton.propTypes = {
   setShowChildren: PropTypes.func,
   onPointerDown: PropTypes.func,
   isOnlyChildren: PropTypes.bool,
+  isActive: PropTypes.bool
 };
 
 export default BigButton;
