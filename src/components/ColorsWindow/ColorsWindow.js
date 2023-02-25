@@ -19,7 +19,7 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
-  const { customColors, setColorPickerData } = usePaintContext();
+  const { customColors, setColorPickerData, colorPickerData, doCustomColorsAdd, doRibbonColorsArrayAdd } = usePaintContext();
   const basicColors = [
     { r: 255, g: 128, b: 128 }, { r: 255, g: 255, b: 128 }, { r: 128, g: 255, b: 128 }, { r: 0, g: 255, b: 128 }, { r: 128, g: 255, b: 255 }, { r: 0, g: 128, b: 255 }, { r: 255, g: 128, b: 192 }, { r: 255, g: 128, b: 255 },
     { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }, { r: 128, g: 255, b: 0 }, { r: 0, g: 255, b: 64 }, { r: 0, g: 255, b: 255 }, { r: 0, g: 128, b: 192 }, { r: 128, g: 128, b: 192 }, { r: 255, g: 0, b: 255 },
@@ -83,7 +83,7 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
                 <div>
                   <h3 className="text">Custom colors:</h3>
 
-                  <div className={css['grid']}>
+                  <div className={`${css['grid']} ${css['grid--alt']}`}>
                     {customButtons}
                   </div>
                 </div>
@@ -98,7 +98,10 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
                     <button 
                       type="button"
                       className="form-button form-button--medium form-button--active"
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => { 
+                        setIsOpen(false);
+                        doRibbonColorsArrayAdd(colorPickerData.RGB);
+                      }}
                       data-cy="ColorsWindow-confirm"
                     >
                       OK
@@ -119,7 +122,13 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
 
                 <ColorPicker/>
 
-                <button type="button" className="form-button form-button--full-width">Add to Custom Colors</button>
+                <button 
+                  type="button"
+                  className="form-button form-button--full-width"
+                  onClick={() => doCustomColorsAdd(colorPickerData.RGB)}
+                >
+                  Add to Custom Colors
+                </button>
                   
               </div>
             </form>

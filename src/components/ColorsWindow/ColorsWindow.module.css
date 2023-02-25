@@ -28,6 +28,11 @@
 
   margin-top: 6px;
 }
+.grid--alt {
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-template-columns: auto;
+}
 
 .grid-button {
   position: relative;

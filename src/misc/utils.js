@@ -165,3 +165,21 @@ export function RGBObjectToString(obj) {
 
   return `rgb(${obj.r}, ${obj.g}, ${obj.b})`;
 }
+
+export function objectEquals(obj1, obj2) {
+  /* not good for comparing objects containing complex data types, only primitives */
+  
+  for(let key in obj1) {
+    if(obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  for(let key in obj2) {
+    if(obj1[key] !== obj2[key]) {
+      return false;
+    }
+  }
+
+  return true;
+}
