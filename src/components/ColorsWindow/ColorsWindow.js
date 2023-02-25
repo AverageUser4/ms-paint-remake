@@ -46,7 +46,7 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
               onPointerDownMove={onPointerDownMove}
             />
       
-            <ResizeWindowBody
+            <ColorsWindowBody
               setIsOpen={setIsOpen}
             />
           </>
@@ -65,13 +65,25 @@ ColorsWindow.propTypes = {
   setIsOpen: PropTypes.func.isRequired,
 };
 
-function ResizeWindowBody({ setIsOpen }) {
-  const tempColors = [];
-  for(let i = 0; i < 48; i++) {
-    tempColors.push(
-      <button key={i} type="button" className={css['grid-button']}></button>
+function ColorsWindowBody({ setIsOpen }) {
+  const basicColors = [
+    '#ff8080', '#ffff80', '#80ff80', '#00ff80', '#80ffff', '#0080ff', '#ff80c0', '#ff80ff',
+    '#ff0000', '#ffff00', '#80ff00', '#00ff40', '#00ffff', '#0080c0', '#8080c0', '#ff00ff',
+    '#804040', '#ff8040', '#00ff00', '#008080', '#004080', '#8080ff', '#800040', '#ff0080',
+    '#800000', '#ff8000', '#008000', '#008040', '#0000ff', '#0000a0', '#800080', '#8000ff',
+    '#400000', '#804000', '#004000', '#004040', '#000080', '#000040', '#400040', '#400080',
+    '#000000', '#808000', '#808040', '#808080', '#408080', '#c0c0c0', '#400040', '#ffffff',
+  ];
+  const basicButtons = basicColors.map((color, index) => {
+    return (
+      <button 
+        key={index}
+        type="button"
+        className={css['grid-button']}
+        style={{ backgroundColor: color }}
+      ></button>
     );
-  }
+  });
   
   return (
     <form className={css['body']}>
@@ -81,7 +93,7 @@ function ResizeWindowBody({ setIsOpen }) {
           <h3 className="text">Basic colors:</h3>
 
           <div className={css['grid']}>
-            {tempColors}
+            {basicButtons}
           </div>
         </div>
 
@@ -89,7 +101,7 @@ function ResizeWindowBody({ setIsOpen }) {
           <h3 className="text">Custom colors:</h3>
 
           <div className={css['grid']}>
-            {tempColors.slice(0, 16)}
+            {basicButtons.slice(0, 16)}
           </div>
         </div>
 
@@ -132,7 +144,7 @@ function ResizeWindowBody({ setIsOpen }) {
   );
 }
 
-ResizeWindowBody.propTypes = {
+ColorsWindowBody.propTypes = {
   setIsOpen: PropTypes.func.isRequired,
 };
 

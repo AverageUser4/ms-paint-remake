@@ -36,7 +36,7 @@ function Logic({
   }, [setMainWindowSize, minimalSize, setIsMainWindowMaximized]);
 
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
-  const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
+  const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(true);
   const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
 
   const isAnyInnerWindowOpen = isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen;
