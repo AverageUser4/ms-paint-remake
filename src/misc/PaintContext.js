@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { HSLtoRGB, objectEquals } from "../misc/utils";
 
@@ -12,152 +12,372 @@ const PaintContext = createContext();
 const WIDTH = 300;
 const HEIGHT = 200;
 
+/* http://jsfiddle.net/d9VRu/ */
+function calculatePoint(originX, originY, radius) {
+  const angle = Math.random() * Math.PI * 2;
+  const r = Math.sqrt(Math.random()) * radius;
+  const x = originX + r * Math.cos(angle);
+  const y = originY + r * Math.sin(angle);
+  return { x: x, y: y };
+}
+
 function PaintProvider({ children }) {
+  const [colorData, setColorData] = useState({
+    primary: '#000',
+    secondary: '#fff',
+    selected: 'primary'
+  });
+  
+  const airbrushIntervalRef = useRef(null);
   const [toolsData, setToolsData] = useState(new Map([
+    /* tools */
     [
       'pencil',
       {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
-        draw(context, x, y) {
+        isBrush: true,
+        draw({ context, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
           if(size <= 2) {
-            context.fillRect(x, y, size, size);
+            context.fillRect(curX, curY, size, size);
           } else if(size === 3) {
-            context.fillRect(x - 1, y, 3, 1);
-            context.fillRect(x, y - 1, 1, 3);
+            context.fillRect(curX - 1, curY, 3, 1);
+            context.fillRect(curX, curY - 1, 1, 3);
           } else if(size === 4) {
-            context.fillRect(x - 1, y, 4, 2);
-            context.fillRect(x, y - 1, 2, 4);
+            context.fillRect(curX - 1, curY, 4, 2);
+            context.fillRect(curX, curY - 1, 2, 4);
           }
         },
-        repeatedDraw(context, x, y) {
-          this.draw(context, x, y);
-        }
       },
     ],
     [
-      'brush',
+      'fill',
+      {
+        sizes: [1, 2, 3, 4],
+        chosenSizeIndex: 0,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          const size = this.sizes[this.chosenSizeIndex];
+          
+          if(size <= 2) {
+            context.fillRect(curX, curY, size, size);
+          } else if(size === 3) {
+            context.fillRect(curX - 1, curY, 3, 1);
+            context.fillRect(curX, curY - 1, 1, 3);
+          } else if(size === 4) {
+            context.fillRect(curX - 1, curY, 4, 2);
+            context.fillRect(curX, curY - 1, 2, 4);
+          }
+        },
+      },
+    ],
+    [
+      'text',
+      {
+        sizes: [1, 2, 3, 4],
+        chosenSizeIndex: 0,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          const size = this.sizes[this.chosenSizeIndex];
+          
+          if(size <= 2) {
+            context.fillRect(curX, curY, size, size);
+          } else if(size === 3) {
+            context.fillRect(curX - 1, curY, 3, 1);
+            context.fillRect(curX, curY - 1, 1, 3);
+          } else if(size === 4) {
+            context.fillRect(curX - 1, curY, 4, 2);
+            context.fillRect(curX, curY - 1, 2, 4);
+          }
+        },
+      },
+    ],
+    [
+      'eraser',
+      {
+        sizes: [4, 6, 8, 10],
+        chosenSizeIndex: 2,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          const size = this.sizes[this.chosenSizeIndex];
+          
+          context.fillStyle = colorData.secondary;
+          context.fillRect(curX, curY, size, size);
+        },
+      },
+    ],
+    [
+      'color-picker',
+      {
+        sizes: [1, 2, 3, 4],
+        chosenSizeIndex: 0,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          const size = this.sizes[this.chosenSizeIndex];
+          
+          if(size <= 2) {
+            context.fillRect(curX, curY, size, size);
+          } else if(size === 3) {
+            context.fillRect(curX - 1, curY, 3, 1);
+            context.fillRect(curX, curY - 1, 1, 3);
+          } else if(size === 4) {
+            context.fillRect(curX - 1, curY, 4, 2);
+            context.fillRect(curX, curY - 1, 2, 4);
+          }
+        },
+      },
+    ],
+    [
+      'magnifier',
+      {
+        sizes: [1, 2, 3, 4],
+        chosenSizeIndex: 0,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          const size = this.sizes[this.chosenSizeIndex];
+          
+          if(size <= 2) {
+            context.fillRect(curX, curY, size, size);
+          } else if(size === 3) {
+            context.fillRect(curX - 1, curY, 3, 1);
+            context.fillRect(curX, curY - 1, 1, 3);
+          } else if(size === 4) {
+            context.fillRect(curX - 1, curY, 4, 2);
+            context.fillRect(curX, curY - 1, 2, 4);
+          }
+        },
+      },
+    ],
+
+    /* brushes */
+    [
+      'brushes-brush',
       {
         sizes: [1, 3, 5, 8],
         chosenSizeIndex: 1,
-        draw(context, x, y) {
+        isBrush: true,
+        draw({ context, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
           context.beginPath();
-          context.arc(x, y, size, 0, Math.PI * 2);
+          context.arc(curX, curY, size, 0, Math.PI * 2);
           context.fill();
         },
-        repeatedDraw(context, x, y) {
-          this.draw(context, x, y);
-        }
       },
     ],
     [
-      'calligraphy-1',
+      'brushes-calligraphy-1',
       {
         sizes: [3, 5, 8, 10],
         chosenSizeIndex: 1,
-        draw(context, x, y) {
+        isBrush: true,
+        draw({ context, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
           if(size === 3) {
-            context.fillRect(x - 1, y + 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y - 1, 2, 1);
+            context.fillRect(curX - 1, curY + 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY - 1, 2, 1);
           } else if(size === 5) {
-            context.fillRect(x - 2, y + 2, 2, 1);
-            context.fillRect(x - 1, y + 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y - 1, 2, 1);
-            context.fillRect(x + 2, y - 2, 2, 1);
+            context.fillRect(curX - 2, curY + 2, 2, 1);
+            context.fillRect(curX - 1, curY + 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY - 1, 2, 1);
+            context.fillRect(curX + 2, curY - 2, 2, 1);
           } else if(size === 8) {
-            context.fillRect(x - 4, y + 4, 2, 1);
-            context.fillRect(x - 3, y + 3, 2, 1);
-            context.fillRect(x - 2, y + 2, 2, 1);
-            context.fillRect(x - 1, y + 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y - 1, 2, 1);
-            context.fillRect(x + 2, y - 2, 2, 1);
-            context.fillRect(x + 3, y - 3, 2, 1);
+            context.fillRect(curX - 4, curY + 4, 2, 1);
+            context.fillRect(curX - 3, curY + 3, 2, 1);
+            context.fillRect(curX - 2, curY + 2, 2, 1);
+            context.fillRect(curX - 1, curY + 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY - 1, 2, 1);
+            context.fillRect(curX + 2, curY - 2, 2, 1);
+            context.fillRect(curX + 3, curY - 3, 2, 1);
           } else if(size === 10) {
-            context.fillRect(x - 5, y + 5, 2, 1);
-            context.fillRect(x - 4, y + 4, 2, 1);
-            context.fillRect(x - 3, y + 3, 2, 1);
-            context.fillRect(x - 2, y + 2, 2, 1);
-            context.fillRect(x - 1, y + 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y - 1, 2, 1);
-            context.fillRect(x + 2, y - 2, 2, 1);
-            context.fillRect(x + 3, y - 3, 2, 1);
-            context.fillRect(x + 4, y - 4, 2, 1);
+            context.fillRect(curX - 5, curY + 5, 2, 1);
+            context.fillRect(curX - 4, curY + 4, 2, 1);
+            context.fillRect(curX - 3, curY + 3, 2, 1);
+            context.fillRect(curX - 2, curY + 2, 2, 1);
+            context.fillRect(curX - 1, curY + 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY - 1, 2, 1);
+            context.fillRect(curX + 2, curY - 2, 2, 1);
+            context.fillRect(curX + 3, curY - 3, 2, 1);
+            context.fillRect(curX + 4, curY - 4, 2, 1);
           }
         },
-        repeatedDraw(context, x, y) {
-          this.draw(context, x, y);
-        }
       },
     ],
     [
-      'calligraphy-2',
+      'brushes-calligraphy-2',
       {
         sizes: [3, 5, 8, 10],
         chosenSizeIndex: 1,
-        draw(context, x, y) {
+        isBrush: true,
+        draw({ context, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
           if(size === 3) {
-            context.fillRect(x - 1, y - 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y + 1, 2, 1);
+            context.fillRect(curX - 1, curY - 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY + 1, 2, 1);
           } else if(size === 5) {
-            context.fillRect(x - 2, y - 2, 2, 1);
-            context.fillRect(x - 1, y - 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y + 1, 2, 1);
-            context.fillRect(x + 2, y + 2, 2, 1);
+            context.fillRect(curX - 2, curY - 2, 2, 1);
+            context.fillRect(curX - 1, curY - 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY + 1, 2, 1);
+            context.fillRect(curX + 2, curY + 2, 2, 1);
           } else if(size === 8) {
-            context.fillRect(x - 4, y - 4, 2, 1);
-            context.fillRect(x - 3, y - 3, 2, 1);
-            context.fillRect(x - 2, y - 2, 2, 1);
-            context.fillRect(x - 1, y - 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y + 1, 2, 1);
-            context.fillRect(x + 2, y + 2, 2, 1);
-            context.fillRect(x + 3, y + 3, 2, 1);
+            context.fillRect(curX - 4, curY - 4, 2, 1);
+            context.fillRect(curX - 3, curY - 3, 2, 1);
+            context.fillRect(curX - 2, curY - 2, 2, 1);
+            context.fillRect(curX - 1, curY - 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY + 1, 2, 1);
+            context.fillRect(curX + 2, curY + 2, 2, 1);
+            context.fillRect(curX + 3, curY + 3, 2, 1);
           } else if(size === 10) {
-            context.fillRect(x - 5, y - 5, 2, 1);
-            context.fillRect(x - 4, y - 4, 2, 1);
-            context.fillRect(x - 3, y - 3, 2, 1);
-            context.fillRect(x - 2, y - 2, 2, 1);
-            context.fillRect(x - 1, y - 1, 2, 1);
-            context.fillRect(x, y, 2, 1);
-            context.fillRect(x + 1, y + 1, 2, 1);
-            context.fillRect(x + 2, y + 2, 2, 1);
-            context.fillRect(x + 3, y + 3, 2, 1);
-            context.fillRect(x + 4, y + 4, 2, 1);
+            context.fillRect(curX - 5, curY - 5, 2, 1);
+            context.fillRect(curX - 4, curY - 4, 2, 1);
+            context.fillRect(curX - 3, curY - 3, 2, 1);
+            context.fillRect(curX - 2, curY - 2, 2, 1);
+            context.fillRect(curX - 1, curY - 1, 2, 1);
+            context.fillRect(curX, curY, 2, 1);
+            context.fillRect(curX + 1, curY + 1, 2, 1);
+            context.fillRect(curX + 2, curY + 2, 2, 1);
+            context.fillRect(curX + 3, curY + 3, 2, 1);
+            context.fillRect(curX + 4, curY + 4, 2, 1);
           }
         },
-        repeatedDraw(context, x, y) {
-          this.draw(context, x, y);
-        }
+      },
+    ],
+    [
+      'brushes-airbrush',
+      {
+        sizes: [4, 8, 16, 24],
+        chosenSizeIndex: 1,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          const size = this.sizes[this.chosenSizeIndex];
+
+          function drawRandomPoints() {
+            for(let i = 0; i < size; i++) {
+              const { x: randX, y: randY } = calculatePoint(curX, curY, size);
+              context.fillRect(Math.round(randX), Math.round(randY), 1, 1);
+            }
+          }
+
+          drawRandomPoints();
+          if(airbrushIntervalRef.current === null) {
+            airbrushIntervalRef.current = setInterval(drawRandomPoints, 100);
+          }
+        },
+      },
+    ],
+    [
+      'brushes-oilbrush',
+      {
+        sizes: [8, 16, 30, 40],
+        chosenSizeIndex: 1,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          /* TODO: add unique implementation */
+          const size = this.sizes[this.chosenSizeIndex];
+
+          context.beginPath();
+          context.arc(curX, curY, size, 0, Math.PI * 2);
+          context.fill();
+        },
+      },
+    ],
+    [
+      'brushes-crayon',
+      {
+        sizes: [8, 16, 30, 40],
+        chosenSizeIndex: 1,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          /* TODO: add unique implementation */
+          const size = this.sizes[this.chosenSizeIndex];
+
+          context.beginPath();
+          context.arc(curX, curY, size, 0, Math.PI * 2);
+          context.fill();
+        },
+      },
+    ],
+    [
+      'brushes-marker',
+      {
+        sizes: [8, 16, 30, 40],
+        chosenSizeIndex: 1,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          /* TODO: add unique implementation */
+          const size = this.sizes[this.chosenSizeIndex];
+
+          context.beginPath();
+          context.arc(curX, curY, size, 0, Math.PI * 2);
+          context.fill();
+        },
+      },
+    ],
+    [
+      'brushes-natural-pencil',
+      {
+        sizes: [8, 16, 30, 40],
+        chosenSizeIndex: 1,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          /* TODO: add unique implementation */
+          const size = this.sizes[this.chosenSizeIndex];
+
+          context.beginPath();
+          context.arc(curX, curY, size, 0, Math.PI * 2);
+          context.fill();
+        },
+      },
+    ],
+    [
+      'brushes-watercolor',
+      {
+        sizes: [8, 16, 30, 40],
+        chosenSizeIndex: 1,
+        isBrush: true,
+        draw({ context, curX, curY }) {
+          /* TODO: add unique implementation */
+          const size = this.sizes[this.chosenSizeIndex];
+
+          context.beginPath();
+          context.arc(curX, curY, size, 0, Math.PI * 2);
+          context.fill();
+        },
       },
     ],
   ]));
-  const [currentTool, setCurrentTool] = useState('calligraphy-2');
-  
+  const [currentTool, setCurrentTool] = useState('pencil');
+  useEffect(() => {
+    function clearAirbrushInterval() {
+      clearInterval(airbrushIntervalRef.current);
+      airbrushIntervalRef.current = null;
+    }
+
+    window.addEventListener('pointerup', clearAirbrushInterval);
+    window.addEventListener('pointermove', clearAirbrushInterval);
+
+    return () => {
+      window.removeEventListener('pointerup', clearAirbrushInterval);
+      window.removeEventListener('pointermove', clearAirbrushInterval);
+    }
+  }, []);
+
   const [canvasData, setCanvasData] = useState({
     mousePosition: null,
     size: { width: WIDTH, height: HEIGHT },
     outlineSize: null,
     zoom: 1,
-  });
-
-  const [colorData, setColorData] = useState({
-    primary: '#000',
-    secondary: '#fff',
-    selected: 'primary'
   });
 
   const [customColors, setCustomColors] = useState(initialCustomColors);

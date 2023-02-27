@@ -37,7 +37,7 @@ function Canvas() {
     isTrackAlsoRight: true
   });
   function onPointerMoveCallbackMove(event) {
-    const step = 1;
+    const step = currentTool === 'airbrush' ? 5 : 1;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     let { x: curX, y: curY } = lastPointerPositionRef.current;
     
@@ -66,14 +66,28 @@ function Canvas() {
     secondaryCtxRef.current.strokeStyle = currentylPressedRef.current === 0 ? colorData.primary : colorData.secondary;
 
     const theTool = toolsData.get(currentTool);
-    theTool.draw(secondaryCtxRef.current, Math.round(curX), Math.round(curY), Math.round(desX), Math.round(desY));
+    theTool.draw({
+      context: secondaryCtxRef.current,
+      curX: Math.round(curX),
+      curY: Math.round(curY),
+      desX: Math.round(desX),
+      desY: Math.round(desY),
+      isRepeated: false,
+      currentylPressed: currentylPressedRef.current
+    });
 
-    if(theTool.repeatedDraw) {
-      while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
-        curX += step * propX;
-        curY += step * propY;
-        theTool.repeatedDraw(secondaryCtxRef.current, Math.round(curX), Math.round(curY));
-      }
+    while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
+      curX += step * propX;
+      curY += step * propY;
+      theTool.draw({
+        context: secondaryCtxRef.current,
+        curX: Math.round(curX),
+        curY: Math.round(curY),
+        desX: Math.round(desX),
+        desY: Math.round(desY),
+        isRepeated: true,
+        currentylPressed: currentylPressedRef.current
+      });
     }
   }
   function onPointerUpCallbackMove() {

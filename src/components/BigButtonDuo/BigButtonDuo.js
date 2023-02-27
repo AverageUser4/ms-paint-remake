@@ -15,12 +15,13 @@ function BigButtonDuo({
   children,
   showChildren = false,
   setShowChildren,
+  isActive,
 }) {
   const dropdownContainerRef = useRef();
   
   return (
     <div 
-      className={css['container']} 
+      className={`${css['container']} ${isActive && css['container--active']}`} 
       ref={dropdownContainerRef}
       data-cy={`BigButtonDuo-${name}`}
     >
@@ -62,6 +63,7 @@ BigButtonDuo.propTypes = {
   children: PropTypes.node,
   showChildren: PropTypes.bool,
   setShowChildren: PropTypes.func,
+  isActive: PropTypes.bool,
 };
 
 export default BigButtonDuo;

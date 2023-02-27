@@ -4,6 +4,7 @@ import css from './RibbonTools.module.css';
 
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
+import { usePaintContext } from "../../misc/PaintContext";
 
 import tools16 from './assets/tools-16.png';
 import pencil16 from './assets/pencil-16.png';
@@ -15,6 +16,7 @@ import magnifier16 from './assets/magnifier-16.png';
 
 function RibbonTools({ ribbonWidth }) {
   const isOnlyContent = ribbonWidth >= 760;
+  const { currentTool, setCurrentTool } = usePaintContext();
 
   return (
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={tools16} name="Tools">
@@ -24,27 +26,57 @@ function RibbonTools({ ribbonWidth }) {
           className={css['container']}
           data-cy="Tools"
         >
-          <button className="button">
+          <button
+            className={`button ${currentTool === 'pencil' && 'button--active'}`}
+            onClick={() => {
+              setCurrentTool('pencil');
+            }}
+          >
             <img draggable="false" src={pencil16} alt="Pencil."/>
           </button>
 
-          <button className="button">
+          <button
+            className={`button ${currentTool === 'fill' && 'button--active'}`}
+            onClick={() => {
+              setCurrentTool('fill');
+            }}
+          >
             <img draggable="false" src={fill16} alt="Fill color."/>
           </button>
 
-          <button className="button">
+          <button
+            className={`button ${currentTool === 'text' && 'button--active'}`}
+            onClick={() => {
+              setCurrentTool('text');
+            }}
+          >
             <img draggable="false" src={text16} alt="Text."/>
           </button>
 
-          <button className="button">
+          <button
+            className={`button ${currentTool === 'eraser' && 'button--active'}`}
+            onClick={() => {
+              setCurrentTool('eraser');
+            }}
+          >
             <img draggable="false" src={eraser16} alt="Eraser."/>
           </button>
 
-          <button className="button">
+          <button
+            className={`button ${currentTool === 'color-picker' && 'button--active'}`}
+            onClick={() => {
+              setCurrentTool('color-picker');
+            }}
+          >
             <img draggable="false" src={colorPicker16} alt="Color picker."/>
           </button>
 
-          <button className="button">
+          <button
+            className={`button ${currentTool === 'magnifier' && 'button--active'}`}
+            onClick={() => {
+              setCurrentTool('magnifier');
+            }}
+          >
             <img draggable="false" src={magnifier16} alt="Magnifier."/>
           </button>
         </div>

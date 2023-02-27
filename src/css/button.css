@@ -24,3 +24,15 @@
   background-color: var(--button-active);
   border-color: var(--button-active-border);
 }
+.button.button--active {
+  background-color: rgb(201, 224, 247);
+  border-color: rgb(98, 162, 228);
+}
+.button.button--active:hover {
+  background-color: rgb(213, 240, 247);
+  border-color: rgb(122, 176, 231);
+}
+.button.button--active:active {
+  background-color: rgb(201, 224, 247);
+  border-color: rgb(98, 162, 228);
+}
