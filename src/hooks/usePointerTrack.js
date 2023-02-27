@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 function usePointerTrack({ 
   onPointerMoveCallback,
@@ -9,22 +9,22 @@ function usePointerTrack({
   isTrackAlsoRight = false
 }) {
   const [isPressed, setIsPressed] = useState(false);
-  const [currentlyPressed, setCurrentlyPressed] = useState(-1);
+  const currentylPressedRef = useRef(-1);
 
   useEffect(() => {
     function onPointerUp(event) {
       setIsPressed(false);
-      setCurrentlyPressed(-1);
+      currentylPressedRef.current = -1;
       onPointerUpCallback && onPointerUpCallback(event);
     }
 
     function onMouseDown(event) {
       if(
-          currentlyPressed === 0 && event.button === 2 ||
-          currentlyPressed === 2 && event.button === 0 
+          currentylPressedRef.current === 0 && event.button === 2 ||
+          currentylPressedRef.current === 2 && event.button === 0 
         ) {
         setIsPressed(false);
-        setCurrentlyPressed(-1);
+        currentylPressedRef.current = -1;
         onCancelCallback && onCancelCallback(event);
       }
     }
@@ -42,24 +42,24 @@ function usePointerTrack({
       window.removeEventListener('pointermove', onPointerMoveCallback);
       window.removeEventListener('mousedown', onMouseDown);
     };
-  }, [isPressed, currentlyPressed, onPointerMoveCallback, onPointerUpCallback, cancelOnRightMouseDown, onCancelCallback]);
+  }, [isPressed, onPointerMoveCallback, onPointerUpCallback, cancelOnRightMouseDown, onCancelCallback]);
   
   function onPointerDown(event) {
     if(event.button === 0 || (isTrackAlsoRight && event.button === 2)) {
       setIsPressed(true);
-      setCurrentlyPressed(event.button);
+      currentylPressedRef.current = event.button;
       onPointerDownCallback && onPointerDownCallback(event);
     }
   }
 
   function doCancel(isInvokeOnPointerUpCallback = false) {
     setIsPressed(false);
-    setCurrentlyPressed(-1);
+    currentylPressedRef.current = -1;
     isInvokeOnPointerUpCallback && onPointerUpCallback();
     onCancelCallback && onCancelCallback();
   }
 
-  return { onPointerDown, doCancel, isPressed, currentlyPressed };
+  return { onPointerDown, doCancel, isPressed, currentylPressedRef };
 }
 
 export default usePointerTrack;

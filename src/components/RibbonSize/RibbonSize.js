@@ -4,16 +4,17 @@ import css from './RibbonSize.module.css';
 import BigButton from "../BigButton/BigButton";
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { toggleBoolState } from "../../misc/utils";
+import { usePaintContext } from "../../misc/PaintContext";
 
 import size32 from './assets/size-32.png';
 
 function RibbonSize() {
+  const { toolsData, setToolsData, currentTool } = usePaintContext();
   const dropdownRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
   // will come from props
-  const sizes = [8, 16, 30, 40];
-  const currentSize = 16;
+  const { sizes } = toolsData.get(currentTool);
 
   return (
     <BigButton 
@@ -30,10 +31,20 @@ function RibbonSize() {
         data-cy="Size-Dropdown"
       >
         {
-          sizes.map(size => 
+          sizes.map((size, index) => 
             <button 
               key={size}
-              className={`${css['button']} ${size === currentSize ? css['button--active'] : ''}`}
+              className={`${css['button']} ${index === toolsData.get(currentTool).chosenSizeIndex ? css['button--active'] : ''}`}
+              onClick={() => {
+                setToolsData(prev => {
+                  const newToolsData = new Map(prev);
+                  const newTool = { ...newToolsData.get(currentTool) };
+                  newTool.chosenSizeIndex = index;
+                  newToolsData.set(currentTool, newTool);
+                  return newToolsData;
+                });
+                setIsDropdownOpen(false);
+              }}
             >
               <div className={css['size']} style={{ height: size < 20 ? size : Math.round(size / 1.4) }}></div>
             </button>)

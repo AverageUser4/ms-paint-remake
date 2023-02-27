@@ -35,39 +35,39 @@ function RibbonBrushes() {
       >
         <div className={css['grid']}>
           <button className={css['button']}>
-            <img src={brush32} alt=""/>
+            <img draggable="false" src={brush32} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={calligraphy132} alt=""/>
+            <img draggable="false" src={calligraphy132} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={calligraphy232} alt=""/>
+            <img draggable="false" src={calligraphy232} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={air32} alt=""/>
+            <img draggable="false" src={air32} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={oil32} alt=""/>
+            <img draggable="false" src={oil32} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={crayon32} alt=""/>
+            <img draggable="false" src={crayon32} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={marker32} alt=""/>
+            <img draggable="false" src={marker32} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={pencil32} alt=""/>
+            <img draggable="false" src={pencil32} alt=""/>
           </button>
 
           <button className={css['button']}>
-            <img src={water32} alt=""/>
+            <img draggable="false" src={water32} alt=""/>
           </button>
         </div>
       </div>

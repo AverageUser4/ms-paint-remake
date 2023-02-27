@@ -13,16 +13,145 @@ const WIDTH = 300;
 const HEIGHT = 200;
 
 function PaintProvider({ children }) {
+  const [toolsData, setToolsData] = useState(new Map([
+    [
+      'pencil',
+      {
+        sizes: [1, 2, 3, 4],
+        chosenSizeIndex: 0,
+        draw(context, x, y) {
+          const size = this.sizes[this.chosenSizeIndex];
+          
+          if(size <= 2) {
+            context.fillRect(x, y, size, size);
+          } else if(size === 3) {
+            context.fillRect(x - 1, y, 3, 1);
+            context.fillRect(x, y - 1, 1, 3);
+          } else if(size === 4) {
+            context.fillRect(x - 1, y, 4, 2);
+            context.fillRect(x, y - 1, 2, 4);
+          }
+        },
+        repeatedDraw(context, x, y) {
+          this.draw(context, x, y);
+        }
+      },
+    ],
+    [
+      'brush',
+      {
+        sizes: [1, 3, 5, 8],
+        chosenSizeIndex: 1,
+        draw(context, x, y) {
+          const size = this.sizes[this.chosenSizeIndex];
+
+          context.beginPath();
+          context.arc(x, y, size, 0, Math.PI * 2);
+          context.fill();
+        },
+        repeatedDraw(context, x, y) {
+          this.draw(context, x, y);
+        }
+      },
+    ],
+    [
+      'calligraphy-1',
+      {
+        sizes: [3, 5, 8, 10],
+        chosenSizeIndex: 1,
+        draw(context, x, y) {
+          const size = this.sizes[this.chosenSizeIndex];
+
+          if(size === 3) {
+            context.fillRect(x - 1, y + 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y - 1, 2, 1);
+          } else if(size === 5) {
+            context.fillRect(x - 2, y + 2, 2, 1);
+            context.fillRect(x - 1, y + 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y - 1, 2, 1);
+            context.fillRect(x + 2, y - 2, 2, 1);
+          } else if(size === 8) {
+            context.fillRect(x - 4, y + 4, 2, 1);
+            context.fillRect(x - 3, y + 3, 2, 1);
+            context.fillRect(x - 2, y + 2, 2, 1);
+            context.fillRect(x - 1, y + 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y - 1, 2, 1);
+            context.fillRect(x + 2, y - 2, 2, 1);
+            context.fillRect(x + 3, y - 3, 2, 1);
+          } else if(size === 10) {
+            context.fillRect(x - 5, y + 5, 2, 1);
+            context.fillRect(x - 4, y + 4, 2, 1);
+            context.fillRect(x - 3, y + 3, 2, 1);
+            context.fillRect(x - 2, y + 2, 2, 1);
+            context.fillRect(x - 1, y + 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y - 1, 2, 1);
+            context.fillRect(x + 2, y - 2, 2, 1);
+            context.fillRect(x + 3, y - 3, 2, 1);
+            context.fillRect(x + 4, y - 4, 2, 1);
+          }
+        },
+        repeatedDraw(context, x, y) {
+          this.draw(context, x, y);
+        }
+      },
+    ],
+    [
+      'calligraphy-2',
+      {
+        sizes: [3, 5, 8, 10],
+        chosenSizeIndex: 1,
+        draw(context, x, y) {
+          const size = this.sizes[this.chosenSizeIndex];
+
+          if(size === 3) {
+            context.fillRect(x - 1, y - 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y + 1, 2, 1);
+          } else if(size === 5) {
+            context.fillRect(x - 2, y - 2, 2, 1);
+            context.fillRect(x - 1, y - 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y + 1, 2, 1);
+            context.fillRect(x + 2, y + 2, 2, 1);
+          } else if(size === 8) {
+            context.fillRect(x - 4, y - 4, 2, 1);
+            context.fillRect(x - 3, y - 3, 2, 1);
+            context.fillRect(x - 2, y - 2, 2, 1);
+            context.fillRect(x - 1, y - 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y + 1, 2, 1);
+            context.fillRect(x + 2, y + 2, 2, 1);
+            context.fillRect(x + 3, y + 3, 2, 1);
+          } else if(size === 10) {
+            context.fillRect(x - 5, y - 5, 2, 1);
+            context.fillRect(x - 4, y - 4, 2, 1);
+            context.fillRect(x - 3, y - 3, 2, 1);
+            context.fillRect(x - 2, y - 2, 2, 1);
+            context.fillRect(x - 1, y - 1, 2, 1);
+            context.fillRect(x, y, 2, 1);
+            context.fillRect(x + 1, y + 1, 2, 1);
+            context.fillRect(x + 2, y + 2, 2, 1);
+            context.fillRect(x + 3, y + 3, 2, 1);
+            context.fillRect(x + 4, y + 4, 2, 1);
+          }
+        },
+        repeatedDraw(context, x, y) {
+          this.draw(context, x, y);
+        }
+      },
+    ],
+  ]));
+  const [currentTool, setCurrentTool] = useState('calligraphy-2');
+  
   const [canvasData, setCanvasData] = useState({
     mousePosition: null,
     size: { width: WIDTH, height: HEIGHT },
     outlineSize: null,
     zoom: 1,
-  });
-
-  const [history, setHistory] = useState({
-    dataArray: [{ element: document.createElement('canvas'), width: WIDTH, height: HEIGHT }],
-    currentIndex: 0
   });
 
   const [colorData, setColorData] = useState({
@@ -71,13 +200,18 @@ function PaintProvider({ children }) {
     RGB: HSLtoRGB({ h: 200, s: 60, l: 50 }),
   })
 
+  const [history, setHistory] = useState({
+    dataArray: [{ element: document.createElement('canvas'), width: WIDTH, height: HEIGHT }],
+    currentIndex: 0
+  });
+
   function doHistoryAdd(data) {
     const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
     newDataArray.push(data);
 
     setHistory(prev => ({ ...prev, dataArray: newDataArray, currentIndex: prev.currentIndex + 1 }));
   }
-  
+
   return (
     <PaintContext.Provider
       value={{
@@ -94,7 +228,11 @@ function PaintProvider({ children }) {
         colorPickerData,
         setColorPickerData,
         ribbonColorsArray,
-        doRibbonColorsArrayAdd
+        doRibbonColorsArrayAdd,
+        toolsData,
+        setToolsData,
+        currentTool,
+        setCurrentTool
       }}
     >
       {children}

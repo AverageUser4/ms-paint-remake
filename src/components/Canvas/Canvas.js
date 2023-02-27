@@ -14,7 +14,7 @@ function doGetCanvasCopy(canvasRef) {
 }
 
 function Canvas() {
-  const { canvasData, setCanvasData, doHistoryAdd, history, setHistory, colorData } = usePaintContext();
+  const { canvasData, setCanvasData, doHistoryAdd, history, colorData, toolsData, currentTool } = usePaintContext();
   const canvasStyle = { 
     width: canvasData.size.width * canvasData.zoom,
     height: canvasData.size.height * canvasData.zoom,
@@ -28,7 +28,7 @@ function Canvas() {
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
-  const { onPointerDown, currentlyPressed } = usePointerTrack({ 
+  const { onPointerDown, currentylPressedRef } = usePointerTrack({ 
     onPointerMoveCallback: onPointerMoveCallbackMove,
     onPointerDownCallback: onPointerMoveCallbackMove,
     onPointerUpCallback: onPointerUpCallbackMove,
@@ -62,13 +62,18 @@ function Canvas() {
       propY = propY * Math.abs(diffY / diffX);
     }
 
-    secondaryCtxRef.current.fillStyle = currentlyPressed === 0 ? colorData.primary : colorData.secondary;
-    secondaryCtxRef.current.fillRect(Math.round(curX), Math.round(curY), 1, 1);
+    secondaryCtxRef.current.fillStyle = currentylPressedRef.current === 0 ? colorData.primary : colorData.secondary;
+    secondaryCtxRef.current.strokeStyle = currentylPressedRef.current === 0 ? colorData.primary : colorData.secondary;
 
-    while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
-      curX += step * propX;
-      curY += step * propY;
-      secondaryCtxRef.current.fillRect(Math.round(curX), Math.round(curY), 1, 1);
+    const theTool = toolsData.get(currentTool);
+    theTool.draw(secondaryCtxRef.current, Math.round(curX), Math.round(curY), Math.round(desX), Math.round(desY));
+
+    if(theTool.repeatedDraw) {
+      while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
+        curX += step * propX;
+        curY += step * propY;
+        theTool.repeatedDraw(secondaryCtxRef.current, Math.round(curX), Math.round(curY));
+      }
     }
   }
   function onPointerUpCallbackMove() {
