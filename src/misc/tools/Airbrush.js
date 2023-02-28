@@ -8,12 +8,15 @@ function calculatePoint(originX, originY, radius) {
 }
 
 export default {
+  latestX: null,
+  latestY: null,
   cursor: 'draw',
   sizes: [4, 8, 16, 24],
   chosenSizeIndex: 1,
-  draw({ secondaryContext, curX, curY }) {
-    console.error('TODO: add spray on mouse hold.');
+  draw({ secondaryContext, curX, curY, currentlyPressedRef }) {
     const size = this.sizes[this.chosenSizeIndex];
+    this.latestX = curX;
+    this.latestY = curY;
 
     function drawRandomPoints() {
       for(let i = 0; i < size; i++) {
@@ -22,26 +25,19 @@ export default {
       }
     }
 
-    drawRandomPoints();
-    // if(airbrushIntervalRef.current === null) {
-    //   airbrushIntervalRef.current = setInterval(drawRandomPoints, 100);
-    // }
+    function timeoutCallback() {
+      if(
+          currentlyPressedRef.current === -1 ||
+          curX !== this.latestX ||
+          curY !== this.latestY
+        ) {
+        return;
+      }
+
+      drawRandomPoints();
+      setTimeout(timeoutCallback.bind(this), 100);
+    }
+    
+    timeoutCallback.apply(this);
   },
 };
-
-// const airbrushIntervalRef = useRef(null);
-
-// useEffect(() => {
-//   function clearAirbrushInterval() {
-//     clearInterval(airbrushIntervalRef.current);
-//     airbrushIntervalRef.current = null;
-//   }
-
-//   window.addEventListener('pointerup', clearAirbrushInterval);
-//   window.addEventListener('pointermove', clearAirbrushInterval);
-
-//   return () => {
-//     window.removeEventListener('pointerup', clearAirbrushInterval);
-//     window.removeEventListener('pointermove', clearAirbrushInterval);
-//   }
-// }, []);

@@ -54,5 +54,8 @@ export default {
     checkAndChange(offsetX, offsetY);
 
     primaryContext.putImageData(imageData, 0, 0);
+  },
+  onPointerMove() {
+    return;
   }
 };

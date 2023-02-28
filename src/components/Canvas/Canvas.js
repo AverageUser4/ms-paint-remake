@@ -18,9 +18,18 @@ function doGetCanvasCopy(canvasRef) {
 }
 
 function Canvas() {
-  const { canvasSize, canvasOutlineSize, canvasZoom, setCanvasOutlineSize, setCanvasSize, canvasMousePosition, setCanvasMousePosition } = useCanvasContext();
+  const { 
+    canvasSize,
+    canvasOutlineSize,
+    canvasZoom,
+    setCanvasZoom,
+    setCanvasOutlineSize,
+    setCanvasSize,
+    canvasMousePosition,
+    setCanvasMousePosition
+  } = useCanvasContext();
   const { toolsData, currentTool } = useToolContext();
-  const { colorData } = useColorContext()
+  const { colorData, setColorData } = useColorContext()
   const { history, doHistoryAdd } = useHistoryContext();
   const currentToolData = toolsData.get(currentTool);
   const canvasStyle = { 
@@ -47,7 +56,10 @@ function Canvas() {
         currentZoom: canvasZoom,
         primaryContext: primaryCtxRef.current,
         canvasSize: canvasSize,
-        colorData
+        colorData,
+        setColorData,
+        canvasZoom,
+        setCanvasZoom
       }),
     onPointerUpCallback: onPointerUpCallbackMove,
     onCancelCallback: onCancelCallbackMove,
@@ -92,6 +104,7 @@ function Canvas() {
       desY: Math.round(desY),
       isRepeated: false,
       currentlyPressed: currentlyPressedRef.current,
+      currentlyPressedRef,
       color: { ...colorData }
     });
 
@@ -107,6 +120,7 @@ function Canvas() {
         desY: Math.round(desY),
         isRepeated: true,
         currentlyPressed: currentlyPressedRef.current,
+        currentlyPressedRef,
         color: { ...colorData }
       });
     }
