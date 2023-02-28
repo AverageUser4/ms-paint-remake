@@ -6,3 +6,4 @@
 
 - the way some flags are passed to Window (through PainXPlatform) is somewhat confusing (default values), like really should be fixed NOW!!!!!!!!!!!!!
 - points used by useResize are not all implemented (only right, bottom and bottom-right)
+- resizing of canvas is buggy when zoom level is different than 1

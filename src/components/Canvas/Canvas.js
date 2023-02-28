@@ -4,6 +4,7 @@ import css from './Canvas.module.css';
 import useResize from "../../hooks/useResize";
 import usePointerTrack from '../../hooks/usePointerTrack';
 import { usePaintContext } from "../../misc/PaintContext";
+import { RGBObjectToString } from "../../misc/utils";
 
 function doGetCanvasCopy(canvasRef) {
   const newCanvas = document.createElement('canvas');
@@ -15,10 +16,45 @@ function doGetCanvasCopy(canvasRef) {
 
 function Canvas() {
   const { canvasData, setCanvasData, doHistoryAdd, history, colorData, toolsData, currentTool } = usePaintContext();
+  const currentToolData = toolsData.get(currentTool);
   const canvasStyle = { 
     width: canvasData.size.width * canvasData.zoom,
     height: canvasData.size.height * canvasData.zoom,
   };
+  let cursorClass;
+
+  if(currentTool.startsWith('brushes')) {
+    cursorClass = css['canvas--draw'];
+  }
+  switch(currentTool) {
+    case 'pencil':
+      cursorClass = css['canvas--pencil'];
+      break;
+
+    case 'fill':
+      cursorClass = css['canvas--fill'];
+      break;
+
+    case 'color-picker':
+      cursorClass = css['canvas--color-picker'];
+      break;
+
+    case 'brushes-airbrush':
+      cursorClass = css['canvas--airbrush'];
+      break;
+
+    case 'text':
+      cursorClass = css['canvas--text'];
+      break;
+
+    case 'zoom':
+      cursorClass = css['canvas--zoom'];
+      break;
+
+    case 'eraser':
+      cursorClass = css['canvas--none'];
+      break;
+  }
 
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
@@ -62,31 +98,35 @@ function Canvas() {
       propY = propY * Math.abs(diffY / diffX);
     }
 
-    secondaryCtxRef.current.fillStyle = currentylPressedRef.current === 0 ? colorData.primary : colorData.secondary;
-    secondaryCtxRef.current.strokeStyle = currentylPressedRef.current === 0 ? colorData.primary : colorData.secondary;
+    secondaryCtxRef.current.fillStyle = currentylPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    secondaryCtxRef.current.strokeStyle = currentylPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
 
     const theTool = toolsData.get(currentTool);
     theTool.draw({
-      context: secondaryCtxRef.current,
+      primaryContext: primaryCtxRef.current,
+      secondaryContext: secondaryCtxRef.current,
       curX: Math.round(curX),
       curY: Math.round(curY),
       desX: Math.round(desX),
       desY: Math.round(desY),
       isRepeated: false,
-      currentylPressed: currentylPressedRef.current
+      currentlyPressed: currentylPressedRef.current,
+      color: { ...colorData }
     });
 
     while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
       curX += step * propX;
       curY += step * propY;
       theTool.draw({
-        context: secondaryCtxRef.current,
+        primaryContext: primaryCtxRef.current,  
+        secondaryContext: secondaryCtxRef.current,
         curX: Math.round(curX),
         curY: Math.round(curY),
         desX: Math.round(desX),
         desY: Math.round(desY),
         isRepeated: true,
-        currentylPressed: currentylPressedRef.current
+        currentlyPressed: currentylPressedRef.current,
+        color: { ...colorData }
       });
     }
   }
@@ -170,23 +210,38 @@ function Canvas() {
         className={`${css['canvas']} ${css['canvas--primary']}`}
         width={canvasData.size.width}
         height={canvasData.size.height}
-        onPointerMove={(e) => setCanvasData(prev => ({ ...prev, mousePosition: { x: e.clientX, y: e.clientY } }))}
-        onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
         ref={primaryRef}
       ></canvas>
 
       <canvas
         style={canvasStyle}
-        className={css['canvas']}
+        className={`${css['canvas']} ${cursorClass}`}
         width={canvasData.size.width}
         height={canvasData.size.height}
-        onPointerMove={(e) => setCanvasData(prev => ({ ...prev, mousePosition: { x: e.clientX, y: e.clientY } }))}
+        onPointerMove={(event) => {
+          const { offsetX, offsetY } = event.nativeEvent;
+          setCanvasData(prev => ({ ...prev, mousePosition: { x: offsetX, y: offsetY } }));
+        }}
         onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
         onPointerDown={onPointerDown}
         ref={secondaryRef}
       ></canvas>
 
       {resizeElements}
+
+      {
+        currentTool === 'eraser' && canvasData.mousePosition &&
+          <div
+            className={css['eraser']}
+            style={{ 
+              left: Math.round(canvasData.mousePosition.x - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasData.zoom),
+              top: Math.round(canvasData.mousePosition.y - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasData.zoom),
+              backgroundColor: RGBObjectToString(colorData.secondary),
+              width: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasData.zoom),
+              height: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasData.zoom),
+            }}
+          ></div>
+      }
     </div>
   );
 }

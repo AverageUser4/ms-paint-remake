@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import { HSLtoRGB, objectEquals } from "../misc/utils";
+import { HSLtoRGB, objectEquals, RGBObjectToString } from "../misc/utils";
 
 const initialCustomColors = [];
 for(let i = 0; i < 16; i ++) {
@@ -23,8 +23,8 @@ function calculatePoint(originX, originY, radius) {
 
 function PaintProvider({ children }) {
   const [colorData, setColorData] = useState({
-    primary: '#000',
-    secondary: '#fff',
+    primary: { r: 0, g: 0, b: 0 },
+    secondary: { r: 255, g: 255, b: 255 },
     selected: 'primary'
   });
   
@@ -37,17 +37,17 @@ function PaintProvider({ children }) {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
           if(size <= 2) {
-            context.fillRect(curX, curY, size, size);
+            secondaryContext.fillRect(curX, curY, size, size);
           } else if(size === 3) {
-            context.fillRect(curX - 1, curY, 3, 1);
-            context.fillRect(curX, curY - 1, 1, 3);
+            secondaryContext.fillRect(curX - 1, curY, 3, 1);
+            secondaryContext.fillRect(curX, curY - 1, 1, 3);
           } else if(size === 4) {
-            context.fillRect(curX - 1, curY, 4, 2);
-            context.fillRect(curX, curY - 1, 2, 4);
+            secondaryContext.fillRect(curX - 1, curY, 4, 2);
+            secondaryContext.fillRect(curX, curY - 1, 2, 4);
           }
         },
       },
@@ -58,17 +58,17 @@ function PaintProvider({ children }) {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
           if(size <= 2) {
-            context.fillRect(curX, curY, size, size);
+            secondaryContext.fillRect(curX, curY, size, size);
           } else if(size === 3) {
-            context.fillRect(curX - 1, curY, 3, 1);
-            context.fillRect(curX, curY - 1, 1, 3);
+            secondaryContext.fillRect(curX - 1, curY, 3, 1);
+            secondaryContext.fillRect(curX, curY - 1, 1, 3);
           } else if(size === 4) {
-            context.fillRect(curX - 1, curY, 4, 2);
-            context.fillRect(curX, curY - 1, 2, 4);
+            secondaryContext.fillRect(curX - 1, curY, 4, 2);
+            secondaryContext.fillRect(curX, curY - 1, 2, 4);
           }
         },
       },
@@ -79,17 +79,17 @@ function PaintProvider({ children }) {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
           if(size <= 2) {
-            context.fillRect(curX, curY, size, size);
+            secondaryContext.fillRect(curX, curY, size, size);
           } else if(size === 3) {
-            context.fillRect(curX - 1, curY, 3, 1);
-            context.fillRect(curX, curY - 1, 1, 3);
+            secondaryContext.fillRect(curX - 1, curY, 3, 1);
+            secondaryContext.fillRect(curX, curY - 1, 1, 3);
           } else if(size === 4) {
-            context.fillRect(curX - 1, curY, 4, 2);
-            context.fillRect(curX, curY - 1, 2, 4);
+            secondaryContext.fillRect(curX - 1, curY, 4, 2);
+            secondaryContext.fillRect(curX, curY - 1, 2, 4);
           }
         },
       },
@@ -100,11 +100,32 @@ function PaintProvider({ children }) {
         sizes: [4, 6, 8, 10],
         chosenSizeIndex: 2,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ primaryContext, secondaryContext, curX, curY, currentlyPressed, color }) {
           const size = this.sizes[this.chosenSizeIndex];
-          
-          context.fillStyle = colorData.secondary;
-          context.fillRect(curX, curY, size, size);
+          const startX = curX - size / 2;
+          const startY = curY - size / 2;
+
+          if(currentlyPressed === 0) {
+            secondaryContext.fillStyle = RGBObjectToString(color.secondary);
+            secondaryContext.fillRect(startX, startY, size, size);
+          } else {
+            const square = primaryContext.getImageData(startX, startY, size, size);
+            for(let i = 0; i < square.data.length; i += 4) {
+              const sR = square.data[i];
+              const sG = square.data[i + 1];
+              const sB = square.data[i + 2];
+              const sA = square.data[i + 3];
+              const { r, g, b } = color.primary;
+
+              if(sR === r && sG === g && sB === b && sA === 255) {
+                const { r, g, b } = color.secondary;
+                square.data[i] = r;
+                square.data[i + 1] = g;
+                square.data[i + 2] = b;
+              }
+            }
+            secondaryContext.putImageData(square, startX, startY);
+          }
         },
       },
     ],
@@ -114,17 +135,17 @@ function PaintProvider({ children }) {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
           if(size <= 2) {
-            context.fillRect(curX, curY, size, size);
+            secondaryContext.fillRect(curX, curY, size, size);
           } else if(size === 3) {
-            context.fillRect(curX - 1, curY, 3, 1);
-            context.fillRect(curX, curY - 1, 1, 3);
+            secondaryContext.fillRect(curX - 1, curY, 3, 1);
+            secondaryContext.fillRect(curX, curY - 1, 1, 3);
           } else if(size === 4) {
-            context.fillRect(curX - 1, curY, 4, 2);
-            context.fillRect(curX, curY - 1, 2, 4);
+            secondaryContext.fillRect(curX - 1, curY, 4, 2);
+            secondaryContext.fillRect(curX, curY - 1, 2, 4);
           }
         },
       },
@@ -135,17 +156,17 @@ function PaintProvider({ children }) {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
           if(size <= 2) {
-            context.fillRect(curX, curY, size, size);
+            secondaryContext.fillRect(curX, curY, size, size);
           } else if(size === 3) {
-            context.fillRect(curX - 1, curY, 3, 1);
-            context.fillRect(curX, curY - 1, 1, 3);
+            secondaryContext.fillRect(curX - 1, curY, 3, 1);
+            secondaryContext.fillRect(curX, curY - 1, 1, 3);
           } else if(size === 4) {
-            context.fillRect(curX - 1, curY, 4, 2);
-            context.fillRect(curX, curY - 1, 2, 4);
+            secondaryContext.fillRect(curX - 1, curY, 4, 2);
+            secondaryContext.fillRect(curX, curY - 1, 2, 4);
           }
         },
       },
@@ -158,12 +179,12 @@ function PaintProvider({ children }) {
         sizes: [1, 3, 5, 8],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
-          context.beginPath();
-          context.arc(curX, curY, size, 0, Math.PI * 2);
-          context.fill();
+          secondaryContext.beginPath();
+          secondaryContext.arc(curX, curY, size, 0, Math.PI * 2);
+          secondaryContext.fill();
         },
       },
     ],
@@ -173,39 +194,39 @@ function PaintProvider({ children }) {
         sizes: [3, 5, 8, 10],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
           if(size === 3) {
-            context.fillRect(curX - 1, curY + 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY - 1, 2, 1);
           } else if(size === 5) {
-            context.fillRect(curX - 2, curY + 2, 2, 1);
-            context.fillRect(curX - 1, curY + 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY - 1, 2, 1);
-            context.fillRect(curX + 2, curY - 2, 2, 1);
+            secondaryContext.fillRect(curX - 2, curY + 2, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX + 2, curY - 2, 2, 1);
           } else if(size === 8) {
-            context.fillRect(curX - 4, curY + 4, 2, 1);
-            context.fillRect(curX - 3, curY + 3, 2, 1);
-            context.fillRect(curX - 2, curY + 2, 2, 1);
-            context.fillRect(curX - 1, curY + 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY - 1, 2, 1);
-            context.fillRect(curX + 2, curY - 2, 2, 1);
-            context.fillRect(curX + 3, curY - 3, 2, 1);
+            secondaryContext.fillRect(curX - 4, curY + 4, 2, 1);
+            secondaryContext.fillRect(curX - 3, curY + 3, 2, 1);
+            secondaryContext.fillRect(curX - 2, curY + 2, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX + 2, curY - 2, 2, 1);
+            secondaryContext.fillRect(curX + 3, curY - 3, 2, 1);
           } else if(size === 10) {
-            context.fillRect(curX - 5, curY + 5, 2, 1);
-            context.fillRect(curX - 4, curY + 4, 2, 1);
-            context.fillRect(curX - 3, curY + 3, 2, 1);
-            context.fillRect(curX - 2, curY + 2, 2, 1);
-            context.fillRect(curX - 1, curY + 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY - 1, 2, 1);
-            context.fillRect(curX + 2, curY - 2, 2, 1);
-            context.fillRect(curX + 3, curY - 3, 2, 1);
-            context.fillRect(curX + 4, curY - 4, 2, 1);
+            secondaryContext.fillRect(curX - 5, curY + 5, 2, 1);
+            secondaryContext.fillRect(curX - 4, curY + 4, 2, 1);
+            secondaryContext.fillRect(curX - 3, curY + 3, 2, 1);
+            secondaryContext.fillRect(curX - 2, curY + 2, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX + 2, curY - 2, 2, 1);
+            secondaryContext.fillRect(curX + 3, curY - 3, 2, 1);
+            secondaryContext.fillRect(curX + 4, curY - 4, 2, 1);
           }
         },
       },
@@ -216,39 +237,39 @@ function PaintProvider({ children }) {
         sizes: [3, 5, 8, 10],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
           if(size === 3) {
-            context.fillRect(curX - 1, curY - 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY + 1, 2, 1);
           } else if(size === 5) {
-            context.fillRect(curX - 2, curY - 2, 2, 1);
-            context.fillRect(curX - 1, curY - 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY + 1, 2, 1);
-            context.fillRect(curX + 2, curY + 2, 2, 1);
+            secondaryContext.fillRect(curX - 2, curY - 2, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX + 2, curY + 2, 2, 1);
           } else if(size === 8) {
-            context.fillRect(curX - 4, curY - 4, 2, 1);
-            context.fillRect(curX - 3, curY - 3, 2, 1);
-            context.fillRect(curX - 2, curY - 2, 2, 1);
-            context.fillRect(curX - 1, curY - 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY + 1, 2, 1);
-            context.fillRect(curX + 2, curY + 2, 2, 1);
-            context.fillRect(curX + 3, curY + 3, 2, 1);
+            secondaryContext.fillRect(curX - 4, curY - 4, 2, 1);
+            secondaryContext.fillRect(curX - 3, curY - 3, 2, 1);
+            secondaryContext.fillRect(curX - 2, curY - 2, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX + 2, curY + 2, 2, 1);
+            secondaryContext.fillRect(curX + 3, curY + 3, 2, 1);
           } else if(size === 10) {
-            context.fillRect(curX - 5, curY - 5, 2, 1);
-            context.fillRect(curX - 4, curY - 4, 2, 1);
-            context.fillRect(curX - 3, curY - 3, 2, 1);
-            context.fillRect(curX - 2, curY - 2, 2, 1);
-            context.fillRect(curX - 1, curY - 1, 2, 1);
-            context.fillRect(curX, curY, 2, 1);
-            context.fillRect(curX + 1, curY + 1, 2, 1);
-            context.fillRect(curX + 2, curY + 2, 2, 1);
-            context.fillRect(curX + 3, curY + 3, 2, 1);
-            context.fillRect(curX + 4, curY + 4, 2, 1);
+            secondaryContext.fillRect(curX - 5, curY - 5, 2, 1);
+            secondaryContext.fillRect(curX - 4, curY - 4, 2, 1);
+            secondaryContext.fillRect(curX - 3, curY - 3, 2, 1);
+            secondaryContext.fillRect(curX - 2, curY - 2, 2, 1);
+            secondaryContext.fillRect(curX - 1, curY - 1, 2, 1);
+            secondaryContext.fillRect(curX, curY, 2, 1);
+            secondaryContext.fillRect(curX + 1, curY + 1, 2, 1);
+            secondaryContext.fillRect(curX + 2, curY + 2, 2, 1);
+            secondaryContext.fillRect(curX + 3, curY + 3, 2, 1);
+            secondaryContext.fillRect(curX + 4, curY + 4, 2, 1);
           }
         },
       },
@@ -259,13 +280,13 @@ function PaintProvider({ children }) {
         sizes: [4, 8, 16, 24],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
           function drawRandomPoints() {
             for(let i = 0; i < size; i++) {
               const { x: randX, y: randY } = calculatePoint(curX, curY, size);
-              context.fillRect(Math.round(randX), Math.round(randY), 1, 1);
+              secondaryContext.fillRect(Math.round(randX), Math.round(randY), 1, 1);
             }
           }
 
@@ -282,13 +303,13 @@ function PaintProvider({ children }) {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
 
-          context.beginPath();
-          context.arc(curX, curY, size, 0, Math.PI * 2);
-          context.fill();
+          secondaryContext.beginPath();
+          secondaryContext.arc(curX, curY, size, 0, Math.PI * 2);
+          secondaryContext.fill();
         },
       },
     ],
@@ -298,13 +319,13 @@ function PaintProvider({ children }) {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
 
-          context.beginPath();
-          context.arc(curX, curY, size, 0, Math.PI * 2);
-          context.fill();
+          secondaryContext.beginPath();
+          secondaryContext.arc(curX, curY, size, 0, Math.PI * 2);
+          secondaryContext.fill();
         },
       },
     ],
@@ -314,13 +335,13 @@ function PaintProvider({ children }) {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
 
-          context.beginPath();
-          context.arc(curX, curY, size, 0, Math.PI * 2);
-          context.fill();
+          secondaryContext.beginPath();
+          secondaryContext.arc(curX, curY, size, 0, Math.PI * 2);
+          secondaryContext.fill();
         },
       },
     ],
@@ -330,13 +351,13 @@ function PaintProvider({ children }) {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
 
-          context.beginPath();
-          context.arc(curX, curY, size, 0, Math.PI * 2);
-          context.fill();
+          secondaryContext.beginPath();
+          secondaryContext.arc(curX, curY, size, 0, Math.PI * 2);
+          secondaryContext.fill();
         },
       },
     ],
@@ -346,18 +367,25 @@ function PaintProvider({ children }) {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
         isBrush: true,
-        draw({ context, curX, curY }) {
+        draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
 
-          context.beginPath();
-          context.arc(curX, curY, size, 0, Math.PI * 2);
-          context.fill();
+          secondaryContext.beginPath();
+          secondaryContext.arc(curX, curY, size, 0, Math.PI * 2);
+          secondaryContext.fill();
         },
       },
     ],
   ]));
   const [currentTool, setCurrentTool] = useState('pencil');
+  const [latestTools, setLatestTools] = useState({ brushes: 'brushes-brush' });
+  function doSetCurrentTool(tool) {
+    if(currentTool.startsWith('brushes')) {
+      setLatestTools(prev => ({ ...prev, brushes: currentTool }));
+    }
+    setCurrentTool(tool);
+  }
   useEffect(() => {
     function clearAirbrushInterval() {
       clearInterval(airbrushIntervalRef.current);
@@ -452,7 +480,9 @@ function PaintProvider({ children }) {
         toolsData,
         setToolsData,
         currentTool,
-        setCurrentTool
+        setCurrentTool,
+        doSetCurrentTool,
+        latestTools
       }}
     >
       {children}

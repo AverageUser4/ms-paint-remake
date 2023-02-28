@@ -25,7 +25,7 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
         data-color={data ? RGBObjectToString(data) : ''}
         style={{ color: data ? RGBObjectToString(data) : '' }}
         className={`${css['color']} ${data && css['color--has-color']}`}
-        onClick={() => data && setColorData(prev => ({ ...prev, [prev.selected]: RGBObjectToString(data) }))}
+        onClick={() => data && setColorData(prev => ({ ...prev, [prev.selected]: data }))}
       ></button>
     );
   }
@@ -39,7 +39,7 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
             data-cy="Colors"
           >
             <BigButton 
-              backgroundColor={colorData.primary}
+              backgroundColor={RGBObjectToString(colorData.primary)}
               hasArrow={false}
               name={<div>Color <div className="line-break"></div> 1</div>}
               strName="Color-1"
@@ -47,7 +47,7 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
               onPointerDown={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
             />
             <BigButton 
-              backgroundColor={colorData.secondary}
+              backgroundColor={RGBObjectToString(colorData.secondary)}
               hasArrow={false}
               name={<div>Color <div className="line-break"></div> 2</div>} 
               iconSize="small"

@@ -19,15 +19,15 @@ import water32 from './assets/water-32.png';
 function RibbonBrushes() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  const { currentTool, setCurrentTool } = usePaintContext();
+  const { currentTool, doSetCurrentTool, latestTools } = usePaintContext();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   let icon = brush32;
 
-  switch(currentTool) {
+  switch(currentTool.startsWith('brushes') ? currentTool : latestTools.brushes) {
     case 'brushes-calligraphy-1':
-        icon = calligraphy132;
-        break;
+      icon = calligraphy132;
+      break;
 
     case 'brushes-calligraphy-2':
       icon = calligraphy232;
@@ -65,6 +65,7 @@ function RibbonBrushes() {
       showChildren={isDropdownOpen}
       setShowChildren={setIsDropdownOpen}
       onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      onPointerDownTop={() => doSetCurrentTool(latestTools.brushes)}
       isActive={currentTool.startsWith('brushes-')}
     >
       <div 
@@ -76,7 +77,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-brush' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-brush');
+              doSetCurrentTool('brushes-brush');
               setIsDropdownOpen(false);
             }}
           >
@@ -86,7 +87,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-calligraphy-1' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-calligraphy-1');
+              doSetCurrentTool('brushes-calligraphy-1');
               setIsDropdownOpen(false);
             }}
           >
@@ -96,7 +97,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-calligraphy-2' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-calligraphy-2');
+              doSetCurrentTool('brushes-calligraphy-2');
               setIsDropdownOpen(false);
             }}
           >
@@ -106,7 +107,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-airbrush' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-airbrush');
+              doSetCurrentTool('brushes-airbrush');
               setIsDropdownOpen(false);
             }}
           >
@@ -116,7 +117,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-oilbrush' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-oilbrush');
+              doSetCurrentTool('brushes-oilbrush');
               setIsDropdownOpen(false);
             }}
           >
@@ -126,7 +127,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-crayon' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-crayon');
+              doSetCurrentTool('brushes-crayon');
               setIsDropdownOpen(false);
             }}
           >
@@ -136,7 +137,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-marker' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-marker');
+              doSetCurrentTool('brushes-marker');
               setIsDropdownOpen(false);
             }}
           >
@@ -146,7 +147,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-natural-pencil' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-natural-pencil');
+              doSetCurrentTool('brushes-natural-pencil');
               setIsDropdownOpen(false);
             }}
           >
@@ -156,7 +157,7 @@ function RibbonBrushes() {
           <button 
             className={`${css['button']} ${currentTool === 'brushes-watercolor' && css['button--active']}`}
             onClick={() => { 
-              setCurrentTool('brushes-watercolor');
+              doSetCurrentTool('brushes-watercolor');
               setIsDropdownOpen(false);
             }}
           >

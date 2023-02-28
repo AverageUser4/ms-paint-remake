@@ -16,7 +16,7 @@ import magnifier16 from './assets/magnifier-16.png';
 
 function RibbonTools({ ribbonWidth }) {
   const isOnlyContent = ribbonWidth >= 760;
-  const { currentTool, setCurrentTool } = usePaintContext();
+  const { currentTool, doSetCurrentTool } = usePaintContext();
 
   return (
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={tools16} name="Tools">
@@ -29,7 +29,7 @@ function RibbonTools({ ribbonWidth }) {
           <button
             className={`button ${currentTool === 'pencil' && 'button--active'}`}
             onClick={() => {
-              setCurrentTool('pencil');
+              doSetCurrentTool('pencil');
             }}
           >
             <img draggable="false" src={pencil16} alt="Pencil."/>
@@ -38,7 +38,7 @@ function RibbonTools({ ribbonWidth }) {
           <button
             className={`button ${currentTool === 'fill' && 'button--active'}`}
             onClick={() => {
-              setCurrentTool('fill');
+              doSetCurrentTool('fill');
             }}
           >
             <img draggable="false" src={fill16} alt="Fill color."/>
@@ -47,7 +47,7 @@ function RibbonTools({ ribbonWidth }) {
           <button
             className={`button ${currentTool === 'text' && 'button--active'}`}
             onClick={() => {
-              setCurrentTool('text');
+              doSetCurrentTool('text');
             }}
           >
             <img draggable="false" src={text16} alt="Text."/>
@@ -56,7 +56,7 @@ function RibbonTools({ ribbonWidth }) {
           <button
             className={`button ${currentTool === 'eraser' && 'button--active'}`}
             onClick={() => {
-              setCurrentTool('eraser');
+              doSetCurrentTool('eraser');
             }}
           >
             <img draggable="false" src={eraser16} alt="Eraser."/>
@@ -65,7 +65,7 @@ function RibbonTools({ ribbonWidth }) {
           <button
             className={`button ${currentTool === 'color-picker' && 'button--active'}`}
             onClick={() => {
-              setCurrentTool('color-picker');
+              doSetCurrentTool('color-picker');
             }}
           >
             <img draggable="false" src={colorPicker16} alt="Color picker."/>
@@ -74,7 +74,7 @@ function RibbonTools({ ribbonWidth }) {
           <button
             className={`button ${currentTool === 'magnifier' && 'button--active'}`}
             onClick={() => {
-              setCurrentTool('magnifier');
+              doSetCurrentTool('magnifier');
             }}
           >
             <img draggable="false" src={magnifier16} alt="Magnifier."/>
