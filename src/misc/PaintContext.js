@@ -107,10 +107,11 @@ function PaintProvider({ children }) {
           }
           
           const clickedColor = getDataFromCoords(offsetX, offsetY);
+          let recursionTimes = 0;
 
           function checkAndChange(offsetX, offsetY) {
             const currentColor = getDataFromCoords(offsetX, offsetY);
-            if(!isSameColor(clickedColor, currentColor)) {
+            if(!isSameColor(clickedColor, currentColor) || ++recursionTimes > 10000) {
               return;
             }
 
