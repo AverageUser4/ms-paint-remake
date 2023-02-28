@@ -37,6 +37,13 @@
 .button--small {
   padding-top: calc(4px + (var(--ribbon-icon-size) - var(--ribbon-icon-small-size)) / 2);
 }
+.button--disabled {
+  opacity: 0.5;
+}
+.button--disabled:hover {
+  background-color: transparent;
+  border-color: transparent;
+}
 
 .icon {
   display: block;

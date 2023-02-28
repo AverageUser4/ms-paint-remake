@@ -50,7 +50,6 @@ function PaintProvider({ children }) {
       {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
@@ -69,9 +68,7 @@ function PaintProvider({ children }) {
     [
       'fill',
       {
-        sizes: [1, 2, 3, 4],
-        chosenSizeIndex: 0,
-        isBrush: false,
+        sizes: null,
         onPointerDown({ event, primaryContext, canvasSize, currentZoom, colorData }) {
           const { width, height } = canvasSize;
           let { offsetX, offsetY } = event.nativeEvent;
@@ -131,9 +128,7 @@ function PaintProvider({ children }) {
     [
       'text',
       {
-        sizes: [1, 2, 3, 4],
-        chosenSizeIndex: 0,
-        isBrush: true,
+        sizes: null,
         draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
           
@@ -154,7 +149,6 @@ function PaintProvider({ children }) {
       {
         sizes: [4, 6, 8, 10],
         chosenSizeIndex: 2,
-        isBrush: true,
         draw({ primaryContext, secondaryContext, curX, curY, currentlyPressed, color }) {
           const size = this.sizes[this.chosenSizeIndex];
           const startX = curX - size / 2;
@@ -187,9 +181,7 @@ function PaintProvider({ children }) {
     [
       'color-picker',
       {
-        sizes: [1, 2, 3, 4],
-        chosenSizeIndex: 0,
-        isBrush: false,
+        sizes: null,
         onPointerDown({ event, primaryContext, currentZoom }) {
           const { offsetX, offsetY } = event.nativeEvent;
           const data = primaryContext.getImageData(Math.round(offsetX / currentZoom), Math.round(offsetY / currentZoom), 1, 1);
@@ -205,9 +197,7 @@ function PaintProvider({ children }) {
     [
       'magnifier',
       {
-        sizes: [1, 2, 3, 4],
-        chosenSizeIndex: 0,
-        isBrush: false,
+        sizes: null,
         onPointerDown({ event, currentZoom }) {
           const currentZoomIndex = zoomData.findIndex(data => data.multiplier === currentZoom);
           if(event.button === 2 && currentZoomIndex > 0) {
@@ -225,7 +215,6 @@ function PaintProvider({ children }) {
       {
         sizes: [1, 3, 5, 8],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
@@ -240,7 +229,6 @@ function PaintProvider({ children }) {
       {
         sizes: [3, 5, 8, 10],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
@@ -283,7 +271,6 @@ function PaintProvider({ children }) {
       {
         sizes: [3, 5, 8, 10],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
@@ -326,7 +313,6 @@ function PaintProvider({ children }) {
       {
         sizes: [4, 8, 16, 24],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           const size = this.sizes[this.chosenSizeIndex];
 
@@ -349,7 +335,6 @@ function PaintProvider({ children }) {
       {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
@@ -365,7 +350,6 @@ function PaintProvider({ children }) {
       {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
@@ -381,7 +365,6 @@ function PaintProvider({ children }) {
       {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
@@ -397,7 +380,6 @@ function PaintProvider({ children }) {
       {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
@@ -413,7 +395,6 @@ function PaintProvider({ children }) {
       {
         sizes: [8, 16, 30, 40],
         chosenSizeIndex: 1,
-        isBrush: true,
         draw({ secondaryContext, curX, curY }) {
           /* TODO: add unique implementation */
           const size = this.sizes[this.chosenSizeIndex];
@@ -424,8 +405,22 @@ function PaintProvider({ children }) {
         },
       },
     ],
+
+    /* selection */
+    [
+      'selection-rectangle',
+      {
+        sizes: null,
+        onPointerDown({ event }) {
+          console.log('hi')
+        },
+        onPointerMove({ event }) {
+          console.log('hello')
+        }
+      },
+    ],
   ]));
-  const [currentTool, setCurrentTool] = useState('pencil');
+  const [currentTool, setCurrentTool] = useState('selection-rectangle');
   const [latestTools, setLatestTools] = useState({ brushes: 'brushes-brush' });
   function doSetCurrentTool(tool) {
     if(currentTool.startsWith('brushes')) {

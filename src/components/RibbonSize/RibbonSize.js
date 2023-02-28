@@ -24,32 +24,36 @@ function RibbonSize() {
       showChildren={isDropdownOpen}
       setShowChildren={setIsDropdownOpen}
       onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      isDisabled={!sizes}
     >
-      <div 
-        className={css['container']}
-        ref={dropdownRef}
-        data-cy="Size-Dropdown"
-      >
-        {
-          sizes.map((size, index) => 
-            <button 
-              key={size}
-              className={`${css['button']} ${index === toolsData.get(currentTool).chosenSizeIndex ? css['button--active'] : ''}`}
-              onClick={() => {
-                setToolsData(prev => {
-                  const newToolsData = new Map(prev);
-                  const newTool = { ...newToolsData.get(currentTool) };
-                  newTool.chosenSizeIndex = index;
-                  newToolsData.set(currentTool, newTool);
-                  return newToolsData;
-                });
-                setIsDropdownOpen(false);
-              }}
-            >
-              <div className={css['size']} style={{ height: size < 20 ? size : Math.round(size / 1.4) }}></div>
-            </button>)
-        }
-      </div>
+      {
+        sizes &&
+          <div 
+            className={css['container']}
+            ref={dropdownRef}
+            data-cy="Size-Dropdown"
+          >
+            {
+              sizes.map((size, index) => 
+                <button 
+                  key={size}
+                  className={`${css['button']} ${index === toolsData.get(currentTool).chosenSizeIndex ? css['button--active'] : ''}`}
+                  onClick={() => {
+                    setToolsData(prev => {
+                      const newToolsData = new Map(prev);
+                      const newTool = { ...newToolsData.get(currentTool) };
+                      newTool.chosenSizeIndex = index;
+                      newToolsData.set(currentTool, newTool);
+                      return newToolsData;
+                    });
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  <div className={css['size']} style={{ height: size < 20 ? size : Math.round(size / 1.4) }}></div>
+                </button>)
+            }
+          </div>
+      }
     </BigButton>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
@@ -54,21 +54,28 @@ function Canvas() {
     case 'eraser':
       cursorClass = css['canvas--none'];
       break;
+
+    case 'selection-rectangle':
+      cursorClass = css['canvas--select'];
+      break;
   }
 
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
   const secondaryRef = useRef();
   const secondaryCtxRef = useRef();
+  const tertirayRef = useRef();
+  const tertirayCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
-    onPointerMoveCallback: currentToolData.isBrush ? onPointerMoveCallbackMove : () => 0,
-    onPointerDownCallback: currentToolData.isBrush ? onPointerMoveCallbackMove : 
-      (e) => currentToolData.onPointerDown({
-        event: e,
+    onPointerMoveCallback: !currentToolData.onPointerMove ? onPointerMoveCallbackMove :
+      (event) => currentToolData.onPointerMove({ event }),
+    onPointerDownCallback: !currentToolData.onPointerDown ? onPointerMoveCallbackMove : 
+      (event) => currentToolData.onPointerDown({
+        event,
         currentZoom: canvasData.zoom,
         primaryContext: primaryCtxRef.current,
         canvasSize: canvasData.size,
@@ -108,8 +115,7 @@ function Canvas() {
     secondaryCtxRef.current.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
     secondaryCtxRef.current.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
 
-    const theTool = toolsData.get(currentTool);
-    theTool.draw({
+    currentToolData.draw({
       primaryContext: primaryCtxRef.current,
       secondaryContext: secondaryCtxRef.current,
       curX: Math.round(curX),
@@ -124,7 +130,7 @@ function Canvas() {
     while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
       curX += step * propX;
       curY += step * propY;
-      theTool.draw({
+      currentToolData.draw({
         primaryContext: primaryCtxRef.current,  
         secondaryContext: secondaryCtxRef.current,
         curX: Math.round(curX),
@@ -240,6 +246,17 @@ function Canvas() {
         onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
         onPointerDown={onPointerDown}
         ref={secondaryRef}
+      ></canvas>
+
+      <canvas
+        style={{ 
+          ...canvasStyle,
+          top: 50,
+          left: 50,
+          width: 50,
+          height: 50
+        }}
+        className={`${css['canvas']} ${css['canvas--tertiary']}`}
       ></canvas>
 
       {resizeElements}
