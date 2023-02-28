@@ -2,6 +2,20 @@ import React, { createContext, useContext, useEffect, useRef, useState } from 'r
 import PropTypes from 'prop-types';
 import { HSLtoRGB, objectEquals, RGBObjectToString } from "../misc/utils";
 
+const zoomData = [
+  { multiplier: 0.125, offset: 7 },
+  { multiplier: 0.25, offset: 12 },
+  { multiplier: 0.50, offset: 23 },
+  { multiplier: 1, offset: 45 },
+  { multiplier: 2, offset: 51 },
+  { multiplier: 3, offset: 57 },
+  { multiplier: 4, offset: 63 },
+  { multiplier: 5, offset: 68 },
+  { multiplier: 6, offset: 73 },
+  { multiplier: 7, offset: 78 },
+  { multiplier: 8, offset: 83 },
+];
+
 const initialCustomColors = [];
 for(let i = 0; i < 16; i ++) {
   initialCustomColors.push({ r: 255, g: 255, b: 255 });
@@ -57,20 +71,60 @@ function PaintProvider({ children }) {
       {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
-        isBrush: true,
-        draw({ secondaryContext, curX, curY }) {
-          const size = this.sizes[this.chosenSizeIndex];
-          
-          if(size <= 2) {
-            secondaryContext.fillRect(curX, curY, size, size);
-          } else if(size === 3) {
-            secondaryContext.fillRect(curX - 1, curY, 3, 1);
-            secondaryContext.fillRect(curX, curY - 1, 1, 3);
-          } else if(size === 4) {
-            secondaryContext.fillRect(curX - 1, curY, 4, 2);
-            secondaryContext.fillRect(curX, curY - 1, 2, 4);
+        isBrush: false,
+        onPointerDown({ event, primaryContext, canvasSize, currentZoom, colorData }) {
+          const { width, height } = canvasSize;
+          let { offsetX, offsetY } = event.nativeEvent;
+          offsetX = Math.round(offsetX / currentZoom);
+          offsetY = Math.round(offsetY / currentZoom);
+          const imageData = primaryContext.getImageData(0, 0, width, height);
+          const color = event.button === 0 ? colorData.primary : colorData.secondary;
+
+          function getIndexFromCoords(x, y) {
+            return y * width * 4 + x * 4;
           }
-        },
+
+          function getDataFromCoords(x, y) {
+            const index = getIndexFromCoords(x, y);
+            return {
+              r: imageData.data[index],
+              g: imageData.data[index + 1],
+              b: imageData.data[index + 2],
+              a: imageData.data[index + 3],
+            };
+          }
+
+          function setPixelAtCoords(x, y) {
+            const index = getIndexFromCoords(x, y);
+            imageData.data[index] = color.r;
+            imageData.data[index + 1] = color.g;
+            imageData.data[index + 2] = color.b;
+            imageData.data[index + 3] = 255;
+          }
+
+          function isSameColor(a, b) {
+            return a.r === b.r && a.g === b.g && a.b === b.b;
+          }
+          
+          const clickedColor = getDataFromCoords(offsetX, offsetY);
+
+          function checkAndChange(offsetX, offsetY) {
+            const currentColor = getDataFromCoords(offsetX, offsetY);
+            if(!isSameColor(clickedColor, currentColor)) {
+              return;
+            }
+
+            setPixelAtCoords(offsetX, offsetY);
+            checkAndChange(offsetX - 1, offsetY);
+            checkAndChange(offsetX + 1, offsetY);
+            checkAndChange(offsetX, offsetY - 1);
+            checkAndChange(offsetX, offsetY + 1);
+          }
+
+          checkAndChange(offsetX, offsetY);
+
+          primaryContext.putImageData(imageData, 0, 0);
+        }
       },
     ],
     [
@@ -134,20 +188,17 @@ function PaintProvider({ children }) {
       {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
-        isBrush: true,
-        draw({ secondaryContext, curX, curY }) {
-          const size = this.sizes[this.chosenSizeIndex];
-          
-          if(size <= 2) {
-            secondaryContext.fillRect(curX, curY, size, size);
-          } else if(size === 3) {
-            secondaryContext.fillRect(curX - 1, curY, 3, 1);
-            secondaryContext.fillRect(curX, curY - 1, 1, 3);
-          } else if(size === 4) {
-            secondaryContext.fillRect(curX - 1, curY, 4, 2);
-            secondaryContext.fillRect(curX, curY - 1, 2, 4);
+        isBrush: false,
+        onPointerDown({ event, primaryContext, currentZoom }) {
+          const { offsetX, offsetY } = event.nativeEvent;
+          const data = primaryContext.getImageData(Math.round(offsetX / currentZoom), Math.round(offsetY / currentZoom), 1, 1);
+          const RGB = { r: data.data[0], g: data.data[1], b: data.data[2] };
+          if(event.button === 0) {
+            setColorData(prev => ({ ...prev, primary: RGB }));
+          } else if(event.button === 2) {
+            setColorData(prev => ({ ...prev, secondary: RGB }));
           }
-        },
+        }
       },
     ],
     [
@@ -155,20 +206,15 @@ function PaintProvider({ children }) {
       {
         sizes: [1, 2, 3, 4],
         chosenSizeIndex: 0,
-        isBrush: true,
-        draw({ secondaryContext, curX, curY }) {
-          const size = this.sizes[this.chosenSizeIndex];
-          
-          if(size <= 2) {
-            secondaryContext.fillRect(curX, curY, size, size);
-          } else if(size === 3) {
-            secondaryContext.fillRect(curX - 1, curY, 3, 1);
-            secondaryContext.fillRect(curX, curY - 1, 1, 3);
-          } else if(size === 4) {
-            secondaryContext.fillRect(curX - 1, curY, 4, 2);
-            secondaryContext.fillRect(curX, curY - 1, 2, 4);
+        isBrush: false,
+        onPointerDown({ event, currentZoom }) {
+          const currentZoomIndex = zoomData.findIndex(data => data.multiplier === currentZoom);
+          if(event.button === 2 && currentZoomIndex > 0) {
+            setCanvasData(prev => ({ ...prev, zoom: zoomData[currentZoomIndex - 1].multiplier }));
+          } else if(event.button === 0 && currentZoomIndex < zoomData.length - 1) {
+            setCanvasData(prev => ({ ...prev, zoom: zoomData[currentZoomIndex + 1].multiplier }));
           }
-        },
+        }
       },
     ],
 
@@ -501,4 +547,5 @@ function usePaintContext() {
 export {
   PaintProvider,
   usePaintContext,
+  zoomData
 };

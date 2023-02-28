@@ -8,7 +8,7 @@
   image-rendering: crisp-edges;
 }
 .canvas--primary {
-  background-color: white;
+  background-color: rgb(255, 0, 255);
   box-shadow: 5px 5px 2px rgba(100, 100, 100, 0.2);
 }
 .canvas--draw {

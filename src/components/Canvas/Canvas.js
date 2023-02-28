@@ -47,7 +47,7 @@ function Canvas() {
       cursorClass = css['canvas--text'];
       break;
 
-    case 'zoom':
+    case 'magnifier':
       cursorClass = css['canvas--zoom'];
       break;
 
@@ -64,9 +64,16 @@ function Canvas() {
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
-  const { onPointerDown, currentylPressedRef } = usePointerTrack({ 
-    onPointerMoveCallback: onPointerMoveCallbackMove,
-    onPointerDownCallback: onPointerMoveCallbackMove,
+  const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
+    onPointerMoveCallback: currentToolData.isBrush ? onPointerMoveCallbackMove : () => 0,
+    onPointerDownCallback: currentToolData.isBrush ? onPointerMoveCallbackMove : 
+      (e) => currentToolData.onPointerDown({
+        event: e,
+        currentZoom: canvasData.zoom,
+        primaryContext: primaryCtxRef.current,
+        canvasSize: canvasData.size,
+        colorData
+      }),
     onPointerUpCallback: onPointerUpCallbackMove,
     onCancelCallback: onCancelCallbackMove,
     cancelOnRightMouseDown: true,
@@ -98,8 +105,8 @@ function Canvas() {
       propY = propY * Math.abs(diffY / diffX);
     }
 
-    secondaryCtxRef.current.fillStyle = currentylPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-    secondaryCtxRef.current.strokeStyle = currentylPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    secondaryCtxRef.current.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    secondaryCtxRef.current.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
 
     const theTool = toolsData.get(currentTool);
     theTool.draw({
@@ -110,7 +117,7 @@ function Canvas() {
       desX: Math.round(desX),
       desY: Math.round(desY),
       isRepeated: false,
-      currentlyPressed: currentylPressedRef.current,
+      currentlyPressed: currentlyPressedRef.current,
       color: { ...colorData }
     });
 
@@ -125,7 +132,7 @@ function Canvas() {
         desX: Math.round(desX),
         desY: Math.round(desY),
         isRepeated: true,
-        currentlyPressed: currentylPressedRef.current,
+        currentlyPressed: currentlyPressedRef.current,
         color: { ...colorData }
       });
     }
@@ -172,16 +179,23 @@ function Canvas() {
   }
 
   useEffect(() => {
+    if(primaryCtxRef.current) {
+      return;
+    }
+
     primaryCtxRef.current = primaryRef.current.getContext('2d');
     secondaryCtxRef.current = secondaryRef.current.getContext('2d');
-  }, []);
+    primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
+    primaryCtxRef.current.fillRect(0, 0, 9999, 9999);
+  }, [colorData.secondary]);
 
   useEffect(() => {
     if(history.currentIndex === lastHistoryIndexRef.current) {
       return;
     }
 
-    primaryCtxRef.current.clearRect(0, 0, 9999, 9999);
+    primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
+    primaryCtxRef.current.fillRect(0, 0, 99999, 99999);
     primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
     setCanvasData(prev => ({ ...prev, size: { 
@@ -190,23 +204,24 @@ function Canvas() {
     }}));
 
     lastHistoryIndexRef.current = history.currentIndex;
-  }, [history, setCanvasData]);
+  }, [history, setCanvasData, colorData.secondary]);
 
   useEffect(() => {
     if(lastPrimaryStateRef.current) {
-      primaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
+      primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
+      primaryCtxRef.current.fillRect(0, 0, canvasData.size.width, canvasData.size.height);
       primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
     }
-  }, [canvasData.size]);
+  }, [canvasData.size, colorData.secondary]);
 
   return (
     <div className="point-container">
       <div style={canvasStyle}></div>
 
       <canvas
-        style={canvasStyle}
+        style={{ ...canvasStyle, backgroundColor: RGBObjectToString(colorData.secondary) }}
         className={`${css['canvas']} ${css['canvas--primary']}`}
         width={canvasData.size.width}
         height={canvasData.size.height}

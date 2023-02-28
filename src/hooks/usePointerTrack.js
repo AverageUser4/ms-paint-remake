@@ -9,22 +9,22 @@ function usePointerTrack({
   isTrackAlsoRight = false
 }) {
   const [isPressed, setIsPressed] = useState(false);
-  const currentylPressedRef = useRef(-1);
+  const currentlyPressedRef = useRef(-1);
 
   useEffect(() => {
     function onPointerUp(event) {
       setIsPressed(false);
-      currentylPressedRef.current = -1;
+      currentlyPressedRef.current = -1;
       onPointerUpCallback && onPointerUpCallback(event);
     }
 
     function onMouseDown(event) {
       if(
-          currentylPressedRef.current === 0 && event.button === 2 ||
-          currentylPressedRef.current === 2 && event.button === 0 
+          currentlyPressedRef.current === 0 && event.button === 2 ||
+          currentlyPressedRef.current === 2 && event.button === 0 
         ) {
         setIsPressed(false);
-        currentylPressedRef.current = -1;
+        currentlyPressedRef.current = -1;
         onCancelCallback && onCancelCallback(event);
       }
     }
@@ -47,19 +47,19 @@ function usePointerTrack({
   function onPointerDown(event) {
     if(event.button === 0 || (isTrackAlsoRight && event.button === 2)) {
       setIsPressed(true);
-      currentylPressedRef.current = event.button;
+      currentlyPressedRef.current = event.button;
       onPointerDownCallback && onPointerDownCallback(event);
     }
   }
 
   function doCancel(isInvokeOnPointerUpCallback = false) {
     setIsPressed(false);
-    currentylPressedRef.current = -1;
+    currentlyPressedRef.current = -1;
     isInvokeOnPointerUpCallback && onPointerUpCallback();
     onCancelCallback && onCancelCallback();
   }
 
-  return { onPointerDown, doCancel, isPressed, currentylPressedRef };
+  return { onPointerDown, doCancel, isPressed, currentlyPressedRef };
 }
 
 export default usePointerTrack;
