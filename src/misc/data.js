@@ -8,3 +8,8 @@ export const innerWindowConfig = {
   isMaximized: false,
   setIsFocused: ()=>0,
 };
+
+export const initialCanvasSize = {
+  width: 300,
+  height: 200
+};

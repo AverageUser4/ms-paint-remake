@@ -6,14 +6,14 @@ import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
-import { usePaintContext } from "../../misc/PaintContext";
+import { useColorContext } from "../../misc/ColorContext";
 import { RGBObjectToString } from "../../misc/utils";
 
 import colors16 from './assets/colors-16.png';
 import colors32 from './assets/colors-32.png';
 
 function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
-  const { colorData, setColorData, ribbonColorsArray } = usePaintContext();
+  const { colorData, setColorData, ribbonColorsArray } = useColorContext();
   const isOnlyContent = ribbonWidth >= 725;
   
   const colorButtons = [];

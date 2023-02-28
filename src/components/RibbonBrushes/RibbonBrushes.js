@@ -4,7 +4,7 @@ import css from './RibbonBrushes.module.css';
 import BigButtonDuo from "../BigButtonDuo/BigButtonDuo";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
-import { usePaintContext } from "../../misc/PaintContext";
+import { useToolContext } from "../../misc/ToolContext";
 
 import air32 from './assets/air-32.png';
 import brush32 from './assets/brush-32.png';
@@ -19,7 +19,7 @@ import water32 from './assets/water-32.png';
 function RibbonBrushes() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  const { currentTool, doSetCurrentTool, latestTools } = usePaintContext();
+  const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   let icon = brush32;

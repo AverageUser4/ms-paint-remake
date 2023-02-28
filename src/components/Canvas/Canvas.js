@@ -1,9 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
 import usePointerTrack from '../../hooks/usePointerTrack';
-import { usePaintContext } from "../../misc/PaintContext";
+import { useCanvasContext } from "../../misc/CanvasContext";
+import { useHistoryContext } from "../../misc/HistoryContext";
+import { useToolContext } from "../../misc/ToolContext";
+import { useColorContext } from "../../misc/ColorContext";
 import { RGBObjectToString } from "../../misc/utils";
 
 function doGetCanvasCopy(canvasRef) {
@@ -15,57 +18,22 @@ function doGetCanvasCopy(canvasRef) {
 }
 
 function Canvas() {
-  const { canvasData, setCanvasData, doHistoryAdd, history, colorData, toolsData, currentTool } = usePaintContext();
+  const { canvasSize, canvasOutlineSize, canvasZoom, setCanvasOutlineSize, setCanvasSize, canvasMousePosition, setCanvasMousePosition } = useCanvasContext();
+  const { toolsData, currentTool } = useToolContext();
+  const { colorData } = useColorContext()
+  const { history, doHistoryAdd } = useHistoryContext();
   const currentToolData = toolsData.get(currentTool);
   const canvasStyle = { 
-    width: canvasData.size.width * canvasData.zoom,
-    height: canvasData.size.height * canvasData.zoom,
+    width: canvasSize.width * canvasZoom,
+    height: canvasSize.height * canvasZoom,
   };
-  let cursorClass;
-
-  if(currentTool.startsWith('brushes')) {
-    cursorClass = css['canvas--draw'];
-  }
-  switch(currentTool) {
-    case 'pencil':
-      cursorClass = css['canvas--pencil'];
-      break;
-
-    case 'fill':
-      cursorClass = css['canvas--fill'];
-      break;
-
-    case 'color-picker':
-      cursorClass = css['canvas--color-picker'];
-      break;
-
-    case 'brushes-airbrush':
-      cursorClass = css['canvas--airbrush'];
-      break;
-
-    case 'text':
-      cursorClass = css['canvas--text'];
-      break;
-
-    case 'magnifier':
-      cursorClass = css['canvas--zoom'];
-      break;
-
-    case 'eraser':
-      cursorClass = css['canvas--none'];
-      break;
-
-    case 'selection-rectangle':
-      cursorClass = css['canvas--select'];
-      break;
-  }
 
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
   const secondaryRef = useRef();
   const secondaryCtxRef = useRef();
-  const tertirayRef = useRef();
-  const tertirayCtxRef = useRef();
+  const tertiaryRef = useRef();
+  const tertiaryCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
@@ -76,9 +44,9 @@ function Canvas() {
     onPointerDownCallback: !currentToolData.onPointerDown ? onPointerMoveCallbackMove : 
       (event) => currentToolData.onPointerDown({
         event,
-        currentZoom: canvasData.zoom,
+        currentZoom: canvasZoom,
         primaryContext: primaryCtxRef.current,
-        canvasSize: canvasData.size,
+        canvasSize: canvasSize,
         colorData
       }),
     onPointerUpCallback: onPointerUpCallbackMove,
@@ -91,8 +59,8 @@ function Canvas() {
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     let { x: curX, y: curY } = lastPointerPositionRef.current;
     
-    const desX = (event.pageX - secondaryRect.x) / canvasData.zoom;
-    const desY = (event.pageY - secondaryRect.y) / canvasData.zoom;
+    const desX = (event.pageX - secondaryRect.x) / canvasZoom;
+    const desY = (event.pageY - secondaryRect.y) / canvasZoom;
     lastPointerPositionRef.current = { x: desX, y: desY };
 
     if(typeof curX === 'undefined') {
@@ -147,26 +115,26 @@ function Canvas() {
     lastPointerPositionRef.current = {};
 
     primaryCtxRef.current.drawImage(secondaryRef.current, 0, 0);
-    secondaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
+    secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
     doHistoryAdd({ 
       element: doGetCanvasCopy(primaryRef),
-      width: canvasData.size.width,
-      height: canvasData.size.height
+      width: canvasSize.width,
+      height: canvasSize.height
     });
   }
   function onCancelCallbackMove() {
     lastPointerPositionRef.current = {};
-    secondaryCtxRef.current.clearRect(0, 0, canvasData.size.width, canvasData.size.height);
+    secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
 
   const { resizeElements } = useResize({ 
     position: { x: 0, y: 0 },
     setPosition: ()=>0,
     isAllowToLeaveViewport: true,
-    size: canvasData.outlineSize || canvasData.size,
-    setSize: (newSize) => setCanvasData(prev => ({ ...prev, outlineSize: newSize })),
+    size: canvasOutlineSize || canvasSize,
+    setSize: (newSize) => setCanvasOutlineSize(newSize),
     isConstrained: false,
     minimalSize: { width: 1, height: 1, },
     isResizable: true,
@@ -176,11 +144,12 @@ function Canvas() {
     onPointerUpCallback: onPointerUpCallbackResize
   });
   function onPointerUpCallbackResize() {
-    setCanvasData(prev => ({ ...prev, outlineSize: null, size: prev.outlineSize }));
+    setCanvasSize(canvasOutlineSize);
+    setCanvasOutlineSize(null);
     doHistoryAdd({ 
       element: doGetCanvasCopy(primaryRef),
-      width: canvasData.outlineSize.width,
-      height: canvasData.outlineSize.height
+      width: canvasOutlineSize.width,
+      height: canvasOutlineSize.height
     });
   }
 
@@ -204,23 +173,23 @@ function Canvas() {
     primaryCtxRef.current.fillRect(0, 0, 99999, 99999);
     primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
-    setCanvasData(prev => ({ ...prev, size: { 
+    setCanvasSize({
       width: history.dataArray[history.currentIndex].width,
       height: history.dataArray[history.currentIndex].height,
-    }}));
+    })
 
     lastHistoryIndexRef.current = history.currentIndex;
-  }, [history, setCanvasData, colorData.secondary]);
+  }, [history, setCanvasSize, colorData.secondary]);
 
   useEffect(() => {
     if(lastPrimaryStateRef.current) {
       primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-      primaryCtxRef.current.fillRect(0, 0, canvasData.size.width, canvasData.size.height);
+      primaryCtxRef.current.fillRect(0, 0, canvasSize.width, canvasSize.height);
       primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
     }
-  }, [canvasData.size, colorData.secondary]);
+  }, [canvasSize, colorData.secondary]);
 
   return (
     <div className="point-container">
@@ -229,26 +198,26 @@ function Canvas() {
       <canvas
         style={{ ...canvasStyle, backgroundColor: RGBObjectToString(colorData.secondary) }}
         className={`${css['canvas']} ${css['canvas--primary']}`}
-        width={canvasData.size.width}
-        height={canvasData.size.height}
+        width={canvasSize.width}
+        height={canvasSize.height}
         ref={primaryRef}
       ></canvas>
 
       <canvas
         style={canvasStyle}
-        className={`${css['canvas']} ${cursorClass}`}
-        width={canvasData.size.width}
-        height={canvasData.size.height}
+        className={`${css['canvas']} ${css[`canvas--cursor-${currentToolData.cursor}`]}`}
+        width={canvasSize.width}
+        height={canvasSize.height}
         onPointerMove={(event) => {
           const { offsetX, offsetY } = event.nativeEvent;
-          setCanvasData(prev => ({ ...prev, mousePosition: { x: offsetX, y: offsetY } }));
+          setCanvasMousePosition({ x: offsetX, y: offsetY });
         }}
-        onPointerLeave={() => setCanvasData(prev => ({ ...prev, mousePosition: null }))}
+        onPointerLeave={() => setCanvasMousePosition(null)}
         onPointerDown={onPointerDown}
         ref={secondaryRef}
       ></canvas>
 
-      <canvas
+      {/* <canvas
         style={{ 
           ...canvasStyle,
           top: 50,
@@ -257,20 +226,20 @@ function Canvas() {
           height: 50
         }}
         className={`${css['canvas']} ${css['canvas--tertiary']}`}
-      ></canvas>
+      ></canvas> */}
 
       {resizeElements}
 
       {
-        currentTool === 'eraser' && canvasData.mousePosition &&
+        currentTool === 'eraser' && canvasMousePosition &&
           <div
             className={css['eraser']}
             style={{ 
-              left: Math.round(canvasData.mousePosition.x - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasData.zoom),
-              top: Math.round(canvasData.mousePosition.y - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasData.zoom),
+              left: Math.round(canvasMousePosition.x - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
+              top: Math.round(canvasMousePosition.y - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
               backgroundColor: RGBObjectToString(colorData.secondary),
-              width: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasData.zoom),
-              height: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasData.zoom),
+              width: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
+              height: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
             }}
           ></div>
       }

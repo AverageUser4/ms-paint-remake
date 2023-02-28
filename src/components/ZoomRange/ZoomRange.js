@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import css from './ZoomRange.module.css';
 
-import { usePaintContext, zoomData } from '../../misc/PaintContext';
+import { useCanvasContext, zoomData } from '../../misc/CanvasContext';
 
 function getOffsetForMultiplier(multiplier) {
   return zoomData.find(data => data.multiplier === multiplier).offset;
@@ -20,7 +20,7 @@ function findClosestMultiplier(offset) {
 }
 
 function ZoomRange() {
-  const { canvasData, setCanvasData } = usePaintContext();
+  const { canvasZoom, setCanvasZoom } = useCanvasContext();
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
   
@@ -37,8 +37,9 @@ function ZoomRange() {
       const difference = event.clientX - rangeRef.current.getBoundingClientRect().x;
       const multiplier = findClosestMultiplier(difference);
 
-      if(canvasData.zoom !== multiplier)
-        setCanvasData(prev => ({ ...prev, zoom: multiplier }));
+      if(canvasZoom !== multiplier) {
+        setCanvasZoom(multiplier);
+      }
     }
 
     window.addEventListener('pointerup', onPointerUp);
@@ -48,21 +49,22 @@ function ZoomRange() {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     };
-  }, [isControlFocused, canvasData, setCanvasData]);
+  }, [isControlFocused, canvasZoom, setCanvasZoom]);
   
   function changeZoom(decrease) {
-    const currentIndex = zoomData.findIndex(data => data.multiplier === canvasData.zoom); 
+    const currentIndex = zoomData.findIndex(data => data.multiplier === canvasZoom); 
     const newIndex = currentIndex + (decrease ? -1 : 1);
 
-    if(newIndex < 0 || newIndex >= zoomData.length)
+    if(newIndex < 0 || newIndex >= zoomData.length) {
       return;
+    }
 
-    setCanvasData(prev => ({ ...prev, zoom: zoomData[newIndex].multiplier }));
+    setCanvasZoom(zoomData[newIndex].multiplier);
   }
 
   return (
     <>
-      <span style={{ width: 35 }} className="text">{canvasData.zoom * 100}%</span>
+      <span style={{ width: 35 }} className="text">{canvasZoom * 100}%</span>
 
       <button className={css['minus']} onClick={() => changeZoom(true)}></button>
 
@@ -72,7 +74,7 @@ function ZoomRange() {
         ref={rangeRef}
       >
         <div 
-          style={{ left: getOffsetForMultiplier(canvasData.zoom) }} 
+          style={{ left: getOffsetForMultiplier(canvasZoom) }} 
           className={css['range-control']}
           onPointerDown={(e) => e.button === 0 && setIsControlFocused(true)}
         ></div>

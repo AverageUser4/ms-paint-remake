@@ -5,9 +5,9 @@ import css from './ColorsWindow.module.css';
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
-import { getWindowCenteredPosition, hexToRGB, RGBtoHSL, RGBObjectToString } from '../../misc/utils';
+import { getWindowCenteredPosition, RGBtoHSL, RGBObjectToString } from '../../misc/utils';
 import { useMainWindowContext } from '../../misc/MainWindowContext';
-import { usePaintContext } from '../../misc/PaintContext';
+import { useColorContext } from '../../misc/ColorContext';
 import { innerWindowConfig } from '../../misc/data';
 
 import duoArrow from './assets/duo-arrow.png';
@@ -19,7 +19,7 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
-  const { customColors, setColorPickerData, colorPickerData, doCustomColorsAdd, doRibbonColorsArrayAdd } = usePaintContext();
+  const { customColors, setColorPickerData, colorPickerData, doCustomColorsAdd, doRibbonColorsArrayAdd } = useColorContext();
   const basicColors = [
     { r: 255, g: 128, b: 128 }, { r: 255, g: 255, b: 128 }, { r: 128, g: 255, b: 128 }, { r: 0, g: 255, b: 128 }, { r: 128, g: 255, b: 255 }, { r: 0, g: 128, b: 255 }, { r: 255, g: 128, b: 192 }, { r: 255, g: 128, b: 255 },
     { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }, { r: 128, g: 255, b: 0 }, { r: 0, g: 255, b: 64 }, { r: 0, g: 255, b: 255 }, { r: 0, g: 128, b: 192 }, { r: 128, g: 128, b: 192 }, { r: 255, g: 0, b: 255 },

@@ -5,7 +5,7 @@ import css from  './QuickAccessToolbar.module.css';
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { usePaintContext } from '../../misc/PaintContext';
+import { useHistoryContext } from '../../misc/HistoryContext';
 
 import email from './assets/email.png';
 import newFile from './assets/new.png';
@@ -20,7 +20,7 @@ import undoEn from './assets/undo-en.png';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
-  const { history, setHistory } = usePaintContext();
+  const { history, setHistory } = useHistoryContext();
   const isHistoryOnFirst = history.currentIndex === 0;
   const isHistoryOnLast = history.currentIndex === history.dataArray.length - 1;
   

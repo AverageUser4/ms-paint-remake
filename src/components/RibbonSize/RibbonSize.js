@@ -4,12 +4,12 @@ import css from './RibbonSize.module.css';
 import BigButton from "../BigButton/BigButton";
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { toggleBoolState } from "../../misc/utils";
-import { usePaintContext } from "../../misc/PaintContext";
+import { useToolContext } from "../../misc/ToolContext";
 
 import size32 from './assets/size-32.png';
 
 function RibbonSize() {
-  const { toolsData, setToolsData, currentTool } = usePaintContext();
+  const { toolsData, setToolsData, currentTool } = useToolContext();
   const dropdownRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));

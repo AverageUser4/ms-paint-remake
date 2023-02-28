@@ -14,31 +14,31 @@
 .canvas--tertiary {
   border: 1px dashed black;
 }
-.canvas--draw {
+.canvas--cursor-draw {
   cursor: url(./assets/draw.png) 9 9, default;
 }
-.canvas--pencil {
+.canvas--cursor-pencil {
   cursor: url(./assets/pencil.png) 1 14, default;
 }
-.canvas--fill {
+.canvas--cursor-fill {
   cursor: url(./assets/fill.png) 1 12, default;
 }
-.canvas--color-picker {
+.canvas--cursor-color-picker {
   cursor: url(./assets/picker.png) 0 14, default;
 }
-.canvas--select {
+.canvas--cursor-selection {
   cursor: url(./assets/select.png) 10 10, default;
 }
-.canvas--airbrush {
+.canvas--cursor-airbrush {
   cursor: url(./assets/spray.png) 0 12, default;
 }
-.canvas--text {
+.canvas--cursor-text {
   cursor: url(./assets/text.png) 3 9, default;
 }
-.canvas--zoom {
+.canvas--cursor-magnifier {
   cursor: url(./assets/zoom.png) 5 5, default;
 }
-.canvas--none {
+.canvas--cursor-none {
   cursor: none;
 }
 

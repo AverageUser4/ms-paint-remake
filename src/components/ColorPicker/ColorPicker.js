@@ -2,13 +2,13 @@ import React, { useRef } from "react";
 import css from './ColorPicker.module.css';
 
 import usePointerTrack from "../../hooks/usePointerTrack";
-import { usePaintContext } from "../../misc/PaintContext";
+import { useColorContext } from "../../misc/ColorContext";
 import { HSLtoRGB, RGBtoHSL } from "../../misc/utils";
 
 import cursor from './assets/cursor.png';
 
 function ColorPicker() {
-  const { colorPickerData, setColorPickerData } = usePaintContext();
+  const { colorPickerData, setColorPickerData } = useColorContext();
   const { HSL, RGB } = colorPickerData;
   
   const fieldRef = useRef();

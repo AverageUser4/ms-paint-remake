@@ -4,7 +4,7 @@ import css from './RibbonTools.module.css';
 
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
-import { usePaintContext } from "../../misc/PaintContext";
+import { useToolContext } from "../../misc/ToolContext";
 
 import tools16 from './assets/tools-16.png';
 import pencil16 from './assets/pencil-16.png';
@@ -16,7 +16,7 @@ import magnifier16 from './assets/magnifier-16.png';
 
 function RibbonTools({ ribbonWidth }) {
   const isOnlyContent = ribbonWidth >= 760;
-  const { currentTool, doSetCurrentTool } = usePaintContext();
+  const { currentTool, doSetCurrentTool } = useToolContext();
 
   return (
     <RibbonItemContainer isOnlyContent={isOnlyContent} icon={tools16} name="Tools">

@@ -14,8 +14,11 @@ import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 import { ContainerProvider } from '../../misc/ContainerContext';
-import { PaintProvider } from '../../misc/PaintContext';
+import { CanvasProvider } from '../../misc/CanvasContext';
+import { HistoryProvider } from '../../misc/HistoryContext';
 import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
+import { ColorProvider } from '../../misc/ColorContext';
+import { ToolProvider } from '../../misc/ToolContext';
 
 function Logic({ 
   minimalSize,
@@ -177,22 +180,28 @@ function PaintXPlatform({
         isAutoFit={isAutoFit}
         isAllowToLeaveViewport={isAllowToLeaveViewport}
       >
-        <PaintProvider>
-          <MainWindowProvider
-            initialPosition={initialPosition}
-            initialSize={initialSize}
-            isInitiallyMaximized={isInitiallyMaximized}
-          >
-            <ContextMenuProvider>
-              <Logic 
-                minimalSize={minimalSize}
-                isResizable={isResizable}
-                isAutoShrink={isAutoShrink}
-                isOpen={isOpen}
-              />
-            </ContextMenuProvider>
-          </MainWindowProvider>
-        </PaintProvider>
+        <ColorProvider>
+          <CanvasProvider>
+            <HistoryProvider>
+              <ToolProvider>
+                <MainWindowProvider
+                  initialPosition={initialPosition}
+                  initialSize={initialSize}
+                  isInitiallyMaximized={isInitiallyMaximized}
+                >
+                  <ContextMenuProvider>
+                    <Logic 
+                      minimalSize={minimalSize}
+                      isResizable={isResizable}
+                      isAutoShrink={isAutoShrink}
+                      isOpen={isOpen}
+                    />
+                  </ContextMenuProvider>
+                </MainWindowProvider>
+              </ToolProvider>
+            </HistoryProvider>
+          </CanvasProvider>
+        </ColorProvider>
       </ContainerProvider>
     </div>
   );
