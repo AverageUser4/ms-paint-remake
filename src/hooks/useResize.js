@@ -18,6 +18,7 @@ export default function useResize({
   isPointBased,
   cancelOnRightMouseDown,
   onPointerUpCallback,
+  zoom = 1,
 }) {
   checkArgs([
     { name: 'minimalSize', value: minimalSize, type: 'object' },
@@ -32,6 +33,7 @@ export default function useResize({
 
   const { containerRect } = useContainerContext();
   const [resizeData, setResizeData] = useState(null);
+  const [hasMoved, setHasMoved] = useState(false);
   useResizeCursor(resizeData);
 
   const { onPointerDown: onPointerDownResize, isPressed } = 
@@ -47,6 +49,8 @@ export default function useResize({
     if(!containerRect) {
       return;
     }
+
+    setHasMoved(true);
 
     let { clientX, clientY } = event;
 
@@ -124,9 +128,10 @@ export default function useResize({
         type: event.target.dataset.name,
         initialX: event.clientX,
         initialY: event.clientY,
-        initialWidth: size.width,
-        initialHeight: size.height
+        initialWidth: Math.round(size.width * zoom),
+        initialHeight: Math.round(size.height * zoom),
       });
+      setHasMoved(false);
     }
   }
 
@@ -136,7 +141,10 @@ export default function useResize({
         isPointBased && isPressed &&
           <div 
             className="point-outline"
-            style={{ width: size.width, height: size.height }}
+            style={{ 
+              width: hasMoved ? size.width : resizeData.initialWidth,
+              height: hasMoved ? size.height : resizeData.initialHeight 
+            }}
           ></div>
       }
 

@@ -10,5 +10,8 @@ export default {
     } else if(event.button === 0 && currentZoomIndex < zoomData.length - 1) {
       setCanvasZoom(zoomData[currentZoomIndex + 1].multiplier);
     }
+  },
+  onPointerMove() {
+    return;
   }
 };

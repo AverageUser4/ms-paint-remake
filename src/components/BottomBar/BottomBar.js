@@ -14,7 +14,7 @@ import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
 function BottomBar({ windowWidth }) {
   const { isMainWindowMaximized } = useMainWindowContext();
-  const { canvasSize, canvasOutlineSize, canvasMousePosition } = useCanvasContext();
+  const { canvasSize, canvasOutlineSize, canvasMousePosition, canvasZoom } = useCanvasContext();
   
   return (
     <footer 
@@ -29,7 +29,7 @@ function BottomBar({ windowWidth }) {
           <img draggable="false" src={cursor16} alt="Canvas position."/>
           {
             canvasMousePosition && !canvasOutlineSize &&
-              <span className="text">{canvasMousePosition.x}, {canvasMousePosition.y}px</span>
+              <span className="text">{Math.round(canvasMousePosition.x / canvasZoom)}, {Math.round(canvasMousePosition.y)}px</span>
           }
         </div>
         

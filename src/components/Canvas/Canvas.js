@@ -155,16 +155,21 @@ function Canvas() {
     isPointBased: true,
     isOnlyThreeDirections: true,
     cancelOnRightMouseDown: true,
-    onPointerUpCallback: onPointerUpCallbackResize
+    onPointerUpCallback: onPointerUpCallbackResize,
+    zoom: canvasZoom
   });
   function onPointerUpCallbackResize() {
-    setCanvasSize(canvasOutlineSize);
+    if(!canvasOutlineSize) {
+      return;
+    }
+
+    let { width, height } = canvasOutlineSize;
+    width = Math.round(width / canvasZoom);
+    height = Math.round(height / canvasZoom);
+
+    setCanvasSize({ width, height });
     setCanvasOutlineSize(null);
-    doHistoryAdd({ 
-      element: doGetCanvasCopy(primaryRef),
-      width: canvasOutlineSize.width,
-      height: canvasOutlineSize.height
-    });
+    doHistoryAdd({ element: doGetCanvasCopy(primaryRef), width, height });
   }
 
   useEffect(() => {
@@ -246,16 +251,18 @@ function Canvas() {
 
       {
         currentTool === 'eraser' && canvasMousePosition &&
-          <div
-            className={css['eraser']}
-            style={{ 
-              left: Math.round(canvasMousePosition.x - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
-              top: Math.round(canvasMousePosition.y - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
-              backgroundColor: RGBObjectToString(colorData.secondary),
-              width: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
-              height: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
-            }}
-          ></div>
+          <div className={css['eraser-container']}>
+            <div
+              className={css['eraser']}
+              style={{ 
+                left: Math.round(canvasMousePosition.x - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
+                top: Math.round(canvasMousePosition.y - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
+                backgroundColor: RGBObjectToString(colorData.secondary),
+                width: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
+                height: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
+              }}
+            ></div>
+          </div>
       }
     </div>
   );

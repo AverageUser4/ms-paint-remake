@@ -8,7 +8,7 @@ const HistoryContext = createContext();
 function HistoryProvider({ children }) {
 
   const [history, setHistory] = useState({
-    dataArray: [{ initialCanvasSize, element: document.createElement('canvas') }],
+    dataArray: [{ ...initialCanvasSize, element: document.createElement('canvas') }],
     currentIndex: 0
   });
 
