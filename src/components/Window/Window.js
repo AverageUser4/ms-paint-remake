@@ -31,10 +31,46 @@ function Window({
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
-  const { resizeElements } = useResize({ position, setPosition, isAllowToLeaveViewport, size, setSize, isConstrained, minimalSize, isResizable });
-  const { onPointerDownMove, tempElement } = useMove({ position, setPosition, isAllowToLeaveViewport, isInnerWindow, isMaximized, size, setSize, isConstrained });
-  useAutoFit({ containerRect, position, setPosition, size, setSize, isAutoFit });
-  useAutoShrink({ containerRect, minimalSize, position, size, setSize, isAutoShrink, isAutoFit, isResizable });
+  const { resizeElements } = useResize({ 
+    position,
+    setPosition,
+    isAllowToLeaveViewport,
+    size,
+    setSize,
+    isConstrained,
+    minimalSize,
+    isResizable,
+    containerRect,
+  });
+  const { onPointerDownMove, tempElement } = useMove({ 
+    position,
+    setPosition,
+    isAllowToLeaveViewport,
+    isInnerWindow,
+    isMaximized,
+    size,
+    setSize,
+    isConstrained,
+    containerRect,
+  });
+  useAutoFit({ 
+    containerRect,
+    position,
+    setPosition,
+    size,
+    setSize,
+    isAutoFit 
+  });
+  useAutoShrink({ 
+    containerRect,
+    minimalSize,
+    position,
+    size,
+    setSize,
+    isAutoShrink,
+    isAutoFit,
+    isResizable 
+  });
 
   useOutsideClick(windowRef, () => { 
     if(!isInnerWindow && isFocused) {

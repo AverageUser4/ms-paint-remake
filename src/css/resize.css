@@ -168,6 +168,23 @@
   height: var(--resizer-size);
 }
 
+.point-bottom,
+.point-right,
+.point-top,
+.point-left,
+.point-top-left,
+.point-top-right,
+.point-bottom-right,
+.point-bottom-left {
+  background-color: red;
+}
+.point-top-left::before,
+.point-top-right::before,
+.point-bottom-right::before,
+.point-bottom-left::before {
+  background-color: green;
+}
+
 .point-top::after,
 .point-top-right::after,
 .point-right::after,
@@ -189,10 +206,10 @@
 }
 
 .point-top {
-  align-items: flex-start;
+  align-items: flex-end;
   justify-content: center;
 
-  top: 0;
+  bottom: 100%;
   left: calc(50% - var(--resizer-size) / 2);
 }
 .point-top:hover {
@@ -223,10 +240,10 @@
 
 .point-left {
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   
   top: calc(50% - var(--resizer-size) / 2);
-  left: 0;
+  right: 100%;
 }
 .point-left:hover {
   cursor: ew-resize;
@@ -262,7 +279,7 @@
 
 .point-top-right {
   position: absolute;
-  top: 0;
+  bottom: 100%;
   left: calc(100% - 20px);
 
   width: 20px;
@@ -273,7 +290,7 @@
 }
 .point-top-right::after {
   position: absolute;
-  top: 0;
+  top: 15px;
   left: 20px;
 }
 .point-top-right::before {
@@ -281,7 +298,7 @@
 
   position: absolute;
   left: 100%;
-  bottom: 0;
+  top: 0;
   
   display: block;
   width: 20px;
@@ -291,7 +308,7 @@
 .point-top-left {
   position: absolute;
   top: 0;
-  left: 0;
+  right: 100%;
 
   width: 20px;
   height: 20px;
@@ -301,25 +318,25 @@
 }
 .point-top-left::after {
   position: absolute;
-  top: 0;
-  left: 0px;
+  top: -5px;
+  right: 0;
 }
 .point-top-left::before {
   content: '';
 
   position: absolute;
-  left: 100%;
-  bottom: 0;
+  left: 0;
+  top: -20px;
   
   display: block;
-  width: 20px;
-  height: 40px;
+  width: 40px;
+  height: 20px;
 }
 
 .point-bottom-left {
   position: absolute;
-  top: 100%;
-  left: 0;
+  bottom: 0;
+  right: 100%;
 
   width: 20px;
   height: 20px;
@@ -329,17 +346,17 @@
 }
 .point-bottom-left::after {
   position: absolute;
-  top: 0;
-  left: 0;
+  bottom: -5px;
+  right: 0;
 }
 .point-bottom-left::before {
   content: '';
 
   position: absolute;
-  left: 100%;
-  bottom: 0;
+  left: 0;
+  top: 100%;
   
   display: block;
-  width: 20px;
-  height: 40px;
+  width: 40px;
+  height: 20px;
 }

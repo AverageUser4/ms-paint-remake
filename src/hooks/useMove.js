@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import WindowPlacementIndicator from "../components/WindowPlacementIndicator/WindowPlacementIndicator";
 
 import { useMainWindowContext } from '../misc/MainWindowContext';
-import { useContainerContext } from '../misc/ContainerContext';
 import usePointerTrack from "./usePointerTrack";
 import { checkArgs } from "../misc/utils";
 
@@ -16,6 +15,8 @@ export default function useMove({
   isInnerWindow,
   isMaximized,
   isConstrained,
+  containerRect,
+  containerRef,
 }) {
   checkArgs([
     { name: 'position', value: position, type: 'object' },
@@ -28,7 +29,6 @@ export default function useMove({
     { name: 'isConstrained', value: isConstrained, type: 'boolean' },
   ]);
 
-  const { containerRect } = useContainerContext();
   const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
   const [positionDifference, setPositionDifference] = useState(null);
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
@@ -47,8 +47,12 @@ export default function useMove({
   }
 
   function onPointerMoveMoveCallback(event) {
-    if(!containerRect) {
+    if(!containerRect && !containerRef?.current) {
       return;
+    }
+
+    if(!containerRect) {
+      containerRect = containerRef.current.getBoundingClientRect();
     }
 
     let x = event.clientX - positionDifference.x;

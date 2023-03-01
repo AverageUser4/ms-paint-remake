@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
+import useMove from "../../hooks/useMove";
 import usePointerTrack from '../../hooks/usePointerTrack';
 import { useCanvasContext } from "../../misc/CanvasContext";
 import { useHistoryContext } from "../../misc/HistoryContext";
@@ -138,14 +139,26 @@ function Canvas() {
     isAllowToLeaveViewport: true,
     size: selectionSize,
     setSize: setSelectionSize,
-    isConstrained: false,
+    isConstrained: true,
     minimalSize: { width: 1, height: 1, },
     isResizable: true,
     isPointBased: true,
     isOnlyThreeDirections: false,
     cancelOnRightMouseDown: true,
     onPointerUpCallback: onPointerUpCallbackResize,
-    zoom: canvasZoom
+    zoom: canvasZoom,
+    containerRef: primaryRef
+  });
+  const { onPointerDownMove } = useMove({
+    position: selectionPosition,
+    setPosition: setSelectionPosition,
+    size: selectionSize,
+    setSize: setSelectionSize,
+    isAllowToLeaveViewport: false,
+    isInnerWindow: false,
+    isMaximized: false,
+    isConstrained: true,
+    containerRef: primaryRef,
   });
   /* TEMPORARY */
   /* TEMPORARY */
@@ -249,7 +262,8 @@ function Canvas() {
     isOnlyThreeDirections: true,
     cancelOnRightMouseDown: true,
     onPointerUpCallback: onPointerUpCallbackResize,
-    zoom: canvasZoom
+    zoom: canvasZoom,
+    onlyThreeDirections: true,
   });
   function onPointerUpCallbackResize() {
     if(!canvasOutlineSize) {
@@ -347,6 +361,7 @@ function Canvas() {
             height: selectionSize.height
           }}
           className={`${css['canvas']} ${css['canvas--selection']}`}
+          onPointerDown={onPointerDownMove}
         ></canvas>
 
         {selectionResizeElements}

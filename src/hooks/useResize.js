@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 import useResizeCursor from './useResizeCursor';
 import usePointerTrack from './usePointerTrack';
-import { useContainerContext } from '../misc/ContainerContext';
 import { checkArgs } from "../misc/utils";
 
 export default function useResize({
@@ -19,6 +18,9 @@ export default function useResize({
   cancelOnRightMouseDown,
   onPointerUpCallback,
   zoom = 1,
+  containerRect,
+  containerRef,
+  onlyThreeDirections,
 }) {
   checkArgs([
     { name: 'minimalSize', value: minimalSize, type: 'object' },
@@ -31,7 +33,6 @@ export default function useResize({
     { name: 'isAllowToLeaveViewport', value: isAllowToLeaveViewport, type: 'boolean' },
   ]);
 
-  const { containerRect } = useContainerContext();
   const [resizeData, setResizeData] = useState(null);
   const [hasMoved, setHasMoved] = useState(false);
   useResizeCursor(resizeData);
@@ -46,18 +47,23 @@ export default function useResize({
     });
 
   function onPointerMoveCallback(event) {
-    if(!containerRect) {
+    if(!containerRect && !containerRef?.current && !onlyThreeDirections) {
       return;
     }
 
-    console.log(position, size)
-
     setHasMoved(true);
+
+    if(!containerRect) {
+      containerRect = containerRef?.current.getBoundingClientRect();
+    }
 
     let { clientX, clientY } = event;
 
-    let containerOffsetX = event.clientX - containerRect.x;
-    let containerOffsetY = event.clientY - containerRect.y;
+    let containerOffsetX, containerOffsetY;
+    if(!onlyThreeDirections) {
+      containerOffsetX = event.pageX - containerRect.x;
+      containerOffsetY = event.pageY - containerRect.y;
+    }
 
     if(!isAllowToLeaveViewport) {
       clientX = Math.max(0, clientX);
@@ -65,9 +71,11 @@ export default function useResize({
     }
     
     if(isConstrained) {
-      containerOffsetX = Math.max(0, containerOffsetX);
-      containerOffsetY = Math.max(0, containerOffsetY);
+      containerOffsetX = Math.max(Math.min(0, -resizeData.resizerDiffX), containerOffsetX);
+      containerOffsetY = Math.max(Math.min(0, -resizeData.resizerDiffY), containerOffsetY);
     }
+
+    console.log(containerOffsetX)
       
     let diffX = clientX - resizeData.initialX;
     let diffY = clientY - resizeData.initialY;
@@ -79,16 +87,24 @@ export default function useResize({
 
     if(resizeData.type.includes('left')) {
       diffX *= -1;
-      newX = isConstrained ? containerOffsetX : clientX;
+      newX = (isConstrained ? containerOffsetX : clientX) + resizeData.resizerDiffX;
+      newWidth = Math.min(
+        resizeData.initialWidth + diffX,
+        resizeData.initialPositionX + resizeData.initialWidth
+      );
     }
     if(resizeData.type.includes('top')) {
       diffY *= -1;
-      newY = isConstrained ? containerOffsetY : clientY;
+      newY = (isConstrained ? containerOffsetY : clientY) + resizeData.resizerDiffY;
+      newHeight = Math.min(
+        resizeData.initialHeight + diffY,
+        resizeData.initialPositionY + resizeData.initialHeight
+      );
     }
-    if(resizeData.type.includes('left') || resizeData.type.includes('right')) {
+    if(resizeData.type.includes('right')) {
       newWidth = resizeData.initialWidth + diffX;
     }
-    if(resizeData.type.includes('top') || resizeData.type.includes('bottom')) {
+    if(resizeData.type.includes('bottom')) {
       newHeight = resizeData.initialHeight + diffY;
     }
 
@@ -125,13 +141,39 @@ export default function useResize({
   }
   
   function onPointerDownCallback(event) {
+    /* 
+      - when we are resizing in directions that cause movements, there may be a few-pixel jump at the beginning
+      of movement, depending on where exactly resize bar was clicked, this could be fixed by adjusting initialX/Y
+      to constant position, but it will be different for 'pointBased' and normal resize type
+    */
+    
+    const { offsetX, offsetY } = event.nativeEvent;
+    let resizerRect;
+    let elementPageX, elementPageY;
+    let resizerDiffX, resizerDiffY;
+
+    if(!isOnlyThreeDirections) {
+      if(!containerRect) {
+        containerRect = containerRef?.current.getBoundingClientRect();
+      }
+      resizerRect = event.target.getBoundingClientRect();
+      elementPageX = containerRect.x + position.x;
+      elementPageY = containerRect.y + position.y;
+      resizerDiffX = elementPageX - resizerRect.x - offsetX;
+      resizerDiffY = elementPageY - resizerRect.y - offsetY;
+    }
+
     if(isResizable) {
       setResizeData({
         type: event.target.dataset.name,
         initialX: event.clientX,
         initialY: event.clientY,
+        initialPositionX: position.x,
+        initialPositionY: position.y,
         initialWidth: Math.round(size.width * zoom),
         initialHeight: Math.round(size.height * zoom),
+        resizerDiffX,
+        resizerDiffY
       });
       setHasMoved(false);
     }
