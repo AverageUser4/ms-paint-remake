@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
@@ -41,26 +41,93 @@ function Canvas() {
   const primaryCtxRef = useRef();
   const secondaryRef = useRef();
   const secondaryCtxRef = useRef();
-  const tertiaryRef = useRef();
-  const tertiaryCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
+  let usedMoveCallback = onPointerMoveCallbackMove;
+  let usedDownCallback = onPointerMoveCallbackMove;
+
+  if(currentToolData.onPointerMove) {
+    usedMoveCallback = (event) => currentToolData.onPointerMove({ event });
+  }
+  if(currentToolData.onPointerDown) {
+    usedDownCallback = (event) => currentToolData.onPointerDown({
+      event,
+      currentZoom: canvasZoom,
+      primaryContext: primaryCtxRef.current,
+      canvasSize: canvasSize,
+      colorData,
+      setColorData,
+      canvasZoom,
+      setCanvasZoom
+    });
+  }
+
+  /* TEMPORARY */
+  /* TEMPORARY */
+  /* TEMPORARY */
+  const [resizeData, setResizeData] = useState(null);
+  const [selectionSize, setSelectionSize] = useState({ width: 0, height: 0 });
+  const [selectionPosition, setSelectionPosition] = useState({ x: 50, y: 50 });
+  if(currentTool === 'selection-rectangle') {
+    usedDownCallback = (event) => {
+      const { clientX, clientY } = event;
+      const primaryRect = primaryRef.current.getBoundingClientRect();
+      const offsetX = event.pageX - primaryRect.x;
+      const offsetY = event.pageY - primaryRect.y;
+      
+      console.log(offsetX, offsetY)
+      
+      setResizeData({
+        initialX: clientX,
+        initialY: clientY,
+        initialWidth: 0,
+        initialHeight: 0,
+      })
+      setSelectionSize({ width: 0, height: 0 });
+      setSelectionPosition({ x: offsetX, y: offsetY });
+    };
+    
+    usedMoveCallback = (event) => {
+      let { clientX, clientY } = event;
+      const primaryRect = primaryRef.current.getBoundingClientRect();
+      const offsetX = event.pageX - primaryRect.x;
+      const offsetY = event.pageY - primaryRect.y;
+  
+      let diffX = clientX - resizeData.initialX;
+      let diffY = clientY - resizeData.initialY;
+  
+      let newWidth = selectionSize.width;
+      let newHeight = selectionSize.height;
+      let newX = selectionPosition.x;
+      let newY = selectionPosition.y;
+  
+      newWidth = resizeData.initialWidth + diffX;
+      newHeight = resizeData.initialHeight + diffY;
+
+      console.log(offsetX)
+      
+      if(newWidth < 0) {
+        newWidth *= -1;
+        newX = offsetX;
+      }
+      if(newHeight < 0) {
+        newHeight *= -1;
+        newY = offsetY;
+      }
+  
+      setSelectionSize({ width: newWidth, height: newHeight });
+      setSelectionPosition({ x: newX, y: newY });
+    };
+  }
+  /* TEMPORARY */
+  /* TEMPORARY */
+  /* TEMPORARY */
+  
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
-    onPointerMoveCallback: !currentToolData.onPointerMove ? onPointerMoveCallbackMove :
-      (event) => currentToolData.onPointerMove({ event }),
-    onPointerDownCallback: !currentToolData.onPointerDown ? onPointerMoveCallbackMove : 
-      (event) => currentToolData.onPointerDown({
-        event,
-        currentZoom: canvasZoom,
-        primaryContext: primaryCtxRef.current,
-        canvasSize: canvasSize,
-        colorData,
-        setColorData,
-        canvasZoom,
-        setCanvasZoom
-      }),
+    onPointerMoveCallback: usedMoveCallback,
+    onPointerDownCallback: usedDownCallback,
     onPointerUpCallback: onPointerUpCallbackMove,
     onCancelCallback: onCancelCallbackMove,
     cancelOnRightMouseDown: true,
@@ -236,16 +303,16 @@ function Canvas() {
         ref={secondaryRef}
       ></canvas>
 
-      {/* <canvas
+      <canvas
         style={{ 
           ...canvasStyle,
-          top: 50,
-          left: 50,
-          width: 50,
-          height: 50
+          left: selectionPosition.x,
+          top: selectionPosition.y,
+          width: selectionSize.width,
+          height: selectionSize.height
         }}
-        className={`${css['canvas']} ${css['canvas--tertiary']}`}
-      ></canvas> */}
+        className={`${css['canvas']} ${css['canvas--selection']}`}
+      ></canvas>
 
       {resizeElements}
 

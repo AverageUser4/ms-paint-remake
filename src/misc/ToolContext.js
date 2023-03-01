@@ -41,7 +41,7 @@ function ToolProvider({ children }) {
     /* selection */
     ['selection-rectangle', RectangularSelection ],
   ]));
-  const [currentTool, setCurrentTool] = useState('brushes-brush');
+  const [currentTool, setCurrentTool] = useState('selection-rectangle');
   const [latestTools, setLatestTools] = useState({ brushes: 'brushes-brush' });
   function doSetCurrentTool(tool) {
     if(currentTool.startsWith('brushes')) {
