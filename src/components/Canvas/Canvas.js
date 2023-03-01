@@ -70,6 +70,7 @@ function Canvas() {
   const [resizeData, setResizeData] = useState(null);
   const [selectionSize, setSelectionSize] = useState({ width: 0, height: 0 });
   const [selectionPosition, setSelectionPosition] = useState({ x: 50, y: 50 });
+
   if(currentTool === 'selection-rectangle') {
     usedDownCallback = (event) => {
       const { clientX, clientY } = event;
@@ -77,11 +78,11 @@ function Canvas() {
       const offsetX = event.pageX - primaryRect.x;
       const offsetY = event.pageY - primaryRect.y;
       
-      console.log(offsetX, offsetY)
-      
       setResizeData({
         initialX: clientX,
         initialY: clientY,
+        initialOffsetX: offsetX,
+        initialOffsetY: offsetY,
         initialWidth: 0,
         initialHeight: 0,
       })
@@ -102,25 +103,50 @@ function Canvas() {
       let newHeight = selectionSize.height;
       let newX = selectionPosition.x;
       let newY = selectionPosition.y;
-  
+
       newWidth = resizeData.initialWidth + diffX;
       newHeight = resizeData.initialHeight + diffY;
-
-      console.log(offsetX)
       
       if(newWidth < 0) {
         newWidth *= -1;
-        newX = offsetX;
+        newWidth = Math.min(newWidth, resizeData.initialOffsetX);
+        newX = Math.max(offsetX, 0);
+      } else {
+        newX = resizeData.initialOffsetX;
+        newWidth = Math.min(newWidth, primaryRect.width - newX);
       }
       if(newHeight < 0) {
         newHeight *= -1;
-        newY = offsetY;
+        newHeight = Math.min(newHeight, resizeData.initialOffsetY);
+        newY = Math.max(offsetY, 0);
+      } else {
+        newY = resizeData.initialOffsetY;
+        newHeight = Math.min(newHeight, primaryRect.height - newY);
       }
   
       setSelectionSize({ width: newWidth, height: newHeight });
-      setSelectionPosition({ x: newX, y: newY });
+
+      if(newX !== selectionPosition.x || newY !== selectionPosition.y) {
+        setSelectionPosition({ x: newX, y: newY });
+      }
     };
   }
+
+  const { resizeElements: selectionResizeElements } = useResize({ 
+    position: selectionPosition,
+    setPosition: setSelectionPosition,
+    isAllowToLeaveViewport: true,
+    size: selectionSize,
+    setSize: setSelectionSize,
+    isConstrained: false,
+    minimalSize: { width: 1, height: 1, },
+    isResizable: true,
+    isPointBased: true,
+    isOnlyThreeDirections: false,
+    cancelOnRightMouseDown: true,
+    onPointerUpCallback: onPointerUpCallbackResize,
+    zoom: canvasZoom
+  });
   /* TEMPORARY */
   /* TEMPORARY */
   /* TEMPORARY */
@@ -303,16 +329,28 @@ function Canvas() {
         ref={secondaryRef}
       ></canvas>
 
-      <canvas
-        style={{ 
-          ...canvasStyle,
+      <div 
+        className="point-container point-container--inner"
+        style={{
           left: selectionPosition.x,
           top: selectionPosition.y,
           width: selectionSize.width,
           height: selectionSize.height
         }}
-        className={`${css['canvas']} ${css['canvas--selection']}`}
-      ></canvas>
+      >
+        <canvas
+          style={{ 
+            ...canvasStyle,
+            left: 0,
+            top: 0,
+            width: selectionSize.width,
+            height: selectionSize.height
+          }}
+          className={`${css['canvas']} ${css['canvas--selection']}`}
+        ></canvas>
+
+        {selectionResizeElements}
+      </div>
 
       {resizeElements}
 

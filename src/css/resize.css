@@ -138,6 +138,9 @@
 
   width: max-content;
 }
+.point-container--inner {
+  position: absolute;
+}
 
 .point-outline {
   position: absolute;
@@ -154,7 +157,9 @@
 }
 
 .point-bottom,
-.point-right {
+.point-right,
+.point-top,
+.point-left {
   display: flex;
 
   position: absolute;
@@ -163,9 +168,14 @@
   height: var(--resizer-size);
 }
 
-.point-bottom::after,
+.point-top::after,
+.point-top-right::after,
 .point-right::after,
-.point-bottom-right::after {
+.point-bottom-right::after,
+.point-bottom::after,
+.point-bottom-left::after,
+.point-left::after,
+.point-top-left::after {
   content: '';
 
   display: block;
@@ -176,6 +186,17 @@
   border: 1px solid rgb(85, 85, 85);
 
   box-sizing: border-box;
+}
+
+.point-top {
+  align-items: flex-start;
+  justify-content: center;
+
+  top: 0;
+  left: calc(50% - var(--resizer-size) / 2);
+}
+.point-top:hover {
+  cursor: ns-resize;
 }
 
 .point-bottom {
@@ -200,6 +221,17 @@
   cursor: ew-resize;
 }
 
+.point-left {
+  align-items: center;
+  justify-content: flex-start;
+  
+  top: calc(50% - var(--resizer-size) / 2);
+  left: 0;
+}
+.point-left:hover {
+  cursor: ew-resize;
+}
+
 .point-bottom-right {
   position: absolute;
   top: 100%;
@@ -217,6 +249,90 @@
   left: 20px;
 }
 .point-bottom-right::before {
+  content: '';
+
+  position: absolute;
+  left: 100%;
+  bottom: 0;
+  
+  display: block;
+  width: 20px;
+  height: 40px;
+}
+
+.point-top-right {
+  position: absolute;
+  top: 0;
+  left: calc(100% - 20px);
+
+  width: 20px;
+  height: 20px;
+}
+.point-top-right:hover {
+  cursor: ne-resize;
+}
+.point-top-right::after {
+  position: absolute;
+  top: 0;
+  left: 20px;
+}
+.point-top-right::before {
+  content: '';
+
+  position: absolute;
+  left: 100%;
+  bottom: 0;
+  
+  display: block;
+  width: 20px;
+  height: 40px;
+}
+
+.point-top-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 20px;
+  height: 20px;
+}
+.point-top-left:hover {
+  cursor: nw-resize;
+}
+.point-top-left::after {
+  position: absolute;
+  top: 0;
+  left: 0px;
+}
+.point-top-left::before {
+  content: '';
+
+  position: absolute;
+  left: 100%;
+  bottom: 0;
+  
+  display: block;
+  width: 20px;
+  height: 40px;
+}
+
+.point-bottom-left {
+  position: absolute;
+  top: 100%;
+  left: 0;
+
+  width: 20px;
+  height: 20px;
+}
+.point-bottom-left:hover {
+  cursor: ne-resize;
+}
+.point-bottom-left::after {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.point-bottom-left::before {
   content: '';
 
   position: absolute;

@@ -50,6 +50,8 @@ export default function useResize({
       return;
     }
 
+    console.log(position, size)
+
     setHasMoved(true);
 
     let { clientX, clientY } = event;

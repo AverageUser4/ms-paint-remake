@@ -13,6 +13,8 @@
 }
 .canvas--selection {
   border: 1px dashed black;
+
+  box-sizing: border-box;
 }
 .canvas--cursor-draw {
   cursor: url(./assets/draw.png) 9 9, default;
