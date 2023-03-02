@@ -48,6 +48,8 @@ function Canvas() {
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
+  const lastCurrentToolRef = useRef();
+  const lastCanvasZoomRef = useRef();
 
   let usedMoveCallback = onPointerMoveCallbackMove;
   let usedDownCallback = onPointerMoveCallbackMove;
@@ -92,10 +94,13 @@ function Canvas() {
   if(currentTool === 'selection-rectangle') {
     usedDownCallback = (event) => {
       if(selectionPhase === 2) {
+        primaryCtxRef.current.imageSmoothingEnabled = false;
         primaryCtxRef.current.drawImage(
           doGetCanvasCopy(selectionRef),
           selectionPosition.x,
-          selectionPosition.y
+          selectionPosition.y,
+          selectionResizedSize.width,
+          selectionResizedSize.height,
         );
         doCancel();
         return;
@@ -211,10 +216,30 @@ function Canvas() {
       selectionCtxRef.current.drawImage(lastSelectionStateRef.current, 0, 0);
     }
   }, [selectionSize, selectionPhase]);
-
+  
   useEffect(() => {
+    if(
+        lastCurrentToolRef.current === currentTool &&
+        lastCanvasZoomRef.current === canvasZoom
+      ) {
+      return;
+    }
+
+    lastCurrentToolRef.current = currentTool;
+    lastCanvasZoomRef.current = canvasZoom;
+    
+    if(selectionPhase === 2) {
+      primaryCtxRef.current.imageSmoothingEnabled = false;
+      primaryCtxRef.current.drawImage(
+        doGetCanvasCopy(selectionRef),
+        selectionPosition.x,
+        selectionPosition.y,
+        selectionResizedSize.width,
+        selectionResizedSize.height,
+      );
+    }
     setSelectionPhase(0);
-  }, [currentTool, canvasZoom]);
+  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize]);
 
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
