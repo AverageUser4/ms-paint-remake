@@ -45,7 +45,6 @@ function Window({
   const { onPointerDownMove, tempElement } = useMove({ 
     position,
     setPosition,
-    isAllowToLeaveViewport,
     isInnerWindow,
     isMaximized,
     size,

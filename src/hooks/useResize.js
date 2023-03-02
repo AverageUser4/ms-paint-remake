@@ -5,22 +5,21 @@ import usePointerTrack from './usePointerTrack';
 import { checkArgs } from "../misc/utils";
 
 export default function useResize({
+  containerRect,
+  containerRef,
   minimalSize,
   position, 
   setPosition, 
   size, 
   setSize,
+  zoom = 1,
   isConstrained,
   isResizable,
   isAllowToLeaveViewport,
   isOnlyThreeDirections,
   isPointBased,
-  cancelOnRightMouseDown,
+  isCancelOnRightMouseDown,
   onPointerUpCallback,
-  zoom = 1,
-  containerRect,
-  containerRef,
-  onlyThreeDirections,
 }) {
   checkArgs([
     { name: 'minimalSize', value: minimalSize, type: 'object' },
@@ -43,11 +42,11 @@ export default function useResize({
       onPointerDownCallback: onPointerDownCallback,
       onPointerUpCallback: (e) => { setResizeData(null); onPointerUpCallback && onPointerUpCallback(e) },
       onCancelCallback: () => setResizeData(null),
-      cancelOnRightMouseDown
+      isCancelOnRightMouseDown
     });
 
   function onPointerMoveCallback(event) {
-    if(!containerRect && !containerRef?.current && !onlyThreeDirections) {
+    if(!containerRect && !containerRef?.current && !isOnlyThreeDirections) {
       return;
     }
 
@@ -60,7 +59,7 @@ export default function useResize({
     let { clientX, clientY } = event;
 
     let containerOffsetX, containerOffsetY;
-    if(!onlyThreeDirections) {
+    if(!isOnlyThreeDirections) {
       containerOffsetX = event.pageX - containerRect.x;
       containerOffsetY = event.pageY - containerRect.y;
     }
@@ -75,8 +74,6 @@ export default function useResize({
       containerOffsetY = Math.max(Math.min(0, -resizeData.resizerDiffY), containerOffsetY);
     }
 
-    console.log(containerOffsetX)
-      
     let diffX = clientX - resizeData.initialX;
     let diffY = clientY - resizeData.initialY;
 
@@ -87,19 +84,27 @@ export default function useResize({
 
     if(resizeData.type.includes('left')) {
       diffX *= -1;
-      newX = (isConstrained ? containerOffsetX : clientX) + resizeData.resizerDiffX;
-      newWidth = Math.min(
-        resizeData.initialWidth + diffX,
-        resizeData.initialPositionX + resizeData.initialWidth
-      );
+      newX = containerOffsetX + resizeData.resizerDiffX;
+      if(isConstrained) {
+        newWidth = Math.min(
+          resizeData.initialWidth + diffX,
+          resizeData.initialPositionX + resizeData.initialWidth
+        );
+      } else {
+        newWidth = resizeData.initialWidth + diffX;
+      }
     }
     if(resizeData.type.includes('top')) {
       diffY *= -1;
-      newY = (isConstrained ? containerOffsetY : clientY) + resizeData.resizerDiffY;
-      newHeight = Math.min(
-        resizeData.initialHeight + diffY,
-        resizeData.initialPositionY + resizeData.initialHeight
-      );
+      newY = containerOffsetY + resizeData.resizerDiffY;
+      if(isConstrained) {
+        newHeight = Math.min(
+          resizeData.initialHeight + diffY,
+          resizeData.initialPositionY + resizeData.initialHeight
+        );
+      } else {
+        newHeight = resizeData.initialHeight + diffY;
+      }
     }
     if(resizeData.type.includes('right')) {
       newWidth = resizeData.initialWidth + diffX;

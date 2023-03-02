@@ -9,6 +9,7 @@ import { useHistoryContext } from "../../misc/HistoryContext";
 import { useToolContext } from "../../misc/ToolContext";
 import { useColorContext } from "../../misc/ColorContext";
 import { RGBObjectToString } from "../../misc/utils";
+import useResizeCursor from "../../hooks/useResizeCursor";
 
 function doGetCanvasCopy(canvasRef) {
   const newCanvas = document.createElement('canvas');
@@ -42,12 +43,16 @@ function Canvas() {
   const primaryCtxRef = useRef();
   const secondaryRef = useRef();
   const secondaryCtxRef = useRef();
+  const selectionRef = useRef();
+  const selectionCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
 
   let usedMoveCallback = onPointerMoveCallbackMove;
   let usedDownCallback = onPointerMoveCallbackMove;
+  let usedUpCallback = onPointerUpCallbackMove;
+  let usedCancelCallback = onCancelCallbackMove;
 
   if(currentToolData.onPointerMove) {
     usedMoveCallback = (event) => currentToolData.onPointerMove({ event });
@@ -64,31 +69,52 @@ function Canvas() {
       setCanvasZoom
     });
   }
+  if(currentToolData.onPointerUp) {
+    usedUpCallback = (event) => currentToolData.onPointerUp({ event });
+  }
+  if(currentToolData.onCancel) {
+    usedCancelCallback = (event) => currentToolData.onCancel({ event });
+  }
 
   /* TEMPORARY */
   /* TEMPORARY */
   /* TEMPORARY */
-  const [resizeData, setResizeData] = useState(null);
-  const [selectionSize, setSelectionSize] = useState({ width: 0, height: 0 });
+  const [selectionResizeData, setSelectionResizeData] = useState(null);
+  const [selectionSize, setSelectionSize] = useState({ width: 1, height: 1 });
+  const [selectionResizedSize, setSelectionResizedSize] = useState({ width: 1, height: 1 });
   const [selectionPosition, setSelectionPosition] = useState({ x: 50, y: 50 });
+  const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
+  // 0, 1 or 2
+  const [selectionPhase, setSelectionPhase] = useState(0);
+  const lastSelectionStateRef = useRef();
+  useResizeCursor(selectionResizeData);
 
   if(currentTool === 'selection-rectangle') {
     usedDownCallback = (event) => {
+      // if(selectionPhase === 2) {
+      //   setSelectionPhase(0);
+      //   setSelectionResizeData(null);
+      //   return;
+      // }
+
       const { clientX, clientY } = event;
       const primaryRect = primaryRef.current.getBoundingClientRect();
       const offsetX = event.pageX - primaryRect.x;
       const offsetY = event.pageY - primaryRect.y;
       
-      setResizeData({
+      setSelectionResizeData({
+        type: 'selection',
         initialX: clientX,
         initialY: clientY,
         initialOffsetX: offsetX,
         initialOffsetY: offsetY,
-        initialWidth: 0,
-        initialHeight: 0,
+        initialWidth: 1,
+        initialHeight: 1,
       })
-      setSelectionSize({ width: 0, height: 0 });
+      setSelectionSize({ width: 1, height: 1 });
+      setSelectionResizedSize({ width: 1, height: 1 });
       setSelectionPosition({ x: offsetX, y: offsetY });
+      setSelectionPhase(1);
     };
     
     usedMoveCallback = (event) => {
@@ -97,67 +123,105 @@ function Canvas() {
       const offsetX = event.pageX - primaryRect.x;
       const offsetY = event.pageY - primaryRect.y;
   
-      let diffX = clientX - resizeData.initialX;
-      let diffY = clientY - resizeData.initialY;
+      let diffX = clientX - selectionResizeData.initialX;
+      let diffY = clientY - selectionResizeData.initialY;
   
       let newWidth = selectionSize.width;
       let newHeight = selectionSize.height;
       let newX = selectionPosition.x;
       let newY = selectionPosition.y;
 
-      newWidth = resizeData.initialWidth + diffX;
-      newHeight = resizeData.initialHeight + diffY;
+      newWidth = selectionResizeData.initialWidth + diffX;
+      newHeight = selectionResizeData.initialHeight + diffY;
       
       if(newWidth < 0) {
         newWidth *= -1;
-        newWidth = Math.min(newWidth, resizeData.initialOffsetX);
+        newWidth = Math.min(newWidth, selectionResizeData.initialOffsetX);
         newX = Math.max(offsetX, 0);
       } else {
-        newX = resizeData.initialOffsetX;
+        newX = selectionResizeData.initialOffsetX;
         newWidth = Math.min(newWidth, primaryRect.width - newX);
       }
       if(newHeight < 0) {
         newHeight *= -1;
-        newHeight = Math.min(newHeight, resizeData.initialOffsetY);
+        newHeight = Math.min(newHeight, selectionResizeData.initialOffsetY);
         newY = Math.max(offsetY, 0);
       } else {
-        newY = resizeData.initialOffsetY;
+        newY = selectionResizeData.initialOffsetY;
         newHeight = Math.min(newHeight, primaryRect.height - newY);
       }
   
       setSelectionSize({ width: newWidth, height: newHeight });
+      setSelectionResizedSize({ width: newWidth, height: newHeight });
 
       if(newX !== selectionPosition.x || newY !== selectionPosition.y) {
         setSelectionPosition({ x: newX, y: newY });
       }
     };
+
+    usedUpCallback = () => {
+      setSelectionPhase(2);
+      setSelectionResizeData(null);
+      const imageData = primaryCtxRef.current.getImageData(
+        selectionPosition.x, selectionPosition.y,
+        selectionSize.width, selectionSize.height
+      );
+      selectionCtxRef.current.putImageData(imageData, 0, 0);
+      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef);
+
+      primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
+      primaryCtxRef.current.fillRect(
+        selectionPosition.x, selectionPosition.y,
+        selectionSize.width, selectionSize.height
+      );
+    };
+
+    usedCancelCallback = () => {
+      setSelectionPhase(0);
+      setSelectionResizeData(null);
+    };
   }
+
+  function onPointerUpCallbackSelectionResize() {
+    if(!selectionOutlineSize) {
+      return;
+    }
+
+    setSelectionResizedSize(selectionOutlineSize);
+    setSelectionOutlineSize(null);
+  }
+
+  useEffect(() => {
+    if(selectionPhase === 2 && lastSelectionStateRef.current) {
+      selectionCtxRef.current.drawImage(lastSelectionStateRef.current, 0, 0);
+    }
+  }, [selectionSize, selectionPhase]);
 
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
     setPosition: setSelectionPosition,
     isAllowToLeaveViewport: true,
-    size: selectionSize,
-    setSize: setSelectionSize,
-    isConstrained: true,
+    size: selectionOutlineSize || selectionResizedSize,
+    setSize: setSelectionOutlineSize,
+    isConstrained: false,
     minimalSize: { width: 1, height: 1, },
     isResizable: true,
     isPointBased: true,
     isOnlyThreeDirections: false,
-    cancelOnRightMouseDown: true,
-    onPointerUpCallback: onPointerUpCallbackResize,
-    zoom: canvasZoom,
+    isCancelOnRightMouseDown: true,
+    onPointerUpCallback: onPointerUpCallbackSelectionResize,
+    zoom: 1,
     containerRef: primaryRef
   });
   const { onPointerDownMove } = useMove({
     position: selectionPosition,
     setPosition: setSelectionPosition,
     size: selectionSize,
-    setSize: setSelectionSize,
-    isAllowToLeaveViewport: false,
+    setSize: (newSize) => { setSelectionSize(newSize); setSelectionResizedSize(newSize); },
     isInnerWindow: false,
     isMaximized: false,
-    isConstrained: true,
+    isConstrained: false,
+    isReverseConstrained: true,
     containerRef: primaryRef,
   });
   /* TEMPORARY */
@@ -167,9 +231,9 @@ function Canvas() {
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
     onPointerMoveCallback: usedMoveCallback,
     onPointerDownCallback: usedDownCallback,
-    onPointerUpCallback: onPointerUpCallbackMove,
-    onCancelCallback: onCancelCallbackMove,
-    cancelOnRightMouseDown: true,
+    onPointerUpCallback: usedUpCallback,
+    onCancelCallback: usedCancelCallback,
+    isCancelOnRightMouseDown: true,
     isTrackAlsoRight: true
   });
   function onPointerMoveCallbackMove(event) {
@@ -254,16 +318,15 @@ function Canvas() {
     setPosition: ()=>0,
     isAllowToLeaveViewport: true,
     size: canvasOutlineSize || canvasSize,
-    setSize: (newSize) => setCanvasOutlineSize(newSize),
+    setSize: setCanvasOutlineSize,
     isConstrained: false,
     minimalSize: { width: 1, height: 1, },
     isResizable: true,
     isPointBased: true,
     isOnlyThreeDirections: true,
-    cancelOnRightMouseDown: true,
+    isCancelOnRightMouseDown: true,
     onPointerUpCallback: onPointerUpCallbackResize,
     zoom: canvasZoom,
-    onlyThreeDirections: true,
   });
   function onPointerUpCallbackResize() {
     if(!canvasOutlineSize) {
@@ -343,29 +406,42 @@ function Canvas() {
         ref={secondaryRef}
       ></canvas>
 
-      <div 
-        className="point-container point-container--inner"
-        style={{
-          left: selectionPosition.x,
-          top: selectionPosition.y,
-          width: selectionSize.width,
-          height: selectionSize.height
-        }}
-      >
-        <canvas
-          style={{ 
-            ...canvasStyle,
-            left: 0,
-            top: 0,
-            width: selectionSize.width,
-            height: selectionSize.height
-          }}
-          className={`${css['canvas']} ${css['canvas--selection']}`}
-          onPointerDown={onPointerDownMove}
-        ></canvas>
+      {
+        selectionPhase > 0 &&
+          <div 
+            className="point-container point-container--inner point-container--repositioned"
+            style={{
+              left: selectionPosition.x,
+              top: selectionPosition.y,
+              width: selectionResizedSize.width,
+              height: selectionResizedSize.height
+            }}
+          >
+            <canvas
+              width={selectionSize.width}
+              height={selectionSize.height}
+              style={{ 
+                ...canvasStyle,
+                left: 0,
+                top: 0,
+                width: selectionResizedSize.width,
+                height: selectionResizedSize.height
+              }}
+              className={`
+                ${css['canvas']}
+                ${css['canvas--selection']}
+                ${selectionPhase === 2 && css['canvas--selection--ready']}
+              `}
+              onPointerDown={onPointerDownMove}
+              ref={(element) => { 
+                selectionRef.current = element;
+                selectionCtxRef.current = element?.getContext('2d');
+              }}
+            ></canvas>
 
-        {selectionResizeElements}
-      </div>
+            {selectionPhase === 2 && selectionResizeElements}
+          </div>
+      }
 
       {resizeElements}
 

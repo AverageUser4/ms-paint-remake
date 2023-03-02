@@ -43,16 +43,22 @@ function useResizeCursor(resizeData) {
         newCursor = 'nw-resize';
         break;
 
+      case 'selection':
+        newCursor = 'var(--cursor-selection)';
+        break;
+        
       default:
         console.error(`Unrecognized "resizeData.type": "${resizeData.type}".`);
     }
 
-    if(!styleSheet.cssRules.length)
+    if(!styleSheet.cssRules.length) {
       styleSheet.insertRule(`* { cursor: ${newCursor} !important; }`);
+    }
 
     return () => {
-      if(styleSheet.cssRules.length)
+      if(styleSheet.cssRules.length) {
         styleSheet.deleteRule(0);
+      }
     };
   }, [resizeData, styleSheet]);
 }

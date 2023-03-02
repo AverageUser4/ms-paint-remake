@@ -12,33 +12,36 @@
   box-shadow: 5px 5px 2px rgba(100, 100, 100, 0.2);
 }
 .canvas--selection {
-  border: 1px dashed black;
+  border: 1px dashed rgb(0, 0, 0);
 
   box-sizing: border-box;
 }
+.canvas--selection--ready {
+  border-color: rgb(0, 120, 215);
+}
 .canvas--cursor-draw {
-  cursor: url(./assets/draw.png) 9 9, default;
+  cursor: var(--cursor-draw);
 }
 .canvas--cursor-pencil {
-  cursor: url(./assets/pencil.png) 1 14, default;
+  cursor: var(--cursor-pencil);
 }
 .canvas--cursor-fill {
-  cursor: url(./assets/fill.png) 1 12, default;
+  cursor: var(--cursor-fill);
 }
 .canvas--cursor-color-picker {
-  cursor: url(./assets/picker.png) 0 14, default;
+  cursor: var(--cursor-color-picker);
 }
 .canvas--cursor-selection {
-  cursor: url(./assets/select.png) 10 10, default;
+  cursor: var(--cursor-selection);
 }
 .canvas--cursor-airbrush {
-  cursor: url(./assets/spray.png) 0 12, default;
+  cursor: var(--cursor-airbrush);
 }
 .canvas--cursor-text {
-  cursor: url(./assets/text.png) 3 9, default;
+  cursor: var(--cursor-text);
 }
 .canvas--cursor-magnifier {
-  cursor: url(./assets/zoom.png) 5 5, default;
+  cursor: var(--cursor-magnifier);
 }
 .canvas--cursor-none {
   cursor: none;

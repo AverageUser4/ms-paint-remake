@@ -168,7 +168,7 @@
   height: var(--resizer-size);
 }
 
-.point-bottom,
+/* .point-bottom,
 .point-right,
 .point-top,
 .point-left,
@@ -183,7 +183,7 @@
 .point-bottom-right::before,
 .point-bottom-left::before {
   background-color: green;
-}
+} */
 
 .point-top::after,
 .point-top-right::after,
@@ -215,6 +215,9 @@
 .point-top:hover {
   cursor: ns-resize;
 }
+.point-container--repositioned .point-top::after {
+  transform: translateY(3px);
+}
 
 .point-bottom {
   align-items: flex-start;
@@ -225,6 +228,9 @@
 }
 .point-bottom:hover {
   cursor: ns-resize;
+}
+.point-container--repositioned .point-bottom::after {
+  transform: translateY(-3px);
 }
 
 .point-right {
@@ -237,6 +243,9 @@
 .point-right:hover {
   cursor: ew-resize;
 }
+.point-container--repositioned .point-right::after {
+  transform: translateX(-3px);
+}
 
 .point-left {
   align-items: center;
@@ -247,6 +256,9 @@
 }
 .point-left:hover {
   cursor: ew-resize;
+}
+.point-container--repositioned .point-left::after {
+  transform: translateX(3px);
 }
 
 .point-bottom-right {
@@ -276,6 +288,9 @@
   width: 20px;
   height: 40px;
 }
+.point-container--repositioned .point-bottom-right::after {
+  transform: translate(-3px, -3px);
+}
 
 .point-top-right {
   position: absolute;
@@ -303,6 +318,9 @@
   display: block;
   width: 20px;
   height: 40px;
+}
+.point-container--repositioned .point-top-right::after {
+  transform: translate(-3px, 3px);
 }
 
 .point-top-left {
@@ -332,6 +350,9 @@
   width: 40px;
   height: 20px;
 }
+.point-container--repositioned .point-top-left::after {
+  transform: translate(3px, 3px);
+}
 
 .point-bottom-left {
   position: absolute;
@@ -359,4 +380,7 @@
   display: block;
   width: 40px;
   height: 20px;
+}
+.point-container--repositioned .point-bottom-left::after {
+  transform: translate(3px, -3px);
 }

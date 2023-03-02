@@ -16,6 +16,7 @@ import NaturalPencil from './tools/NaturalPencil';
 import Oilbrush from './tools/Oilbrush';
 import Watercolor from './tools/Watercolor';
 import RectangularSelection from './tools/RectangularSelection';
+import FreeFormSelection from './tools/FreeFormSelection';
 
 const ToolContext = createContext();
 
@@ -39,13 +40,19 @@ function ToolProvider({ children }) {
     ['brushes-natural-pencil', NaturalPencil],
     ['brushes-watercolor', Watercolor],
     /* selection */
-    ['selection-rectangle', RectangularSelection ],
+    ['selection-rectangle', RectangularSelection],
+    ['selection-free-form', FreeFormSelection]
   ]));
   const [currentTool, setCurrentTool] = useState('selection-rectangle');
-  const [latestTools, setLatestTools] = useState({ brushes: 'brushes-brush' });
+  const [latestTools, setLatestTools] = useState({ 
+    brushes: 'brushes-brush',
+    selection: 'selection-rectangle'
+  });
   function doSetCurrentTool(tool) {
     if(currentTool.startsWith('brushes')) {
       setLatestTools(prev => ({ ...prev, brushes: currentTool }));
+    } else if(currentTool.startsWith('selection')) {
+      setLatestTools(prev => ({ ...prev, selection: currentTool }));
     }
     setCurrentTool(tool);
   }

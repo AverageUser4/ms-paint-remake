@@ -8,6 +8,7 @@ import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Dropdown from "../Dropdown/Dropdown";
 import { toggleBoolState } from "../../misc/utils";
+import { useToolContext } from "../../misc/ToolContext";
 
 import image16 from './assets/image-16.png';
 import image32 from './assets/image-32.png';
@@ -15,6 +16,7 @@ import invert16 from './assets/invert-16.png';
 import delete16 from './assets/delete-16.png';
 import selectAll16 from './assets/select-all-16.png';
 import freeForm16 from './assets/free-form-16.png';
+import freeForm32 from './assets/free-form-32.png';
 import crop16 from './assets/crop-16.png';
 import resize16 from './assets/resize-16.png';
 import rotate16 from './assets/rotate-16.png';
@@ -25,8 +27,16 @@ import rotateLeft16 from './assets/rotate-left-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
-  const dropdownContainerRef = useRef();
+  const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
+  let icon = image32;
   
+  switch(currentTool.startsWith('selection') ? currentTool : latestTools.selection) {
+    case 'selection-free-form':
+      icon = freeForm32;
+      break;
+  }
+    
+    const dropdownContainerRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -47,11 +57,13 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
             data-cy="Image"
           >
             <BigButtonDuo 
-              icon={image32} 
+              icon={icon} 
               name="Select"
               showChildren={isDropdownOpen}
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              onPointerDownTop={() => doSetCurrentTool(latestTools.selection)}
+              isActive={currentTool.startsWith('selection-')}
             >
               <div 
                 className="popup" 
@@ -60,12 +72,26 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               >
                 <h3 className="popup__head head head--2">Selection shapes</h3>
 
-                <button className="popup__button popup__button--selected text text--4 text--nowrap">
+                <button 
+                  className={`
+                    popup__button 
+                    ${currentTool === 'selection-rectangle' && 'popup__button--selected'}
+                    text text--4 text--nowrap
+                  `}
+                  onClick={() => doSetCurrentTool('selection-rectangle')}
+                >
                   <img className="popup__image" src={image16} alt=""/>
                   <span><span className="text--underline">R</span>ectangular selection</span>
                 </button>
 
-                <button className="popup__button text text--4 text--nowrap">
+                <button 
+                  className={`
+                    popup__button 
+                    ${currentTool === 'selection-free-form' && 'popup__button--selected'}
+                    text text--4 text--nowrap
+                  `}
+                  onClick={() => doSetCurrentTool('selection-free-form')}
+                >
                   <img className="popup__image" src={freeForm16} alt=""/>
                   <span><span className="text--underline">F</span>ree-form selection</span>
                 </button>

@@ -5,7 +5,7 @@ function usePointerTrack({
   onPointerDownCallback,
   onPointerUpCallback,
   onCancelCallback,
-  cancelOnRightMouseDown = false,
+  isCancelOnRightMouseDown = false,
   isTrackAlsoRight = false
 }) {
   const [isPressed, setIsPressed] = useState(false);
@@ -32,7 +32,7 @@ function usePointerTrack({
     if(isPressed) {
       window.addEventListener('pointerup', onPointerUp);
       window.addEventListener('pointermove', onPointerMoveCallback);
-      if(cancelOnRightMouseDown) {
+      if(isCancelOnRightMouseDown) {
         window.addEventListener('mousedown', onMouseDown);
       }
     }
@@ -42,7 +42,7 @@ function usePointerTrack({
       window.removeEventListener('pointermove', onPointerMoveCallback);
       window.removeEventListener('mousedown', onMouseDown);
     };
-  }, [isPressed, onPointerMoveCallback, onPointerUpCallback, cancelOnRightMouseDown, onCancelCallback]);
+  }, [isPressed, onPointerMoveCallback, onPointerUpCallback, isCancelOnRightMouseDown, onCancelCallback]);
   
   function onPointerDown(event) {
     if(event.button === 0 || (isTrackAlsoRight && event.button === 2)) {
