@@ -91,12 +91,16 @@ function Canvas() {
 
   if(currentTool === 'selection-rectangle') {
     usedDownCallback = (event) => {
-      // if(selectionPhase === 2) {
-      //   setSelectionPhase(0);
-      //   setSelectionResizeData(null);
-      //   return;
-      // }
-
+      if(selectionPhase === 2) {
+        primaryCtxRef.current.drawImage(
+          doGetCanvasCopy(selectionRef),
+          selectionPosition.x,
+          selectionPosition.y
+        );
+        doCancel();
+        return;
+      }
+      
       const { clientX, clientY } = event;
       const primaryRect = primaryRef.current.getBoundingClientRect();
       const offsetX = event.pageX - primaryRect.x;
@@ -150,6 +154,9 @@ function Canvas() {
         newY = selectionResizeData.initialOffsetY;
         newHeight = Math.min(newHeight, primaryRect.height - newY);
       }
+
+      newWidth = Math.max(newWidth, 1);
+      newHeight = Math.max(newHeight, 1);
   
       setSelectionSize({ width: newWidth, height: newHeight });
       setSelectionResizedSize({ width: newWidth, height: newHeight });
@@ -159,7 +166,15 @@ function Canvas() {
       }
     };
 
-    usedUpCallback = () => {
+    usedUpCallback = (event) => {
+      if(
+          selectionResizeData.initialX === event.clientX &&
+          selectionResizeData.initialY === event.clientY
+        ) {
+        setSelectionPhase(0);
+        return;
+      }
+      
       setSelectionPhase(2);
       setSelectionResizeData(null);
       const imageData = primaryCtxRef.current.getImageData(
@@ -197,6 +212,10 @@ function Canvas() {
     }
   }, [selectionSize, selectionPhase]);
 
+  useEffect(() => {
+    setSelectionPhase(0);
+  }, [currentTool, canvasZoom]);
+
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
     setPosition: setSelectionPosition,
@@ -228,7 +247,7 @@ function Canvas() {
   /* TEMPORARY */
   /* TEMPORARY */
   
-  const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
+  const { onPointerDown, currentlyPressedRef, doCancel } = usePointerTrack({ 
     onPointerMoveCallback: usedMoveCallback,
     onPointerDownCallback: usedDownCallback,
     onPointerUpCallback: usedUpCallback,
