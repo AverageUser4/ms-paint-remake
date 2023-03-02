@@ -97,10 +97,10 @@ function Canvas() {
         primaryCtxRef.current.imageSmoothingEnabled = false;
         primaryCtxRef.current.drawImage(
           doGetCanvasCopy(selectionRef),
-          selectionPosition.x,
-          selectionPosition.y,
-          selectionResizedSize.width,
-          selectionResizedSize.height,
+          Math.round(selectionPosition.x / canvasZoom),
+          Math.round(selectionPosition.y / canvasZoom),
+          Math.round(selectionResizedSize.width / canvasZoom),
+          Math.round(selectionResizedSize.height / canvasZoom),
         );
         doCancel();
         return;
@@ -183,16 +183,23 @@ function Canvas() {
       setSelectionPhase(2);
       setSelectionResizeData(null);
       const imageData = primaryCtxRef.current.getImageData(
-        selectionPosition.x, selectionPosition.y,
-        selectionSize.width, selectionSize.height
+        Math.round(selectionPosition.x / canvasZoom),
+        Math.round(selectionPosition.y / canvasZoom),
+        Math.round(selectionSize.width / canvasZoom),
+        Math.round(selectionSize.height / canvasZoom),
       );
+
+      selectionCtxRef.current.imageSmoothingEnabled = false;
+      selectionCtxRef.current.scale(canvasZoom, canvasZoom);
       selectionCtxRef.current.putImageData(imageData, 0, 0);
       lastSelectionStateRef.current = doGetCanvasCopy(selectionRef);
 
-      primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
+      primaryCtxRef.current.fillStyle = 'red'//RGBObjectToString(colorData.secondary);
       primaryCtxRef.current.fillRect(
-        selectionPosition.x, selectionPosition.y,
-        selectionSize.width, selectionSize.height
+        Math.round(selectionPosition.x / canvasZoom),
+        Math.round(selectionPosition.y / canvasZoom),
+        Math.round(selectionSize.width / canvasZoom),
+        Math.round(selectionSize.height / canvasZoom),
       );
     };
 
