@@ -4,6 +4,7 @@ import useResize from "../../hooks/useResize";
 import useResizeCursor from "../../hooks/useResizeCursor";
 import usePointerTrack from '../../hooks/usePointerTrack';
 import { doGetCanvasCopy } from '../../misc/utils';
+import { RGBObjectToString } from '../../misc/utils';
 
 function useSelection({
   primaryRef,
@@ -14,6 +15,7 @@ function useSelection({
   lastCanvasZoomRef,
   currentTool,
   canvasZoom,
+  colorData,
 }) {
   const [selectionResizeData, setSelectionResizeData] = useState(null);
   const [selectionSize, setSelectionSize] = useState({ width: 1, height: 1 });
@@ -95,6 +97,7 @@ function useSelection({
     newWidth = Math.max(newWidth, 1);
     newHeight = Math.max(newHeight, 1);
 
+    console.log(`setting width to: ${newWidth}`)
     setSelectionSize({ width: newWidth, height: newHeight });
     setSelectionResizedSize({ width: newWidth, height: newHeight });
 
@@ -112,8 +115,17 @@ function useSelection({
       return;
     }
     
+    console.log(selectionSize.width)
+    /*
+      - there is a bug here: if mouse moves too fast this function reads stale width and height
+      - must make sure that selectionSize is set to latest value before running code below
+      - using ref wont work because selectionSize also affects width and height of canvas element
+        and drawing to it when it is still smaller causes part of image to be cut off
+    */
+    
     setSelectionPhase(2);
     setSelectionResizeData(null);
+
     const imageData = primaryCtxRef.current.getImageData(
       Math.round(selectionPosition.x / canvasZoom),
       Math.round(selectionPosition.y / canvasZoom),
@@ -200,7 +212,7 @@ function useSelection({
   const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
     position: selectionPosition,
     setPosition: setSelectionPosition,
-    size: selectionSize,
+    size: selectionResizedSize,
     setSize: (newSize) => { setSelectionSize(newSize); setSelectionResizedSize(newSize); },
     isInnerWindow: false,
     isMaximized: false,

@@ -53,7 +53,7 @@ function Canvas() {
   } = useSelection({
     currentTool, primaryCtxRef, selectionRef,
     canvasZoom, primaryRef, selectionCtxRef, lastCurrentToolRef,
-    lastCanvasZoomRef,
+    lastCanvasZoomRef, colorData
   });
 
   const { resizeElements } = useResize({ 
