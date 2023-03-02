@@ -1,27 +1,26 @@
-import { RGBObjectToString } from "../../misc/utils";
+import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 
 function useBrush({
-  currentTool,
-  secondaryRef,
-  lastPointerPositionRef,
-  canvasZoom,
-  secondaryCtxRef,
-  colorData,
-  currentToolData,
-  primaryCtxRef,
-  lastPrimaryStateRef,
-  doHistoryAdd,
-  doGetCanvasCopy,
-  canvasSize,
   primaryRef,
-  setColorData,
+  primaryCtxRef,
+  secondaryRef,
+  secondaryCtxRef,
+  lastPointerPositionRef,
+  lastPrimaryStateRef,
+  currentTool,
+  currentToolData,
+  canvasZoom,
   setCanvasZoom,
-  }) {
-  let usedMoveCallback = onPointerMoveCallbackMove;
-  let usedDownCallback = onPointerMoveCallbackMove;
-  let usedUpCallback = onPointerUpCallbackMove;
-  let usedCancelCallback = onCancelCallbackMove;
+  canvasSize,
+  colorData,
+  setColorData,
+  doHistoryAdd,
+}) {
+  let usedMoveCallback = onPointerMoveCallback;
+  let usedDownCallback = onPointerMoveCallback;
+  let usedUpCallback = onPointerUpCallback;
+  let usedCancelCallback = onCancelCallback;
 
   if(currentToolData.onPointerMove) {
     usedMoveCallback = (event) => currentToolData.onPointerMove({ event });
@@ -45,7 +44,7 @@ function useBrush({
     usedCancelCallback = (event) => currentToolData.onCancel({ event });
   }
 
-  function onPointerMoveCallbackMove(event) {
+  function onPointerMoveCallback(event) {
     const step = currentTool === 'airbrush' ? 5 : 1;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     let { x: curX, y: curY } = lastPointerPositionRef.current;
@@ -104,20 +103,20 @@ function useBrush({
       });
     }
   }
-  function onPointerUpCallbackMove() {
+  function onPointerUpCallback() {
     lastPointerPositionRef.current = {};
 
     primaryCtxRef.current.drawImage(secondaryRef.current, 0, 0);
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
+    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     doHistoryAdd({ 
-      element: doGetCanvasCopy(primaryRef),
+      element: doGetCanvasCopy(primaryRef.current),
       width: canvasSize.width,
       height: canvasSize.height
     });
   }
-  function onCancelCallbackMove() {
+  function onCancelCallback() {
     lastPointerPositionRef.current = {};
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
@@ -132,9 +131,6 @@ function useBrush({
   });
 
   return { 
-    onPointerMoveCallbackMove,
-    onPointerUpCallbackMove,
-    onCancelCallbackMove,
     onPointerDownBrush: onPointerDown,
   };
 }

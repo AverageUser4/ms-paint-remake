@@ -168,3 +168,11 @@ export function objectEquals(obj1, obj2) {
 
   return true;
 }
+
+export function doGetCanvasCopy(canvasElement) {
+  const newCanvas = document.createElement('canvas');
+  newCanvas.width = canvasElement.width;
+  newCanvas.height = canvasElement.height;
+  newCanvas.getContext('2d').drawImage(canvasElement, 0, 0);
+  return newCanvas;
+}

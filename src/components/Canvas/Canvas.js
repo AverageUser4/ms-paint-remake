@@ -6,28 +6,15 @@ import { useCanvasContext } from "../../misc/CanvasContext";
 import { useHistoryContext } from "../../misc/HistoryContext";
 import { useToolContext } from "../../misc/ToolContext";
 import { useColorContext } from "../../misc/ColorContext";
-import { RGBObjectToString } from "../../misc/utils";
+import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
 import useSelection from "./useSelection";
 import useBrush from "./useBrush";
 
-function doGetCanvasCopy(canvasRef) {
-  const newCanvas = document.createElement('canvas');
-  newCanvas.width = canvasRef.current.width;
-  newCanvas.height = canvasRef.current.height;
-  newCanvas.getContext('2d').drawImage(canvasRef.current, 0, 0);
-  return newCanvas;
-}
-
 function Canvas() {
   const { 
-    canvasSize,
-    canvasOutlineSize,
-    canvasZoom,
-    setCanvasZoom,
-    setCanvasOutlineSize,
-    setCanvasSize,
-    canvasMousePosition,
-    setCanvasMousePosition
+    canvasSize, canvasOutlineSize, canvasZoom, setCanvasZoom,
+    setCanvasOutlineSize, setCanvasSize, canvasMousePosition,
+    setCanvasMousePosition,
   } = useCanvasContext();
   const { toolsData, currentTool } = useToolContext();
   const { colorData, setColorData } = useColorContext()
@@ -53,57 +40,36 @@ function Canvas() {
   const {
     onPointerDownBrush
   } = useBrush({
-    currentTool,
-    secondaryRef,
-    lastPointerPositionRef,
-    canvasZoom,
-    secondaryCtxRef,
-    colorData,
-    currentToolData,
-    primaryCtxRef,
-    lastPrimaryStateRef,
-    doHistoryAdd,
-    doGetCanvasCopy,
-    canvasSize,
-    primaryRef,
-    setColorData,
-    setCanvasZoom,
+    currentTool, secondaryRef, lastPointerPositionRef, canvasZoom,
+    secondaryCtxRef, colorData, currentToolData, primaryCtxRef,
+    lastPrimaryStateRef, doHistoryAdd, canvasSize,
+    primaryRef, setColorData, setCanvasZoom,
   });
 
   const { 
-    selectionPhase,
-    selectionPosition,
-    selectionResizeElements,
-    selectionResizedSize,
-    selectionSize,
-    onPointerDownMove,
+    selectionPhase, selectionPosition, selectionResizeElements,
+    selectionResizedSize, selectionSize, onPointerDownSelectionMove,
     onPointerDownSelection
   } = useSelection({
-    currentTool,
-    primaryCtxRef,
-    doGetCanvasCopy,
-    selectionRef,
-    canvasZoom,
-    primaryRef,
-    selectionCtxRef,
-    lastCurrentToolRef,
+    currentTool, primaryCtxRef, selectionRef,
+    canvasZoom, primaryRef, selectionCtxRef, lastCurrentToolRef,
     lastCanvasZoomRef,
   });
 
   const { resizeElements } = useResize({ 
     position: { x: 0, y: 0 },
     setPosition: ()=>0,
-    isAllowToLeaveViewport: true,
     size: canvasOutlineSize || canvasSize,
     setSize: setCanvasOutlineSize,
-    isConstrained: false,
     minimalSize: { width: 1, height: 1, },
+    zoom: canvasZoom,
+    onPointerUpCallback: onPointerUpCallbackResize,
+    isConstrained: false,
+    isAllowToLeaveViewport: true,
     isResizable: true,
     isPointBased: true,
     isOnlyThreeDirections: true,
     isCancelOnRightMouseDown: true,
-    onPointerUpCallback: onPointerUpCallbackResize,
-    zoom: canvasZoom,
   });
   function onPointerUpCallbackResize() {
     if(!canvasOutlineSize) {
@@ -116,7 +82,7 @@ function Canvas() {
 
     setCanvasSize({ width, height });
     setCanvasOutlineSize(null);
-    doHistoryAdd({ element: doGetCanvasCopy(primaryRef), width, height });
+    doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), width, height });
   }
 
   useEffect(() => {
@@ -126,11 +92,13 @@ function Canvas() {
 
     primaryCtxRef.current = primaryRef.current.getContext('2d');
     secondaryCtxRef.current = secondaryRef.current.getContext('2d');
+    // by default canvas background is transparent, in paint it is supposed to always be in secondary color
     primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryCtxRef.current.fillRect(0, 0, 9999, 9999);
+    primaryCtxRef.current.fillRect(0, 0, 99999, 99999);
   }, [colorData.secondary]);
 
   useEffect(() => {
+    // when history.currentIndex changes, change canvas state to that point in history
     if(history.currentIndex === lastHistoryIndexRef.current) {
       return;
     }
@@ -138,7 +106,7 @@ function Canvas() {
     primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
     primaryCtxRef.current.fillRect(0, 0, 99999, 99999);
     primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
-    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
+    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     setCanvasSize({
       width: history.dataArray[history.currentIndex].width,
       height: history.dataArray[history.currentIndex].height,
@@ -148,12 +116,16 @@ function Canvas() {
   }, [history, setCanvasSize, colorData.secondary]);
 
   useEffect(() => {
+    // changing width or height attribute (which happens whenever canvasSize changes)
+    // of canvas causes it to lose its entire context (both 'settings' like
+    // fillStyle and pixels drawn to it), this effect makes sure that after every change
+    // to canvas' dimensions its latest pixels are put back on it
     if(lastPrimaryStateRef.current) {
       primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
       primaryCtxRef.current.fillRect(0, 0, canvasSize.width, canvasSize.height);
       primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef);
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     }
   }, [canvasSize, colorData.secondary]);
 
@@ -209,7 +181,7 @@ function Canvas() {
                 ${css['canvas--selection']}
                 ${selectionPhase === 2 && css['canvas--selection--ready']}
               `}
-              onPointerDown={onPointerDownMove}
+              onPointerDown={onPointerDownSelectionMove}
               ref={(element) => { 
                 selectionRef.current = element;
                 selectionCtxRef.current = element?.getContext('2d');

@@ -3,33 +3,32 @@ import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
 import useResizeCursor from "../../hooks/useResizeCursor";
 import usePointerTrack from '../../hooks/usePointerTrack';
+import { doGetCanvasCopy } from '../../misc/utils';
 
 function useSelection({
-  currentTool,
-  primaryCtxRef,
-  doGetCanvasCopy,
-  selectionRef,
-  canvasZoom,
   primaryRef,
+  primaryCtxRef,
+  selectionRef,
   selectionCtxRef,
   lastCurrentToolRef,
-  lastCanvasZoomRef
+  lastCanvasZoomRef,
+  currentTool,
+  canvasZoom,
 }) {
   const [selectionResizeData, setSelectionResizeData] = useState(null);
   const [selectionSize, setSelectionSize] = useState({ width: 1, height: 1 });
   const [selectionResizedSize, setSelectionResizedSize] = useState({ width: 1, height: 1 });
   const [selectionPosition, setSelectionPosition] = useState({ x: 50, y: 50 });
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
-  // 0, 1 or 2
-  const [selectionPhase, setSelectionPhase] = useState(0);
+  const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
   const lastSelectionStateRef = useRef();
   useResizeCursor(selectionResizeData);
 
-  function selectionDownCallback(event) {
+  function onPointerDownCallback(event) {
     if(selectionPhase === 2) {
       primaryCtxRef.current.imageSmoothingEnabled = false;
       primaryCtxRef.current.drawImage(
-        doGetCanvasCopy(selectionRef),
+        doGetCanvasCopy(selectionRef.current),
         Math.round(selectionPosition.x / canvasZoom),
         Math.round(selectionPosition.y / canvasZoom),
         Math.round(selectionResizedSize.width / canvasZoom),
@@ -59,7 +58,7 @@ function useSelection({
     setSelectionPhase(1);
   }
   
-  function selectionMoveCallback(event) {
+  function onPointerMoveCallback(event) {
     let { clientX, clientY } = event;
     const primaryRect = primaryRef.current.getBoundingClientRect();
     const offsetX = event.pageX - primaryRect.x;
@@ -104,7 +103,7 @@ function useSelection({
     }
   }
 
-  function selectionUpCallback(event) {
+  function onPointerUpCallback(event) {
     if(
         selectionResizeData.initialX === event.clientX &&
         selectionResizeData.initialY === event.clientY
@@ -125,7 +124,7 @@ function useSelection({
     selectionCtxRef.current.imageSmoothingEnabled = false;
     selectionCtxRef.current.scale(canvasZoom, canvasZoom);
     selectionCtxRef.current.putImageData(imageData, 0, 0);
-    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef);
+    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
 
     primaryCtxRef.current.fillStyle = 'red'//RGBObjectToString(colorData.secondary);
     primaryCtxRef.current.fillRect(
@@ -136,12 +135,12 @@ function useSelection({
     );
   }
 
-  function selectionCancelCallback() {
+  function onCancelCallback() {
     setSelectionPhase(0);
     setSelectionResizeData(null);
   }
 
-  function onPointerUpCallbackSelectionResize() {
+  function onPointerUpCallbackResize() {
     if(!selectionOutlineSize) {
       return;
     }
@@ -170,7 +169,7 @@ function useSelection({
     if(selectionPhase === 2) {
       primaryCtxRef.current.imageSmoothingEnabled = false;
       primaryCtxRef.current.drawImage(
-        doGetCanvasCopy(selectionRef),
+        doGetCanvasCopy(selectionRef.current),
         selectionPosition.x,
         selectionPosition.y,
         selectionResizedSize.width,
@@ -178,7 +177,9 @@ function useSelection({
       );
     }
     setSelectionPhase(0);
-  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize, doGetCanvasCopy, lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef]);
+  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize,
+      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef]
+  );
 
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
@@ -192,11 +193,11 @@ function useSelection({
     isPointBased: true,
     isOnlyThreeDirections: false,
     isCancelOnRightMouseDown: true,
-    onPointerUpCallback: onPointerUpCallbackSelectionResize,
+    onPointerUpCallback: onPointerUpCallbackResize,
     zoom: 1,
     containerRef: primaryRef
   });
-  const { onPointerDownMove } = useMove({
+  const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
     position: selectionPosition,
     setPosition: setSelectionPosition,
     size: selectionSize,
@@ -209,10 +210,10 @@ function useSelection({
   });
 
   const { onPointerDown, doCancel } = usePointerTrack({ 
-    onPointerMoveCallback: selectionMoveCallback,
-    onPointerDownCallback: selectionDownCallback,
-    onPointerUpCallback: selectionUpCallback,
-    onCancelCallback: selectionCancelCallback,
+    onPointerMoveCallback,
+    onPointerDownCallback,
+    onPointerUpCallback,
+    onCancelCallback,
     isCancelOnRightMouseDown: true,
     isTrackAlsoRight: true
   });
@@ -223,7 +224,7 @@ function useSelection({
     selectionResizeElements,
     selectionResizedSize,
     selectionSize,
-    onPointerDownMove,
+    onPointerDownSelectionMove,
     onPointerDownSelection: onPointerDown,
   }
 }
