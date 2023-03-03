@@ -91,7 +91,7 @@ export default function useMove({
     setPositionDifference(null);
   }
 
-  const tempElement = 
+  const tempElement = !isInnerWindow && (
     <WindowPlacementIndicator
       position={position}
       isConstrained={isConstrained}
@@ -99,7 +99,8 @@ export default function useMove({
       isBeingMoved={isMovePressed}
       indicatorData={indicatorData}
       setIndicatorData={setIndicatorData}
-    />;
+    />
+  );
 
   return {
     onPointerDownMove,

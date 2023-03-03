@@ -6,14 +6,11 @@ import usePointerTrack from '../../hooks/usePointerTrack';
 import { doGetCanvasCopy } from '../../misc/utils';
 import { RGBObjectToString } from '../../misc/utils';
 
-function useSelection({
+function useRectangularSelection({
   primaryRef,
   primaryCtxRef,
   selectionRef,
   selectionCtxRef,
-  lastCurrentToolRef,
-  lastCanvasZoomRef,
-  currentTool,
   canvasZoom,
   colorData,
 }) {
@@ -21,7 +18,6 @@ function useSelection({
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionResizedSize, setSelectionResizedSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
-  const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
   const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
   const lastSelectionStateRef = useRef();
   const lastSelectionSizeRef = useRef(null);
@@ -177,85 +173,13 @@ function useSelection({
     setSelectionResizeData(null);
   }
 
-  function onPointerUpCallbackResize() {
-    if(!selectionOutlineSize) {
-      return;
-    }
-
-    setSelectionResizedSize(selectionOutlineSize);
-    setSelectionOutlineSize(null);
-  }
-
-  useEffect(() => {
-    // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
-    if(selectionPhase === 2 && lastSelectionStateRef.current) {
-      selectionCtxRef.current.drawImage(lastSelectionStateRef.current, 0, 0);
-    }
-  }, [selectionSize, selectionPhase, selectionCtxRef]);
-  
-  useEffect(() => {
-    if(
-        lastCurrentToolRef.current === currentTool &&
-        lastCanvasZoomRef.current === canvasZoom
-      ) {
-      return;
-    }
-    
-    if(selectionPhase === 2) {
-      primaryCtxRef.current.imageSmoothingEnabled = false;
-      primaryCtxRef.current.drawImage(
-        doGetCanvasCopy(selectionRef.current),
-        Math.round(selectionPosition.x / lastCanvasZoomRef.current),
-        Math.round(selectionPosition.y / lastCanvasZoomRef.current),
-        Math.round(selectionResizedSize.width / lastCanvasZoomRef.current),
-        Math.round(selectionResizedSize.height / lastCanvasZoomRef.current),
-      );
-    }
-
-    setSelectionPhase(0);
-    lastCurrentToolRef.current = currentTool;
-    lastCanvasZoomRef.current = canvasZoom;
-  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize,
-      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef]
-  );
-
-  const { resizeElements: selectionResizeElements } = useResize({ 
-    position: selectionPosition,
-    setPosition: setSelectionPosition,
-    isAllowToLeaveViewport: true,
-    size: selectionOutlineSize || selectionResizedSize,
-    setSize: setSelectionOutlineSize,
-    isConstrained: false,
-    minimalSize: { width: 1, height: 1, },
-    isResizable: true,
-    isPointBased: true,
-    isOnlyThreeDirections: false,
-    isCancelOnRightMouseDown: true,
-    onPointerUpCallback: onPointerUpCallbackResize,
-    zoom: 1,
-    containerRef: primaryRef
-  });
-  const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
-    position: selectionPosition,
-    setPosition: setSelectionPosition,
-    size: selectionResizedSize,
-    setSize: (newSize) => { setSelectionSize(newSize); setSelectionResizedSize(newSize); },
-    isInnerWindow: true,
-    isMaximized: false,
-    isConstrained: false,
-    isReverseConstrained: true,
-    containerRef: primaryRef,
-  });
-
   return {
     selectionPhase,
     selectionPosition,
-    selectionResizeElements,
     selectionResizedSize,
     selectionSize,
-    onPointerDownSelectionMove,
     onPointerDownSelection: onPointerDown,
   }
 }
 
-export default useSelection;
+export default useRectangularSelection;

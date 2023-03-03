@@ -192,7 +192,7 @@ function Canvas() {
           </div>
       }
 
-      {resizeElements}
+      {selectionPhase !== 2 && resizeElements}
 
       {
         currentTool === 'eraser' && canvasMousePosition &&
