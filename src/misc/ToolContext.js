@@ -43,7 +43,7 @@ function ToolProvider({ children }) {
     ['selection-rectangle', RectangularSelection],
     ['selection-free-form', FreeFormSelection]
   ]));
-  const [currentTool, setCurrentTool] = useState('selection-rectangle');
+  const [currentTool, setCurrentTool] = useState('selection-free-form');
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'

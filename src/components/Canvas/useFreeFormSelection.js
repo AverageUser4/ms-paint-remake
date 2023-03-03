@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { RGBObjectToString, doGetCanvasCopy, checkArgs } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 
@@ -27,20 +28,35 @@ function useFreeFormSelection({
     { name: 'currentToolData', value: currentToolData, type: 'object' },
     { name: 'canvasSize', value: canvasSize, type: 'object' },
   ]);
+  const minPositionRef = useRef();
+  const maxPositionRef = useRef();
 
-  let usedMoveCallback = onPointerMoveCallback;
-  let usedDownCallback = onPointerMoveCallback;
-  let usedUpCallback = onPointerUpCallback;
-  let usedCancelCallback = onCancelCallback;
+  function onPointerDownCallback(event) {
+    const secondaryRect = secondaryRef.current.getBoundingClientRect();
+    const offsetX = event.pageX - secondaryRect.x / canvasZoom;
+    const offsetY = event.pageY - secondaryRect.y / canvasZoom;
+    const position = { x: offsetX, y: offsetY };
+    minPositionRef.current = position;
+    maxPositionRef.current = position;
+  }
 
   function onPointerMoveCallback(event) {
     const step = currentTool === 'airbrush' ? 5 : 1;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     let { x: curX, y: curY } = lastPointerPositionRef.current;
     
-    const desX = (event.pageX - secondaryRect.x) / canvasZoom;
-    const desY = (event.pageY - secondaryRect.y) / canvasZoom;
+    const desX = Math.max(Math.min((event.pageX - secondaryRect.x) / canvasZoom, secondaryRect.width - 1), 0);
+    const desY = Math.max(Math.min((event.pageY - secondaryRect.y) / canvasZoom, secondaryRect.height - 1), 0);
     lastPointerPositionRef.current = { x: desX, y: desY };
+
+    minPositionRef.current = {
+      x: Math.min(minPositionRef.current.x, desX),
+      y: Math.min(minPositionRef.current.y, desY),
+    };
+    maxPositionRef.current = {
+      x: Math.max(maxPositionRef.current.x, desX),
+      y: Math.max(maxPositionRef.current.y, desY),
+    };
 
     if(typeof curX === 'undefined') {
       curX = desX;
@@ -95,7 +111,14 @@ function useFreeFormSelection({
   function onPointerUpCallback() {
     lastPointerPositionRef.current = {};
 
-    primaryCtxRef.current.drawImage(secondaryRef.current, 0, 0);
+    primaryCtxRef.current.fillStyle = 'hotpink';
+    primaryCtxRef.current.fillRect(
+      minPositionRef.current.x,
+      minPositionRef.current.y,
+      maxPositionRef.current.x - minPositionRef.current.x,
+      maxPositionRef.current.y - minPositionRef.current.y,
+    );
+
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
@@ -106,10 +129,10 @@ function useFreeFormSelection({
   }
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
-    onPointerMoveCallback: usedMoveCallback,
-    onPointerDownCallback: usedDownCallback,
-    onPointerUpCallback: usedUpCallback,
-    onCancelCallback: usedCancelCallback,
+    onPointerMoveCallback,
+    onPointerDownCallback,
+    onPointerUpCallback,
+    onCancelCallback,
     isCancelOnRightMouseDown: true,
     isTrackAlsoRight: true
   });
