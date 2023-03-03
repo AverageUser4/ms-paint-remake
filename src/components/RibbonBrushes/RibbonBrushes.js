@@ -65,7 +65,7 @@ function RibbonBrushes() {
       showChildren={isDropdownOpen}
       setShowChildren={setIsDropdownOpen}
       onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-      onPointerDownTop={() => doSetCurrentTool(latestTools.brushes)}
+      onPointerDownTop={() => !currentTool.startsWith('brushes-') && doSetCurrentTool(latestTools.brushes)}
       isActive={currentTool.startsWith('brushes-')}
     >
       <div 

@@ -49,12 +49,26 @@ function Canvas() {
   const { 
     selectionPhase, selectionPosition, selectionResizeElements,
     selectionResizedSize, selectionSize, onPointerDownSelectionMove,
-    onPointerDownSelection
+    onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection({
     currentTool, primaryCtxRef, selectionRef,
     canvasZoom, primaryRef, selectionCtxRef, lastCurrentToolRef,
-    lastCanvasZoomRef, colorData
+    lastCanvasZoomRef, colorData,
+
+    secondaryRef,
+    secondaryCtxRef,
+    lastPointerPositionRef,
+    lastPrimaryStateRef,
+    currentToolData,
+    canvasSize,
   });
+
+  let onPointerDownSecondary = onPointerDownBrush;
+  if(currentTool === 'selection-rectangle') {
+    onPointerDownSecondary = onPointerDownRectangularSelection;
+  } else if(currentTool === 'selection-free-form') {
+    onPointerDownSecondary = onPointerDownFreeFormSelection;
+  }
 
   const { resizeElements } = useResize({ 
     position: { x: 0, y: 0 },
@@ -151,7 +165,7 @@ function Canvas() {
           setCanvasMousePosition({ x: offsetX, y: offsetY });
         }}
         onPointerLeave={() => setCanvasMousePosition(null)}
-        onPointerDown={currentTool.startsWith('selection') ? onPointerDownSelection : onPointerDownBrush}
+        onPointerDown={(e) => onPointerDownSecondary(e)}
         ref={secondaryRef}
       ></canvas>
 
@@ -181,7 +195,7 @@ function Canvas() {
                 ${css['canvas--selection']}
                 ${selectionPhase === 2 && css['canvas--selection--ready']}
               `}
-              onPointerDown={onPointerDownSelectionMove}
+              onPointerDown={(e) => onPointerDownSelectionMove(e)}
               ref={(element) => { 
                 selectionRef.current = element;
                 selectionCtxRef.current = element?.getContext('2d');

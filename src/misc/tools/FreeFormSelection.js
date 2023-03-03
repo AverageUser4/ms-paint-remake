@@ -1,10 +1,8 @@
 export default {
   cursor: 'selection',
   sizes: null,
-  onPointerDown({ event }) {
-    console.log('hi')
+  draw({ secondaryContext, curX, curY }) {
+    const size = 2;
+    secondaryContext.fillRect(curX, curY, size, size);
   },
-  onPointerMove({ event }) {
-    console.log('hello')
-  }
 };

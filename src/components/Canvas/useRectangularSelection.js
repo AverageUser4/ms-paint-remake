@@ -1,10 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import useMove from "../../hooks/useMove";
-import useResize from "../../hooks/useResize";
-import useResizeCursor from "../../hooks/useResizeCursor";
+import { useState } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
-import { doGetCanvasCopy } from '../../misc/utils';
-import { RGBObjectToString } from '../../misc/utils';
+import useResizeCursor from "../../hooks/useResizeCursor";
+import { doGetCanvasCopy, RGBObjectToString, checkArgs } from '../../misc/utils';
 
 function useRectangularSelection({
   primaryRef,
@@ -13,27 +10,38 @@ function useRectangularSelection({
   selectionCtxRef,
   canvasZoom,
   colorData,
+  selectionSize,
+  selectionResizedSize,
+  selectionPosition,
+  selectionPhase,
+  setSelectionPhase,
+  lastSelectionStateRef,
+  lastSelectionSizeRef,
+  lastSelectionPositionRef,
+  doSetSize,
+  doSetPosition,
 }) {
+  checkArgs([
+    { name: 'primaryRef', value: primaryRef, type: 'object' },
+    { name: 'primaryCtxRef', value: primaryCtxRef, type: 'object' },
+    { name: 'selectionRef', value: selectionRef, type: 'object' },
+    { name: 'selectionCtxRef', value: selectionCtxRef, type: 'object' },
+    { name: 'canvasZoom', value: canvasZoom, type: 'number' },
+    { name: 'colorData', value: colorData, type: 'object' },
+    { name: 'selectionSize', value: selectionSize, type: 'object' },
+    { name: 'selectionResizedSize', value: selectionResizedSize, type: 'object' },
+    { name: 'selectionPosition', value: selectionPosition, type: 'object' },
+    { name: 'selectionPhase', value: selectionPhase, type: 'number' },
+    { name: 'setSelectionPhase', value: setSelectionPhase, type: 'function' },
+    { name: 'lastSelectionStateRef', value: lastSelectionStateRef, type: 'object' },
+    { name: 'lastSelectionSizeRef', value: lastSelectionSizeRef, type: 'object' },
+    { name: 'lastSelectionPositionRef', value: lastSelectionPositionRef, type: 'object' },
+    { name: 'doSetSize', value: doSetSize, type: 'function' },
+    { name: 'doSetPosition', value: doSetPosition, type: 'function' },
+  ]);
+
   const [selectionResizeData, setSelectionResizeData] = useState(null);
-  const [selectionSize, setSelectionSize] = useState(null);
-  const [selectionResizedSize, setSelectionResizedSize] = useState(null);
-  const [selectionPosition, setSelectionPosition] = useState(null);
-  const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
-  const lastSelectionStateRef = useRef();
-  const lastSelectionSizeRef = useRef(null);
-  const lastSelectionPositionRef = useRef(null);
   useResizeCursor(selectionResizeData);
-
-  function doSetSize(newSize) {
-    setSelectionSize(newSize);
-    setSelectionResizedSize(newSize);
-    lastSelectionSizeRef.current = newSize;
-  }
-
-  function doSetPosition(newPosition) {
-    setSelectionPosition(newPosition);
-    lastSelectionPositionRef.current = newPosition;
-  }
 
   const { onPointerDown, doCancel } = usePointerTrack({ 
     onPointerMoveCallback,
@@ -174,11 +182,7 @@ function useRectangularSelection({
   }
 
   return {
-    selectionPhase,
-    selectionPosition,
-    selectionResizedSize,
-    selectionSize,
-    onPointerDownSelection: onPointerDown,
+    onPointerDownRectangularSelection: onPointerDown,
   }
 }
 

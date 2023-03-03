@@ -62,7 +62,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               showChildren={isDropdownOpen}
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-              onPointerDownTop={() => doSetCurrentTool(latestTools.selection)}
+              onPointerDownTop={() => !currentTool.startsWith('selection-') && doSetCurrentTool(latestTools.selection)}
               isActive={currentTool.startsWith('selection-')}
             >
               <div 
