@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { RGBObjectToString, doGetCanvasCopy, checkArgs, getDrawData } from "../../misc/utils";
+import { ImageDataUtils, checkArgs, getDrawData, doGetCanvasCopy } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 
 function useFreeFormSelection({
@@ -17,7 +17,12 @@ function useFreeFormSelection({
   doSetSize,
   doSetPosition,
   setSelectionPhase,
-  selectionCtxRef
+  selectionCtxRef,
+  lastSelectionStateRef,
+  selectionPhase,
+  selectionRef,
+  selectionPosition,
+  selectionResizedSize
 }) {
   checkArgs([
     { name: 'primaryRef', value: primaryRef, type: 'object' },
@@ -35,11 +40,29 @@ function useFreeFormSelection({
     { name: 'doSetPosition', value: doSetPosition, type: 'function' },
     { name: 'setSelectionPhase', value: setSelectionPhase, type: 'function' },
     { name: 'selectionCtxRef', value: selectionCtxRef, type: 'object' },
+    { name: 'lastSelectionStateRef', value: lastSelectionStateRef, type: 'object' },
+    { name: 'selectionPhase', value: selectionPhase, type: 'number' },
+    { name: 'selectionRef', value: selectionRef, type: 'object' },
+    { name: 'selectionPosition', value: selectionPosition, type: 'object' },
+    { name: 'selectionResizedSize', value: selectionResizedSize, type: 'object' },
   ]);
   const edgePositionRef = useRef();
   const initialPositionRef = useRef();
 
   function onPointerDownCallback(event) {
+    if(selectionPhase === 2) {
+      primaryCtxRef.current.imageSmoothingEnabled = false;
+      primaryCtxRef.current.drawImage(
+        doGetCanvasCopy(selectionRef.current),
+        Math.round(selectionPosition.x / canvasZoom),
+        Math.round(selectionPosition.y / canvasZoom),
+        Math.round(selectionResizedSize.width / canvasZoom),
+        Math.round(selectionResizedSize.height / canvasZoom),
+      );
+      doCancel();
+      return;
+    }
+
     const { pageX, pageY } = event;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     const offsetX = pageX - secondaryRect.x / canvasZoom;
@@ -52,9 +75,11 @@ function useFreeFormSelection({
       maxY: position.y,
     };
     initialPositionRef.current = { pageX, pageY, offsetX, offsetY };
+
+    onPointerMoveCallback(event);
   }
 
-  function onPointerMoveCallback(event, TEMPORARY) {
+  function onPointerMoveCallback(event) {
     const step = 1;
     const currentPixel = { ...lastPointerPositionRef.current };
 
@@ -73,9 +98,6 @@ function useFreeFormSelection({
     };
 
     secondaryCtxRef.current.fillStyle = 'black';
-    if(TEMPORARY) {
-      secondaryCtxRef.current.fillStyle = 'red';
-    }
 
     function doDraw(isRepeated) {
       currentToolData.draw({
@@ -93,30 +115,65 @@ function useFreeFormSelection({
   }
   function onPointerUpCallback() {
     onPointerMoveCallback(initialPositionRef.current, true);
-    // code below has same bug (line does not fully close, it means that there's something wrong with specified start or destination (not a problem with drawing algorithm))
-    // secondaryCtxRef.current.strokeStyle = 'hotpink';
-    // secondaryCtxRef.current.beginPath();
-    // secondaryCtxRef.current.moveTo(initialPositionRef.current.offsetX, initialPositionRef.current.offsetY);
-    // secondaryCtxRef.current.lineTo(lastPointerPositionRef.current.x, lastPointerPositionRef.current.y);
-    // secondaryCtxRef.current.stroke();
-
     lastPointerPositionRef.current = {};
 
     const x = edgePositionRef.current.minX;
     const y = edgePositionRef.current.minY;
     const width = edgePositionRef.current.maxX - edgePositionRef.current.minX + 1;
     const height = edgePositionRef.current.maxY - edgePositionRef.current.minY + 1;
-    
-    const imageData = secondaryCtxRef.current.getImageData(x, y, width, height);
+
+    const boundariesImageData = secondaryCtxRef.current.getImageData(x, y, width, height);
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    lastSelectionStateRef.current = null;
+
+    if(width < 6 || height < 6) {
+      return;
+    }
 
     setSelectionPhase(2);
     doSetPosition({ x, y });
     doSetSize({ width, height });
 
     setTimeout(() => {
-      selectionCtxRef.current.putImageData(imageData, 0, 0);
-    }, 150);
+      const primaryImageData = primaryCtxRef.current.getImageData(x, y, width, height);
+      const selectionImageData = selectionCtxRef.current.getImageData(x, y, width, height);
+      
+      function isThereTerminatingLine(column, row) {
+        for(let i = column + 2; i < width; i++) {
+          const isBlack = ImageDataUtils.getColorFromCoords(boundariesImageData, i, row).a > 0;
+          if(isBlack) {
+            return true;
+          }
+        }
+        return false;
+      }
+      
+      for(let row = 0; row < height; row++) {
+        let isWithinLine = false;
+
+        for(let column = 0; column < width; column++) {
+          const isBlack = ImageDataUtils.getColorFromCoords(boundariesImageData, column, row).a > 0;
+          const isNextBlack = column === width - 1 ? false : ImageDataUtils.getColorFromCoords(boundariesImageData, column + 1, row).a > 0;
+
+          if(isWithinLine && isNextBlack) {
+              isWithinLine = false;
+          } else if(!isWithinLine && isBlack && !isNextBlack) {
+            if(isThereTerminatingLine(column, row)) {
+              isWithinLine = true;
+            }
+          }
+          
+          if(isWithinLine) {
+            const primaryColor = ImageDataUtils.getColorFromCoords(primaryImageData, column, row);
+            ImageDataUtils.setColorAtCoords(selectionImageData, column, row, primaryColor);
+            ImageDataUtils.setColorAtCoords(primaryImageData, column, row, colorData.secondary);
+          }
+        }
+
+        primaryCtxRef.current.putImageData(primaryImageData, x, y);
+        selectionCtxRef.current.putImageData(selectionImageData, 0, 0);
+      }
+    }, 50);
     // setTimeout(() => {
     //   setSelectionPhase(2);
     //   setSelectionResizeData(null);
@@ -152,11 +209,12 @@ function useFreeFormSelection({
     // }, 50);
   }
   function onCancelCallback() {
+    setSelectionPhase(0);
     lastPointerPositionRef.current = {};
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
 
-  const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
+  const { onPointerDown, currentlyPressedRef, doCancel } = usePointerTrack({ 
     onPointerMoveCallback,
     onPointerDownCallback,
     onPointerUpCallback,

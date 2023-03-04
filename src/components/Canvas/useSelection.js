@@ -95,8 +95,13 @@ function useSelection({
     colorData,
     doSetSize,
     doSetPosition,
+    selectionPhase,
     setSelectionPhase,
-    selectionCtxRef
+    selectionCtxRef,
+    lastSelectionStateRef,
+    selectionRef,
+    selectionPosition,
+    selectionResizedSize,
   });
   
   function onPointerUpCallbackResize() {
