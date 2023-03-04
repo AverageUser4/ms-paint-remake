@@ -1,4 +1,4 @@
-import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
+import { RGBObjectToString, doGetCanvasCopy, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 
 function useBrush({
@@ -46,62 +46,31 @@ function useBrush({
 
   function onPointerMoveCallback(event) {
     const step = currentTool === 'airbrush' ? 5 : 1;
-    const secondaryRect = secondaryRef.current.getBoundingClientRect();
-    let { x: curX, y: curY } = lastPointerPositionRef.current;
-    
-    const desX = (event.pageX - secondaryRect.x) / canvasZoom;
-    const desY = (event.pageY - secondaryRect.y) / canvasZoom;
-    lastPointerPositionRef.current = { x: desX, y: desY };
+    const currentPixel = { ...lastPointerPositionRef.current };
 
-    if(typeof curX === 'undefined') {
-      curX = desX;
-      curY = desY;
-    }
+    const { destinationPixel, doDrawLoop, } = getDrawData({
+      event, secondaryRef, canvasZoom, currentPixel,
+      pagePixel: { x: event.pageX, y: event.pageY },
+    });
 
-    const diffX = desX - curX;
-    const diffY = desY - curY;
-
-    let propX = diffX < 0 ? -1 : 1;
-    let propY = diffY < 0 ? -1 : 1;
-    
-    if(Math.abs(diffX) < Math.abs(diffY)) {
-      propX = propX * Math.abs(diffX / diffY);
-    } else {
-      propY = propY * Math.abs(diffY / diffX);
-    }
+    lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
 
     secondaryCtxRef.current.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
     secondaryCtxRef.current.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
 
-    currentToolData.draw({
-      primaryContext: primaryCtxRef.current,
-      secondaryContext: secondaryCtxRef.current,
-      curX: Math.round(curX),
-      curY: Math.round(curY),
-      desX: Math.round(desX),
-      desY: Math.round(desY),
-      isRepeated: false,
-      currentlyPressed: currentlyPressedRef.current,
-      currentlyPressedRef,
-      color: { ...colorData }
-    });
-
-    while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
-      curX += step * propX;
-      curY += step * propY;
+    function doDraw(isRepeated) {
       currentToolData.draw({
-        primaryContext: primaryCtxRef.current,  
+        primaryContext: primaryCtxRef.current,
         secondaryContext: secondaryCtxRef.current,
-        curX: Math.round(curX),
-        curY: Math.round(curY),
-        desX: Math.round(desX),
-        desY: Math.round(desY),
-        isRepeated: true,
-        currentlyPressed: currentlyPressedRef.current,
+        currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
-        color: { ...colorData }
+        color: { ...colorData },
+        isRepeated,
       });
     }
+
+    doDraw(false);
+    doDrawLoop(doDraw, step);
   }
   function onPointerUpCallback() {
     lastPointerPositionRef.current = {};

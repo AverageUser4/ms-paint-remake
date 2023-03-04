@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { RGBObjectToString, doGetCanvasCopy, checkArgs } from "../../misc/utils";
+import { RGBObjectToString, doGetCanvasCopy, checkArgs, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 
 function useFreeFormSelection({
@@ -14,6 +14,10 @@ function useFreeFormSelection({
   canvasZoom,
   canvasSize,
   colorData,
+  doSetSize,
+  doSetPosition,
+  setSelectionPhase,
+  selectionCtxRef
 }) {
   checkArgs([
     { name: 'primaryRef', value: primaryRef, type: 'object' },
@@ -27,101 +31,125 @@ function useFreeFormSelection({
     { name: 'lastPrimaryStateRef', value: lastPrimaryStateRef, type: 'object' },
     { name: 'currentToolData', value: currentToolData, type: 'object' },
     { name: 'canvasSize', value: canvasSize, type: 'object' },
+    { name: 'doSetSize', value: doSetSize, type: 'function' },
+    { name: 'doSetPosition', value: doSetPosition, type: 'function' },
+    { name: 'setSelectionPhase', value: setSelectionPhase, type: 'function' },
+    { name: 'selectionCtxRef', value: selectionCtxRef, type: 'object' },
   ]);
-  const minPositionRef = useRef();
-  const maxPositionRef = useRef();
+  const edgePositionRef = useRef();
+  const initialPositionRef = useRef();
 
   function onPointerDownCallback(event) {
+    const { pageX, pageY } = event;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
-    const offsetX = event.pageX - secondaryRect.x / canvasZoom;
-    const offsetY = event.pageY - secondaryRect.y / canvasZoom;
+    const offsetX = pageX - secondaryRect.x / canvasZoom;
+    const offsetY = pageY - secondaryRect.y / canvasZoom;
     const position = { x: offsetX, y: offsetY };
-    minPositionRef.current = position;
-    maxPositionRef.current = position;
+    edgePositionRef.current = {
+      minX: position.x,
+      minY: position.y,
+      maxX: position.x,
+      maxY: position.y,
+    };
+    initialPositionRef.current = { pageX, pageY, offsetX, offsetY };
   }
 
-  function onPointerMoveCallback(event) {
-    const step = currentTool === 'airbrush' ? 5 : 1;
-    const secondaryRect = secondaryRef.current.getBoundingClientRect();
-    let { x: curX, y: curY } = lastPointerPositionRef.current;
-    
-    const desX = Math.max(Math.min((event.pageX - secondaryRect.x) / canvasZoom, secondaryRect.width - 1), 0);
-    const desY = Math.max(Math.min((event.pageY - secondaryRect.y) / canvasZoom, secondaryRect.height - 1), 0);
-    lastPointerPositionRef.current = { x: desX, y: desY };
+  function onPointerMoveCallback(event, TEMPORARY) {
+    const step = 1;
+    const currentPixel = { ...lastPointerPositionRef.current };
 
-    minPositionRef.current = {
-      x: Math.min(minPositionRef.current.x, desX),
-      y: Math.min(minPositionRef.current.y, desY),
-    };
-    maxPositionRef.current = {
-      x: Math.max(maxPositionRef.current.x, desX),
-      y: Math.max(maxPositionRef.current.y, desY),
-    };
-
-    if(typeof curX === 'undefined') {
-      curX = desX;
-      curY = desY;
-    }
-
-    const diffX = desX - curX;
-    const diffY = desY - curY;
-
-    let propX = diffX < 0 ? -1 : 1;
-    let propY = diffY < 0 ? -1 : 1;
-    
-    if(Math.abs(diffX) < Math.abs(diffY)) {
-      propX = propX * Math.abs(diffX / diffY);
-    } else {
-      propY = propY * Math.abs(diffY / diffX);
-    }
-
-    secondaryCtxRef.current.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-    secondaryCtxRef.current.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-
-    currentToolData.draw({
-      primaryContext: primaryCtxRef.current,
-      secondaryContext: secondaryCtxRef.current,
-      curX: Math.round(curX),
-      curY: Math.round(curY),
-      desX: Math.round(desX),
-      desY: Math.round(desY),
-      isRepeated: false,
-      currentlyPressed: currentlyPressedRef.current,
-      currentlyPressedRef,
-      color: { ...colorData }
+    const { destinationPixel, doDrawLoop, } = getDrawData({
+      event, secondaryRef, canvasZoom, currentPixel,
+      pagePixel: { x: event.pageX, y: event.pageY },
     });
+    
+    lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
 
-    while(Math.abs(curX - desX) > step || Math.abs(curY - desY) > step) {
-      curX += step * propX;
-      curY += step * propY;
+    edgePositionRef.current = {
+      minX: Math.min(edgePositionRef.current.minX, destinationPixel.x),
+      minY: Math.min(edgePositionRef.current.minY, destinationPixel.y),
+      maxX: Math.max(edgePositionRef.current.maxX, destinationPixel.x),
+      maxY: Math.max(edgePositionRef.current.maxY, destinationPixel.y),
+    };
+
+    secondaryCtxRef.current.fillStyle = 'black';
+    if(TEMPORARY) {
+      secondaryCtxRef.current.fillStyle = 'red';
+    }
+
+    function doDraw(isRepeated) {
       currentToolData.draw({
-        primaryContext: primaryCtxRef.current,  
+        primaryContext: primaryCtxRef.current,
         secondaryContext: secondaryCtxRef.current,
-        curX: Math.round(curX),
-        curY: Math.round(curY),
-        desX: Math.round(desX),
-        desY: Math.round(desY),
-        isRepeated: true,
-        currentlyPressed: currentlyPressedRef.current,
+        currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
-        color: { ...colorData }
+        color: { ...colorData },
+        isRepeated,
       });
     }
+
+    doDraw(false);
+    doDrawLoop(doDraw, step);
   }
   function onPointerUpCallback() {
+    onPointerMoveCallback(initialPositionRef.current, true);
+    // code below has same bug (line does not fully close, it means that there's something wrong with specified start or destination (not a problem with drawing algorithm))
+    // secondaryCtxRef.current.strokeStyle = 'hotpink';
+    // secondaryCtxRef.current.beginPath();
+    // secondaryCtxRef.current.moveTo(initialPositionRef.current.offsetX, initialPositionRef.current.offsetY);
+    // secondaryCtxRef.current.lineTo(lastPointerPositionRef.current.x, lastPointerPositionRef.current.y);
+    // secondaryCtxRef.current.stroke();
+
     lastPointerPositionRef.current = {};
 
-    primaryCtxRef.current.fillStyle = 'hotpink';
-    primaryCtxRef.current.fillRect(
-      minPositionRef.current.x,
-      minPositionRef.current.y,
-      maxPositionRef.current.x - minPositionRef.current.x,
-      maxPositionRef.current.y - minPositionRef.current.y,
-    );
-
+    const x = edgePositionRef.current.minX;
+    const y = edgePositionRef.current.minY;
+    const width = edgePositionRef.current.maxX - edgePositionRef.current.minX + 1;
+    const height = edgePositionRef.current.maxY - edgePositionRef.current.minY + 1;
+    
+    const imageData = secondaryCtxRef.current.getImageData(x, y, width, height);
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+    setSelectionPhase(2);
+    doSetPosition({ x, y });
+    doSetSize({ width, height });
+
+    setTimeout(() => {
+      selectionCtxRef.current.putImageData(imageData, 0, 0);
+    }, 150);
+    // setTimeout(() => {
+    //   setSelectionPhase(2);
+    //   setSelectionResizeData(null);
+  
+    //   const imageData = primaryCtxRef.current.getImageData(
+    //     Math.round(lastSelectionPositionRef.current.x / canvasZoom),
+    //     Math.round(lastSelectionPositionRef.current.y / canvasZoom),
+    //     Math.round(lastSelectionSizeRef.current.width / canvasZoom),
+    //     Math.round(lastSelectionSizeRef.current.height / canvasZoom),
+    //   );
+  
+    //   const bufCanvas = document.createElement('canvas');
+    //   bufCanvas.width = Math.round(lastSelectionSizeRef.current.width / canvasZoom);
+    //   bufCanvas.height = Math.round(lastSelectionSizeRef.current.height / canvasZoom);
+    //   bufCanvas.imageSmoothingEnabled = false;
+    //   bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
+      
+    //   selectionCtxRef.current.imageSmoothingEnabled = false;
+    //   selectionCtxRef.current.putImageData(imageData, 0, 0);
+    //   lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+
+    //   // scale does not apply to putImageData, so have to use drawImage after copying data
+    //   selectionCtxRef.current.scale(canvasZoom, canvasZoom);
+    //   selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
+  
+    //   primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
+    //   primaryCtxRef.current.fillRect(
+    //     Math.round(lastSelectionPositionRef.current.x / canvasZoom),
+    //     Math.round(lastSelectionPositionRef.current.y / canvasZoom),
+    //     Math.round(lastSelectionSizeRef.current.width / canvasZoom),
+    //     Math.round(lastSelectionSizeRef.current.height / canvasZoom),
+    //   );
+    // }, 50);
   }
   function onCancelCallback() {
     lastPointerPositionRef.current = {};

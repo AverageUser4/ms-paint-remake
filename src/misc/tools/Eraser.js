@@ -1,15 +1,20 @@
 import { RGBObjectToString } from "../utils";
+import validateDrawArgs from "./validateDrawArgs";
 
 export default {
   cursor: 'none',
   sizes: [4, 6, 8, 10],
   chosenSizeIndex: 2,
-  draw({ primaryContext, secondaryContext, curX, curY, currentlyPressed, color }) {
-    const size = this.sizes[this.chosenSizeIndex];
-    const startX = curX - size / 2;
-    const startY = curY - size / 2;
+  draw({ primaryContext, secondaryContext, currentPixel, currentlyPressedRef, color }) {
+    validateDrawArgs({ primaryContext, secondaryContext, currentPixel, currentlyPressedRef, color,
+      toBeValidatedArray: ['primaryContext', 'secondaryContext', 'currentPixel', 'currentlyPressedRef', 'color']
+    });
 
-    if(currentlyPressed === 0) {
+    const size = this.sizes[this.chosenSizeIndex];
+    const startX = currentPixel.x - size / 2;
+    const startY = currentPixel.y - size / 2;
+
+    if(currentlyPressedRef.current === 0) {
       secondaryContext.fillStyle = RGBObjectToString(color.secondary);
       secondaryContext.fillRect(startX, startY, size, size);
     } else {

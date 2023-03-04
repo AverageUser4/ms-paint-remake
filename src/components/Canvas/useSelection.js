@@ -93,6 +93,10 @@ function useSelection({
     canvasZoom,
     canvasSize,
     colorData,
+    doSetSize,
+    doSetPosition,
+    setSelectionPhase,
+    selectionCtxRef
   });
   
   function onPointerUpCallbackResize() {

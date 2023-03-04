@@ -80,7 +80,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                   `}
                   onClick={() => doSetCurrentTool('selection-rectangle')}
                 >
-                  <img className="popup__image" src={image16} alt=""/>
+                  <img draggable="false" className="popup__image" src={image16} alt=""/>
                   <span><span className="text--underline">R</span>ectangular selection</span>
                 </button>
 
@@ -92,7 +92,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                   `}
                   onClick={() => doSetCurrentTool('selection-free-form')}
                 >
-                  <img className="popup__image" src={freeForm16} alt=""/>
+                  <img draggable="false" className="popup__image" src={freeForm16} alt=""/>
                   <span><span className="text--underline">F</span>ree-form selection</span>
                 </button>
 
@@ -100,17 +100,17 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                 <h3 className="popup__head head head--2">Selection options</h3>
 
                 <button className="popup__button text text--4 text--nowrap">
-                  <img className="popup__image" src={selectAll16} alt=""/>
+                  <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
                   <span>Select <span className="text--underline">a</span>ll</span>
                 </button>
 
                 <button className="popup__button text text--4 text--nowrap">
-                  <img className="popup__image" src={invert16} alt=""/>
+                  <img draggable="false" className="popup__image" src={invert16} alt=""/>
                   <span><span className="text--underline">I</span>nvert selection</span>
                 </button>
 
                 <button className="popup__button text text--4 text--nowrap">
-                  <img className="popup__image" src={delete16} alt=""/>
+                  <img draggable="false" className="popup__image" src={delete16} alt=""/>
                   <span><span className="text--underline">D</span>elete</span>
                 </button>
 

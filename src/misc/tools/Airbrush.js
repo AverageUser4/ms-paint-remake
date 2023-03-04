@@ -1,11 +1,5 @@
-function calculatePoint(originX, originY, radius) {
-  /* http://jsfiddle.net/d9VRu/ */
-  const angle = Math.random() * Math.PI * 2;
-  const r = Math.sqrt(Math.random()) * radius;
-  const x = originX + r * Math.cos(angle);
-  const y = originY + r * Math.sin(angle);
-  return { x: x, y: y };
-}
+import { getRandomPointWithinCircle } from '../../misc/utils';
+import validateDrawArgs from './validateDrawArgs';
 
 export default {
   latestX: null,
@@ -13,14 +7,18 @@ export default {
   cursor: 'draw',
   sizes: [4, 8, 16, 24],
   chosenSizeIndex: 1,
-  draw({ secondaryContext, curX, curY, currentlyPressedRef }) {
+  draw({ secondaryContext, currentPixel, currentlyPressedRef }) {
+    validateDrawArgs({ secondaryContext, currentPixel, currentlyPressedRef, 
+      toBeValidatedArray: ['secondaryContext', 'currentPixel', 'currentlyPressedRef']
+    });
+     
     const size = this.sizes[this.chosenSizeIndex];
-    this.latestX = curX;
-    this.latestY = curY;
+    this.latestX = currentPixel.x;
+    this.latestY = currentPixel.y;
 
     function drawRandomPoints() {
       for(let i = 0; i < size; i++) {
-        const { x: randX, y: randY } = calculatePoint(curX, curY, size);
+        const { x: randX, y: randY } = getRandomPointWithinCircle(currentPixel.x, currentPixel.y, size);
         secondaryContext.fillRect(Math.round(randX), Math.round(randY), 1, 1);
       }
     }
@@ -28,8 +26,8 @@ export default {
     function timeoutCallback() {
       if(
           currentlyPressedRef.current === -1 ||
-          curX !== this.latestX ||
-          curY !== this.latestY
+          currentPixel.x !== this.latestX ||
+          currentPixel.y !== this.latestY
         ) {
         return;
       }

@@ -68,8 +68,9 @@
 }
 
 .popup__image {
-  width: 16px;
-  height: 16px;
+  width: 15px;
+  height: 15px;
+  padding: 1px;
 }
 
 .popup__button--selected .popup__image {

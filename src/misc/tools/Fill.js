@@ -1,3 +1,6 @@
+import { objectEquals } from "../utils";
+import { ImageDataUtils } from "../utils";
+
 export default {
   cursor: 'fill',
   sizes: null,
@@ -9,46 +12,32 @@ export default {
     const imageData = primaryContext.getImageData(0, 0, width, height);
     const color = event.button === 0 ? colorData.primary : colorData.secondary;
 
-    function getIndexFromCoords(x, y) {
-      return y * width * 4 + x * 4;
-    }
-
-    function getDataFromCoords(x, y) {
-      const index = getIndexFromCoords(x, y);
-      return {
-        r: imageData.data[index],
-        g: imageData.data[index + 1],
-        b: imageData.data[index + 2],
-        a: imageData.data[index + 3],
-      };
-    }
-
-    function setPixelAtCoords(x, y) {
-      const index = getIndexFromCoords(x, y);
-      imageData.data[index] = color.r;
-      imageData.data[index + 1] = color.g;
-      imageData.data[index + 2] = color.b;
-      imageData.data[index + 3] = 255;
-    }
-
-    function isSameColor(a, b) {
-      return a.r === b.r && a.g === b.g && a.b === b.b;
-    }
-    
-    const clickedColor = getDataFromCoords(offsetX, offsetY);
+    const clickedColor = ImageDataUtils.getColorFromCoords(imageData, offsetX, offsetY);
     let recursionTimes = 0;
 
     function checkAndChange(offsetX, offsetY) {
-      const currentColor = getDataFromCoords(offsetX, offsetY);
-      if(!isSameColor(clickedColor, currentColor) || ++recursionTimes > 10000) {
+      const currentColor = ImageDataUtils.getColorFromCoords(imageData, offsetX, offsetY);
+      if(
+          !objectEquals(clickedColor, currentColor, ['a'])
+          || ++recursionTimes > 10000
+        ) {
         return;
       }
 
-      setPixelAtCoords(offsetX, offsetY);
-      checkAndChange(offsetX - 1, offsetY);
-      checkAndChange(offsetX + 1, offsetY);
-      checkAndChange(offsetX, offsetY - 1);
-      checkAndChange(offsetX, offsetY + 1);
+      ImageDataUtils.setColorAtCoords(imageData, offsetX, offsetY, color);
+      if(offsetX - 1 >= 0) {
+        checkAndChange(offsetX - 1, offsetY);
+      }
+      if(offsetX + 1 < imageData.width) {
+        checkAndChange(offsetX + 1, offsetY);
+      }
+      if(offsetY - 1 >= 0) {
+        checkAndChange(offsetX, offsetY - 1);
+      }
+      if(offsetY + 1 < imageData.height) {
+        checkAndChange(offsetX, offsetY + 1);
+      }
+
     }
 
     checkAndChange(offsetX, offsetY);
