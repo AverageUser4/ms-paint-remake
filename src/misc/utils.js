@@ -242,12 +242,12 @@ export const ImageDataUtils = {
     if(!(imageData instanceof ImageData)) {
       console.error(`First argument has to be an instance of ImageData, provided "${imageData}".`);
     }
-    if(!Number.isInteger(x) || x < 0 || x > imageData.width - 1) {
-      console.error(`Second argument has to be and integer between 0 and imageData.width - 1, provided "${x}"`);
-    }
-    if(!Number.isInteger(y) || y < 0 || y > imageData.height - 1) {
-      console.error(`Third argument has to be and integer between 0 and imageData.height - 1, provided "${y}"`);
-    }
+    // if(!Number.isInteger(x) || x < 0 || x > imageData.width - 1) {
+    //   console.error(`Second argument has to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided "${x}"`);
+    // }
+    // if(!Number.isInteger(y) || y < 0 || y > imageData.height - 1) {
+    //   console.error(`Third argument has to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided "${y}"`);
+    // }
   },
 
   getIndexFromCoords(imageData, x, y) {

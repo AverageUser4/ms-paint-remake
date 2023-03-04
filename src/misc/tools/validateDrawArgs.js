@@ -4,7 +4,9 @@ export default function validateDrawArgs({
   currentPixel,
   currentlyPressedRef,
   toBeValidatedArray,
-  color
+  color,
+  isRepeated,
+  primaryImageData,
 }) {
   if(!Array.isArray(toBeValidatedArray) || toBeValidatedArray.length === 0) {
     throw new Error(`"toBeValidatedArray" has to be a non-empty array, provided: "${toBeValidatedArray}".`);
@@ -20,7 +22,9 @@ export default function validateDrawArgs({
       name !== 'secondaryContext' &&
       name !== 'currentPixel' &&
       name !== 'currentlyPressedRef' &&
-      name !== 'color'
+      name !== 'color' &&
+      name !== 'isRepeated' &&
+      name !== 'primaryImageData'
     ) {
       throw new Error(`"toBeValidatedArray" contains unexpected value: "${name}".`);
     }
@@ -40,5 +44,11 @@ export default function validateDrawArgs({
   }
   if(is('color') && (typeof color !== 'object')) {
     console.error(`"color" argument has to be an object, provided: "${color}".`);
+  }
+  if(is('isRepeated') && (typeof isRepeated !== 'boolean')) {
+    console.error(`"isRepeated" argument has to be a boolean value, provided: "${isRepeated}".`);
+  }
+  if(is('primaryImageData') && (!(primaryImageData instanceof ImageData))) {
+    console.error(`"primaryImageData" argument has to be an instance of ImageData, provided: "${primaryImageData}".`);
   }
 }

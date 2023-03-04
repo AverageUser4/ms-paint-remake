@@ -48,6 +48,7 @@ function useFreeFormSelection({
   ]);
   const edgePositionRef = useRef();
   const initialPositionRef = useRef();
+  const primaryImageDataRef = useRef();
 
   function onPointerDownCallback(event) {
     if(selectionPhase === 2) {
@@ -63,10 +64,12 @@ function useFreeFormSelection({
       return;
     }
 
+    primaryImageDataRef.current = primaryCtxRef.current.getImageData(
+      0, 0, primaryRef.current.width, primaryRef.current.height);
     const { pageX, pageY } = event;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
-    const offsetX = pageX - secondaryRect.x / canvasZoom;
-    const offsetY = pageY - secondaryRect.y / canvasZoom;
+    const offsetX = Math.round((pageX - secondaryRect.x) / canvasZoom);
+    const offsetY = Math.round((pageY - secondaryRect.y) / canvasZoom);
     const position = { x: offsetX, y: offsetY };
     edgePositionRef.current = {
       minX: position.x,
@@ -106,6 +109,7 @@ function useFreeFormSelection({
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
+        primaryImageData: primaryImageDataRef.current,
         isRepeated,
       });
     }
@@ -122,6 +126,11 @@ function useFreeFormSelection({
     const width = edgePositionRef.current.maxX - edgePositionRef.current.minX + 1;
     const height = edgePositionRef.current.maxY - edgePositionRef.current.minY + 1;
 
+    const zoomedX = Math.round(x * canvasZoom);
+    const zoomedY = Math.round(y * canvasZoom);
+    const zoomedWidth = Math.round(width * canvasZoom);
+    const zoomedHeight = Math.round(height * canvasZoom);
+
     const boundariesImageData = secondaryCtxRef.current.getImageData(x, y, width, height);
     secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
     lastSelectionStateRef.current = null;
@@ -131,8 +140,8 @@ function useFreeFormSelection({
     }
 
     setSelectionPhase(2);
-    doSetPosition({ x, y });
-    doSetSize({ width, height });
+    doSetPosition({ x: zoomedX, y: zoomedY });
+    doSetSize({ width: zoomedWidth, height: zoomedHeight });
 
     setTimeout(() => {
       const primaryImageData = primaryCtxRef.current.getImageData(x, y, width, height);
@@ -171,7 +180,22 @@ function useFreeFormSelection({
         }
 
         primaryCtxRef.current.putImageData(primaryImageData, x, y);
+
         selectionCtxRef.current.putImageData(selectionImageData, 0, 0);
+        lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+        // scale does not apply to putImageData, so have to use drawImage after copying data
+        selectionCtxRef.current.imageSmoothingEnabled = false;
+        // selectionCtxRef.current.scale(canvasZoom, canvasZoom);
+
+        const bufCanvas = document.createElement('canvas');
+        bufCanvas.width = 100;
+        bufCanvas.height = 100;
+        bufCanvas.imageSmoothingEnabled = false;
+        bufCanvas.getContext('2d').fillStyle = 'red';
+        bufCanvas.getContext('2d').fillRect(10, 10, 60, 60);
+
+        selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
+        selectionCtxRef.current.drawImage(lastSelectionStateRef.current, 0, 0);
       }
     }, 50);
     // setTimeout(() => {
