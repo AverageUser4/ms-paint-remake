@@ -1,21 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
 import { doGetCanvasCopy, checkArgs } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
+import { useSelectionContext } from '../../misc/SelectionContext';
 
 function useSelection({
   primaryRef,
   primaryCtxRef,
-  selectionRef,
-  selectionCtxRef,
   lastCurrentToolRef,
   lastCanvasZoomRef,
   currentTool,
   canvasZoom,
   colorData,
-
   secondaryRef,
   secondaryCtxRef,
   lastPointerPositionRef,
@@ -26,14 +24,11 @@ function useSelection({
   checkArgs([
     { name: 'primaryRef', value: primaryRef, type: 'object' },
     { name: 'primaryCtxRef', value: primaryCtxRef, type: 'object' },
-    { name: 'selectionRef', value: selectionRef, type: 'object' },
-    { name: 'selectionCtxRef', value: selectionCtxRef, type: 'object' },
     { name: 'lastCurrentToolRef', value: lastCurrentToolRef, type: 'object' },
     { name: 'lastCanvasZoomRef', value: lastCanvasZoomRef, type: 'object' },
     { name: 'currentTool', value: currentTool, type: 'string' },
     { name: 'colorData', value: colorData, type: 'object' },
     { name: 'canvasZoom', value: canvasZoom, type: 'number' },
-
     { name: 'secondaryRef', value: secondaryRef, type: 'object' },
     { name: 'secondaryCtxRef', value: secondaryCtxRef, type: 'object' },
     { name: 'lastPointerPositionRef', value: lastPointerPositionRef, type: 'object' },
@@ -42,41 +37,24 @@ function useSelection({
     { name: 'canvasSize', value: canvasSize, type: 'object' },
   ]);
 
-  const [selectionSize, setSelectionSize] = useState(null);
-  const [selectionResizedSize, setSelectionResizedSize] = useState(null);
-  const [selectionPosition, setSelectionPosition] = useState(null);
-  const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
-  const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
-  const lastSelectionStateRef = useRef();
-  const lastSelectionSizeRef = useRef(null);
-  const lastSelectionPositionRef = useRef(null);
-
-  function doSetSize(newSize) {
-    setSelectionSize(newSize);
-    setSelectionResizedSize(newSize);
-    lastSelectionSizeRef.current = newSize;
-  }
-
-  function doSetPosition(newPosition) {
-    setSelectionPosition(newPosition);
-    lastSelectionPositionRef.current = newPosition;
-  }
+  const {
+    selectionRef,
+    selectionCtxRef,
+    selectionSize,
+    selectionResizedSize, setSelectionResizedSize,
+    selectionPosition,
+    selectionOutlineSize, setSelectionOutlineSize,
+    selectionPhase, setSelectionPhase,
+    lastSelectionStateRef,
+    doSetSize,
+    doSetPosition
+  } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection({
     primaryRef,
     primaryCtxRef,
-    selectionRef,
-    selectionCtxRef,
     canvasZoom,
     colorData,
-    selectionSize,
-    selectionResizedSize,
-    selectionPosition,
-    selectionPhase,
-    setSelectionPhase,
-    lastSelectionStateRef,
-    lastSelectionPositionRef,
-    lastSelectionSizeRef,
     doSetSize,
     doSetPosition,
   });
@@ -95,13 +73,6 @@ function useSelection({
     colorData,
     doSetSize,
     doSetPosition,
-    selectionPhase,
-    setSelectionPhase,
-    selectionCtxRef,
-    lastSelectionStateRef,
-    selectionRef,
-    selectionPosition,
-    selectionResizedSize,
   });
   
   function onPointerUpCallbackResize() {
@@ -118,7 +89,7 @@ function useSelection({
     if(selectionPhase === 2 && lastSelectionStateRef.current) {
       selectionCtxRef.current.drawImage(lastSelectionStateRef.current, 0, 0);
     }
-  }, [selectionSize, selectionPhase, selectionCtxRef]);
+  }, [selectionSize, selectionPhase, selectionCtxRef, lastSelectionStateRef]);
   
   useEffect(() => {
     // when zoom or tool changes put current selection where it currently is on primary canvas
@@ -144,7 +115,7 @@ function useSelection({
     lastCurrentToolRef.current = currentTool;
     lastCanvasZoomRef.current = canvasZoom;
   }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize,
-      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef]
+      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef, setSelectionPhase]
   );
 
   const { resizeElements: selectionResizeElements } = useResize({ 

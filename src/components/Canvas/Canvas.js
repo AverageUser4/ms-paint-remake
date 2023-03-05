@@ -2,13 +2,14 @@ import React, { useEffect, useRef } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
+import useSelection from "./useSelection";
+import useBrush from "./useBrush";
 import { useCanvasContext } from "../../misc/CanvasContext";
 import { useHistoryContext } from "../../misc/HistoryContext";
 import { useToolContext } from "../../misc/ToolContext";
 import { useColorContext } from "../../misc/ColorContext";
+import { useSelectionContext } from "../../misc/SelectionContext";
 import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
-import useSelection from "./useSelection";
-import useBrush from "./useBrush";
 
 function Canvas() {
   const { 
@@ -25,12 +26,12 @@ function Canvas() {
     height: canvasSize.height * canvasZoom,
   };
 
+  const { selectionRef, selectionCtxRef } = useSelectionContext();
+  
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
   const secondaryRef = useRef();
   const secondaryCtxRef = useRef();
-  const selectionRef = useRef();
-  const selectionCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
   const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);

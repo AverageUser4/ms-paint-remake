@@ -6,6 +6,7 @@ import BigButtonDuo from '../BigButtonDuo/BigButtonDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import useOutsideClick from "../../hooks/useOutsideClick";
+import { useSelectionContext } from "../../misc/SelectionContext";
 import { toggleBoolState } from "../../misc/utils";
 
 import clipboard32 from './assets/clipboard-32.png';
@@ -15,6 +16,8 @@ import copy16 from './assets/copy-16.png';
 import cut16 from './assets/cut-16.png';
 
 function RibbonClipboard({ ribbonWidth }) {
+  const { selectionBrowseFile, selectionPasteFromClipboard } = useSelectionContext();
+  
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -36,18 +39,31 @@ function RibbonClipboard({ ribbonWidth }) {
               showChildren={isDropdownOpen}
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              onPointerDownTop={() => selectionPasteFromClipboard()}
             >
               <div 
                 className="popup"
                 ref={dropdownRef}
                 data-cy="Clipboard-Paste-Dropdown"
               >
-                <button className="popup__button text text--4 text--nowrap">
+                <button 
+                  className="popup__button text text--4 text--nowrap"
+                  onPointerDown={() => {
+                    selectionPasteFromClipboard();
+                    setIsDropdownOpen(false);
+                  }}
+                >
                   <img className="popup__image" src={clipboard16} alt=""/>
                   <span><span className="text--underline">P</span>aste</span>
                 </button>
 
-                <button className="popup__button text text--4 text--nowrap">
+                <button 
+                  className="popup__button text text--4 text--nowrap"
+                  onPointerDown={() => {
+                    selectionBrowseFile();
+                    setIsDropdownOpen(false);
+                  }}
+                >
                   <img className="popup__image" src={pasteFrom16} alt=""/>
                   <span>Paste <span className="text--underline">f</span>rom</span>
                 </button>

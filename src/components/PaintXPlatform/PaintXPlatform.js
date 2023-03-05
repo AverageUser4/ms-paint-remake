@@ -19,6 +19,7 @@ import { HistoryProvider } from '../../misc/HistoryContext';
 import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
 import { ColorProvider } from '../../misc/ColorContext';
 import { ToolProvider } from '../../misc/ToolContext';
+import { SelectionProvider } from '../../misc/SelectionContext';
 
 function Logic({ 
   minimalSize,
@@ -184,20 +185,22 @@ function PaintXPlatform({
           <CanvasProvider>
             <HistoryProvider>
               <ToolProvider>
-                <MainWindowProvider
-                  initialPosition={initialPosition}
-                  initialSize={initialSize}
-                  isInitiallyMaximized={isInitiallyMaximized}
-                >
-                  <ContextMenuProvider>
-                    <Logic 
-                      minimalSize={minimalSize}
-                      isResizable={isResizable}
-                      isAutoShrink={isAutoShrink}
-                      isOpen={isOpen}
-                    />
-                  </ContextMenuProvider>
-                </MainWindowProvider>
+                <SelectionProvider>
+                  <MainWindowProvider
+                    initialPosition={initialPosition}
+                    initialSize={initialSize}
+                    isInitiallyMaximized={isInitiallyMaximized}
+                  >
+                    <ContextMenuProvider>
+                      <Logic 
+                        minimalSize={minimalSize}
+                        isResizable={isResizable}
+                        isAutoShrink={isAutoShrink}
+                        isOpen={isOpen}
+                      />
+                    </ContextMenuProvider>
+                  </MainWindowProvider>
+                </SelectionProvider>
               </ToolProvider>
             </HistoryProvider>
           </CanvasProvider>

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { ImageDataUtils, checkArgs, getDrawData, doGetCanvasCopy } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
+import { useSelectionContext } from "../../misc/SelectionContext";
 
 function useFreeFormSelection({
   primaryRef,
@@ -16,13 +17,6 @@ function useFreeFormSelection({
   colorData,
   doSetSize,
   doSetPosition,
-  setSelectionPhase,
-  selectionCtxRef,
-  lastSelectionStateRef,
-  selectionPhase,
-  selectionRef,
-  selectionPosition,
-  selectionResizedSize
 }) {
   checkArgs([
     { name: 'primaryRef', value: primaryRef, type: 'object' },
@@ -38,14 +32,18 @@ function useFreeFormSelection({
     { name: 'canvasSize', value: canvasSize, type: 'object' },
     { name: 'doSetSize', value: doSetSize, type: 'function' },
     { name: 'doSetPosition', value: doSetPosition, type: 'function' },
-    { name: 'setSelectionPhase', value: setSelectionPhase, type: 'function' },
-    { name: 'selectionCtxRef', value: selectionCtxRef, type: 'object' },
-    { name: 'lastSelectionStateRef', value: lastSelectionStateRef, type: 'object' },
-    { name: 'selectionPhase', value: selectionPhase, type: 'number' },
-    { name: 'selectionRef', value: selectionRef, type: 'object' },
-    { name: 'selectionPosition', value: selectionPosition, type: 'object' },
-    { name: 'selectionResizedSize', value: selectionResizedSize, type: 'object' },
   ]);
+
+  const {
+    setSelectionPhase,
+    selectionCtxRef,
+    lastSelectionStateRef,
+    selectionPhase,
+    selectionRef,
+    selectionPosition,
+    selectionResizedSize
+  } = useSelectionContext();
+
   const edgePositionRef = useRef();
   const initialPositionRef = useRef();
   const primaryImageDataRef = useRef();
@@ -199,39 +197,6 @@ function useFreeFormSelection({
         selectionCtxRef.current.scale(canvasZoom, canvasZoom);
         selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
     }, 50);
-    // setTimeout(() => {
-    //   setSelectionPhase(2);
-    //   setSelectionResizeData(null);
-  
-    //   const imageData = primaryCtxRef.current.getImageData(
-    //     Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-    //     Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-    //     Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-    //     Math.round(lastSelectionSizeRef.current.height / canvasZoom),
-    //   );
-  
-    //   const bufCanvas = document.createElement('canvas');
-    //   bufCanvas.width = Math.round(lastSelectionSizeRef.current.width / canvasZoom);
-    //   bufCanvas.height = Math.round(lastSelectionSizeRef.current.height / canvasZoom);
-    //   bufCanvas.imageSmoothingEnabled = false;
-    //   bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
-      
-    //   selectionCtxRef.current.imageSmoothingEnabled = false;
-    //   selectionCtxRef.current.putImageData(imageData, 0, 0);
-    //   lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-
-    //   // scale does not apply to putImageData, so have to use drawImage after copying data
-    //   selectionCtxRef.current.scale(canvasZoom, canvasZoom);
-    //   selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
-  
-    //   primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-    //   primaryCtxRef.current.fillRect(
-    //     Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-    //     Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-    //     Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-    //     Math.round(lastSelectionSizeRef.current.height / canvasZoom),
-    //   );
-    // }, 50);
   }
   function onCancelCallback() {
     setSelectionPhase(0);
