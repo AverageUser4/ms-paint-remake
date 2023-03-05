@@ -152,6 +152,7 @@ function useRectangularSelection({
         Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       );
   
+      // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
       const bufCanvas = document.createElement('canvas');
       bufCanvas.width = Math.round(lastSelectionSizeRef.current.width / canvasZoom);
       bufCanvas.height = Math.round(lastSelectionSizeRef.current.height / canvasZoom);

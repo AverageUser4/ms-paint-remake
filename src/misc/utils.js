@@ -242,12 +242,12 @@ export const ImageDataUtils = {
     if(!(imageData instanceof ImageData)) {
       console.error(`First argument has to be an instance of ImageData, provided "${imageData}".`);
     }
-    // if(!Number.isInteger(x) || x < 0 || x > imageData.width - 1) {
-    //   console.error(`Second argument has to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided "${x}"`);
-    // }
-    // if(!Number.isInteger(y) || y < 0 || y > imageData.height - 1) {
-    //   console.error(`Third argument has to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided "${y}"`);
-    // }
+    if(!Number.isInteger(x) || x < 0 || x > imageData.width - 1) {
+      console.error(`Second argument has to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided "${x}"`);
+    }
+    if(!Number.isInteger(y) || y < 0 || y > imageData.height - 1) {
+      console.error(`Third argument has to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided "${y}"`);
+    }
   },
 
   getIndexFromCoords(imageData, x, y) {
@@ -298,7 +298,8 @@ export function getDrawData({
   pagePixel,
   secondaryRef,
   canvasZoom,
-  currentPixel
+  currentPixel,
+  isConstrained = false,
 }) {
   if(typeof pagePixel !== 'object') {
     console.error(`"pagePixel" argument has to be an object, provided: "${pagePixel}".`);
@@ -316,8 +317,13 @@ export function getDrawData({
   const secondaryRect = secondaryRef.current.getBoundingClientRect();
   
   const destinationPixel = {
-    x: Math.max(Math.min((pagePixel.x - secondaryRect.x) / canvasZoom, secondaryRect.width - 1), 0),
-    y: Math.max(Math.min((pagePixel.y - secondaryRect.y) / canvasZoom, secondaryRect.height - 1), 0),
+    x: (pagePixel.x - secondaryRect.x) / canvasZoom,
+    y: (pagePixel.y - secondaryRect.y) / canvasZoom,
+  };
+
+  if(isConstrained) {
+    destinationPixel.x = Math.max(Math.min(destinationPixel.x, Math.round(secondaryRect.width / canvasZoom) - 1), 0);
+    destinationPixel.y = Math.max(Math.min(destinationPixel.y, Math.round(secondaryRect.height / canvasZoom) - 1), 0);
   }
 
   if(typeof currentPixel.x === 'undefined') {
