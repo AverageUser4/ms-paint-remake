@@ -5,41 +5,33 @@ import { checkArgs } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
 import { useSelectionContext } from '../../misc/SelectionContext';
+import { useCanvasContext } from '../../misc/CanvasContext';
 
 function useSelection({
-  primaryRef,
-  primaryCtxRef,
   lastCurrentToolRef,
   lastCanvasZoomRef,
   currentTool,
   canvasZoom,
   colorData,
-  secondaryRef,
-  secondaryCtxRef,
   lastPointerPositionRef,
-  lastPrimaryStateRef,
   currentToolData,
   canvasSize,
 }) {
   checkArgs([
-    { name: 'primaryRef', value: primaryRef, type: 'object' },
-    { name: 'primaryCtxRef', value: primaryCtxRef, type: 'object' },
     { name: 'lastCurrentToolRef', value: lastCurrentToolRef, type: 'object' },
     { name: 'lastCanvasZoomRef', value: lastCanvasZoomRef, type: 'object' },
     { name: 'currentTool', value: currentTool, type: 'string' },
     { name: 'colorData', value: colorData, type: 'object' },
     { name: 'canvasZoom', value: canvasZoom, type: 'number' },
-    { name: 'secondaryRef', value: secondaryRef, type: 'object' },
-    { name: 'secondaryCtxRef', value: secondaryCtxRef, type: 'object' },
     { name: 'lastPointerPositionRef', value: lastPointerPositionRef, type: 'object' },
-    { name: 'lastPrimaryStateRef', value: lastPrimaryStateRef, type: 'object' },
     { name: 'currentToolData', value: currentToolData, type: 'object' },
     { name: 'canvasSize', value: canvasSize, type: 'object' },
   ]);
 
+  const { primaryRef } = useCanvasContext();
+  
   const {
     selectionRef,
-    selectionCtxRef,
     selectionSize,
     selectionResizedSize, setSelectionResizedSize,
     selectionPosition,
@@ -52,8 +44,6 @@ function useSelection({
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection({
-    primaryRef,
-    primaryCtxRef,
     canvasZoom,
     colorData,
     doSetSize,
@@ -61,12 +51,7 @@ function useSelection({
   });
 
   const { onPointerDownFreeFormSelection } = useFreeFormSelection({
-    primaryRef,
-    primaryCtxRef,
-    secondaryRef,
-    secondaryCtxRef,
     lastPointerPositionRef,
-    lastPrimaryStateRef,
     currentTool,
     currentToolData,
     canvasZoom,
@@ -88,9 +73,9 @@ function useSelection({
   useEffect(() => {
     // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
     if(selectionPhase === 2 && lastSelectionStateRef.current) {
-      selectionCtxRef.current.drawImage(lastSelectionStateRef.current, 0, 0);
+      selectionRef.current.getContext('2d').drawImage(lastSelectionStateRef.current, 0, 0);
     }
-  }, [selectionSize, selectionPhase, selectionCtxRef, lastSelectionStateRef]);
+  }, [selectionSize, selectionPhase, selectionRef, lastSelectionStateRef]);
   
   useEffect(() => {
     // when zoom or tool changes put current selection where it currently is on primary canvas
@@ -102,14 +87,14 @@ function useSelection({
     }
     
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(primaryCtxRef.current, lastCanvasZoomRef.current);
+      doSelectionDrawToPrimary(lastCanvasZoomRef.current);
     }
 
     setSelectionPhase(0);
     lastCurrentToolRef.current = currentTool;
     lastCanvasZoomRef.current = canvasZoom;
   }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize,
-      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
+      lastCanvasZoomRef, lastCurrentToolRef, primaryRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
   );
 
   const { resizeElements: selectionResizeElements } = useResize({ 

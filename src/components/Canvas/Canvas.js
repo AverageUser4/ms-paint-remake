@@ -15,7 +15,7 @@ function Canvas() {
   const { 
     canvasSize, canvasOutlineSize, canvasZoom, setCanvasZoom,
     setCanvasOutlineSize, setCanvasSize, canvasMousePosition,
-    setCanvasMousePosition,
+    setCanvasMousePosition, primaryRef, secondaryRef, lastPrimaryStateRef,
   } = useCanvasContext();
   const { toolsData, currentTool } = useToolContext();
   const { colorData, setColorData } = useColorContext()
@@ -27,39 +27,32 @@ function Canvas() {
   };
 
   const { 
-    selectionRef, selectionCtxRef, selectionResizedSize,
+    selectionRef, selectionResizedSize,
     selectionSize,selectionPhase, selectionPosition,
   } = useSelectionContext();
   
-  const primaryRef = useRef();
-  const primaryCtxRef = useRef();
-  const secondaryRef = useRef();
-  const secondaryCtxRef = useRef();
   const lastPointerPositionRef = useRef({});
-  const lastPrimaryStateRef = useRef();
   const lastHistoryIndexRef = useRef(history.currentIndex);
   const lastCurrentToolRef = useRef();
   const lastCanvasZoomRef = useRef();
+  const isFirstRenderRef = useRef(true);
 
   const {
     onPointerDownBrush
   } = useBrush({
-    currentTool, secondaryRef, lastPointerPositionRef, canvasZoom,
-    secondaryCtxRef, colorData, currentToolData, primaryCtxRef,
-    lastPrimaryStateRef, doHistoryAdd, canvasSize,
-    primaryRef, setColorData, setCanvasZoom,
+    currentTool, lastPointerPositionRef, canvasZoom,
+    colorData, currentToolData,
+    doHistoryAdd, canvasSize,
+    setColorData, setCanvasZoom,
   });
 
   const { 
     selectionResizeElements, onPointerDownSelectionMove,
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection({
-    currentTool, primaryCtxRef, selectionRef,
-    canvasZoom, primaryRef, selectionCtxRef, lastCurrentToolRef,
+    currentTool, selectionRef,
+    canvasZoom, lastCurrentToolRef,
     lastCanvasZoomRef, colorData,
-
-    secondaryRef,
-    secondaryCtxRef,
     lastPointerPositionRef,
     lastPrimaryStateRef,
     currentToolData,
@@ -103,16 +96,16 @@ function Canvas() {
   }
 
   useEffect(() => {
-    if(primaryCtxRef.current) {
+    // by default canvas background is transparent, in paint it is supposed to always be in secondary color
+    if(!isFirstRenderRef.current) {
       return;
     }
+    isFirstRenderRef.current = false;
 
-    primaryCtxRef.current = primaryRef.current.getContext('2d');
-    secondaryCtxRef.current = secondaryRef.current.getContext('2d');
-    // by default canvas background is transparent, in paint it is supposed to always be in secondary color
-    primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryCtxRef.current.fillRect(0, 0, 9999, 9999);
-  }, [colorData.secondary]);
+    const primaryContext = primaryRef.current.getContext('2d');
+    primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
+    primaryContext.fillRect(0, 0, 9999, 9999);
+  }, [colorData.secondary, primaryRef]);
 
   useEffect(() => {
     // when history.currentIndex changes, change canvas state to that point in history
@@ -120,17 +113,19 @@ function Canvas() {
       return;
     }
 
-    primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryCtxRef.current.fillRect(0, 0, 9999, 9999);
-    primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
+    const primaryContext = primaryRef.current.getContext('2d');
+    primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
+    primaryContext.fillRect(0, 0, 9999, 9999);
+    primaryContext.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+
     setCanvasSize({
       width: history.dataArray[history.currentIndex].width,
       height: history.dataArray[history.currentIndex].height,
     })
 
     lastHistoryIndexRef.current = history.currentIndex;
-  }, [history, setCanvasSize, colorData.secondary]);
+  }, [history, setCanvasSize, colorData.secondary, lastPrimaryStateRef, primaryRef]);
 
   useEffect(() => {
     // changing width or height attribute (which happens whenever canvasSize changes)
@@ -138,13 +133,14 @@ function Canvas() {
     // fillStyle and pixels drawn to it), this effect makes sure that after every change
     // to canvas' dimensions its latest pixels are put back on it
     if(lastPrimaryStateRef.current) {
-      primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-      primaryCtxRef.current.fillRect(0, 0, canvasSize.width, canvasSize.height);
-      primaryCtxRef.current.drawImage(lastPrimaryStateRef.current, 0, 0);
+      const primaryContext = primaryRef.current.getContext('2d');
+      primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
+      primaryContext.fillRect(0, 0, canvasSize.width, canvasSize.height);
+      primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     }
-  }, [canvasSize, colorData.secondary]);
+  }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef]);
 
   return (
     <div className="point-container">
@@ -201,7 +197,6 @@ function Canvas() {
               onPointerDown={(e) => onPointerDownSelectionMove(e)}
               ref={(element) => { 
                 selectionRef.current = element;
-                selectionCtxRef.current = element?.getContext('2d');
               }}
             ></canvas>
 

@@ -1,13 +1,9 @@
 import { RGBObjectToString, doGetCanvasCopy, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
+import { useCanvasContext } from "../../misc/CanvasContext";
 
 function useBrush({
-  primaryRef,
-  primaryCtxRef,
-  secondaryRef,
-  secondaryCtxRef,
   lastPointerPositionRef,
-  lastPrimaryStateRef,
   currentTool,
   currentToolData,
   canvasZoom,
@@ -17,6 +13,8 @@ function useBrush({
   setColorData,
   doHistoryAdd,
 }) {
+  const { primaryRef, secondaryRef, lastPrimaryStateRef } = useCanvasContext();
+  
   let usedMoveCallback = onPointerMoveCallback;
   let usedDownCallback = onPointerMoveCallback;
   let usedUpCallback = onPointerUpCallback;
@@ -29,7 +27,7 @@ function useBrush({
     usedDownCallback = (event) => currentToolData.onPointerDown({
       event,
       currentZoom: canvasZoom,
-      primaryContext: primaryCtxRef.current,
+      primaryContext: primaryRef.current.getContext('2d'),
       canvasSize: canvasSize,
       colorData,
       setColorData,
@@ -55,13 +53,16 @@ function useBrush({
 
     lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
 
-    secondaryCtxRef.current.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-    secondaryCtxRef.current.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    const primaryContext = primaryRef.current.getContext('2d');
+    const secondaryContext = secondaryRef.current.getContext('2d');
+    
+    secondaryContext.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    secondaryContext.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
 
     function doDraw(isRepeated) {
       currentToolData.draw({
-        primaryContext: primaryCtxRef.current,
-        secondaryContext: secondaryCtxRef.current,
+        primaryContext,
+        secondaryContext,
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
@@ -72,11 +73,12 @@ function useBrush({
     doDraw(false);
     doDrawLoop(doDraw, step);
   }
+
   function onPointerUpCallback() {
     lastPointerPositionRef.current = {};
 
-    primaryCtxRef.current.drawImage(secondaryRef.current, 0, 0);
-    secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    primaryRef.current.getContext('2d').drawImage(secondaryRef.current, 0, 0);
+    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     doHistoryAdd({ 
@@ -85,9 +87,10 @@ function useBrush({
       height: canvasSize.height
     });
   }
+
   function onCancelCallback() {
     lastPointerPositionRef.current = {};
-    secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 

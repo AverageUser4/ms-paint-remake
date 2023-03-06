@@ -1,25 +1,24 @@
 import { useState } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
+import { useCanvasContext } from '../../misc/CanvasContext';
 import { useSelectionContext } from '../../misc/SelectionContext';
 import { RGBObjectToString, checkArgs } from '../../misc/utils';
 
 function useRectangularSelection({
-  primaryRef,
-  primaryCtxRef,
   canvasZoom,
   colorData,
   doSetSize,
   doSetPosition,
 }) {
   checkArgs([
-    { name: 'primaryRef', value: primaryRef, type: 'object' },
-    { name: 'primaryCtxRef', value: primaryCtxRef, type: 'object' },
     { name: 'canvasZoom', value: canvasZoom, type: 'number' },
     { name: 'colorData', value: colorData, type: 'object' },
     { name: 'doSetSize', value: doSetSize, type: 'function' },
     { name: 'doSetPosition', value: doSetPosition, type: 'function' },
   ]);
+
+  const { primaryRef } = useCanvasContext();
 
   const {
     selectionSize,
@@ -46,7 +45,7 @@ function useRectangularSelection({
   
   function onPointerDownCallback(event) {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(primaryCtxRef.current, canvasZoom);
+      doSelectionDrawToPrimary(canvasZoom);
       doCancel();
       return;
     }
@@ -129,18 +128,20 @@ function useRectangularSelection({
 
       setSelectionPhase(2);
       setSelectionResizeData(null);
+
+      const primaryContext = primaryRef.current.getContext('2d');
   
-      const imageData = primaryCtxRef.current.getImageData(
+      const imageData = primaryContext.getImageData(
         Math.round(lastSelectionPositionRef.current.x / canvasZoom),
         Math.round(lastSelectionPositionRef.current.y / canvasZoom),
         Math.round(lastSelectionSizeRef.current.width / canvasZoom),
         Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       );
   
-      doSelectionDrawToSelection(imageData, canvasZoom);
+      doSelectionDrawToSelection(imageData);
   
-      primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-      primaryCtxRef.current.fillRect(
+      primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
+      primaryContext.fillRect(
         Math.round(lastSelectionPositionRef.current.x / canvasZoom),
         Math.round(lastSelectionPositionRef.current.y / canvasZoom),
         Math.round(lastSelectionSizeRef.current.width / canvasZoom),

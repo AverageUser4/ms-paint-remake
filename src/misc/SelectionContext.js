@@ -6,10 +6,9 @@ import { doGetCanvasCopy } from './utils';
 const SelectionContext = createContext();
 
 function SelectionProvider({ children }) {
-  const { setCanvasSize, canvasZoom } = useCanvasContext();
+  const { setCanvasSize, canvasZoom, primaryRef } = useCanvasContext();
   
   const selectionRef = useRef();
-  const selectionCtxRef = useRef();
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionResizedSize, setSelectionResizedSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
@@ -31,7 +30,9 @@ function SelectionProvider({ children }) {
     lastSelectionPositionRef.current = newPosition;
   }
 
-  function doSelectionDrawToPrimary(primaryContext, zoom) {
+  function doSelectionDrawToPrimary(zoom) {
+    // using zoom argument is important as it isn't always canvasZoom
+    const primaryContext = primaryRef.current.getContext('2d');
     primaryContext.imageSmoothingEnabled = false;
     primaryContext.drawImage(
       doGetCanvasCopy(selectionRef.current),
@@ -42,25 +43,31 @@ function SelectionProvider({ children }) {
     );
   }
 
-  function doSelectionDrawToSelection(imageData, zoom) {
-    // when zoom < 1, part of the image would get cut if we didn't use bufCanvas
+  function doSelectionDrawToSelection(imageData) {
+    // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
     const bufCanvas = document.createElement('canvas');
     bufCanvas.width = Math.round(9999);
     bufCanvas.height = Math.round(9999);
     bufCanvas.imageSmoothingEnabled = false;
     bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
     
-    selectionCtxRef.current.imageSmoothingEnabled = false;
-    selectionCtxRef.current.putImageData(imageData, 0, 0);
+    const selectionContext = selectionRef.current.getContext('2d');
+    
+    selectionContext.imageSmoothingEnabled = false;
+    selectionContext.putImageData(imageData, 0, 0);
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-    selectionCtxRef.current.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
+    selectionContext.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
 
     // scale does not apply to putImageData, so have to use drawImage after copying data
-    selectionCtxRef.current.scale(zoom, zoom);
-    selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
+    selectionContext.scale(canvasZoom, canvasZoom);
+    selectionContext.drawImage(bufCanvas, 0, 0);
   }
 
   function doSelectionCrop() {
+    if(selectionPhase !== 2) {
+      return;
+    }
+
     setSelectionPhase(0);
   }
 
@@ -80,9 +87,10 @@ function SelectionProvider({ children }) {
     setSelectionPhase(2);
 
     setTimeout(() => {
-      selectionCtxRef.current.imageSmoothingEnabled = false;
-      selectionCtxRef.current.scale(canvasZoom, canvasZoom);
-      selectionCtxRef.current.drawImage(image, 0, 0);
+      const selectionContext = selectionRef.current.getContext('2d');
+      selectionContext.imageSmoothingEnabled = false;
+      selectionContext.scale(canvasZoom, canvasZoom);
+      selectionContext.drawImage(image, 0, 0);
       URL.revokeObjectURL(image.src);
     }, 50);
   }, [canvasZoom, setCanvasSize]);
@@ -156,7 +164,6 @@ function SelectionProvider({ children }) {
         doSetSize,
         doSetPosition,
         selectionRef,
-        selectionCtxRef,
         selectionBrowseFile,
         selectionPasteFromClipboard,
         doSelectionDrawToPrimary,

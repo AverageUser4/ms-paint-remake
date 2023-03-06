@@ -2,14 +2,10 @@ import { useRef } from "react";
 import { ImageDataUtils, checkArgs, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useSelectionContext } from "../../misc/SelectionContext";
+import { useCanvasContext } from "../../misc/CanvasContext";
 
 function useFreeFormSelection({
-  primaryRef,
-  primaryCtxRef,
-  secondaryRef,
-  secondaryCtxRef,
   lastPointerPositionRef,
-  lastPrimaryStateRef,
   currentTool,
   currentToolData,
   canvasZoom,
@@ -19,24 +15,21 @@ function useFreeFormSelection({
   doSetPosition,
 }) {
   checkArgs([
-    { name: 'primaryRef', value: primaryRef, type: 'object' },
-    { name: 'primaryCtxRef', value: primaryCtxRef, type: 'object' },
     { name: 'currentTool', value: currentTool, type: 'string' },
     { name: 'colorData', value: colorData, type: 'object' },
     { name: 'canvasZoom', value: canvasZoom, type: 'number' },
-    { name: 'secondaryRef', value: secondaryRef, type: 'object' },
-    { name: 'secondaryCtxRef', value: secondaryCtxRef, type: 'object' },
     { name: 'lastPointerPositionRef', value: lastPointerPositionRef, type: 'object' },
-    { name: 'lastPrimaryStateRef', value: lastPrimaryStateRef, type: 'object' },
     { name: 'currentToolData', value: currentToolData, type: 'object' },
     { name: 'canvasSize', value: canvasSize, type: 'object' },
     { name: 'doSetSize', value: doSetSize, type: 'function' },
     { name: 'doSetPosition', value: doSetPosition, type: 'function' },
   ]);
 
+  const { primaryRef, secondaryRef } = useCanvasContext();
+
   const {
     setSelectionPhase,
-    selectionCtxRef,
+    selectionRef,
     lastSelectionStateRef,
     selectionPhase,
     doSelectionDrawToPrimary,
@@ -49,12 +42,12 @@ function useFreeFormSelection({
 
   function onPointerDownCallback(event) {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(primaryCtxRef.current, canvasZoom);
+      doSelectionDrawToPrimary(canvasZoom);
       doCancel();
       return;
     }
 
-    primaryImageDataRef.current = primaryCtxRef.current.getImageData(
+    primaryImageDataRef.current = primaryRef.current.getContext('2d').getImageData(
       0, 0, primaryRef.current.width, primaryRef.current.height);
     const { pageX, pageY } = event;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
@@ -91,12 +84,13 @@ function useFreeFormSelection({
       maxY: Math.max(edgePositionRef.current.maxY, destinationPixel.y),
     };
 
-    secondaryCtxRef.current.fillStyle = 'black';
+    const secondaryContext = secondaryRef.current.getContext('2d');
+    secondaryContext.fillStyle = 'black';
 
     function doDraw(isRepeated) {
       currentToolData.draw({
-        primaryContext: primaryCtxRef.current,
-        secondaryContext: secondaryCtxRef.current,
+        primaryContext: primaryRef.current.getContext('2d'),
+        secondaryContext,
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
@@ -122,8 +116,11 @@ function useFreeFormSelection({
     const zoomedWidth = Math.round(width * canvasZoom);
     const zoomedHeight = Math.round(height * canvasZoom);
 
-    const boundariesImageData = secondaryCtxRef.current.getImageData(x, y, width, height);
-    secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    const primaryContext = primaryRef.current.getContext('2d');
+    const secondaryContext = secondaryRef.current.getContext('2d');
+    
+    const boundariesImageData = secondaryContext.getImageData(x, y, width, height);
+    secondaryContext.clearRect(0, 0, canvasSize.width, canvasSize.height);
     lastSelectionStateRef.current = null;
 
     if(width < 6 || height < 6) {
@@ -135,8 +132,8 @@ function useFreeFormSelection({
     setSelectionPhase(2);
 
     setTimeout(() => {
-      const primaryImageData = primaryCtxRef.current.getImageData(x, y, width, height);
-      const selectionImageData = selectionCtxRef.current.getImageData(x, y, width, height);
+      const primaryImageData = primaryContext.getImageData(x, y, width, height);
+      const selectionImageData = selectionRef.current.getContext('2d').getImageData(x, y, width, height);
       
       function isThereTerminatingLine(column, row) {
         for(let i = column + 2; i < width; i++) {
@@ -171,15 +168,16 @@ function useFreeFormSelection({
         }
       }
 
-      doSelectionDrawToSelection(selectionImageData, canvasZoom);
+      doSelectionDrawToSelection(selectionImageData);
 
-      primaryCtxRef.current.putImageData(primaryImageData, x, y);
+      primaryContext.putImageData(primaryImageData, x, y);
     }, 20);
   }
+
   function onCancelCallback() {
     setSelectionPhase(0);
     lastPointerPositionRef.current = {};
-    secondaryCtxRef.current.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
 
   const { onPointerDown, currentlyPressedRef, doCancel } = usePointerTrack({ 

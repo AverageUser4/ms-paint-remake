@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { initialCanvasSize } from './data';
@@ -24,6 +24,9 @@ function CanvasProvider({ children }) {
   const [canvasSize, setCanvasSize] = useState(initialCanvasSize);
   const [canvasOutlineSize, setCanvasOutlineSize] = useState(null);
   const [canvasZoom, setCanvasZoom] = useState(1);
+  const primaryRef = useRef();
+  const secondaryRef = useRef();
+  const lastPrimaryStateRef = useRef();
   
   return (
     <CanvasContext.Provider
@@ -35,7 +38,10 @@ function CanvasProvider({ children }) {
         canvasOutlineSize,
         setCanvasOutlineSize,
         canvasZoom, 
-        setCanvasZoom
+        setCanvasZoom,
+        primaryRef,
+        secondaryRef,
+        lastPrimaryStateRef,
       }}
     >
       {children}
