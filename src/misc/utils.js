@@ -355,3 +355,19 @@ export function getDrawData({
 
   return { destinationPixel, doDrawLoop };
 }
+
+export function checkNumberValue(value) {
+  let isInvalid = false;
+
+  if(value.startsWith('0') && value !== '0') {
+    value = value.slice(1);
+  }
+  if(value === '') {
+    value = '0';
+  }
+  if(value.match(/[^0-9]/)) {
+    isInvalid = true;
+  }
+
+  return [parseFloat(value), isInvalid];
+}

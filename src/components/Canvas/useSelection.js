@@ -38,16 +38,16 @@ function useSelection({
     selectionOutlineSize, setSelectionOutlineSize,
     selectionPhase, setSelectionPhase,
     lastSelectionStateRef,
-    doSetSize,
-    doSetPosition,
+    doSelectionSetSize,
+    doSelectionSetPosition,
     doSelectionDrawToPrimary
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection({
     canvasZoom,
     colorData,
-    doSetSize,
-    doSetPosition,
+    doSelectionSetSize,
+    doSelectionSetPosition,
   });
 
   const { onPointerDownFreeFormSelection } = useFreeFormSelection({
@@ -57,8 +57,8 @@ function useSelection({
     canvasZoom,
     canvasSize,
     colorData,
-    doSetSize,
-    doSetPosition,
+    doSelectionSetSize,
+    doSelectionSetPosition,
   });
   
   function onPointerUpCallbackResize() {
@@ -99,7 +99,7 @@ function useSelection({
 
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
-    setPosition: doSetPosition,
+    setPosition: doSelectionSetPosition,
     isAllowToLeaveViewport: true,
     size: selectionOutlineSize || selectionResizedSize,
     setSize: setSelectionOutlineSize,
@@ -115,9 +115,9 @@ function useSelection({
   });
   const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
     position: selectionPosition,
-    setPosition: doSetPosition,
+    setPosition: doSelectionSetPosition,
     size: selectionResizedSize,
-    setSize: doSetSize,
+    setSize: doSelectionSetSize,
     isInnerWindow: true,
     isMaximized: false,
     isConstrained: false,

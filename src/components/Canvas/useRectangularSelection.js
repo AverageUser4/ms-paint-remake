@@ -8,14 +8,14 @@ import { checkArgs } from '../../misc/utils';
 function useRectangularSelection({
   canvasZoom,
   colorData,
-  doSetSize,
-  doSetPosition,
+  doSelectionSetSize,
+  doSelectionSetPosition,
 }) {
   checkArgs([
     { name: 'canvasZoom', value: canvasZoom, type: 'number' },
     { name: 'colorData', value: colorData, type: 'object' },
-    { name: 'doSetSize', value: doSetSize, type: 'function' },
-    { name: 'doSetPosition', value: doSetPosition, type: 'function' },
+    { name: 'doSelectionSetSize', value: doSelectionSetSize, type: 'function' },
+    { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
   ]);
 
   const { primaryRef, clearPrimary } = useCanvasContext();
@@ -64,8 +64,8 @@ function useRectangularSelection({
       initialWidth: 1,
       initialHeight: 1,
     })
-    doSetSize({ width: 1, height: 1 });
-    doSetPosition({ x: offsetX, y: offsetY });
+    doSelectionSetSize({ width: 1, height: 1 });
+    doSelectionSetPosition({ x: offsetX, y: offsetY });
     setSelectionPhase(1);
   }
   
@@ -106,10 +106,10 @@ function useRectangularSelection({
     newWidth = Math.max(newWidth, 1);
     newHeight = Math.max(newHeight, 1);
 
-    doSetSize({ width: newWidth, height: newHeight });
+    doSelectionSetSize({ width: newWidth, height: newHeight });
 
     if(newX !== selectionPosition.x || newY !== selectionPosition.y) {
-      doSetPosition({ x: newX, y: newY })
+      doSelectionSetPosition({ x: newX, y: newY })
     }
   }
 

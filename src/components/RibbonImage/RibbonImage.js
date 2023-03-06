@@ -28,7 +28,7 @@ import rotateLeft16 from './assets/rotate-left-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
-  const { doSelectionCrop } = useSelectionContext();
+  const { doSelectionCrop, selectionPhase } = useSelectionContext();
   const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
   let icon = image32;
   
@@ -127,6 +127,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               <button 
                 className="button"
                 onPointerDown={() => doSelectionCrop()}
+                disabled={selectionPhase !== 2}
               >
                 <img draggable="false" src={crop16} alt="Crop."/>
                 {showText && <span className="text text--1">Crop</span>}

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useRef, useEffect, useCallb
 import PropTypes from 'prop-types';
 import { useCanvasContext } from './CanvasContext';
 import { doGetCanvasCopy } from './utils';
+import { MAX_CANVAS_SIZE } from './data';
 
 const SelectionContext = createContext();
 
@@ -19,13 +20,13 @@ function SelectionProvider({ children }) {
   const lastSelectionPositionRef = useRef(null);
   const inputFileRef = useRef();
 
-  function doSetSize(newSize) {
+  function doSelectionSetSize(newSize) {
     setSelectionSize(newSize);
     setSelectionResizedSize(newSize);
     lastSelectionSizeRef.current = newSize;
   }
 
-  function doSetPosition(newPosition) {
+  function doSelectionSetPosition(newPosition) {
     setSelectionPosition(newPosition);
     lastSelectionPositionRef.current = newPosition;
   }
@@ -47,8 +48,8 @@ function SelectionProvider({ children }) {
   function doSelectionDrawToSelection(imageData) {
     // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
     const bufCanvas = document.createElement('canvas');
-    bufCanvas.width = Math.round(9999);
-    bufCanvas.height = Math.round(9999);
+    bufCanvas.width = Math.round(MAX_CANVAS_SIZE);
+    bufCanvas.height = Math.round(MAX_CANVAS_SIZE);
     bufCanvas.imageSmoothingEnabled = false;
     bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
     
@@ -75,7 +76,7 @@ function SelectionProvider({ children }) {
       height: Math.round(selectionResizedSize.height / canvasZoom),
     };
 
-    doSetPosition(newPosition);
+    doSelectionSetPosition(newPosition);
     setCanvasSize(newSize);
 
     setTimeout(() => {
@@ -93,11 +94,11 @@ function SelectionProvider({ children }) {
       width: prev.width > width ? prev.width : width,
       height: prev.height > height ? prev.height : height,
     }));
-    doSetSize({ 
+    doSelectionSetSize({ 
       width: Math.round(width * canvasZoom),
       height: Math.round(height * canvasZoom),
     });
-    doSetPosition({ x: 0, y: 0 });
+    doSelectionSetPosition({ x: 0, y: 0 });
     setSelectionPhase(2);
 
     setTimeout(() => {
@@ -175,8 +176,8 @@ function SelectionProvider({ children }) {
         lastSelectionStateRef,
         lastSelectionSizeRef,
         lastSelectionPositionRef,
-        doSetSize,
-        doSetPosition,
+        doSelectionSetSize,
+        doSelectionSetPosition,
         selectionRef,
         selectionBrowseFile,
         selectionPasteFromClipboard,

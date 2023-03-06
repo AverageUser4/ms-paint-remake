@@ -3,7 +3,7 @@ import css from './ColorPicker.module.css';
 
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useColorContext } from "../../misc/ColorContext";
-import { HSLtoRGB, RGBtoHSL } from "../../misc/utils";
+import { checkNumberValue, HSLtoRGB, RGBtoHSL } from "../../misc/utils";
 
 import cursor from './assets/cursor.png';
 
@@ -42,23 +42,21 @@ function ColorPicker() {
   }
 
   function onChange(event) {
-    let { name, value } = event.target;
+    const { name, value } = event.target;
 
-    if(value.startsWith('0' && value !== '0'))
-      value = value.slice(1);
-    if(value === '')
-      value = '0';
-    if(value.match(/[^0-9]/))
+    let [numUsedValue, isInvalid] = checkNumberValue(value);
+    if(isInvalid) {
       return;
+    }
 
     if(name === 'h' || name === 's' || name === 'l') {
-      value = Math.min(value, name === 'h' ? 359 : 100);
-      const newHSL = { ...HSL, [name]: parseFloat(value) };
+      numUsedValue = Math.min(numUsedValue, name === 'h' ? 359 : 100);
+      const newHSL = { ...HSL, [name]: numUsedValue };
       setColorPickerData(prev => ({ ...prev, HSL: newHSL, RGB: HSLtoRGB(newHSL)}));
     }
     else {
-      value = Math.min(value, 255);
-      const newRGB = { ...RGB, [name]: parseFloat(value) };
+      numUsedValue = Math.min(numUsedValue, 255);
+      const newRGB = { ...RGB, [name]: numUsedValue };
       setColorPickerData(prev => ({ ...prev, RGB: newRGB, HSL: RGBtoHSL(newRGB)}));
     }
   }

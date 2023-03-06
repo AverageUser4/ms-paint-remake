@@ -11,8 +11,8 @@ function useFreeFormSelection({
   canvasZoom,
   canvasSize,
   colorData,
-  doSetSize,
-  doSetPosition,
+  doSelectionSetSize,
+  doSelectionSetPosition,
 }) {
   checkArgs([
     { name: 'currentTool', value: currentTool, type: 'string' },
@@ -21,8 +21,8 @@ function useFreeFormSelection({
     { name: 'lastPointerPositionRef', value: lastPointerPositionRef, type: 'object' },
     { name: 'currentToolData', value: currentToolData, type: 'object' },
     { name: 'canvasSize', value: canvasSize, type: 'object' },
-    { name: 'doSetSize', value: doSetSize, type: 'function' },
-    { name: 'doSetPosition', value: doSetPosition, type: 'function' },
+    { name: 'doSelectionSetSize', value: doSelectionSetSize, type: 'function' },
+    { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
   ]);
 
   const { primaryRef, secondaryRef } = useCanvasContext();
@@ -127,8 +127,8 @@ function useFreeFormSelection({
       return;
     }
 
-    doSetPosition({ x: zoomedX, y: zoomedY });
-    doSetSize({ width: zoomedWidth, height: zoomedHeight });
+    doSelectionSetPosition({ x: zoomedX, y: zoomedY });
+    doSelectionSetSize({ width: zoomedWidth, height: zoomedHeight });
     setSelectionPhase(2);
 
     setTimeout(() => {

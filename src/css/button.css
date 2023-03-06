@@ -36,3 +36,10 @@
   background-color: rgb(201, 224, 247);
   border-color: rgb(98, 162, 228);
 }
+.button:disabled {
+  opacity: 0.5;
+}
+.button.button:disabled {
+  background-color: transparent;
+  border-color: transparent;
+}

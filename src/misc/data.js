@@ -13,3 +13,5 @@ export const initialCanvasSize = {
   width: 300,
   height: 200
 };
+
+export const MAX_CANVAS_SIZE = 10_000;

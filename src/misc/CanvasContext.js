@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { initialCanvasSize } from './data';
+import { initialCanvasSize, MAX_CANVAS_SIZE } from './data';
 import { useColorContext } from './ColorContext';
 import { RGBObjectToString } from './utils';
 
@@ -31,8 +31,7 @@ function CanvasProvider({ children }) {
   const secondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
 
-  function clearPrimary(x = 0, y = 0, width = 9999, height = 9999) {
-    console.log(x, y, width, height)
+  function clearPrimary(x = 0, y = 0, width = MAX_CANVAS_SIZE, height = MAX_CANVAS_SIZE) {
     const primaryContext = primaryRef.current.getContext('2d');
     primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
     primaryContext.fillRect(x, y, width, height);
