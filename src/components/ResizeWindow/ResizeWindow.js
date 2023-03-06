@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './ResizeWindow.module.css';
 
@@ -18,6 +18,12 @@ import { checkNumberValue } from '../../misc/utils';
 
 const WIDTH = 280;
 const HEIGHT = 400;
+const initialData = { 
+  resizeHorizontal: 100,
+  resizeVertical: 100,
+  skewHorizontal: 0,
+  skewVertical: 0,
+};
 
 const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   const { selectionPhase, selectionResizedSize, setSelectionResizedSize } = useSelectionContext();
@@ -28,12 +34,10 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
   const [resizeType, setResizeType] = useState('percentage');
   const [isMaintainRatio, setIsMaintainRatio] = useState(true);
-  const [data, setData] = useState({ 
-    resizeHorizontal: 100,
-    resizeVertical: 100,
-    skewHorizontal: 0,
-    skewVertical: 0,
-  });
+  const [data, setData] = useState(initialData);
+  const lastResizeTypeRef = useRef(resizeType);
+  const lastIsMaintainRatioRef = useRef(isMaintainRatio);
+  const usedSize = selectionPhase === 2 ? selectionResizedSize : canvasSize;
 
   useEffect(() => {
     if(isOpen) {
@@ -43,8 +47,36 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   }, [isOpen, mainWindowPosition]);
 
   useEffect(() => {
+    if(isOpen) {
+      setResizeType('percentage');
+      lastResizeTypeRef.current = 'percentage';
+      setIsMaintainRatio(true);
+      lastIsMaintainRatioRef.current = true;
+      setData(initialData);
+    }
+  }, [isOpen]);
 
-  }, [resizeType]);
+  useEffect(() => {
+    if(
+        resizeType === lastResizeTypeRef.current &&
+        isMaintainRatio === lastIsMaintainRatioRef.current
+      ) {
+      return;
+    }
+
+    lastResizeTypeRef.current = resizeType;
+    lastIsMaintainRatioRef.current = isMaintainRatio;
+
+    if(resizeType === lastResizeTypeRef.current && isMaintainRatio === false) {
+      return;
+    }
+    
+    if(resizeType === 'percentage') {
+      setData(prev => ({ ...prev, resizeHorizontal: 100, resizeVertical: 100 }));
+    } else if(resizeType === 'pixels') {
+      setData(prev => ({ ...prev, resizeHorizontal: usedSize.width, resizeVertical: usedSize.height }));
+    }
+  }, [resizeType, usedSize, isMaintainRatio]);
 
   function onChangeResizeInput(event) {
     const { name, value } = event.target;
@@ -54,16 +86,9 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
       return;
     }
 
-    numUsedValue = Math.max(1, numUsedValue);
-
-    const usedSize = selectionPhase === 2 ? selectionResizedSize : canvasSize;
-    const horizontalMultiplier = usedSize.width / usedSize.height;
-    const verticalMultiplier = usedSize.height / usedSize.width;
-
-    const maxHorizontalPercentage = Math.round(MAX_CANVAS_SIZE / usedSize.width * 100);
-    const maxVerticalPercentage = Math.round(MAX_CANVAS_SIZE / usedSize.height * 100);
-
     if(resizeType === 'percentage') {
+      const maxHorizontalPercentage = Math.round(MAX_CANVAS_SIZE / usedSize.width * 100);
+      const maxVerticalPercentage = Math.round(MAX_CANVAS_SIZE / usedSize.height * 100);
       const maxSharedPercentage = Math.min(maxHorizontalPercentage, maxVerticalPercentage);
 
       if(isMaintainRatio) {
@@ -77,12 +102,40 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
         numUsedValue = Math.min(name === 'resizeHorizontal' ? maxHorizontalPercentage : maxVerticalPercentage, numUsedValue);
         setData(prev => ({ ...prev, [name]: numUsedValue }));
       }
-    } else {
-      'hi'
+    } else if(resizeType === 'pixels') {
+      numUsedValue = Math.min(MAX_CANVAS_SIZE, numUsedValue);
+
+      if(isMaintainRatio) {
+        const horizontalMultiplier = usedSize.width / usedSize.height;
+        const verticalMultiplier = usedSize.height / usedSize.width;
+
+        let usedHorizontal;
+        let usedVertical;
+
+        if(name === 'resizeHorizontal') {
+          usedHorizontal = numUsedValue;
+          usedVertical = Math.round(numUsedValue * verticalMultiplier);
+
+          if(usedVertical > MAX_CANVAS_SIZE) {
+            usedVertical = MAX_CANVAS_SIZE;
+            usedHorizontal = Math.round(MAX_CANVAS_SIZE * horizontalMultiplier);
+          }
+        } else if(name === 'resizeVertical') {
+          usedVertical = numUsedValue;
+          usedHorizontal = Math.round(numUsedValue * horizontalMultiplier);
+
+          if(usedHorizontal > MAX_CANVAS_SIZE) {
+            usedHorizontal = MAX_CANVAS_SIZE;
+            usedVertical = Math.round(MAX_CANVAS_SIZE * verticalMultiplier);
+          }
+        }
+
+        setData(prev => ({ ...prev, resizeHorizontal: usedHorizontal, resizeVertical: usedVertical }));
+      } else {
+        setData(prev => ({ ...prev, [name]: numUsedValue }));
+      }
     }
     
-    setData(prev => ({ ...prev, [name]: numUsedValue }));
-
     // skew 0-180
     // percent 1-(based on how big would be)
     // pixels 1-MAX_CANVAS_SIZE
@@ -98,6 +151,26 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
 
     numUsedValue = Math.min(numUsedValue, 179);
     setData(prev => ({ ...prev, [name]: numUsedValue }));
+  }
+
+  function doApplyChanges() {
+    const newSize = {
+      width: data.resizeHorizontal,
+      height: data.resizeVertical,
+    }
+
+    if(resizeType === 'percentage') {
+      newSize.width = Math.round((usedSize.width * data.resizeHorizontal) / 100);
+      newSize.height = Math.round((usedSize.height * data.resizeVertical) / 100);
+    }
+
+    if(selectionPhase === 2) {
+      setSelectionResizedSize(newSize);
+    } else {
+      setCanvasSize(newSize);
+    }
+  
+    setIsOpen(false);
   }
 
   return (
@@ -245,7 +318,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
                 <button 
                   className={`form-button form-button--active`} 
                   type="button"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => doApplyChanges()}
                   data-cy="ResizeWindow-confirm"
                 >
                   OK
