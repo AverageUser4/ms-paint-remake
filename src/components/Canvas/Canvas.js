@@ -16,6 +16,7 @@ function Canvas() {
     canvasSize, canvasOutlineSize, canvasZoom, setCanvasZoom,
     setCanvasOutlineSize, setCanvasSize, canvasMousePosition,
     setCanvasMousePosition, primaryRef, secondaryRef, lastPrimaryStateRef,
+    clearPrimary,
   } = useCanvasContext();
   const { toolsData, currentTool } = useToolContext();
   const { colorData, setColorData } = useColorContext()
@@ -36,6 +37,7 @@ function Canvas() {
   const lastCurrentToolRef = useRef();
   const lastCanvasZoomRef = useRef();
   const isFirstRenderRef = useRef(true);
+  const lastCanvasSizeRef = useRef(canvasSize);
 
   const {
     onPointerDownBrush
@@ -81,6 +83,7 @@ function Canvas() {
     isOnlyThreeDirections: true,
     isCancelOnRightMouseDown: true,
   });
+
   function onPointerUpCallbackResize() {
     if(!canvasOutlineSize) {
       return;
@@ -102,10 +105,8 @@ function Canvas() {
     }
     isFirstRenderRef.current = false;
 
-    const primaryContext = primaryRef.current.getContext('2d');
-    primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryContext.fillRect(0, 0, 9999, 9999);
-  }, [colorData.secondary, primaryRef]);
+    clearPrimary();
+  }, [colorData.secondary, clearPrimary]);
 
   useEffect(() => {
     // when history.currentIndex changes, change canvas state to that point in history
@@ -114,8 +115,7 @@ function Canvas() {
     }
 
     const primaryContext = primaryRef.current.getContext('2d');
-    primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryContext.fillRect(0, 0, 9999, 9999);
+    clearPrimary();
     primaryContext.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
 
@@ -125,22 +125,26 @@ function Canvas() {
     })
 
     lastHistoryIndexRef.current = history.currentIndex;
-  }, [history, setCanvasSize, colorData.secondary, lastPrimaryStateRef, primaryRef]);
+  }, [history, setCanvasSize, colorData.secondary, lastPrimaryStateRef, primaryRef, clearPrimary]);
 
   useEffect(() => {
     // changing width or height attribute (which happens whenever canvasSize changes)
     // of canvas causes it to lose its entire context (both 'settings' like
     // fillStyle and pixels drawn to it), this effect makes sure that after every change
     // to canvas' dimensions its latest pixels are put back on it
+    if(lastCanvasSizeRef.current === canvasSize) {
+      return;
+    }
+    lastCanvasSizeRef.current = canvasSize;
+    
     if(lastPrimaryStateRef.current) {
       const primaryContext = primaryRef.current.getContext('2d');
-      primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
-      primaryContext.fillRect(0, 0, canvasSize.width, canvasSize.height);
+      clearPrimary();
       primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     }
-  }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef]);
+  }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef, clearPrimary]);
 
   return (
     <div className="point-container">

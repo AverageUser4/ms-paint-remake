@@ -6,7 +6,7 @@ import { doGetCanvasCopy } from './utils';
 const SelectionContext = createContext();
 
 function SelectionProvider({ children }) {
-  const { setCanvasSize, canvasZoom, primaryRef } = useCanvasContext();
+  const { setCanvasSize, canvasZoom, primaryRef, lastPrimaryStateRef, clearPrimary } = useCanvasContext();
   
   const selectionRef = useRef();
   const [selectionSize, setSelectionSize] = useState(null);
@@ -30,17 +30,18 @@ function SelectionProvider({ children }) {
     lastSelectionPositionRef.current = newPosition;
   }
 
-  function doSelectionDrawToPrimary(zoom) {
+  function doSelectionDrawToPrimary(zoom, adjustedPosition) {
     // using zoom argument is important as it isn't always canvasZoom
     const primaryContext = primaryRef.current.getContext('2d');
     primaryContext.imageSmoothingEnabled = false;
     primaryContext.drawImage(
       doGetCanvasCopy(selectionRef.current),
-      Math.round(selectionPosition.x / zoom),
-      Math.round(selectionPosition.y / zoom),
+      Math.round((adjustedPosition ? adjustedPosition.x : selectionPosition.x) / zoom),
+      Math.round((adjustedPosition ? adjustedPosition.y : selectionPosition.y) / zoom),
       Math.round(selectionResizedSize.width / zoom),
       Math.round(selectionResizedSize.height / zoom),
     );
+    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
   }
 
   function doSelectionDrawToSelection(imageData) {
@@ -68,7 +69,20 @@ function SelectionProvider({ children }) {
       return;
     }
 
-    setSelectionPhase(0);
+    const newPosition = { x: 0, y: 0 };
+    const newSize = {
+      width: Math.round(selectionResizedSize.width / canvasZoom),
+      height: Math.round(selectionResizedSize.height / canvasZoom),
+    };
+
+    doSetPosition(newPosition);
+    setCanvasSize(newSize);
+
+    setTimeout(() => {
+      setSelectionPhase(0);
+      clearPrimary();
+      doSelectionDrawToPrimary(canvasZoom, newPosition);
+    }, 20);
   }
 
   const onLoadImage = useCallback(event => {

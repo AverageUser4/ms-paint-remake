@@ -8,6 +8,7 @@ import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Dropdown from "../Dropdown/Dropdown";
 import { toggleBoolState } from "../../misc/utils";
+import { useSelectionContext } from "../../misc/SelectionContext";
 import { useToolContext } from "../../misc/ToolContext";
 
 import image16 from './assets/image-16.png';
@@ -27,6 +28,7 @@ import rotateLeft16 from './assets/rotate-left-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
+  const { doSelectionCrop } = useSelectionContext();
   const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
   let icon = image32;
   
@@ -36,7 +38,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
       break;
   }
     
-    const dropdownContainerRef = useRef();
+  const dropdownContainerRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -122,7 +124,10 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
             </BigButtonDuo>
 
             <div data-cy="Image-buttons">
-              <button className="button">
+              <button 
+                className="button"
+                onPointerDown={() => doSelectionCrop()}
+              >
                 <img draggable="false" src={crop16} alt="Crop."/>
                 {showText && <span className="text text--1">Crop</span>}
               </button>

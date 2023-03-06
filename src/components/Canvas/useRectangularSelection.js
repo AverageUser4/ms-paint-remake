@@ -3,7 +3,7 @@ import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../misc/CanvasContext';
 import { useSelectionContext } from '../../misc/SelectionContext';
-import { RGBObjectToString, checkArgs } from '../../misc/utils';
+import { checkArgs } from '../../misc/utils';
 
 function useRectangularSelection({
   canvasZoom,
@@ -18,7 +18,7 @@ function useRectangularSelection({
     { name: 'doSetPosition', value: doSetPosition, type: 'function' },
   ]);
 
-  const { primaryRef } = useCanvasContext();
+  const { primaryRef, clearPrimary } = useCanvasContext();
 
   const {
     selectionSize,
@@ -139,9 +139,7 @@ function useRectangularSelection({
       );
   
       doSelectionDrawToSelection(imageData);
-  
-      primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
-      primaryContext.fillRect(
+      clearPrimary(
         Math.round(lastSelectionPositionRef.current.x / canvasZoom),
         Math.round(lastSelectionPositionRef.current.y / canvasZoom),
         Math.round(lastSelectionSizeRef.current.width / canvasZoom),

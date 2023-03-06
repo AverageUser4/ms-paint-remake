@@ -2,6 +2,8 @@ import React, { createContext, useContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { initialCanvasSize } from './data';
+import { useColorContext } from './ColorContext';
+import { RGBObjectToString } from './utils';
 
 const zoomData = [
   { multiplier: 0.125, offset: 7 },
@@ -20,6 +22,7 @@ const zoomData = [
 const CanvasContext = createContext();
 
 function CanvasProvider({ children }) {
+  const { colorData } = useColorContext();
   const [canvasMousePosition, setCanvasMousePosition] = useState(null);
   const [canvasSize, setCanvasSize] = useState(initialCanvasSize);
   const [canvasOutlineSize, setCanvasOutlineSize] = useState(null);
@@ -27,6 +30,13 @@ function CanvasProvider({ children }) {
   const primaryRef = useRef();
   const secondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
+
+  function clearPrimary(x = 0, y = 0, width = 9999, height = 9999) {
+    console.log(x, y, width, height)
+    const primaryContext = primaryRef.current.getContext('2d');
+    primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
+    primaryContext.fillRect(x, y, width, height);
+  }
   
   return (
     <CanvasContext.Provider
@@ -42,6 +52,7 @@ function CanvasProvider({ children }) {
         primaryRef,
         secondaryRef,
         lastPrimaryStateRef,
+        clearPrimary
       }}
     >
       {children}
