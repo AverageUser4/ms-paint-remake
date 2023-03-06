@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useCanvasContext } from './CanvasContext';
+import { doGetCanvasCopy } from './utils';
 
 const SelectionContext = createContext();
 
@@ -28,6 +29,39 @@ function SelectionProvider({ children }) {
   function doSetPosition(newPosition) {
     setSelectionPosition(newPosition);
     lastSelectionPositionRef.current = newPosition;
+  }
+
+  function doSelectionDrawToPrimary(primaryContext, zoom) {
+    primaryContext.imageSmoothingEnabled = false;
+    primaryContext.drawImage(
+      doGetCanvasCopy(selectionRef.current),
+      Math.round(selectionPosition.x / zoom),
+      Math.round(selectionPosition.y / zoom),
+      Math.round(selectionResizedSize.width / zoom),
+      Math.round(selectionResizedSize.height / zoom),
+    );
+  }
+
+  function doSelectionDrawToSelection(imageData, zoom) {
+    // when zoom < 1, part of the image would get cut if we didn't use bufCanvas
+    const bufCanvas = document.createElement('canvas');
+    bufCanvas.width = Math.round(9999);
+    bufCanvas.height = Math.round(9999);
+    bufCanvas.imageSmoothingEnabled = false;
+    bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
+    
+    selectionCtxRef.current.imageSmoothingEnabled = false;
+    selectionCtxRef.current.putImageData(imageData, 0, 0);
+    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+    selectionCtxRef.current.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
+
+    // scale does not apply to putImageData, so have to use drawImage after copying data
+    selectionCtxRef.current.scale(zoom, zoom);
+    selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
+  }
+
+  function doSelectionCrop() {
+    setSelectionPhase(0);
   }
 
   const onLoadImage = useCallback(event => {
@@ -125,6 +159,9 @@ function SelectionProvider({ children }) {
         selectionCtxRef,
         selectionBrowseFile,
         selectionPasteFromClipboard,
+        doSelectionDrawToPrimary,
+        doSelectionDrawToSelection,
+        doSelectionCrop,
       }}
     >
       <input 

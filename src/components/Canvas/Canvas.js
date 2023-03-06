@@ -26,7 +26,10 @@ function Canvas() {
     height: canvasSize.height * canvasZoom,
   };
 
-  const { selectionRef, selectionCtxRef } = useSelectionContext();
+  const { 
+    selectionRef, selectionCtxRef, selectionResizedSize,
+    selectionSize,selectionPhase, selectionPosition,
+  } = useSelectionContext();
   
   const primaryRef = useRef();
   const primaryCtxRef = useRef();
@@ -48,8 +51,7 @@ function Canvas() {
   });
 
   const { 
-    selectionPhase, selectionPosition, selectionResizeElements,
-    selectionResizedSize, selectionSize, onPointerDownSelectionMove,
+    selectionResizeElements, onPointerDownSelectionMove,
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection({
     currentTool, primaryCtxRef, selectionRef,
@@ -109,7 +111,7 @@ function Canvas() {
     secondaryCtxRef.current = secondaryRef.current.getContext('2d');
     // by default canvas background is transparent, in paint it is supposed to always be in secondary color
     primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryCtxRef.current.fillRect(0, 0, 99999, 99999);
+    primaryCtxRef.current.fillRect(0, 0, 9999, 9999);
   }, [colorData.secondary]);
 
   useEffect(() => {
@@ -119,7 +121,7 @@ function Canvas() {
     }
 
     primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryCtxRef.current.fillRect(0, 0, 99999, 99999);
+    primaryCtxRef.current.fillRect(0, 0, 9999, 9999);
     primaryCtxRef.current.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     setCanvasSize({

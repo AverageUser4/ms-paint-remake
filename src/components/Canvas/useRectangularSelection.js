@@ -2,7 +2,7 @@ import { useState } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
 import { useSelectionContext } from '../../misc/SelectionContext';
-import { doGetCanvasCopy, RGBObjectToString, checkArgs } from '../../misc/utils';
+import { RGBObjectToString, checkArgs } from '../../misc/utils';
 
 function useRectangularSelection({
   primaryRef,
@@ -22,16 +22,14 @@ function useRectangularSelection({
   ]);
 
   const {
-    selectionRef,
-    selectionCtxRef,
     selectionSize,
-    selectionResizedSize,
     selectionPosition,
     selectionPhase,
     setSelectionPhase,
-    lastSelectionStateRef,
     lastSelectionSizeRef,
     lastSelectionPositionRef,
+    doSelectionDrawToPrimary,
+    doSelectionDrawToSelection,
   } = useSelectionContext();
 
   const [selectionResizeData, setSelectionResizeData] = useState(null);
@@ -48,14 +46,7 @@ function useRectangularSelection({
   
   function onPointerDownCallback(event) {
     if(selectionPhase === 2) {
-      primaryCtxRef.current.imageSmoothingEnabled = false;
-      primaryCtxRef.current.drawImage(
-        doGetCanvasCopy(selectionRef.current),
-        Math.round(selectionPosition.x / canvasZoom),
-        Math.round(selectionPosition.y / canvasZoom),
-        Math.round(selectionResizedSize.width / canvasZoom),
-        Math.round(selectionResizedSize.height / canvasZoom),
-      );
+      doSelectionDrawToPrimary(primaryCtxRef.current, canvasZoom);
       doCancel();
       return;
     }
@@ -146,20 +137,7 @@ function useRectangularSelection({
         Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       );
   
-      // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
-      const bufCanvas = document.createElement('canvas');
-      bufCanvas.width = Math.round(lastSelectionSizeRef.current.width / canvasZoom);
-      bufCanvas.height = Math.round(lastSelectionSizeRef.current.height / canvasZoom);
-      bufCanvas.imageSmoothingEnabled = false;
-      bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
-      
-      selectionCtxRef.current.imageSmoothingEnabled = false;
-      selectionCtxRef.current.putImageData(imageData, 0, 0);
-      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-
-      // scale does not apply to putImageData, so have to use drawImage after copying data
-      selectionCtxRef.current.scale(canvasZoom, canvasZoom);
-      selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
+      doSelectionDrawToSelection(imageData, canvasZoom);
   
       primaryCtxRef.current.fillStyle = RGBObjectToString(colorData.secondary);
       primaryCtxRef.current.fillRect(
@@ -168,7 +146,7 @@ function useRectangularSelection({
         Math.round(lastSelectionSizeRef.current.width / canvasZoom),
         Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       );
-    }, 50);
+    }, 20);
   }
 
   function onCancelCallback() {

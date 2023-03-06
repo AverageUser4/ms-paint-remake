@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { ImageDataUtils, checkArgs, getDrawData, doGetCanvasCopy } from "../../misc/utils";
+import { ImageDataUtils, checkArgs, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useSelectionContext } from "../../misc/SelectionContext";
 
@@ -39,9 +39,8 @@ function useFreeFormSelection({
     selectionCtxRef,
     lastSelectionStateRef,
     selectionPhase,
-    selectionRef,
-    selectionPosition,
-    selectionResizedSize
+    doSelectionDrawToPrimary,
+    doSelectionDrawToSelection
   } = useSelectionContext();
 
   const edgePositionRef = useRef();
@@ -50,14 +49,7 @@ function useFreeFormSelection({
 
   function onPointerDownCallback(event) {
     if(selectionPhase === 2) {
-      primaryCtxRef.current.imageSmoothingEnabled = false;
-      primaryCtxRef.current.drawImage(
-        doGetCanvasCopy(selectionRef.current),
-        Math.round(selectionPosition.x / canvasZoom),
-        Math.round(selectionPosition.y / canvasZoom),
-        Math.round(selectionResizedSize.width / canvasZoom),
-        Math.round(selectionResizedSize.height / canvasZoom),
-      );
+      doSelectionDrawToPrimary(primaryCtxRef.current, canvasZoom);
       doCancel();
       return;
     }
@@ -138,9 +130,9 @@ function useFreeFormSelection({
       return;
     }
 
-    setSelectionPhase(2);
     doSetPosition({ x: zoomedX, y: zoomedY });
     doSetSize({ width: zoomedWidth, height: zoomedHeight });
+    setSelectionPhase(2);
 
     setTimeout(() => {
       const primaryImageData = primaryCtxRef.current.getImageData(x, y, width, height);
@@ -179,24 +171,10 @@ function useFreeFormSelection({
         }
       }
 
-        primaryCtxRef.current.putImageData(primaryImageData, x, y);
+      doSelectionDrawToSelection(selectionImageData, canvasZoom);
 
-        // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
-        const bufCanvas = document.createElement('canvas');
-        bufCanvas.width = Math.round(9999);
-        bufCanvas.height = Math.round(9999);
-        bufCanvas.imageSmoothingEnabled = false;
-        bufCanvas.getContext('2d').putImageData(selectionImageData, 0, 0);
-        
-        selectionCtxRef.current.imageSmoothingEnabled = false;
-        selectionCtxRef.current.putImageData(selectionImageData, 0, 0);
-        lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-        selectionCtxRef.current.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
-
-        // scale does not apply to putImageData, so have to use drawImage after copying data
-        selectionCtxRef.current.scale(canvasZoom, canvasZoom);
-        selectionCtxRef.current.drawImage(bufCanvas, 0, 0);
-    }, 50);
+      primaryCtxRef.current.putImageData(primaryImageData, x, y);
+    }, 20);
   }
   function onCancelCallback() {
     setSelectionPhase(0);

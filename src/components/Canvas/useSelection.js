@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
-import { doGetCanvasCopy, checkArgs } from '../../misc/utils';
+import { checkArgs } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
 import { useSelectionContext } from '../../misc/SelectionContext';
@@ -47,7 +47,8 @@ function useSelection({
     selectionPhase, setSelectionPhase,
     lastSelectionStateRef,
     doSetSize,
-    doSetPosition
+    doSetPosition,
+    doSelectionDrawToPrimary
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection({
@@ -101,21 +102,14 @@ function useSelection({
     }
     
     if(selectionPhase === 2) {
-      primaryCtxRef.current.imageSmoothingEnabled = false;
-      primaryCtxRef.current.drawImage(
-        doGetCanvasCopy(selectionRef.current),
-        Math.round(selectionPosition.x / lastCanvasZoomRef.current),
-        Math.round(selectionPosition.y / lastCanvasZoomRef.current),
-        Math.round(selectionResizedSize.width / lastCanvasZoomRef.current),
-        Math.round(selectionResizedSize.height / lastCanvasZoomRef.current),
-      );
+      doSelectionDrawToPrimary(primaryCtxRef.current, lastCanvasZoomRef.current);
     }
 
     setSelectionPhase(0);
     lastCurrentToolRef.current = currentTool;
     lastCanvasZoomRef.current = canvasZoom;
   }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize,
-      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef, setSelectionPhase]
+      lastCanvasZoomRef, lastCurrentToolRef, primaryCtxRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
   );
 
   const { resizeElements: selectionResizeElements } = useResize({ 
@@ -147,11 +141,7 @@ function useSelection({
   });
 
   return {
-    selectionPhase,
-    selectionPosition,
     selectionResizeElements,
-    selectionResizedSize,
-    selectionSize,
     onPointerDownSelectionMove,
     onPointerDownRectangularSelection,
     onPointerDownFreeFormSelection,
