@@ -11,7 +11,6 @@ function SelectionProvider({ children }) {
   
   const selectionRef = useRef();
   const [selectionSize, setSelectionSize] = useState(null);
-  const [selectionResizedSize, setSelectionResizedSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
   const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
@@ -22,7 +21,6 @@ function SelectionProvider({ children }) {
 
   function doSelectionSetSize(newSize) {
     setSelectionSize(newSize);
-    setSelectionResizedSize(newSize);
     lastSelectionSizeRef.current = newSize;
   }
 
@@ -39,8 +37,8 @@ function SelectionProvider({ children }) {
       doGetCanvasCopy(selectionRef.current),
       Math.round((adjustedPosition ? adjustedPosition.x : selectionPosition.x) / zoom),
       Math.round((adjustedPosition ? adjustedPosition.y : selectionPosition.y) / zoom),
-      Math.round(selectionResizedSize.width / zoom),
-      Math.round(selectionResizedSize.height / zoom),
+      Math.round(selectionSize.width / zoom),
+      Math.round(selectionSize.height / zoom),
     );
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
   }
@@ -72,8 +70,8 @@ function SelectionProvider({ children }) {
 
     const newPosition = { x: 0, y: 0 };
     const newSize = {
-      width: Math.round(selectionResizedSize.width / canvasZoom),
-      height: Math.round(selectionResizedSize.height / canvasZoom),
+      width: Math.round(selectionSize.width / canvasZoom),
+      height: Math.round(selectionSize.height / canvasZoom),
     };
 
     doSelectionSetPosition(newPosition);
@@ -169,7 +167,6 @@ function SelectionProvider({ children }) {
     <SelectionContext.Provider
       value={{
         selectionSize, setSelectionSize,
-        selectionResizedSize, setSelectionResizedSize,
         selectionPosition, setSelectionPosition,
         selectionOutlineSize, setSelectionOutlineSize,
         selectionPhase, setSelectionPhase,

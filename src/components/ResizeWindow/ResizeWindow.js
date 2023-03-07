@@ -26,7 +26,7 @@ const initialData = {
 };
 
 const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
-  const { selectionPhase, selectionResizedSize, setSelectionResizedSize, doSelectionSetSize, selectionRef } = useSelectionContext();
+  const { selectionPhase, selectionSize, doSelectionSetSize, selectionRef } = useSelectionContext();
   const { canvasSize, setCanvasSize } = useCanvasContext();
   const { mainWindowPosition } = useMainWindowContext();
 
@@ -37,7 +37,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   const [data, setData] = useState(initialData);
   const lastResizeTypeRef = useRef(resizeType);
   const lastIsMaintainRatioRef = useRef(isMaintainRatio);
-  const usedSize = selectionPhase === 2 ? selectionResizedSize : canvasSize;
+  const usedSize = selectionPhase === 2 ? selectionSize : canvasSize;
 
   useEffect(() => {
     if(isOpen) {
@@ -165,7 +165,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
     }
 
     if(selectionPhase === 2) {
-      setSelectionResizedSize(newSize);
+      doSelectionSetSize(newSize);
 
       if(data.skewHorizontal !== 0 || data.skewVertical !== 0) {
         setTimeout(() => {

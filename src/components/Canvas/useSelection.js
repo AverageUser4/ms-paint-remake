@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
-import { checkArgs } from '../../misc/utils';
+import { checkArgs, doGetCanvasCopy } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
 import { useSelectionContext } from '../../misc/SelectionContext';
 import { useCanvasContext } from '../../misc/CanvasContext';
+import { MAX_CANVAS_SIZE } from '../../misc/data';
 
 function useSelection({
   lastCurrentToolRef,
@@ -33,7 +34,6 @@ function useSelection({
   const {
     selectionRef,
     selectionSize,
-    selectionResizedSize, setSelectionResizedSize,
     selectionPosition,
     selectionOutlineSize, setSelectionOutlineSize,
     selectionPhase, setSelectionPhase,
@@ -66,8 +66,24 @@ function useSelection({
       return;
     }
 
-    setSelectionResizedSize(selectionOutlineSize);
+    const selectionCanvasCopy = doGetCanvasCopy(selectionRef.current);
+    const multiplier = {
+      x: selectionOutlineSize.width / selectionSize.width,
+      y: selectionOutlineSize.height / selectionSize.height,
+    };
+
+    doSelectionSetSize(selectionOutlineSize);
     setSelectionOutlineSize(null);
+    lastSelectionStateRef.current = selectionCanvasCopy;
+
+    setTimeout(() => {
+      const selectionContext = selectionRef.current.getContext('2d');
+
+      selectionContext.imageSmoothingEnabled = false;
+      selectionContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
+      selectionContext.scale(multiplier.x, multiplier.y);
+      selectionContext.drawImage(selectionCanvasCopy, 0, 0);
+    }, 20);
   }
 
   useEffect(() => {
@@ -93,15 +109,15 @@ function useSelection({
     setSelectionPhase(0);
     lastCurrentToolRef.current = currentTool;
     lastCanvasZoomRef.current = canvasZoom;
-  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, selectionResizedSize,
-      lastCanvasZoomRef, lastCurrentToolRef, primaryRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
+  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, lastCanvasZoomRef,
+      lastCurrentToolRef, primaryRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
   );
 
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
     setPosition: doSelectionSetPosition,
     isAllowToLeaveViewport: true,
-    size: selectionOutlineSize || selectionResizedSize,
+    size: selectionOutlineSize || selectionSize,
     setSize: setSelectionOutlineSize,
     isConstrained: false,
     minimalSize: { width: 1, height: 1, },
@@ -116,7 +132,7 @@ function useSelection({
   const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
     position: selectionPosition,
     setPosition: doSelectionSetPosition,
-    size: selectionResizedSize,
+    size: selectionSize,
     setSize: doSelectionSetSize,
     isInnerWindow: true,
     isMaximized: false,

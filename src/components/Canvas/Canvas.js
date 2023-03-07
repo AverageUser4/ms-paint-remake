@@ -28,8 +28,7 @@ function Canvas() {
   };
 
   const { 
-    selectionRef, selectionResizedSize,
-    selectionSize,selectionPhase, selectionPosition,
+    selectionRef, selectionSize, selectionPhase, selectionPosition,
   } = useSelectionContext();
   
   const lastPointerPositionRef = useRef({});
@@ -179,8 +178,8 @@ function Canvas() {
             style={{
               left: selectionPosition.x,
               top: selectionPosition.y,
-              width: selectionResizedSize.width,
-              height: selectionResizedSize.height
+              width: selectionSize.width,
+              height: selectionSize.height
             }}
           >
             <canvas
@@ -190,8 +189,8 @@ function Canvas() {
                 ...canvasStyle,
                 left: 0,
                 top: 0,
-                width: selectionResizedSize.width,
-                height: selectionResizedSize.height
+                width: selectionSize.width,
+                height: selectionSize.height
               }}
               className={`
                 ${css['canvas']}
