@@ -44,7 +44,7 @@ function ColorPicker() {
   function onChange(event) {
     const { name, value } = event.target;
 
-    let [numUsedValue, isInvalid] = checkNumberValue(value);
+    let { numValue: numUsedValue, isInvalid } = checkNumberValue(value);
     if(isInvalid) {
       return;
     }

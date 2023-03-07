@@ -14,7 +14,7 @@ import resizeVertical from './assets/resize-vertical.ico';
 import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
-import { checkNumberValue, doGetCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
+import { checkNumberValue, clamp, doGetCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
 
 const WIDTH = 280;
 const HEIGHT = 400;
@@ -82,7 +82,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   function onChangeResizeInput(event) {
     const { name, value } = event.target;
 
-    let [numUsedValue, isInvalid] = checkNumberValue(value);
+    let { numValue: numUsedValue, isInvalid } = checkNumberValue(value);
     if(isInvalid) {
       return;
     }
@@ -136,22 +136,18 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
         setData(prev => ({ ...prev, [name]: numUsedValue }));
       }
     }
-    
-    // skew 0-180
-    // percent 1-(based on how big would be)
-    // pixels 1-MAX_CANVAS_SIZE
   }
 
   function onChangeSkewInput(event) {
     const { name, value } = event.target;
 
-    let [numUsedValue, isInvalid] = checkNumberValue(value);
+    let { value: usedValue, numValue: numUsedValue, isInvalid } = checkNumberValue(value, true);
     if(isInvalid) {
       return;
     }
 
-    numUsedValue = Math.min(numUsedValue, 179);
-    setData(prev => ({ ...prev, [name]: numUsedValue }));
+    numUsedValue = clamp(-89, numUsedValue, 89);
+    setData(prev => ({ ...prev, [name]: usedValue === '-' ? usedValue : numUsedValue }));
   }
 
   function onSubmit(event) {
@@ -173,27 +169,30 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
       usedResize(newSize);
     }
 
-    if(data.skewHorizontal !== 0 || data.skewVertical !== 0) {
+    const usedSkewHorizontal = data.skewHorizontal === '-' ? 0 : data.skewHorizontal;
+    const usedSkewVertical = data.skewVertical === '-' ? 0 : data.skewVertical;
+
+    if(usedSkewHorizontal !== 0 || usedSkewVertical !== 0) {
       setTimeout(() => {
         const usedSize = newSize;
         const usedSetSize = isSelectionActive ? doSelectionSetSize : setCanvasSize;
     
-        const { width, height } = getSkewedSize(usedSize.width, usedSize.height, data.skewHorizontal, data.skewVertical);
-        const movedX = data.skewHorizontal < 0 ? width - usedSize.width : 0;
-        const movedY = data.skewVertical < 0 ? height - usedSize.height : 0;
+        const { width, height } = getSkewedSize(usedSize.width, usedSize.height, usedSkewHorizontal, usedSkewVertical);
+        const movedX = usedSkewHorizontal < 0 ? width - usedSize.width : 0;
+        const movedY = usedSkewVertical < 0 ? height - usedSize.height : 0;
     
         const usedContext = isSelectionActive ? selectionRef.current.getContext('2d') : primaryRef.current.getContext('2d');
         const usedCopy = doGetCanvasCopy(isSelectionActive ? selectionRef.current : primaryRef.current);
         
         usedSetSize({
-          width: width > 0 ? width : usedSize.width - width,
-          height: height > 0 ? height : usedSize.height - height,
+          width: Math.min(width > 0 ? width : usedSize.width - width, MAX_CANVAS_SIZE),
+          height: Math.min(height > 0 ? height : usedSize.height - height, MAX_CANVAS_SIZE),
         });
         
         setTimeout(() => {
           usedContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
           usedContext.translate(movedX, movedY);
-          usedContext.transform(1, setSkew(data.skewVertical), setSkew(data.skewHorizontal), 1, 0, 0);
+          usedContext.transform(1, setSkew(usedSkewVertical), setSkew(usedSkewHorizontal), 1, 0, 0);
           usedContext.drawImage(usedCopy, 0, 0);
         }, 20);
       }, 20);

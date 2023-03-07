@@ -5,6 +5,7 @@ import css from './BottomBar.module.css';
 import ZoomRange from "../ZoomRange/ZoomRange";
 import { useMainWindowContext } from "../../misc/MainWindowContext";
 import { useCanvasContext } from "../../misc/CanvasContext";
+import { useSelectionContext } from "../../misc/SelectionContext";
 
 import canvas16 from './assets/canvas-16.ico';
 import cursor16 from './assets/cursor-16.ico';
@@ -15,6 +16,8 @@ import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 function BottomBar({ windowWidth }) {
   const { isMainWindowMaximized } = useMainWindowContext();
   const { canvasSize, canvasOutlineSize, canvasMousePosition, canvasZoom } = useCanvasContext();
+  const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
+  const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;
   
   return (
     <footer 
@@ -37,7 +40,10 @@ function BottomBar({ windowWidth }) {
           windowWidth >= 560 &&
             <div className={css['data']}>
               <img draggable="false" src={selection16} alt="Selection size."/>
-              <span className="text">100 <Cross/> 100px</span>
+              {
+                selectionPhase > 0 &&
+                  <span className="text">{usedSelectionSize.width} <Cross/> {usedSelectionSize.height}px</span>
+              }
             </div>
         }
 

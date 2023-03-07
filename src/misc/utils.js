@@ -356,7 +356,7 @@ export function getDrawData({
   return { destinationPixel, doDrawLoop };
 }
 
-export function checkNumberValue(value) {
+export function checkNumberValue(value, acceptNegative = false) {
   let isInvalid = false;
 
   if(value.startsWith('0') && value !== '0') {
@@ -365,11 +365,25 @@ export function checkNumberValue(value) {
   if(value === '') {
     value = '0';
   }
-  if(value.match(/[^0-9]/)) {
+  if(
+      (acceptNegative && (value.slice(0, 1).match(/[^0-9-]/) || value.slice(1).match(/[^0-9]/))) ||
+      (!acceptNegative && value.match(/[^0-9]/))
+    ) {
     isInvalid = true;
   }
 
-  return [parseFloat(value), isInvalid];
+  let numValue = parseFloat(value);
+  if(Number.isNaN(numValue)) {
+    numValue = 0
+  }
+
+  console.log(value, numValue, isInvalid)
+
+  return {
+    value,
+    numValue,
+    isInvalid,
+  };
 }
 
 export function degreesToRadians(degrees) {
@@ -392,4 +406,8 @@ export function getSkewedSize(width, height, degreeX, degreeY) {
     width: Math.round(widthSkewed + (degreeX >= 0 ? width : 0)),
     height: Math.round(heightSkewed + (degreeY > 0 ? height : 0)),
   };
+}
+
+export function clamp(min, actual, max) {
+  return Math.max(Math.min(actual, max), min);
 }
