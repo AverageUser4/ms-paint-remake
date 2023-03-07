@@ -26,8 +26,8 @@ const initialData = {
 };
 
 const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
-  const { selectionPhase, selectionSize, doSelectionResize, selectionRef } = useSelectionContext();
-  const { canvasSize, setCanvasSize } = useCanvasContext();
+  const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
+  const { canvasSize, setCanvasSize, primaryRef } = useCanvasContext();
   const { mainWindowPosition } = useMainWindowContext();
 
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
@@ -37,7 +37,8 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   const [data, setData] = useState(initialData);
   const lastResizeTypeRef = useRef(resizeType);
   const lastIsMaintainRatioRef = useRef(isMaintainRatio);
-  const usedSize = selectionPhase === 2 ? selectionSize : canvasSize;
+  const isSelectionActive = selectionPhase === 2;
+  const usedSize = isSelectionActive ? selectionSize : canvasSize;
 
   useEffect(() => {
     if(isOpen) {
@@ -153,7 +154,9 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
     setData(prev => ({ ...prev, [name]: numUsedValue }));
   }
 
-  function doApplyChanges() {
+  function onSubmit(event) {
+    event.preventDefault();
+    
     const newSize = {
       width: data.resizeHorizontal,
       height: data.resizeVertical,
@@ -164,43 +167,36 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
       newSize.height = Math.round((usedSize.height * data.resizeVertical) / 100);
     }
 
-    if(selectionPhase === 2) {
-      doSelectionResize(newSize);
+    const usedResize = isSelectionActive ? doSelectionResize : setCanvasSize;
 
-      if(data.skewHorizontal !== 0 || data.skewVertical !== 0) {
+    if(newSize.width !== usedSize.width || newSize.height !== usedSize.height) {
+      usedResize(newSize);
+    }
+
+    if(data.skewHorizontal !== 0 || data.skewVertical !== 0) {
+      setTimeout(() => {
+        const usedSize = newSize;
+        const usedSetSize = isSelectionActive ? doSelectionSetSize : setCanvasSize;
+    
+        const { width, height } = getSkewedSize(usedSize.width, usedSize.height, data.skewHorizontal, data.skewVertical);
+        const movedX = data.skewHorizontal < 0 ? width - usedSize.width : 0;
+        const movedY = data.skewVertical < 0 ? height - usedSize.height : 0;
+    
+        const usedContext = isSelectionActive ? selectionRef.current.getContext('2d') : primaryRef.current.getContext('2d');
+        const usedCopy = doGetCanvasCopy(isSelectionActive ? selectionRef.current : primaryRef.current);
+        
+        usedSetSize({
+          width: width > 0 ? width : usedSize.width - width,
+          height: height > 0 ? height : usedSize.height - height,
+        });
+        
         setTimeout(() => {
-          const usedSize = newSize;
-          const usedSetSize = selectionPhase === 2 ? doSelectionResize : setCanvasSize;
-      
-          const myDegreeX = data.skewHorizontal;
-          const myDegreeY = data.skewVertical;
-          const myWidth = usedSize.width;
-          const myHeight = usedSize.height;
-      
-          const { width, height } = getSkewedSize(myWidth, myHeight, myDegreeX, myDegreeY);
-          const movedX = myDegreeX < 0 ? width - myWidth : 0;
-          const movedY = myDegreeY < 0 ? height - myHeight : 0;
-      
-          console.log(newSize, width, height)
-          
-          const selectionContext = selectionRef.current.getContext('2d');
-          const selectionCopy = doGetCanvasCopy(selectionRef.current);
-          
-          usedSetSize({
-            width: width > 0 ? width : usedSize.width - width,
-            height: height > 0 ? height : usedSize.height - height,
-          });
-          
-          setTimeout(() => {
-            selectionContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
-            selectionContext.translate(movedX, movedY);
-            selectionContext.transform(1, setSkew(myDegreeY), setSkew(myDegreeX), 1, 0, 0);
-            selectionContext.drawImage(selectionCopy, 0, 0);
-          }, 20);
+          usedContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
+          usedContext.translate(movedX, movedY);
+          usedContext.transform(1, setSkew(data.skewVertical), setSkew(data.skewHorizontal), 1, 0, 0);
+          usedContext.drawImage(usedCopy, 0, 0);
         }, 20);
-      }
-    } else {
-      setCanvasSize(newSize);
+      }, 20);
     }
   
     setIsOpen(false);
@@ -226,7 +222,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
               onPointerDownMove={onPointerDownMove}
             />
       
-            <form className={css['body']}>
+            <form className={css['body']} onSubmit={(e) => onSubmit(e)}>
 
               <div className={css['group']}>
                 <h3 className={`text ${css['group-label']}`}>Resize</h3>
@@ -350,8 +346,6 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
               <div className={css['buttons-container']}>
                 <button 
                   className={`form-button form-button--active`} 
-                  type="button"
-                  onClick={() => doApplyChanges()}
                   data-cy="ResizeWindow-confirm"
                 >
                   OK
