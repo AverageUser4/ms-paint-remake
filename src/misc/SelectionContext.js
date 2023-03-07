@@ -29,6 +29,26 @@ function SelectionProvider({ children }) {
     lastSelectionPositionRef.current = newPosition;
   }
 
+  function doSelectionResize(newSize) {
+    const selectionCanvasCopy = doGetCanvasCopy(selectionRef.current);
+    const multiplier = {
+      x: newSize.width / selectionSize.width,
+      y: newSize.height / selectionSize.height,
+    };
+    
+    lastSelectionStateRef.current = selectionCanvasCopy;
+    doSelectionSetSize(newSize);
+
+    setTimeout(() => {
+      const selectionContext = selectionRef.current.getContext('2d');
+
+      selectionContext.imageSmoothingEnabled = false;
+      selectionContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
+      selectionContext.scale(multiplier.x, multiplier.y);
+      selectionContext.drawImage(selectionCanvasCopy, 0, 0);
+    }, 20);
+  }
+
   function doSelectionDrawToPrimary(zoom, adjustedPosition) {
     // using zoom argument is important as it isn't always canvasZoom
     const primaryContext = primaryRef.current.getContext('2d');
@@ -181,6 +201,7 @@ function SelectionProvider({ children }) {
         doSelectionDrawToPrimary,
         doSelectionDrawToSelection,
         doSelectionCrop,
+        doSelectionResize,
       }}
     >
       <input 

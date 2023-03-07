@@ -39,6 +39,7 @@ function useSelection({
     selectionPhase, setSelectionPhase,
     lastSelectionStateRef,
     doSelectionSetSize,
+    doSelectionResize,
     doSelectionSetPosition,
     doSelectionDrawToPrimary
   } = useSelectionContext();
@@ -66,24 +67,8 @@ function useSelection({
       return;
     }
 
-    const selectionCanvasCopy = doGetCanvasCopy(selectionRef.current);
-    const multiplier = {
-      x: selectionOutlineSize.width / selectionSize.width,
-      y: selectionOutlineSize.height / selectionSize.height,
-    };
-
-    doSelectionSetSize(selectionOutlineSize);
+    doSelectionResize(selectionOutlineSize);
     setSelectionOutlineSize(null);
-    lastSelectionStateRef.current = selectionCanvasCopy;
-
-    setTimeout(() => {
-      const selectionContext = selectionRef.current.getContext('2d');
-
-      selectionContext.imageSmoothingEnabled = false;
-      selectionContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
-      selectionContext.scale(multiplier.x, multiplier.y);
-      selectionContext.drawImage(selectionCanvasCopy, 0, 0);
-    }, 20);
   }
 
   useEffect(() => {

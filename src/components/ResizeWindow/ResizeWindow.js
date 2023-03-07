@@ -26,7 +26,7 @@ const initialData = {
 };
 
 const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
-  const { selectionPhase, selectionSize, doSelectionSetSize, selectionRef } = useSelectionContext();
+  const { selectionPhase, selectionSize, doSelectionResize, selectionRef } = useSelectionContext();
   const { canvasSize, setCanvasSize } = useCanvasContext();
   const { mainWindowPosition } = useMainWindowContext();
 
@@ -165,12 +165,12 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
     }
 
     if(selectionPhase === 2) {
-      doSelectionSetSize(newSize);
+      doSelectionResize(newSize);
 
       if(data.skewHorizontal !== 0 || data.skewVertical !== 0) {
         setTimeout(() => {
           const usedSize = newSize;
-          const usedSetSize = selectionPhase === 2 ? doSelectionSetSize : setCanvasSize;
+          const usedSetSize = selectionPhase === 2 ? doSelectionResize : setCanvasSize;
       
           const myDegreeX = data.skewHorizontal;
           const myDegreeY = data.skewVertical;
