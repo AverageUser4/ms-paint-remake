@@ -371,3 +371,25 @@ export function checkNumberValue(value) {
 
   return [parseFloat(value), isInvalid];
 }
+
+export function degreesToRadians(degrees) {
+  return degrees * (Math.PI / 180);
+}
+export function setSkew(degrees) {
+  return Math.tan(degreesToRadians(degrees));
+}
+export function getSkewedSize(width, height, degreeX, degreeY) {
+  /* https://stackoverflow.com/questions/9281320/calculate-new-width-when-skewing-in-canvas */
+  /* http://jsfiddle.net/LBzUt/33/ */
+
+  degreeX = Math.abs(degreeX);
+  degreeY = Math.abs(degreeY);
+
+  const widthSkewed = setSkew(degreeX) * height;
+  const heightSkewed = setSkew(degreeY) * width;
+
+  return {
+    width: Math.round(widthSkewed + (degreeX >= 0 ? width : 0)),
+    height: Math.round(heightSkewed + (degreeY > 0 ? height : 0)),
+  };
+}

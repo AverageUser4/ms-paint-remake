@@ -14,7 +14,7 @@ import resizeVertical from './assets/resize-vertical.ico';
 import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
-import { checkNumberValue } from '../../misc/utils';
+import { checkNumberValue, doGetCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
 
 const WIDTH = 280;
 const HEIGHT = 400;
@@ -26,7 +26,7 @@ const initialData = {
 };
 
 const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
-  const { selectionPhase, selectionResizedSize, setSelectionResizedSize } = useSelectionContext();
+  const { selectionPhase, selectionResizedSize, setSelectionResizedSize, doSelectionSetSize, selectionRef } = useSelectionContext();
   const { canvasSize, setCanvasSize } = useCanvasContext();
   const { mainWindowPosition } = useMainWindowContext();
 
@@ -166,6 +166,39 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
 
     if(selectionPhase === 2) {
       setSelectionResizedSize(newSize);
+
+      if(data.skewHorizontal !== 0 || data.skewVertical !== 0) {
+        setTimeout(() => {
+          const usedSize = newSize;
+          const usedSetSize = selectionPhase === 2 ? doSelectionSetSize : setCanvasSize;
+      
+          const myDegreeX = data.skewHorizontal;
+          const myDegreeY = data.skewVertical;
+          const myWidth = usedSize.width;
+          const myHeight = usedSize.height;
+      
+          const { width, height } = getSkewedSize(myWidth, myHeight, myDegreeX, myDegreeY);
+          const movedX = myDegreeX < 0 ? width - myWidth : 0;
+          const movedY = myDegreeY < 0 ? height - myHeight : 0;
+      
+          console.log(newSize, width, height)
+          
+          const selectionContext = selectionRef.current.getContext('2d');
+          const selectionCopy = doGetCanvasCopy(selectionRef.current);
+          
+          usedSetSize({
+            width: width > 0 ? width : usedSize.width - width,
+            height: height > 0 ? height : usedSize.height - height,
+          });
+          
+          setTimeout(() => {
+            selectionContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
+            selectionContext.translate(movedX, movedY);
+            selectionContext.transform(1, setSkew(myDegreeY), setSkew(myDegreeX), 1, 0, 0);
+            selectionContext.drawImage(selectionCopy, 0, 0);
+          }, 20);
+        }, 20);
+      }
     } else {
       setCanvasSize(newSize);
     }
