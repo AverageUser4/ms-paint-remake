@@ -11,7 +11,6 @@ import { useColorContext } from "../../misc/ColorContext";
 import { useContextMenuContext } from "../../misc/ContextMenuContext";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
-import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
   const { 
@@ -22,7 +21,7 @@ function Canvas() {
   } = useCanvasContext();
   const { toolsData, currentTool } = useToolContext();
   const { colorData, setColorData } = useColorContext()
-  const { history, doHistoryAdd } = useHistoryContext();
+  const { doHistoryAdd } = useHistoryContext();
   const currentToolData = toolsData.get(currentTool);
   const canvasStyle = { 
     width: canvasSize.width * canvasZoom,
@@ -34,7 +33,6 @@ function Canvas() {
   const { openContextMenu } = useContextMenuContext();
   
   const lastPointerPositionRef = useRef({});
-  const lastHistoryIndexRef = useRef(history.currentIndex);
   const lastCurrentToolRef = useRef();
   const lastCanvasZoomRef = useRef();
   const isFirstRenderRef = useRef(true);
@@ -106,8 +104,8 @@ function Canvas() {
     }
     isFirstRenderRef.current = false;
 
-    clearPrimary();
-  }, [colorData.secondary, clearPrimary]);
+    clearPrimary(0, 0, canvasSize.width, canvasSize.height);
+  }, [colorData.secondary, clearPrimary, canvasSize]);
 
   useEffect(() => {
     // changing width or height attribute (which happens whenever canvasSize changes)
@@ -121,7 +119,7 @@ function Canvas() {
     
     if(lastPrimaryStateRef.current) {
       const primaryContext = primaryRef.current.getContext('2d');
-      clearPrimary();
+      clearPrimary(0, 0, canvasSize.width, canvasSize.height);
       primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);

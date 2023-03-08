@@ -31,8 +31,6 @@ function HistoryProvider({ children }) {
   }
 
   function doHistorySetToState(index) {
-    const start = performance.now();
-    
     const data = history.dataArray[index];
     const bufCanvas = document.createElement('canvas');
     bufCanvas.width = data.width;
@@ -40,14 +38,12 @@ function HistoryProvider({ children }) {
     bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
   
     const primaryContext = primaryRef.current.getContext('2d');
-    clearPrimary();
+    clearPrimary(0, 0, data.width, data.height);
     primaryContext.drawImage(bufCanvas, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
   
     setCanvasSize({ width: data.width, height: data.height });
     setHistory(prev => ({ ...prev, currentIndex: index }));
-
-    console.log(performance.now() - start)
   }
   
   function doHistoryGoBack() {

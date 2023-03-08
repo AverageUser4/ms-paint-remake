@@ -4,7 +4,6 @@ import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
 import { doGetCanvasCopy } from './utils';
-import { MAX_CANVAS_SIZE } from './data';
 
 const SelectionContext = createContext();
 
@@ -46,10 +45,12 @@ function SelectionProvider({ children }) {
     setTimeout(() => {
       const selectionContext = selectionRef.current.getContext('2d');
 
+      selectionContext.save();
       selectionContext.imageSmoothingEnabled = false;
-      selectionContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
+      selectionContext.clearRect(0, 0, newSize.width, newSize.height);
       selectionContext.scale(multiplier.x, multiplier.y);
       selectionContext.drawImage(selectionCanvasCopy, 0, 0);
+      selectionContext.restore();
     }, 20);
   }
 
@@ -77,8 +78,8 @@ function SelectionProvider({ children }) {
   function doSelectionDrawToSelection(imageData) {
     // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
     const bufCanvas = document.createElement('canvas');
-    bufCanvas.width = Math.round(MAX_CANVAS_SIZE);
-    bufCanvas.height = Math.round(MAX_CANVAS_SIZE);
+    bufCanvas.width = imageData.width;
+    bufCanvas.height = imageData.height;
     bufCanvas.imageSmoothingEnabled = false;
     bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
     
@@ -110,7 +111,7 @@ function SelectionProvider({ children }) {
 
     setTimeout(() => {
       setSelectionPhase(0);
-      clearPrimary();
+      clearPrimary(0, 0, canvasSize.width, canvasSize.height);
       doSelectionDrawToPrimary(canvasZoom, newPosition);
     }, 20);
   }

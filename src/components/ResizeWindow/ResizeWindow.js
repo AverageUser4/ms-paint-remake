@@ -201,7 +201,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
         
         setTimeout(() => {
           usedContext.save();
-          usedContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
+          usedContext.clearRect(0, 0, usedNewSize.width, usedNewSize.height);
           usedContext.translate(movedX, movedY);
           usedContext.transform(1, setSkew(usedSkewVertical), setSkew(usedSkewHorizontal), 1, 0, 0);
           usedContext.drawImage(usedCopy, 0, 0);
