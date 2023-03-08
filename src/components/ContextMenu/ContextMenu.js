@@ -12,6 +12,13 @@ import restore from './assets/restore.png';
 import clipboard16 from '../../assets/global/clipboard-16.png';
 import copy16 from '../../assets/global/copy-16.png';
 import cut16 from '../../assets/global/cut-16.png';
+import crop16 from '../../assets/global/crop-16.png';
+import selectAll16 from '../../assets/global/select-all-16.png';
+import invertSelection16 from '../../assets/global/invert-selection-16.png';
+import delete16 from '../../assets/global/delete-16.png';
+import rotate16 from '../../assets/global/rotate-16.png';
+import resize16 from '../../assets/global/resize-16.png';
+import invertColor16 from '../../assets/global/invert-color-16.png';
 
 function ContextMenu() {
   const { isOpen, setIsOpen, contentType, position } = useContextMenuContext();
@@ -77,6 +84,45 @@ function ContextMenu() {
           <button className="popup__button text text--4 text--nowrap">
             <img draggable="false" className="popup__image" src={clipboard16} alt=""/>
             <span><span className="text--underline">P</span>aste</span>
+          </button>
+
+          <div className="popup__line popup__line--separator"></div>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={crop16} alt=""/>
+            <span>C<span className="text--underline">r</span>op</span>
+          </button>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
+            <span>Select <span className="text--underline">a</span>ll</span>
+          </button>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
+            <span><span className="text--underline">I</span>nvert selection</span>
+          </button>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={delete16} alt=""/>
+            <span><span className="text--underline">D</span>elete</span>
+          </button>
+
+          <div className="popup__line popup__line--separator"></div>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={rotate16} alt=""/>
+            <span>R<span className="text--underline">o</span>tate</span>
+          </button>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={resize16} alt=""/>
+            <span>Re<span className="text--underline">s</span>ize</span>
+          </button>
+
+          <button className="popup__button text text--4 text--nowrap">
+            <img draggable="false" className="popup__image" src={invertColor16} alt=""/>
+            <span>Inv<span className="text--underline">e</span>rt color</span>
           </button>
         </div>
       );

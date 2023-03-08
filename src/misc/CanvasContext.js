@@ -51,7 +51,7 @@ function CanvasProvider({ children }) {
         primaryRef,
         secondaryRef,
         lastPrimaryStateRef,
-        clearPrimary
+        clearPrimary,
       }}
     >
       {children}

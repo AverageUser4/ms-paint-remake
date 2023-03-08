@@ -11,16 +11,16 @@ import { toggleBoolState } from "../../misc/utils";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { useToolContext } from "../../misc/ToolContext";
 
+import crop16 from '../../assets/global/crop-16.png';
+import selectAll16 from '../../assets/global/select-all-16.png';
+import invertSelection16 from '../../assets/global/invert-selection-16.png';
+import delete16 from '../../assets/global/delete-16.png';
+import rotate16 from '../../assets/global/rotate-16.png';
+import resize16 from '../../assets/global/resize-16.png';
 import image16 from './assets/image-16.png';
 import image32 from './assets/image-32.png';
-import invert16 from './assets/invert-16.png';
-import delete16 from './assets/delete-16.png';
-import selectAll16 from './assets/select-all-16.png';
 import freeForm16 from './assets/free-form-16.png';
 import freeForm32 from './assets/free-form-32.png';
-import crop16 from './assets/crop-16.png';
-import resize16 from './assets/resize-16.png';
-import rotate16 from './assets/rotate-16.png';
 import rotate18016 from './assets/rotate-180-16.png';
 import filpHorizontal16 from './assets/flip-horizontal-16.png';
 import filpVertical16 from './assets/flip-vertical-16.png';
@@ -107,7 +107,7 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                 </button>
 
                 <button className="popup__button text text--4 text--nowrap">
-                  <img draggable="false" className="popup__image" src={invert16} alt=""/>
+                  <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
                   <span><span className="text--underline">I</span>nvert selection</span>
                 </button>
 

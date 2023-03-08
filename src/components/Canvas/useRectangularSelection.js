@@ -42,7 +42,6 @@ function useRectangularSelection({
     onPointerUpCallback,
     onCancelCallback,
     isCancelOnRightMouseDown: true,
-    isTrackAlsoRight: true
   });
   
   function onPointerDownCallback(event) {

@@ -18,7 +18,7 @@ function Canvas() {
     canvasSize, canvasOutlineSize, canvasZoom, setCanvasZoom,
     setCanvasOutlineSize, setCanvasSize, canvasMousePosition,
     setCanvasMousePosition, primaryRef, secondaryRef, lastPrimaryStateRef,
-    clearPrimary,
+    clearPrimary
   } = useCanvasContext();
   const { toolsData, currentTool } = useToolContext();
   const { colorData, setColorData } = useColorContext()
@@ -175,6 +175,7 @@ function Canvas() {
         }}
         onPointerLeave={() => setCanvasMousePosition(null)}
         onPointerDown={(e) => onPointerDownSecondary(e)}
+        onContextMenu={(e) => currentTool === 'selection-rectangle' && openContextMenu(e, 'canvas')}
         ref={secondaryRef}
       ></canvas>
 

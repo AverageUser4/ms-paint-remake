@@ -23,6 +23,10 @@
   
   background-color: rgb(220, 221, 222);
 }
+.popup__line--separator {
+  width: calc(100% - 34px);
+  margin-left: auto;
+}
 
 .popup__button {
   display: flex;

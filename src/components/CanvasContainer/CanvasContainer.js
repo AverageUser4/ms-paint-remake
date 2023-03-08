@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './CanvasContainer.module.css';
 
 import Canvas from '../Canvas/Canvas';
+import { useSelectionContext } from '../../misc/SelectionContext';
 
 function CanvasContainer({ toolbarData, ribbonData }) {
+  const { selectionPhase, setSelectionPhase } = useSelectionContext();
+  const containerRef = useRef();
+  
   const style = {
     height: `calc(
       100%
@@ -17,7 +21,20 @@ function CanvasContainer({ toolbarData, ribbonData }) {
   };
 
   return (
-    <div style={style} className={css['container']}>
+    <div 
+      style={style} 
+      className={css['container']}
+      ref={containerRef}
+      // onClick={(e) => {
+      //   console.log(e.target)
+      //   if(e.target !== containerRef.current) {
+      //     return;
+      //   }
+      //   if(selectionPhase > 0) {
+      //     setSelectionPhase(0);
+      //   }
+      // }}
+    >
       <Canvas/>
     </div>
   );
@@ -26,6 +43,6 @@ function CanvasContainer({ toolbarData, ribbonData }) {
 CanvasContainer.propTypes = {
   ribbonData: PropTypes.object.isRequired,
   toolbarData: PropTypes.object.isRequired,
-}
+};
 
 export default CanvasContainer;
