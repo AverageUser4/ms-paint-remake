@@ -200,17 +200,19 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
         usedSetSize(usedNewSize);
         
         setTimeout(() => {
+          usedContext.save();
           usedContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
           usedContext.translate(movedX, movedY);
           usedContext.transform(1, setSkew(usedSkewVertical), setSkew(usedSkewHorizontal), 1, 0, 0);
           usedContext.drawImage(usedCopy, 0, 0);
+          usedContext.restore();
 
-          // if(!isSelectionActive) {
-          //   doHistoryAdd({
-          //     element: doGetCanvasCopy(primaryRef.current),
-          //     ...usedNewSize,
-          //   });
-          // }
+          if(!isSelectionActive) {
+            doHistoryAdd({
+              element: doGetCanvasCopy(primaryRef.current),
+              ...usedNewSize,
+            });
+          }
         }, 20);
       }, 20);
     }

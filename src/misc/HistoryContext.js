@@ -13,12 +13,17 @@ function HistoryProvider({ children }) {
   });
 
   function doHistoryAdd(data) {
-    console.log(data)
     // { element: canvas, width: number, height: number }
-    const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
-    newDataArray.push(data);
-
-    setHistory(prev => ({ ...prev, dataArray: newDataArray, currentIndex: prev.currentIndex + 1 }));
+    setHistory(prev => {
+      const newIndex = prev.currentIndex + 1;
+      const newDataArray = prev.dataArray.slice(0, newIndex);
+      newDataArray.push(data);
+      return {
+        ...prev,
+        dataArray: newDataArray,
+        currentIndex: newIndex,
+      };
+    });
   }
 
   return (

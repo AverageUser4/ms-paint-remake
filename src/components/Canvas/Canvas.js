@@ -8,6 +8,7 @@ import { useCanvasContext } from "../../misc/CanvasContext";
 import { useHistoryContext } from "../../misc/HistoryContext";
 import { useToolContext } from "../../misc/ToolContext";
 import { useColorContext } from "../../misc/ColorContext";
+import { useContextMenuContext } from "../../misc/ContextMenuContext";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
 import { MAX_CANVAS_SIZE } from "../../misc/data";
@@ -27,10 +28,10 @@ function Canvas() {
     width: canvasSize.width * canvasZoom,
     height: canvasSize.height * canvasZoom,
   };
-
   const { 
     selectionRef, selectionSize, selectionPhase, selectionPosition,
   } = useSelectionContext();
+  const { openContextMenu } = useContextMenuContext();
   
   const lastPointerPositionRef = useRef({});
   const lastHistoryIndexRef = useRef(history.currentIndex);
@@ -203,7 +204,8 @@ function Canvas() {
                 ${css['canvas--selection']}
                 ${selectionPhase === 2 && css['canvas--selection--ready']}
               `}
-              onPointerDown={(e) => onPointerDownSelectionMove(e)}
+              onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
+              onContextMenu={(e) => openContextMenu(e, 'canvas')}
               ref={(element) => { 
                 selectionRef.current = element;
               }}

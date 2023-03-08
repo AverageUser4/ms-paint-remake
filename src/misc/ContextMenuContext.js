@@ -5,17 +5,19 @@ const ContextMenuContext = createContext();
 
 function ContextMenuProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [contents, setContents] = useState(null);
+  const [contentType, setContentType] = useState(null);
   const [position, setPosition] = useState(null);
   
-  function openContextMenu(event, contents) {
-    if(event.type === 'contextmenu') {
-      event.stopPropagation();
-      event.preventDefault();
+  function openContextMenu(event, contentType) {
+    if(event.type !== 'contextmenu') {
+      console.error(`This function should be triggered only by "contextmenu" event, passed event contentType: "${event.type}".`);
     }
+
+    event.stopPropagation();
+    event.preventDefault();
     
     setPosition({ x: event.clientX, y: event.clientY });
-    setContents(contents);
+    setContentType(contentType);
     setIsOpen(true);
   }
   
@@ -24,7 +26,7 @@ function ContextMenuProvider({ children }) {
       value={{
         isOpen,
         setIsOpen,
-        contents,
+        contentType,
         position,
         openContextMenu,
       }}

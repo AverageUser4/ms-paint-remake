@@ -10,10 +10,10 @@ import { useSelectionContext } from "../../misc/SelectionContext";
 import { toggleBoolState } from "../../misc/utils";
 
 import clipboard32 from './assets/clipboard-32.png';
-import clipboard16 from './assets/clipboard-16.png';
 import pasteFrom16 from './assets/paste-from-16.png';
-import copy16 from './assets/copy-16.png';
-import cut16 from './assets/cut-16.png';
+import clipboard16 from '../../assets/global/clipboard-16.png';
+import copy16 from '../../assets/global/copy-16.png';
+import cut16 from '../../assets/global/cut-16.png';
 
 function RibbonClipboard({ ribbonWidth }) {
   const { selectionBrowseFile, selectionPasteFromClipboard } = useSelectionContext();
