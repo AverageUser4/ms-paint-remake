@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
+
 import Pencil from './tools/Pencil.js';
 import Fill from './tools/Fill.js';
 import Text from './tools/Text.js';
@@ -43,7 +44,7 @@ function ToolProvider({ children }) {
     ['selection-rectangle', RectangularSelection],
     ['selection-free-form', FreeFormSelection]
   ]));
-  const [currentTool, setCurrentTool] = useState('selection-free-form');
+  const [currentTool, setCurrentTool] = useState('pencil');
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'

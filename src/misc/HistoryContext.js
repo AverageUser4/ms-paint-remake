@@ -13,6 +13,8 @@ function HistoryProvider({ children }) {
   });
 
   function doHistoryAdd(data) {
+    console.log(data)
+    // { element: canvas, width: number, height: number }
     const newDataArray = history.dataArray.slice(0, history.currentIndex + 1);
     newDataArray.push(data);
 

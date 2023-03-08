@@ -1,13 +1,17 @@
 import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useCanvasContext } from './CanvasContext';
+import { useHistoryContext } from './HistoryContext';
+import { useToolContext } from './ToolContext';
 import { doGetCanvasCopy } from './utils';
 import { MAX_CANVAS_SIZE } from './data';
 
 const SelectionContext = createContext();
 
 function SelectionProvider({ children }) {
-  const { setCanvasSize, canvasZoom, primaryRef, lastPrimaryStateRef, clearPrimary } = useCanvasContext();
+  const { setCanvasSize, canvasZoom, canvasSize, primaryRef, lastPrimaryStateRef, clearPrimary } = useCanvasContext();
+  const { doHistoryAdd } = useHistoryContext();
+  const { setCurrentTool } = useToolContext();
   
   const selectionRef = useRef();
   const [selectionSize, setSelectionSize] = useState(null);
@@ -61,6 +65,13 @@ function SelectionProvider({ children }) {
       Math.round(selectionSize.height / zoom),
     );
     lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+
+    doHistoryAdd({ 
+      element: doGetCanvasCopy(primaryRef.current),
+      width: canvasSize.width,
+      height: canvasSize.height
+    });
   }
 
   function doSelectionDrawToSelection(imageData) {
@@ -124,12 +135,14 @@ function SelectionProvider({ children }) {
       selectionContext.imageSmoothingEnabled = false;
       selectionContext.scale(canvasZoom, canvasZoom);
       selectionContext.drawImage(image, 0, 0);
+      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
       URL.revokeObjectURL(image.src);
-    }, 50);
+    }, 20);
   }, [canvasZoom, setCanvasSize]);
   
   function selectionBrowseFile() {
     inputFileRef.current.click();
+    setCurrentTool('selection-rectangle');
   }
 
   function selectionPasteFromClipboard() {
@@ -153,6 +166,7 @@ function SelectionProvider({ children }) {
       .then(blob => {
         const image = new Image();
         image.src = URL.createObjectURL(blob);
+        setCurrentTool('selection-rectangle');
 
         image.addEventListener('load', onLoadImage);
         image.addEventListener('error', () => {

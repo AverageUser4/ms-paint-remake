@@ -10,6 +10,7 @@ import { useToolContext } from "../../misc/ToolContext";
 import { useColorContext } from "../../misc/ColorContext";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
+import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
   const { 
@@ -113,15 +114,20 @@ function Canvas() {
       return;
     }
 
+    const bufCanvas = document.createElement('canvas');
+    bufCanvas.width = MAX_CANVAS_SIZE;
+    bufCanvas.height = MAX_CANVAS_SIZE;
+    bufCanvas.getContext('2d').drawImage(history.dataArray[history.currentIndex].element, 0, 0);
+
     const primaryContext = primaryRef.current.getContext('2d');
     clearPrimary();
-    primaryContext.drawImage(history.dataArray[history.currentIndex].element, 0, 0);
-    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+    primaryContext.drawImage(bufCanvas, 0, 0);
+    lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
 
     setCanvasSize({
       width: history.dataArray[history.currentIndex].width,
       height: history.dataArray[history.currentIndex].height,
-    })
+    });
 
     lastHistoryIndexRef.current = history.currentIndex;
   }, [history, setCanvasSize, colorData.secondary, lastPrimaryStateRef, primaryRef, clearPrimary]);

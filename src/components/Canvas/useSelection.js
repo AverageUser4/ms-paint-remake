@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
-import { checkArgs, doGetCanvasCopy } from '../../misc/utils';
+import { checkArgs } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
 import { useSelectionContext } from '../../misc/SelectionContext';
 import { useCanvasContext } from '../../misc/CanvasContext';
-import { MAX_CANVAS_SIZE } from '../../misc/data';
 
 function useSelection({
   lastCurrentToolRef,

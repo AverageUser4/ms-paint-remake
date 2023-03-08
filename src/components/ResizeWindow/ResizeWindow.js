@@ -15,6 +15,7 @@ import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 import { checkNumberValue, clamp, doGetCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
+import { useHistoryContext } from '../../misc/HistoryContext';
 
 const WIDTH = 280;
 const HEIGHT = 400;
@@ -29,6 +30,7 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
   const { canvasSize, setCanvasSize, primaryRef } = useCanvasContext();
   const { mainWindowPosition } = useMainWindowContext();
+  const { doHistoryAdd } = useHistoryContext();
 
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
@@ -167,6 +169,12 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
 
     if(newSize.width !== usedSize.width || newSize.height !== usedSize.height) {
       usedResize(newSize);
+      if(!isSelectionActive) {
+        doHistoryAdd({
+          element: doGetCanvasCopy(primaryRef.current),
+          ...newSize,
+        });
+      }
     }
 
     const usedSkewHorizontal = data.skewHorizontal === '-' ? 0 : data.skewHorizontal;
@@ -184,16 +192,25 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
         const usedContext = isSelectionActive ? selectionRef.current.getContext('2d') : primaryRef.current.getContext('2d');
         const usedCopy = doGetCanvasCopy(isSelectionActive ? selectionRef.current : primaryRef.current);
         
-        usedSetSize({
+        const usedNewSize = {
           width: Math.min(width > 0 ? width : usedSize.width - width, MAX_CANVAS_SIZE),
           height: Math.min(height > 0 ? height : usedSize.height - height, MAX_CANVAS_SIZE),
-        });
+        };
+        
+        usedSetSize(usedNewSize);
         
         setTimeout(() => {
           usedContext.clearRect(0, 0, MAX_CANVAS_SIZE, MAX_CANVAS_SIZE);
           usedContext.translate(movedX, movedY);
           usedContext.transform(1, setSkew(usedSkewVertical), setSkew(usedSkewHorizontal), 1, 0, 0);
           usedContext.drawImage(usedCopy, 0, 0);
+
+          // if(!isSelectionActive) {
+          //   doHistoryAdd({
+          //     element: doGetCanvasCopy(primaryRef.current),
+          //     ...usedNewSize,
+          //   });
+          // }
         }, 20);
       }, 20);
     }

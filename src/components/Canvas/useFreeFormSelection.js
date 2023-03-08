@@ -1,8 +1,9 @@
 import { useRef } from "react";
-import { ImageDataUtils, checkArgs, getDrawData } from "../../misc/utils";
+import { ImageDataUtils, checkArgs, getDrawData, doGetCanvasCopy } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { useCanvasContext } from "../../misc/CanvasContext";
+import { useHistoryContext } from "../../misc/HistoryContext";
 
 function useFreeFormSelection({
   lastPointerPositionRef,
@@ -26,6 +27,7 @@ function useFreeFormSelection({
   ]);
 
   const { primaryRef, secondaryRef } = useCanvasContext();
+  const { doHistoryAdd } = useHistoryContext();
 
   const {
     setSelectionPhase,
@@ -171,6 +173,10 @@ function useFreeFormSelection({
       doSelectionDrawToSelection(selectionImageData);
 
       primaryContext.putImageData(primaryImageData, x, y);
+      doHistoryAdd({
+        element: doGetCanvasCopy(primaryRef.current),
+        ...canvasSize,
+      });
     }, 20);
   }
 

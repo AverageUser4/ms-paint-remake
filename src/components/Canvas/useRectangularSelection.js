@@ -2,8 +2,9 @@ import { useState } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../misc/CanvasContext';
+import { useHistoryContext } from '../../misc/HistoryContext';
 import { useSelectionContext } from '../../misc/SelectionContext';
-import { checkArgs } from '../../misc/utils';
+import { checkArgs, doGetCanvasCopy } from '../../misc/utils';
 
 function useRectangularSelection({
   canvasZoom,
@@ -18,7 +19,8 @@ function useRectangularSelection({
     { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
   ]);
 
-  const { primaryRef, clearPrimary } = useCanvasContext();
+  const { primaryRef, clearPrimary, canvasSize } = useCanvasContext();
+  const { doHistoryAdd } = useHistoryContext();
 
   const {
     selectionSize,
@@ -145,6 +147,11 @@ function useRectangularSelection({
         Math.round(lastSelectionSizeRef.current.width / canvasZoom),
         Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       );
+
+      doHistoryAdd({
+        element: doGetCanvasCopy(primaryRef.current),
+        ...canvasSize,
+      });
     }, 20);
   }
 
