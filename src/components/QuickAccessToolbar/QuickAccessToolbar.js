@@ -20,9 +20,7 @@ import undoEn from './assets/undo-en.png';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
-  const { history, setHistory } = useHistoryContext();
-  const isHistoryOnFirst = history.currentIndex === 0;
-  const isHistoryOnLast = history.currentIndex === history.dataArray.length - 1;
+  const { doHistoryGoBack, doHistoryGoForward, isHistoryOnFirst, isHistoryOnLast } = useHistoryContext();
   
   const [showDropdown, setShowDropdown] = useState(false);
   const dropdownRef = useRef();
@@ -62,20 +60,12 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
     {
       id: 'undo',
       src: isHistoryOnFirst ? undoDis : undoEn,
-      onClick: () => {
-        if(!isHistoryOnFirst) {
-          setHistory(prev => ({ ...prev, currentIndex: prev.currentIndex - 1 }));
-        }
-      }
+      onClick: () => doHistoryGoBack()
     },
     {
       id: 'redo',
       src: isHistoryOnLast ? redoDis : redoEn,
-      onClick: () => {
-        if(!isHistoryOnLast) {
-          setHistory(prev => ({ ...prev, currentIndex: prev.currentIndex + 1 }));
-        }
-      }
+      onClick: () => doHistoryGoForward()
     },
   ];
 

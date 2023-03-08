@@ -110,30 +110,6 @@ function Canvas() {
   }, [colorData.secondary, clearPrimary]);
 
   useEffect(() => {
-    // when history.currentIndex changes, change canvas state to that point in history
-    if(history.currentIndex === lastHistoryIndexRef.current) {
-      return;
-    }
-
-    const bufCanvas = document.createElement('canvas');
-    bufCanvas.width = MAX_CANVAS_SIZE;
-    bufCanvas.height = MAX_CANVAS_SIZE;
-    bufCanvas.getContext('2d').drawImage(history.dataArray[history.currentIndex].element, 0, 0);
-
-    const primaryContext = primaryRef.current.getContext('2d');
-    clearPrimary();
-    primaryContext.drawImage(bufCanvas, 0, 0);
-    lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
-
-    setCanvasSize({
-      width: history.dataArray[history.currentIndex].width,
-      height: history.dataArray[history.currentIndex].height,
-    });
-
-    lastHistoryIndexRef.current = history.currentIndex;
-  }, [history, setCanvasSize, colorData.secondary, lastPrimaryStateRef, primaryRef, clearPrimary]);
-
-  useEffect(() => {
     // changing width or height attribute (which happens whenever canvasSize changes)
     // of canvas causes it to lose its entire context (both 'settings' like
     // fillStyle and pixels drawn to it), this effect makes sure that after every change

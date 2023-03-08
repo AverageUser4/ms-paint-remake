@@ -25,6 +25,7 @@ export default {
       }
 
       ImageDataUtils.setColorAtCoords(imageData, offsetX, offsetY, color);
+
       if(offsetX - 1 >= 0) {
         checkAndChange(offsetX - 1, offsetY);
       }
