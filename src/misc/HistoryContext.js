@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { initialCanvasSize, MAX_CANVAS_SIZE } from './data';
+import { initialCanvasSize } from './data';
 import { doGetCanvasCopy } from './utils';
 import { useCanvasContext } from './CanvasContext';
 
@@ -17,7 +17,6 @@ function HistoryProvider({ children }) {
   const isHistoryOnLast = history.currentIndex === history.dataArray.length - 1;
 
   function doHistoryAdd(data) {
-    console.log('adding to history...')
     // { element: canvas, width: number, height: number }
     setHistory(prev => {
       const newIndex = prev.currentIndex + 1;
@@ -32,10 +31,12 @@ function HistoryProvider({ children }) {
   }
 
   function doHistorySetToState(index) {
+    const start = performance.now();
+    
     const data = history.dataArray[index];
     const bufCanvas = document.createElement('canvas');
-    bufCanvas.width = MAX_CANVAS_SIZE;
-    bufCanvas.height = MAX_CANVAS_SIZE;
+    bufCanvas.width = data.width;
+    bufCanvas.height = data.height;
     bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
   
     const primaryContext = primaryRef.current.getContext('2d');
@@ -45,6 +46,8 @@ function HistoryProvider({ children }) {
   
     setCanvasSize({ width: data.width, height: data.height });
     setHistory(prev => ({ ...prev, currentIndex: index }));
+
+    console.log(performance.now() - start)
   }
   
   function doHistoryGoBack() {

@@ -19,7 +19,7 @@ export default {
       const currentColor = ImageDataUtils.getColorFromCoords(imageData, offsetX, offsetY);
       if(
           !objectEquals(clickedColor, currentColor, ['a'])
-          || ++recursionTimes > 10000
+          || ++recursionTimes > 5000
         ) {
         return;
       }
