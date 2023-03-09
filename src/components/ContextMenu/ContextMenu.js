@@ -207,9 +207,14 @@ function ContextMenu() {
                   clearPrimary();
                   doSelectionDrawToPrimary(canvasZoom);
 
+                  /*
+                    it seems like the cut out part if of correct size, but gets put always at 0, 0 in selection canvas (not 100% sure, issue may be bit different)
+                  */
+                  
                   for(let y = selectionPosition.y; y < canvasSize.height && y < selectionSize.height; y++) {
                     for(let x = selectionPosition.x; x < canvasSize.width && x < selectionSize.width; x++) {
                       if(ImageDataUtils.getColorFromCoords(selectionImageData, x - selectionPosition.x, y - selectionPosition.y).a > 0) {
+                        // should be { r: 0, g: 0, b: 0, a: 0 }
                         ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 255, g: 0, b: 255, a: 255 });
                       }
                     }
@@ -217,6 +222,7 @@ function ContextMenu() {
 
                   doSelectionSetPosition({ x: 0, y: 0 });
                   doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
+                  setIsOpen(false);
 
                   setTimeout(() => {
                     selectionContext.putImageData(primaryImageData, 0, 0);
@@ -229,7 +235,19 @@ function ContextMenu() {
               <span><span className="text--underline">I</span>nvert selection</span>
             </button>
 
-            <button className="popup__button text text--4 text--nowrap">
+            <button 
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  setSelectionPhase(0);
+                } else if(data === 'primary') {
+                  clearPrimary();
+                  lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+                  doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+                }
+                setIsOpen(false);
+              }}
+            >
               <img draggable="false" className="popup__image" src={delete16} alt=""/>
               <span><span className="text--underline">D</span>elete</span>
             </button>
@@ -273,12 +291,48 @@ function ContextMenu() {
               </div>
             </div>
 
-            <button onClick={() => setIsResizeWindowOpen(true)} className="popup__button text text--4 text--nowrap">
+            <button 
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                setIsResizeWindowOpen(true);
+                setIsOpen(false);
+              }}
+            >
               <img draggable="false" className="popup__image" src={resize16} alt=""/>
               <span>Re<span className="text--underline">s</span>ize</span>
             </button>
 
-            <button className="popup__button text text--4 text--nowrap">
+            <button 
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                let usedImageData;
+
+                if(data === 'selection' && selectionPhase) {
+                  usedImageData = selectionRef.current.getContext('2d').getImageData(0, 0, selectionSize.width, selectionSize.height);
+                } else if(data === 'primary') {
+                  usedImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
+                }
+
+                for(let y = 0; y < usedImageData.height; y++) {
+                  for(let x = 0; x < usedImageData.width; x++) {
+                    const color = ImageDataUtils.getColorFromCoords(usedImageData, x, y);
+                    ImageDataUtils.setColorAtCoords(usedImageData, x, y, { 
+                      r: 255 - color.r, g: 255 - color.g, b: 255 - color.b
+                    });
+                  }
+                }
+
+                if(data === 'selection' && selectionPhase) {
+                  doSelectionDrawToSelection(usedImageData);
+                } else if(data === 'primary') {
+                  primaryRef.current.getContext('2d').putImageData(usedImageData, 0, 0);
+                  lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+                  doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+                }
+
+                setIsOpen(false);
+              }}
+            >
               <img draggable="false" className="popup__image" src={invertColor16} alt=""/>
               <span>Inv<span className="text--underline">e</span>rt color</span>
             </button>
