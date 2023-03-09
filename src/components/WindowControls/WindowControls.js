@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './WindowControls.module.css';
 
-import { useMainWindowContext } from "../../misc/MainWindowContext";
+import { useWindowsContext } from "../../misc/WindowsContext";
 
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
@@ -10,7 +10,7 @@ import { ReactComponent as Minimize } from './assets/minimize.svg';
 import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 
 function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doSetWindowToMinimalSize }) {
-  const { isMainWindowFocused, isMainWindowMaximized, mainWindowToggleMaximize } = useMainWindowContext();
+  const { isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize } = useWindowsContext();
   
   // inner window
   if(isInnerWindow) {
@@ -47,7 +47,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
-        onClick={mainWindowToggleMaximize}
+        onClick={doMainWindowToggleMaximize}
       >
         {
           isMainWindowMaximized ?

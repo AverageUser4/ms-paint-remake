@@ -104,7 +104,7 @@ function Canvas() {
     }
     isFirstRenderRef.current = false;
 
-    clearPrimary(0, 0, canvasSize.width, canvasSize.height);
+    clearPrimary();
   }, [colorData.secondary, clearPrimary, canvasSize]);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ function Canvas() {
     
     if(lastPrimaryStateRef.current) {
       const primaryContext = primaryRef.current.getContext('2d');
-      clearPrimary(0, 0, canvasSize.width, canvasSize.height);
+      clearPrimary();
       primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
@@ -149,7 +149,7 @@ function Canvas() {
         }}
         onPointerLeave={() => setCanvasMousePosition(null)}
         onPointerDown={(e) => onPointerDownSecondary(e)}
-        onContextMenu={(e) => currentTool === 'selection-rectangle' && openContextMenu(e, 'canvas')}
+        onContextMenu={(e) => currentTool === 'selection-rectangle' && openContextMenu(e, 'canvas', 'primary')}
         ref={secondaryRef}
       ></canvas>
 
@@ -180,7 +180,7 @@ function Canvas() {
                 ${selectionPhase === 2 && css['canvas--selection--ready']}
               `}
               onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
-              onContextMenu={(e) => openContextMenu(e, 'canvas')}
+              onContextMenu={(e) => openContextMenu(e, 'canvas', 'selection')}
               ref={(element) => { 
                 selectionRef.current = element;
               }}

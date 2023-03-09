@@ -46,27 +46,29 @@ function RibbonClipboard({ ribbonWidth }) {
                 ref={dropdownRef}
                 data-cy="Clipboard-Paste-Dropdown"
               >
-                <button 
-                  className="popup__button text text--4 text--nowrap"
-                  onPointerDown={() => {
-                    selectionPasteFromClipboard();
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  <img className="popup__image" src={clipboard16} alt=""/>
-                  <span><span className="text--underline">P</span>aste</span>
-                </button>
+                <div className="popup__part">
+                  <button 
+                    className="popup__button text text--4 text--nowrap"
+                    onPointerDown={() => {
+                      selectionPasteFromClipboard();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <img className="popup__image" src={clipboard16} alt=""/>
+                    <span><span className="text--underline">P</span>aste</span>
+                  </button>
 
-                <button 
-                  className="popup__button text text--4 text--nowrap"
-                  onPointerDown={() => {
-                    selectionBrowseFile();
-                    setIsDropdownOpen(false);
-                  }}
-                >
-                  <img className="popup__image" src={pasteFrom16} alt=""/>
-                  <span>Paste <span className="text--underline">f</span>rom</span>
-                </button>
+                  <button 
+                    className="popup__button text text--4 text--nowrap"
+                    onPointerDown={() => {
+                      selectionBrowseFile();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
+                    <img className="popup__image" src={pasteFrom16} alt=""/>
+                    <span>Paste <span className="text--underline">f</span>rom</span>
+                  </button>
+                </div>
               </div>
             </BigButtonDuo>
 

@@ -3,12 +3,15 @@ import css from './ContextMenu.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { useContextMenuContext } from '../../misc/ContextMenuContext';
+import { useWindowsContext } from '../../misc/WindowsContext';
+import { useSelectionContext } from '../../misc/SelectionContext';
+import { useCanvasContext } from '../../misc/CanvasContext';
+import { useHistoryContext } from '../../misc/HistoryContext';
 
 import close from './assets/close.png';
 import minimize from './assets/minimize.png';
 import maximize from './assets/maximize.png';
 import restore from './assets/restore.png';
-
 import clipboard16 from '../../assets/global/clipboard-16.png';
 import copy16 from '../../assets/global/copy-16.png';
 import cut16 from '../../assets/global/cut-16.png';
@@ -19,9 +22,19 @@ import delete16 from '../../assets/global/delete-16.png';
 import rotate16 from '../../assets/global/rotate-16.png';
 import resize16 from '../../assets/global/resize-16.png';
 import invertColor16 from '../../assets/global/invert-color-16.png';
+import rotate18016 from '../../assets/global/rotate-180-16.png';
+import filpHorizontal16 from '../../assets/global/flip-horizontal-16.png';
+import filpVertical16 from '../../assets/global/flip-vertical-16.png';
+import rotateLeft16 from '../../assets/global/rotate-left-16.png';
+import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
+import { doGetCanvasCopy } from '../../misc/utils';
 
 function ContextMenu() {
-  const { isOpen, setIsOpen, contentType, position } = useContextMenuContext();
+  const { setIsResizeWindowOpen } = useWindowsContext();
+  const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
+  const { selectionPhase, setSelectionPhase } = useSelectionContext();
+  const { clearPrimary, primaryRef, canvasSize } = useCanvasContext();
+  const { doHistoryAdd } = useHistoryContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
   
@@ -69,61 +82,111 @@ function ContextMenu() {
     break;
 
     case 'canvas':
+      if(data !== 'primary' && data !== 'selection') {
+        console.error(`When "contentType" used in openContext menu is "canvas", data has to be string either ov value "primary" or "selection", provided data is: "${data}".`);
+      }
       contents = (
         <div className="popup">
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={cut16} alt=""/>
-            <span>Cu<span className="text--underline">t</span></span>
-          </button>
+          <div className="popup__part">
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={copy16} alt=""/>
-            <span><span className="text--underline">C</span>opy</span>
-          </button>
+            <button 
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  setSelectionPhase(0);
+                } else if(data === 'primary') {
+                  clearPrimary();
+                  doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+                }
+              }}
+            >
+              <img draggable="false" className="popup__image" src={cut16} alt=""/>
+              <span>Cu<span className="text--underline">t</span></span>
+            </button>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={clipboard16} alt=""/>
-            <span><span className="text--underline">P</span>aste</span>
-          </button>
+            <button 
+              className="popup__button text text--4 text--nowrap"
+            >
+              <img draggable="false" className="popup__image" src={copy16} alt=""/>
+              <span><span className="text--underline">C</span>opy</span>
+            </button>
 
-          <div className="popup__line popup__line--separator"></div>
+            <button className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={clipboard16} alt=""/>
+              <span><span className="text--underline">P</span>aste</span>
+            </button>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={crop16} alt=""/>
-            <span>C<span className="text--underline">r</span>op</span>
-          </button>
+            <div className="popup__line popup__line--separator"></div>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
-            <span>Select <span className="text--underline">a</span>ll</span>
-          </button>
+            <button disabled={data === 'primary'} className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={crop16} alt=""/>
+              <span>C<span className="text--underline">r</span>op</span>
+            </button>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
-            <span><span className="text--underline">I</span>nvert selection</span>
-          </button>
+            <button className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
+              <span>Select <span className="text--underline">a</span>ll</span>
+            </button>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={delete16} alt=""/>
-            <span><span className="text--underline">D</span>elete</span>
-          </button>
+            <button disabled={data === 'primary'} className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
+              <span><span className="text--underline">I</span>nvert selection</span>
+            </button>
 
-          <div className="popup__line popup__line--separator"></div>
+            <button className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={delete16} alt=""/>
+              <span><span className="text--underline">D</span>elete</span>
+            </button>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={rotate16} alt=""/>
-            <span>R<span className="text--underline">o</span>tate</span>
-          </button>
+            <div className="popup__line popup__line--separator"></div>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={resize16} alt=""/>
-            <span>Re<span className="text--underline">s</span>ize</span>
-          </button>
+            <div tabIndex="0" className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={rotate16} alt=""/>
+              <span>R<span className="text--underline">o</span>tate</span>
+              <ArrowRight className="popup__button__arrow"/>
 
-          <button className="popup__button text text--4 text--nowrap">
-            <img draggable="false" className="popup__image" src={invertColor16} alt=""/>
-            <span>Inv<span className="text--underline">e</span>rt color</span>
-          </button>
+              <div 
+                className="popup popup--inner"
+              >
+                <div className="popup__part">
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={rotate16} alt=""/>
+                    <span>Rotate <span className="text--underline">r</span>ight 90°</span>
+                  </button>
+
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={rotateLeft16} alt=""/>
+                    <span>Rotate <span className="text--underline">l</span>eft 90°</span>
+                  </button>
+
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={rotate18016} alt=""/>
+                    <span>Ro<span className="text--underline">t</span>ate 180°</span>
+                  </button>
+
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={filpVertical16} alt=""/>
+                    <span>Flip <span className="text--underline">v</span>ertical</span>
+                  </button>
+
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={filpHorizontal16} alt=""/>
+                    <span>Flip <span className="text--underline">h</span>orizontal</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <button onClick={() => setIsResizeWindowOpen(true)} className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={resize16} alt=""/>
+              <span>Re<span className="text--underline">s</span>ize</span>
+            </button>
+
+            <button className="popup__button text text--4 text--nowrap">
+              <img draggable="false" className="popup__image" src={invertColor16} alt=""/>
+              <span>Inv<span className="text--underline">e</span>rt color</span>
+            </button>
+          </div>
         </div>
       );
     break;

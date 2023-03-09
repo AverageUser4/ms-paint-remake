@@ -5,12 +5,12 @@ import css from './RibbonItemContainer.module.css';
 import Dropdown from '../Dropdown/Dropdown';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
-import { useMainWindowContext } from "../../misc/MainWindowContext";
+import { useWindowsContext } from "../../misc/WindowsContext";
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
-  const { isMainWindowFocused } = useMainWindowContext();
+  const { isMainWindowFocused } = useWindowsContext();
   const containerRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(containerRef, () => isDropdownOpen && setIsDropdownOpen(false));

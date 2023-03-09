@@ -7,8 +7,9 @@ function ContextMenuProvider({ children }) {
   const [isOpen, setIsOpen] = useState(false);
   const [contentType, setContentType] = useState(null);
   const [position, setPosition] = useState(null);
+  const [data, setData] = useState();
   
-  function openContextMenu(event, contentType) {
+  function openContextMenu(event, contentType, data) {
     if(event.type !== 'contextmenu') {
       console.error(`This function should be triggered only by "contextmenu" event, passed event contentType: "${event.type}".`);
     }
@@ -18,6 +19,7 @@ function ContextMenuProvider({ children }) {
     
     setPosition({ x: event.clientX, y: event.clientY });
     setContentType(contentType);
+    setData(data);
     setIsOpen(true);
   }
   
@@ -29,6 +31,7 @@ function ContextMenuProvider({ children }) {
         contentType,
         position,
         openContextMenu,
+        data,
       }}
     >
       {children}

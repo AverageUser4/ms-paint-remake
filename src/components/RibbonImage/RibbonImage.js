@@ -10,6 +10,7 @@ import Dropdown from "../Dropdown/Dropdown";
 import { toggleBoolState } from "../../misc/utils";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { useToolContext } from "../../misc/ToolContext";
+import { useWindowsContext } from "../../misc/WindowsContext";
 
 import crop16 from '../../assets/global/crop-16.png';
 import selectAll16 from '../../assets/global/select-all-16.png';
@@ -17,19 +18,20 @@ import invertSelection16 from '../../assets/global/invert-selection-16.png';
 import delete16 from '../../assets/global/delete-16.png';
 import rotate16 from '../../assets/global/rotate-16.png';
 import resize16 from '../../assets/global/resize-16.png';
+import rotate18016 from '../../assets/global/rotate-180-16.png';
+import filpHorizontal16 from '../../assets/global/flip-horizontal-16.png';
+import filpVertical16 from '../../assets/global/flip-vertical-16.png';
+import rotateLeft16 from '../../assets/global/rotate-left-16.png';
 import image16 from './assets/image-16.png';
 import image32 from './assets/image-32.png';
 import freeForm16 from './assets/free-form-16.png';
 import freeForm32 from './assets/free-form-32.png';
-import rotate18016 from './assets/rotate-180-16.png';
-import filpHorizontal16 from './assets/flip-horizontal-16.png';
-import filpVertical16 from './assets/flip-vertical-16.png';
-import rotateLeft16 from './assets/rotate-left-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
+function RibbonImage({ ribbonWidth }) {
   const { doSelectionCrop, selectionPhase } = useSelectionContext();
   const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
+  const { setIsResizeWindowOpen } = useWindowsContext();
   let icon = image32;
   
   switch(currentTool.startsWith('selection') ? currentTool : latestTools.selection) {
@@ -74,52 +76,56 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
               >
                 <h3 className="popup__head head head--2">Selection shapes</h3>
 
-                <button 
-                  className={`
-                    popup__button 
-                    ${currentTool === 'selection-rectangle' && 'popup__button--selected'}
-                    text text--4 text--nowrap
-                  `}
-                  onClick={() => doSetCurrentTool('selection-rectangle')}
-                >
-                  <img draggable="false" className="popup__image" src={image16} alt=""/>
-                  <span><span className="text--underline">R</span>ectangular selection</span>
-                </button>
+                <div className="popup__part">
+                  <button 
+                    className={`
+                      popup__button 
+                      ${currentTool === 'selection-rectangle' && 'popup__button--selected'}
+                      text text--4 text--nowrap
+                    `}
+                    onClick={() => doSetCurrentTool('selection-rectangle')}
+                  >
+                    <img draggable="false" className="popup__image" src={image16} alt=""/>
+                    <span><span className="text--underline">R</span>ectangular selection</span>
+                  </button>
 
-                <button 
-                  className={`
-                    popup__button 
-                    ${currentTool === 'selection-free-form' && 'popup__button--selected'}
-                    text text--4 text--nowrap
-                  `}
-                  onClick={() => doSetCurrentTool('selection-free-form')}
-                >
-                  <img draggable="false" className="popup__image" src={freeForm16} alt=""/>
-                  <span><span className="text--underline">F</span>ree-form selection</span>
-                </button>
+                  <button 
+                    className={`
+                      popup__button 
+                      ${currentTool === 'selection-free-form' && 'popup__button--selected'}
+                      text text--4 text--nowrap
+                    `}
+                    onClick={() => doSetCurrentTool('selection-free-form')}
+                  >
+                    <img draggable="false" className="popup__image" src={freeForm16} alt=""/>
+                    <span><span className="text--underline">F</span>ree-form selection</span>
+                  </button>
+                </div>
 
                 <div className="popup__line"></div>
                 <h3 className="popup__head head head--2">Selection options</h3>
 
-                <button className="popup__button text text--4 text--nowrap">
-                  <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
-                  <span>Select <span className="text--underline">a</span>ll</span>
-                </button>
+                <div className="popup__part">
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
+                    <span>Select <span className="text--underline">a</span>ll</span>
+                  </button>
 
-                <button className="popup__button text text--4 text--nowrap">
-                  <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
-                  <span><span className="text--underline">I</span>nvert selection</span>
-                </button>
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
+                    <span><span className="text--underline">I</span>nvert selection</span>
+                  </button>
 
-                <button className="popup__button text text--4 text--nowrap">
-                  <img draggable="false" className="popup__image" src={delete16} alt=""/>
-                  <span><span className="text--underline">D</span>elete</span>
-                </button>
+                  <button className="popup__button text text--4 text--nowrap">
+                    <img draggable="false" className="popup__image" src={delete16} alt=""/>
+                    <span><span className="text--underline">D</span>elete</span>
+                  </button>
 
-                <button className="popup__button text text--4 text--nowrap">
-                  <span className="popup__image"></span>
-                  <span><span className="text--underline">T</span>ransparent selection</span>
-                </button>
+                  <button className="popup__button text text--4 text--nowrap">
+                    <span className="popup__image"></span>
+                    <span><span className="text--underline">T</span>ransparent selection</span>
+                  </button>
+                </div>
               </div>
             </BigButtonDuo>
 
@@ -163,30 +169,32 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
                     ref={rotateDropdownRef}
                     data-cy="Image-Rotate-Dropdown"
                   >
-                    <button className="popup__button text text--4 text--nowrap">
-                      <img className="popup__image" src={rotate16} alt=""/>
-                      <span>Rotate <span className="text--underline">r</span>ight 90°</span>
-                    </button>
+                    <div className="popup__part">
+                      <button className="popup__button text text--4 text--nowrap">
+                        <img draggable="false" className="popup__image" src={rotate16} alt=""/>
+                        <span>Rotate <span className="text--underline">r</span>ight 90°</span>
+                      </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
-                      <img className="popup__image" src={rotateLeft16} alt=""/>
-                      <span>Rotate <span className="text--underline">l</span>eft 90°</span>
-                    </button>
+                      <button className="popup__button text text--4 text--nowrap">
+                        <img draggable="false" className="popup__image" src={rotateLeft16} alt=""/>
+                        <span>Rotate <span className="text--underline">l</span>eft 90°</span>
+                      </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
-                      <img className="popup__image" src={rotate18016} alt=""/>
-                      <span>Ro<span className="text--underline">t</span>ate 180°</span>
-                    </button>
+                      <button className="popup__button text text--4 text--nowrap">
+                        <img draggable="false" className="popup__image" src={rotate18016} alt=""/>
+                        <span>Ro<span className="text--underline">t</span>ate 180°</span>
+                      </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
-                      <img className="popup__image" src={filpVertical16} alt=""/>
-                      <span>Flip <span className="text--underline">v</span>ertical</span>
-                    </button>
+                      <button className="popup__button text text--4 text--nowrap">
+                        <img draggable="false" className="popup__image" src={filpVertical16} alt=""/>
+                        <span>Flip <span className="text--underline">v</span>ertical</span>
+                      </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
-                      <img className="popup__image" src={filpHorizontal16} alt=""/>
-                      <span>Flip <span className="text--underline">h</span>orizontal</span>
-                    </button>
+                      <button className="popup__button text text--4 text--nowrap">
+                        <img draggable="false" className="popup__image" src={filpHorizontal16} alt=""/>
+                        <span>Flip <span className="text--underline">h</span>orizontal</span>
+                      </button>
+                    </div>
                   </div>
                 </Dropdown>
 
@@ -204,7 +212,6 @@ function RibbonImage({ ribbonWidth, setIsResizeWindowOpen }) {
 
 RibbonImage.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,
-  setIsResizeWindowOpen: PropTypes.func.isRequired,
 };
 
 export default RibbonImage;

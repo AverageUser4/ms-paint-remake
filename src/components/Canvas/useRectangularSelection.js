@@ -140,12 +140,12 @@ function useRectangularSelection({
       );
   
       doSelectionDrawToSelection(imageData);
-      clearPrimary(
-        Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-        Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-        Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-        Math.round(lastSelectionSizeRef.current.height / canvasZoom),
-      );
+      clearPrimary({
+        x: Math.round(lastSelectionPositionRef.current.x / canvasZoom),
+        y: Math.round(lastSelectionPositionRef.current.y / canvasZoom),
+        width: Math.round(lastSelectionSizeRef.current.width / canvasZoom),
+        height: Math.round(lastSelectionSizeRef.current.height / canvasZoom),
+      });
 
       doHistoryAdd({
         element: doGetCanvasCopy(primaryRef.current),

@@ -1,10 +1,9 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
-import PropTypes from 'prop-types';
 import css from './ResizeWindow.module.css';
 
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
-import { useMainWindowContext } from '../../misc/MainWindowContext';
+import { useWindowsContext } from '../../misc/WindowsContext';
 import { useSelectionContext } from '../../misc/SelectionContext';
 import { useCanvasContext } from '../../misc/CanvasContext';
 import { innerWindowConfig, MAX_CANVAS_SIZE } from '../../misc/data';
@@ -26,10 +25,10 @@ const initialData = {
   skewVertical: 0,
 };
 
-const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
+const ResizeWindow = memo(function ResizeWindow() {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
   const { canvasSize, setCanvasSize, primaryRef } = useCanvasContext();
-  const { mainWindowPosition } = useMainWindowContext();
+  const { mainWindowPosition, isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
@@ -385,14 +384,5 @@ const ResizeWindow = memo(function ResizeWindow({ isOpen, setIsOpen }) {
     />
   );
 });
-
-ResizeWindow.propTypes = {
-  containerDimensions: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  isOpen: PropTypes.bool.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
-};
 
 export default ResizeWindow;

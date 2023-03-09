@@ -31,10 +31,10 @@ function CanvasProvider({ children }) {
   const secondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
 
-  function clearPrimary(x = 0, y = 0, width = MAX_CANVAS_SIZE, height = MAX_CANVAS_SIZE) {
+  function clearPrimary({ x = 0, y = 0, width, height } = {}) {
     const primaryContext = primaryRef.current.getContext('2d');
     primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryContext.fillRect(x, y, width, height);
+    primaryContext.fillRect(x, y, width || canvasSize.width, height || canvasSize.height);
   }
   
   return (

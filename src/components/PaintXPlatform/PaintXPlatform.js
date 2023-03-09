@@ -16,7 +16,7 @@ import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 import { ContainerProvider } from '../../misc/ContainerContext';
 import { CanvasProvider } from '../../misc/CanvasContext';
 import { HistoryProvider } from '../../misc/HistoryContext';
-import { useMainWindowContext, MainWindowProvider } from '../../misc/MainWindowContext';
+import { useWindowsContext, WindowsProvider } from '../../misc/WindowsContext';
 import { ColorProvider } from '../../misc/ColorContext';
 import { ToolProvider } from '../../misc/ToolContext';
 import { SelectionProvider } from '../../misc/SelectionContext';
@@ -32,18 +32,14 @@ function Logic({
     mainWindowPosition, setMainWindowPosition,
     mainWindowSize, setMainWindowSize,
     isMainWindowMaximized, setIsMainWindowMaximized
-  } = useMainWindowContext();
+  } = useWindowsContext();
 
   const doSetWindowToMinimalSize = useCallback(() => {
     setMainWindowSize(minimalSize);
     setIsMainWindowMaximized(false);
   }, [setMainWindowSize, minimalSize, setIsMainWindowMaximized]);
 
-  const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
-  const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
-  const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
-
-  const isAnyInnerWindowOpen = isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen;
+  const { isAnyInnerWindowOpen } = useWindowsContext();
   
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -89,7 +85,6 @@ function Logic({
                 toolbarData={toolbarData}
                 setToolbarData={setToolbarData}
                 ribbonData={ribbonData}
-                setIsPromptWindowOpen={setIsPromptWindowOpen}
                 doSetWindowToMinimalSize={doSetWindowToMinimalSize}
                 windowHasFocus={isMainWindowFocused}
                 onPointerDownMove={onPointerDownMove}
@@ -99,8 +94,6 @@ function Logic({
               />
               <Ribbon
                 ribbonData={ribbonData}
-                setIsResizeWindowOpen={setIsResizeWindowOpen}
-                setIsColorsWindowOpen={setIsColorsWindowOpen}
                 windowWidth={mainWindowSize.width}
               />
               {
@@ -124,20 +117,9 @@ function Logic({
         }}
       />
 
-      <ResizeWindow
-        isOpen={isResizeWindowOpen}
-        setIsOpen={setIsResizeWindowOpen}
-      />
-
-      <ColorsWindow
-        isOpen={isColorsWindowOpen}
-        setIsOpen={setIsColorsWindowOpen}
-      />
-
-      <PromptWindow
-        isOpen={isPromptWindowOpen}
-        setIsOpen={setIsPromptWindowOpen}
-      />
+      <ResizeWindow/>
+      <ColorsWindow/>
+      <PromptWindow/>
     </div>
   );
 }
@@ -186,7 +168,7 @@ function PaintXPlatform({
             <HistoryProvider>
               <ToolProvider>
                 <SelectionProvider>
-                  <MainWindowProvider
+                  <WindowsProvider
                     initialPosition={initialPosition}
                     initialSize={initialSize}
                     isInitiallyMaximized={isInitiallyMaximized}
@@ -199,7 +181,7 @@ function PaintXPlatform({
                         isOpen={isOpen}
                       />
                     </ContextMenuProvider>
-                  </MainWindowProvider>
+                  </WindowsProvider>
                 </SelectionProvider>
               </ToolProvider>
             </HistoryProvider>

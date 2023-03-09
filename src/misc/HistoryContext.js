@@ -38,7 +38,7 @@ function HistoryProvider({ children }) {
     bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
   
     const primaryContext = primaryRef.current.getContext('2d');
-    clearPrimary(0, 0, data.width, data.height);
+    clearPrimary({ ...data });
     primaryContext.drawImage(bufCanvas, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
   

@@ -1,12 +1,11 @@
 import React, { memo, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import css from './ColorsWindow.module.css';
 
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
 import { getWindowCenteredPosition, RGBtoHSL, RGBObjectToString } from '../../misc/utils';
-import { useMainWindowContext } from '../../misc/MainWindowContext';
+import { useWindowsContext } from '../../misc/WindowsContext';
 import { useColorContext } from '../../misc/ColorContext';
 import { innerWindowConfig } from '../../misc/data';
 
@@ -15,8 +14,11 @@ import duoArrow from './assets/duo-arrow.png';
 const WIDTH = 448;
 const HEIGHT = 340;
 
-const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
-  const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
+const ColorsWindow = memo(function ColorsWindow() {
+  const { 
+    mainWindowPosition, mainWindowSize,
+    isColorsWindowOpen: isOpen, setIsColorsWindowOpen: setIsOpen 
+  } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   const { customColors, setColorPickerData, colorPickerData, doCustomColorsAdd, doRibbonColorsArrayAdd } = useColorContext();
@@ -138,14 +140,5 @@ const ColorsWindow = memo(function ColorsWindow({ isOpen, setIsOpen }) {
     />
   );
 });
-
-ColorsWindow.propTypes = {
-  containerDimensions: PropTypes.shape({
-    width: PropTypes.number,
-    height: PropTypes.number,
-  }),
-  isOpen: PropTypes.bool.isRequired,
-  setIsOpen: PropTypes.func.isRequired,
-};
 
 export default ColorsWindow;

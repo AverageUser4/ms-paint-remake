@@ -14,7 +14,7 @@ import RibbonShowOrHide from "../RibbonShowOrHide/RibbonShowOrHide";
 import RibbonDisplay from "../RibbonDisplay/RibbonDisplay";
 import useOutsideClick from "../../hooks/useOutsideClick";
 
-const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindowOpen, setIsColorsWindowOpen }) {
+const Ribbon = memo(function Ribbon({ windowWidth, ribbonData }) {
   const containerRef = useRef();
   useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(), 'ribbon');
   
@@ -42,8 +42,8 @@ const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindow
                 ribbonWidth={windowWidth}
               />
 
-              <RibbonImage 
-                ribbonWidth={windowWidth} setIsResizeWindowOpen={setIsResizeWindowOpen}
+              <RibbonImage
+                ribbonWidth={windowWidth}
               />
 
               <RibbonTools 
@@ -64,7 +64,6 @@ const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindow
 
               <RibbonColors 
                 ribbonWidth={windowWidth}
-                setIsColorsWindowOpen={setIsColorsWindowOpen}
               />
 
               <div className="vertical-line"></div>
@@ -88,8 +87,6 @@ const Ribbon = memo(function Ribbon({ windowWidth, ribbonData, setIsResizeWindow
 Ribbon.propTypes = {
   windowWidth: PropTypes.number.isRequired,
   ribbonData: PropTypes.object.isRequired,
-  setIsResizeWindowOpen: PropTypes.func.isRequired,
-  setIsColorsWindowOpen: PropTypes.func.isRequired,
 };
 
 export default Ribbon;

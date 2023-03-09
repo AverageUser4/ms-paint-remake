@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import css from './Dropdown.module.css';
 
 import { useContainerContext } from '../../misc/ContainerContext';
-import { useMainWindowContext } from "../../misc/MainWindowContext";
+import { useWindowsContext } from "../../misc/WindowsContext";
 
 const Dropdown = forwardRef(function Dropdown(props, ref) {
   const { isVisible, setIsVisible, classes, children, adjustPosition = true, dropdownContainerRef } = props;
-  const { isMainWindowFocused } = useMainWindowContext();
+  const { isMainWindowFocused } = useWindowsContext();
   const { containerRect: paintContainerRect } = useContainerContext();
   const dropdownRef = useRef();
   const [position, setPosition] = useState(adjustPosition ? { left: 0, right: 'auto', top: '100%', bottom: 'auto' } : {});

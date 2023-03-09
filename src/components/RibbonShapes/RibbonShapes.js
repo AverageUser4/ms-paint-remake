@@ -100,40 +100,42 @@ function RibbonShapes({ ribbonWidth }) {
                   ref={outlineDropdownRef}
                   data-cy="Shapes-Outline-Dropdown"
                 >
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={none16} alt=""/>
-                    <span>No outline</span>
-                  </button>
+                  <div className="popup__part">
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={none16} alt=""/>
+                      <span>No outline</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={solidColor16} alt=""/>
-                    <span>Solid color</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={solidColor16} alt=""/>
+                      <span>Solid color</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={crayon16} alt=""/>
-                    <span>Crayon</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={crayon16} alt=""/>
+                      <span>Crayon</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={marker16} alt=""/>
-                    <span>Marker</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={marker16} alt=""/>
+                      <span>Marker</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={oil16} alt=""/>
-                    <span>Oil</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={oil16} alt=""/>
+                      <span>Oil</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={pencil16} alt=""/>
-                    <span>Natural pencil</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={pencil16} alt=""/>
+                      <span>Natural pencil</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={waterColor16} alt=""/>
-                    <span>Watercolor</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={waterColor16} alt=""/>
+                      <span>Watercolor</span>
+                    </button>
+                  </div>
                 </div>
               </Dropdown>
             </div>
@@ -159,40 +161,42 @@ function RibbonShapes({ ribbonWidth }) {
                   ref={fillDropdownRef}
                   data-cy="Shapes-Fill-Dropdown"
                 >
-                <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={none16} alt=""/>
-                    <span>No fill</span>
-                  </button>
+                  <div className="popup__part">
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={none16} alt=""/>
+                      <span>No fill</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={solidColor16} alt=""/>
-                    <span>Solid color</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={solidColor16} alt=""/>
+                      <span>Solid color</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={crayon16} alt=""/>
-                    <span>Crayon</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={crayon16} alt=""/>
+                      <span>Crayon</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={marker16} alt=""/>
-                    <span>Marker</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={marker16} alt=""/>
+                      <span>Marker</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={oil16} alt=""/>
-                    <span>Oil</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={oil16} alt=""/>
+                      <span>Oil</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={pencil16} alt=""/>
-                    <span>Natural pencil</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={pencil16} alt=""/>
+                      <span>Natural pencil</span>
+                    </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
-                    <img className="popup__image" src={waterColor16} alt=""/>
-                    <span>Watercolor</span>
-                  </button>
+                    <button className="popup__button text text--4 text--nowrap">
+                      <img className="popup__image" src={waterColor16} alt=""/>
+                      <span>Watercolor</span>
+                    </button>
+                  </div>
                 </div>
               </Dropdown>
             </div>

@@ -61,6 +61,22 @@ function useResizeCursor(resizeData) {
       }
     };
   }, [resizeData, styleSheet]);
+
+  useEffect(() => {
+    function onMouseMove() {
+      if(styleSheet.cssRules.length) {
+        styleSheet.deleteRule(0);
+      }
+    }
+
+    if(resizeData) {
+      window.addEventListener('mousemove', onMouseMove);
+    }
+
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove);
+    };
+  }, [resizeData, styleSheet]);
 }
 
 export default useResizeCursor;

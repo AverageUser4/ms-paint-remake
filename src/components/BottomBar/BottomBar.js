@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import css from './BottomBar.module.css';
 
 import ZoomRange from "../ZoomRange/ZoomRange";
-import { useMainWindowContext } from "../../misc/MainWindowContext";
+import { useWindowsContext } from "../../misc/WindowsContext";
 import { useCanvasContext } from "../../misc/CanvasContext";
 import { useSelectionContext } from "../../misc/SelectionContext";
 
@@ -14,7 +14,7 @@ import selection16 from './assets/selection-16.ico';
 import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
 function BottomBar({ windowWidth }) {
-  const { isMainWindowMaximized } = useMainWindowContext();
+  const { isMainWindowMaximized } = useWindowsContext();
   const { canvasSize, canvasOutlineSize, canvasMousePosition, canvasZoom } = useCanvasContext();
   const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
   const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;

@@ -6,13 +6,15 @@ import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 
+import { useWindowsContext } from "../../misc/WindowsContext";
 import { useColorContext } from "../../misc/ColorContext";
 import { RGBObjectToString } from "../../misc/utils";
 
 import colors16 from './assets/colors-16.png';
 import colors32 from './assets/colors-32.png';
 
-function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
+function RibbonColors({ ribbonWidth }) {
+  const { setIsColorsWindowOpen } = useWindowsContext();
   const { colorData, setColorData, ribbonColorsArray } = useColorContext();
   const isOnlyContent = ribbonWidth >= 725;
   
@@ -79,7 +81,6 @@ function RibbonColors({ ribbonWidth, setIsColorsWindowOpen }) {
 
 RibbonColors.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,
-  setIsColorsWindowOpen: PropTypes.func.isRequired,
 };
 
 export default RibbonColors;

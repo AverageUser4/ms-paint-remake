@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import WindowPlacementIndicator from "../components/WindowPlacementIndicator/WindowPlacementIndicator";
 
-import { useMainWindowContext } from '../misc/MainWindowContext';
+import { useWindowsContext } from '../misc/WindowsContext';
 import usePointerTrack from "./usePointerTrack";
 import { checkArgs } from "../misc/utils";
 
@@ -28,7 +28,7 @@ export default function useMove({
     { name: 'isConstrained', value: isConstrained, type: 'boolean' },
   ]);
 
-  const { mainWindowRestoreSize, mainWindowLatestSize, mainWindowMaximize } = useMainWindowContext();
+  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize } = useWindowsContext();
   const [positionDifference, setPositionDifference] = useState(null);
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 
@@ -71,7 +71,7 @@ export default function useMove({
       const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
       const adjustedX = pointerContainerX - widthBeforeCursor;
 
-      mainWindowRestoreSize();
+      doMainWindowRestoreSize();
       setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
       setPosition({ x: adjustedX, y: 0 })
     } else {
@@ -82,7 +82,7 @@ export default function useMove({
   function onPointerUpMoveCallback() {
     if(indicatorData.strPosition) {
       if(indicatorData.strPosition === 'full') {
-        mainWindowMaximize();
+        doMainWindowMaximize();
       } else {
         setPosition(indicatorData.position);
         setSize(indicatorData.size);

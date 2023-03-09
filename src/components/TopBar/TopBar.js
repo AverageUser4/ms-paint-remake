@@ -5,7 +5,7 @@ import css from './TopBar.module.css';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
 import { useContextMenuContext } from '../../misc/ContextMenuContext';
-import { useMainWindowContext } from '../../misc/MainWindowContext';
+import { useWindowsContext } from '../../misc/WindowsContext';
 
 import logoMini from './assets/logo-mini.png';
 
@@ -15,13 +15,12 @@ const TopBar = memo(function TopBar({
   toolbarData,
   setToolbarData,
   ribbonData,
-  setIsPromptWindowOpen,
   doSetWindowToMinimalSize,
 }) {
   const containerRef = useRef();
   const textRef = useRef();
   const { openContextMenu } = useContextMenuContext();
-  const { mainWindowToggleMaximize } = useMainWindowContext();
+  const { doMainWindowToggleMaximize, setIsPromptWindowOpen } = useWindowsContext();
   
   function isExpectedTarget(event) {
     return event.target === containerRef.current || event.target === textRef.current;
@@ -32,7 +31,7 @@ const TopBar = memo(function TopBar({
       className={css['container']} 
       onPointerDown={(e) => isExpectedTarget(e) && onPointerDownMove(e)}
       onContextMenu={(e) => isExpectedTarget(e) && openContextMenu(e, 'window')}
-      onDoubleClick={(e) => isExpectedTarget(e) && mainWindowToggleMaximize(e)}
+      onDoubleClick={(e) => isExpectedTarget(e) && doMainWindowToggleMaximize(e)}
       ref={containerRef}
       data-cy="TopBar"
     >
@@ -72,7 +71,6 @@ TopBar.propTypes = {
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
-  setIsPromptWindowOpen: PropTypes.func.isRequired,
   doSetWindowToMinimalSize: PropTypes.func.isRequired,
 };
 
