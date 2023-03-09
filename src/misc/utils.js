@@ -411,3 +411,22 @@ export function getSkewedSize(width, height, degreeX, degreeY) {
 export function clamp(min, actual, max) {
   return Math.max(Math.min(actual, max), min);
 }
+
+export function writeCanvasToClipboard(canvas) {
+  try {
+    if(!navigator.clipboard.write) {
+      throw new Error('Your browser does not seem to (fully) support Clipboard API.');
+    }
+  
+    canvas.toBlob((blob) => {
+      if(!blob) {
+        throw new Error('Unable to create BLOB out of canvas.');
+      }
+  
+      navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
+        .catch(error => console.error('Unable to write canvas to clipboard', error));
+    });
+  } catch(error) {
+    console.error(error);
+  }
+}

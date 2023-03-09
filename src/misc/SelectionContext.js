@@ -54,6 +54,9 @@ function SelectionProvider({ children }) {
   }
 
   function doSelectionDrawToPrimary(zoom, adjustedPosition) {
+    if(typeof zoom !== 'number') {
+      console.error(`This function requires first argument (zoom) to be of type "number", provided: "${zoom}".`);
+    }
     // using zoom argument is important as it isn't always canvasZoom
     const primaryContext = primaryRef.current.getContext('2d');
     primaryContext.imageSmoothingEnabled = false;

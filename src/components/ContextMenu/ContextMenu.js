@@ -27,13 +27,21 @@ import filpHorizontal16 from '../../assets/global/flip-horizontal-16.png';
 import filpVertical16 from '../../assets/global/flip-vertical-16.png';
 import rotateLeft16 from '../../assets/global/rotate-left-16.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
-import { doGetCanvasCopy } from '../../misc/utils';
+import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from '../../misc/utils';
 
 function ContextMenu() {
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
-  const { selectionPhase, setSelectionPhase } = useSelectionContext();
-  const { clearPrimary, primaryRef, canvasSize } = useCanvasContext();
+  const { 
+    selectionPhase, setSelectionPhase, selectionRef,
+    selectionPasteFromClipboard, doSelectionDrawToPrimary,
+    doSelectionCrop, doSelectionDrawToSelection, doSelectionSetPosition,
+    doSelectionSetSize, lastSelectionStateRef, selectionSize, selectionPosition
+  } = useSelectionContext();
+  const { 
+    clearPrimary, primaryRef, canvasSize, lastPrimaryStateRef,
+    canvasZoom
+  } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
@@ -93,11 +101,15 @@ function ContextMenu() {
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 if(data === 'selection' && selectionPhase) {
+                  writeCanvasToClipboard(selectionRef.current);
                   setSelectionPhase(0);
                 } else if(data === 'primary') {
+                  writeCanvasToClipboard(primaryRef.current);
                   clearPrimary();
+                  lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
                   doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
                 }
+                setIsOpen(false);
               }}
             >
               <img draggable="false" className="popup__image" src={cut16} alt=""/>
@@ -106,29 +118,113 @@ function ContextMenu() {
 
             <button 
               className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  writeCanvasToClipboard(selectionRef.current);
+                } else if(data === 'primary') {
+                  writeCanvasToClipboard(primaryRef.current);
+                }
+                setIsOpen(false);
+              }}
             >
               <img draggable="false" className="popup__image" src={copy16} alt=""/>
               <span><span className="text--underline">C</span>opy</span>
             </button>
 
-            <button className="popup__button text text--4 text--nowrap">
+            <button 
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  doSelectionDrawToPrimary(canvasZoom);
+                }
+                selectionPasteFromClipboard();
+                setIsOpen(false);
+              }}
+            >
               <img draggable="false" className="popup__image" src={clipboard16} alt=""/>
               <span><span className="text--underline">P</span>aste</span>
             </button>
 
             <div className="popup__line popup__line--separator"></div>
 
-            <button disabled={data === 'primary'} className="popup__button text text--4 text--nowrap">
+            <button 
+              disabled={data === 'primary'}
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  doSelectionCrop();
+                }
+                setIsOpen(false);
+              }}
+            >
               <img draggable="false" className="popup__image" src={crop16} alt=""/>
               <span>C<span className="text--underline">r</span>op</span>
             </button>
 
-            <button className="popup__button text text--4 text--nowrap">
+            <button 
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  doSelectionDrawToPrimary(canvasZoom);
+                }
+                
+                setSelectionPhase(2);
+                doSelectionSetSize(canvasSize);
+                doSelectionSetPosition({ x: 0, y: 0 });
+                lastSelectionStateRef.current = null;
+                setIsOpen(false);
+                
+                setTimeout(() => {
+                  const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
+                  doSelectionDrawToSelection(primaryImageData);
+                  clearPrimary();
+                }, 20);
+              }}
+            >
               <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
               <span>Select <span className="text--underline">a</span>ll</span>
             </button>
 
-            <button disabled={data === 'primary'} className="popup__button text text--4 text--nowrap">
+            <button 
+              disabled={data === 'primary'}
+              className="popup__button text text--4 text--nowrap"
+              onClick={() => {
+                if(data === 'selection' && selectionPhase) {
+                  // if(
+                  //    <= 0 + selectionPosition.x >= canvasSize.width) ||
+                  //     (selectionPosition.y <= 0 && selectionSize.height + selectionPosition.y >= canvasSize.height)
+                  //   ) {
+                  //   // will not do for freeForm selection
+                  //   doSelectionDrawToPrimary(canvasZoom);
+                  //   return;
+                  // }
+
+                  const selectionContext = selectionRef.current.getContext('2d');
+                  
+                  const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
+                  const selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
+
+                  clearPrimary();
+                  doSelectionDrawToPrimary(canvasZoom);
+
+                  for(let y = selectionPosition.y; y < canvasSize.height && y < selectionSize.height; y++) {
+                    for(let x = selectionPosition.x; x < canvasSize.width && x < selectionSize.width; x++) {
+                      if(ImageDataUtils.getColorFromCoords(selectionImageData, x - selectionPosition.x, y - selectionPosition.y).a > 0) {
+                        ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 255, g: 0, b: 255, a: 255 });
+                      }
+                    }
+                  }
+
+                  doSelectionSetPosition({ x: 0, y: 0 });
+                  doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
+
+                  setTimeout(() => {
+                    selectionContext.putImageData(primaryImageData, 0, 0);
+                    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+                  }, 20);
+                }
+              }}
+            >
               <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
               <span><span className="text--underline">I</span>nvert selection</span>
             </button>

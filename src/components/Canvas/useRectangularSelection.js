@@ -19,7 +19,7 @@ function useRectangularSelection({
     { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
   ]);
 
-  const { primaryRef, clearPrimary, canvasSize } = useCanvasContext();
+  const { primaryRef, clearPrimary, canvasSize, lastPrimaryStateRef } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const {
@@ -147,6 +147,8 @@ function useRectangularSelection({
         height: Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       });
 
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      
       doHistoryAdd({
         element: doGetCanvasCopy(primaryRef.current),
         ...canvasSize,
