@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
-import { doGetCanvasCopy } from './utils';
+import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from './utils';
 
 const SelectionContext = createContext();
 
@@ -120,7 +120,8 @@ function SelectionProvider({ children }) {
   const onLoadImage = useCallback(event => {
     const image = event.target;
     const { naturalWidth: width, naturalHeight: height } = image;
-
+    lastSelectionStateRef.current = null;
+    
     setCanvasSize(prev => ({ 
       width: prev.width > width ? prev.width : width,
       height: prev.height > height ? prev.height : height,
@@ -145,11 +146,21 @@ function SelectionProvider({ children }) {
   }, [canvasZoom, setCanvasSize]);
   
   function selectionBrowseFile() {
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary(canvasZoom);
+      setSelectionPhase(0);
+    }
+
     inputFileRef.current.click();
     setCurrentTool('selection-rectangle');
   }
 
-  function selectionPasteFromClipboard() {
+  function selectionPasteFromClipboard() {   
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary(canvasZoom);
+      setSelectionPhase(0);
+    }
+
     if(!navigator.clipboard.read) {
       console.error('Reading images from clipboard does not seem to be implemented in your browser.');
       return;
@@ -200,6 +211,106 @@ function SelectionProvider({ children }) {
       inputFileElement.removeEventListener('change', onChange);
     };
   }, [setCanvasSize, canvasZoom, onLoadImage]);
+
+  function doSharedCut() {
+    if(selectionPhase === 2) {
+      writeCanvasToClipboard(selectionRef.current);
+      setSelectionPhase(0);
+    } else {
+      writeCanvasToClipboard(primaryRef.current);
+      clearPrimary();
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+    }
+  }
+
+  function doSharedCopy() {
+    if(selectionPhase === 2) {
+      writeCanvasToClipboard(selectionRef.current);
+    } else {
+      writeCanvasToClipboard(primaryRef.current);
+    }
+  }
+  
+  function doSelectionSelectAll() {
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary(canvasZoom);
+    }
+    
+    setSelectionPhase(2);
+    doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
+    doSelectionSetPosition({ x: 0, y: 0 });
+    lastSelectionStateRef.current = null;
+    
+    setTimeout(() => {
+      const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
+      doSelectionDrawToSelection(primaryImageData);
+      clearPrimary();
+    }, 20);
+  }
+
+  function doSelectionInvertSelection() {
+    if(selectionPhase !== 2) {
+      return;
+    }
+    
+    const selectionContext = selectionRef.current.getContext('2d');
+    const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
+    let selectionImageData;
+    if(canvasZoom === 1) {
+      selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
+    } else {
+      const copy = document.createElement('canvas');
+      const copyContext = copy.getContext('2d');
+      copy.width = Math.round(selectionSize.width / canvasZoom);
+      copy.height = Math.round(selectionSize.height / canvasZoom);
+      copyContext.imageSmoothingEnabled = false;
+      copyContext.scale(1 / canvasZoom, 1 / canvasZoom);
+      copyContext.drawImage(selectionRef.current, 0, 0);
+      selectionImageData = copyContext.getImageData(0, 0, copy.width, copy.height);
+    }
+    
+    clearPrimary();
+    doSelectionDrawToPrimary(canvasZoom);
+
+    const usedPosition = {
+      x: Math.max(Math.round(selectionPosition.x / canvasZoom), 0),
+      y: Math.max(Math.round(selectionPosition.y / canvasZoom), 0),
+    };
+    
+    for(
+      let y = usedPosition.y;
+      y < canvasSize.height && y < Math.round((selectionPosition.y + selectionSize.height) / canvasZoom);
+      y++
+    ) {
+      for(
+        let x = usedPosition.x;
+        x < canvasSize.width && x < Math.round((selectionPosition.x + selectionSize.width) / canvasZoom);
+        x++
+      ) {
+        if(ImageDataUtils.getColorFromCoords(selectionImageData, x - usedPosition.x, y - usedPosition.y).a > 0) {
+          ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 0 , g: 0, b: 0, a: 0 });
+        }
+      }
+    }
+
+    doSelectionSetPosition({ x: 0, y: 0 });
+    doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
+
+    setTimeout(() => {
+      doSelectionDrawToSelection(primaryImageData);
+    }, 20);
+  }
+
+  function doSharedDelete() {
+    if(selectionPhase === 2) {
+      setSelectionPhase(0);
+    } else {
+      clearPrimary();
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+    }
+  }
   
   return (
     <SelectionContext.Provider
@@ -220,6 +331,11 @@ function SelectionProvider({ children }) {
         doSelectionDrawToSelection,
         doSelectionCrop,
         doSelectionResize,
+        doSharedCut,
+        doSharedCopy,
+        doSelectionSelectAll,
+        doSelectionInvertSelection,
+        doSharedDelete,
       }}
     >
       <input 

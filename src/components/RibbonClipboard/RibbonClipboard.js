@@ -16,7 +16,7 @@ import copy16 from '../../assets/global/copy-16.png';
 import cut16 from '../../assets/global/cut-16.png';
 
 function RibbonClipboard({ ribbonWidth }) {
-  const { selectionBrowseFile, selectionPasteFromClipboard } = useSelectionContext();
+  const { selectionBrowseFile, selectionPasteFromClipboard, doSharedCut, doSharedCopy } = useSelectionContext();
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
@@ -73,12 +73,24 @@ function RibbonClipboard({ ribbonWidth }) {
             </BigButtonDuo>
 
             <div data-cy="Clipboard-buttons">
-              <button className="button">
+              <button 
+                className="button"
+                onClick={() => {
+                  doSharedCut();
+                  setIsDropdownOpen(false);
+                }}
+              >
                 <img draggable="false" src={cut16} alt="Cut."/>
                 {showText && <span className="text text--1">Cut</span>}
               </button>
 
-              <button className="button">
+              <button 
+                className="button"
+                onClick={() => {
+                  doSharedCopy();
+                  setIsDropdownOpen(false);
+                }}
+              >
                 <img draggable="false" src={copy16} alt="Copy."/>
                 {showText && <span className="text text--1">Copy</span>}
               </button>

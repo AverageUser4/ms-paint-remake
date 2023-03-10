@@ -36,6 +36,17 @@ function CanvasProvider({ children }) {
     primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
     primaryContext.fillRect(x, y, width || canvasSize.width, height || canvasSize.height);
   }
+
+  function changeZoom(decrease) {
+    const currentIndex = zoomData.findIndex(data => data.multiplier === canvasZoom); 
+    const newIndex = currentIndex + (decrease ? -1 : 1);
+
+    if(newIndex < 0 || newIndex >= zoomData.length) {
+      return;
+    }
+
+    setCanvasZoom(zoomData[newIndex].multiplier);
+  }
   
   return (
     <CanvasContext.Provider
@@ -52,6 +63,7 @@ function CanvasProvider({ children }) {
         secondaryRef,
         lastPrimaryStateRef,
         clearPrimary,
+        changeZoom,
       }}
     >
       {children}

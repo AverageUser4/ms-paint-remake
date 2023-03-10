@@ -4,6 +4,7 @@ import css from './RibbonZoom.module.css';
 
 import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
+import { useCanvasContext } from '../../misc/CanvasContext';
 
 import zoomIn16 from './assets/zoom-in-16.png';
 import zoomIn32 from './assets/zoom-in-32.png';
@@ -13,20 +14,31 @@ import percent16 from './assets/100-percent-16.png';
 import percent32 from './assets/100-percent-32.png';
 
 function RibbonZoom({ ribbonWidth }) {
+  const { setCanvasZoom, changeZoom } = useCanvasContext();
+  
   if(ribbonWidth < 350) {
     return (
       <RibbonItemExpanded name="Zoom">
-        <button className="button">
+        <button 
+          className="button"
+          onClick={() => changeZoom(false)}
+        >
           <img src={zoomIn16} alt=""/>
           <span className="text text--1">Zoom in</span>
         </button>
 
-        <button className="button">
+        <button 
+          className="button"
+          onClick={() => changeZoom(true)}
+        >
           <img src={zoomOut16} alt=""/>
           <span className="text text--1">Zoom out</span>
         </button>
 
-        <button className="button">
+        <button 
+          className="button"
+          onClick={() => setCanvasZoom(1)}
+        >
           <img src={percent16} alt=""/>
           <span className="text text--1">100%</span>
         </button>
@@ -42,18 +54,21 @@ function RibbonZoom({ ribbonWidth }) {
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> in</div>}
           strName="Zoom-in"
+          onPointerDown={() => changeZoom(false)}
         />
         <BigButton 
           icon={zoomOut32}
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> out</div>}
           strName="Zoom-out"
+          onPointerDown={() => changeZoom(true)}
         />
         <BigButton 
           icon={percent32}
           hasArrow={false}
           name={<div>100 <div className="line-break"></div> %</div>}
           strName="100%"
+          onPointerDown={() => setCanvasZoom(1)}
         />
       </div>
     </RibbonItemExpanded>

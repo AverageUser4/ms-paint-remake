@@ -29,7 +29,10 @@ import freeForm32 from './assets/free-form-32.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 function RibbonImage({ ribbonWidth }) {
-  const { doSelectionCrop, selectionPhase } = useSelectionContext();
+  const { 
+    doSelectionCrop, selectionPhase, doSelectionSelectAll,
+    doSelectionInvertSelection, doSharedDelete
+  } = useSelectionContext();
   const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
   const { setIsResizeWindowOpen } = useWindowsContext();
   let icon = image32;
@@ -106,17 +109,36 @@ function RibbonImage({ ribbonWidth }) {
                 <h3 className="popup__head head head--2">Selection options</h3>
 
                 <div className="popup__part">
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button 
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      doSelectionSelectAll();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
                     <span>Select <span className="text--underline">a</span>ll</span>
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button 
+                    disabled={selectionPhase !== 2}
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      doSelectionInvertSelection();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
                     <span><span className="text--underline">I</span>nvert selection</span>
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button 
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      doSharedDelete();
+                      setIsDropdownOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={delete16} alt=""/>
                     <span><span className="text--underline">D</span>elete</span>
                   </button>

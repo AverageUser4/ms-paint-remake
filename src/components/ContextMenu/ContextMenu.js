@@ -27,21 +27,17 @@ import filpHorizontal16 from '../../assets/global/flip-horizontal-16.png';
 import filpVertical16 from '../../assets/global/flip-vertical-16.png';
 import rotateLeft16 from '../../assets/global/rotate-left-16.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
-import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from '../../misc/utils';
+import { doGetCanvasCopy, ImageDataUtils } from '../../misc/utils';
 
 function ContextMenu() {
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
   const { 
-    selectionPhase, setSelectionPhase, selectionRef,
-    selectionPasteFromClipboard, doSelectionDrawToPrimary,
-    doSelectionCrop, doSelectionDrawToSelection, doSelectionSetPosition,
-    doSelectionSetSize, lastSelectionStateRef, selectionSize, selectionPosition
+    selectionRef, selectionPasteFromClipboard, doSelectionCrop,
+    lastSelectionStateRef, selectionSize, doSharedCut, doSharedCopy,
+    doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete
   } = useSelectionContext();
-  const { 
-    clearPrimary, primaryRef, canvasSize, lastPrimaryStateRef,
-    canvasZoom
-  } = useCanvasContext();
+  const { primaryRef, canvasSize, lastPrimaryStateRef } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
@@ -100,15 +96,7 @@ function ContextMenu() {
             <button 
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  writeCanvasToClipboard(selectionRef.current);
-                  setSelectionPhase(0);
-                } else if(data === 'primary') {
-                  writeCanvasToClipboard(primaryRef.current);
-                  clearPrimary();
-                  lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
-                  doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
-                }
+                doSharedCut();
                 setIsOpen(false);
               }}
             >
@@ -119,11 +107,7 @@ function ContextMenu() {
             <button 
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  writeCanvasToClipboard(selectionRef.current);
-                } else if(data === 'primary') {
-                  writeCanvasToClipboard(primaryRef.current);
-                }
+                doSharedCopy();
                 setIsOpen(false);
               }}
             >
@@ -134,9 +118,6 @@ function ContextMenu() {
             <button 
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  doSelectionDrawToPrimary(canvasZoom);
-                }
                 selectionPasteFromClipboard();
                 setIsOpen(false);
               }}
@@ -151,9 +132,7 @@ function ContextMenu() {
               disabled={data === 'primary'}
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  doSelectionCrop();
-                }
+                doSelectionCrop();
                 setIsOpen(false);
               }}
             >
@@ -164,21 +143,8 @@ function ContextMenu() {
             <button 
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  doSelectionDrawToPrimary(canvasZoom);
-                }
-                
-                setSelectionPhase(2);
-                doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
-                doSelectionSetPosition({ x: 0, y: 0 });
-                lastSelectionStateRef.current = null;
+                doSelectionSelectAll();
                 setIsOpen(false);
-                
-                setTimeout(() => {
-                  const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
-                  doSelectionDrawToSelection(primaryImageData);
-                  clearPrimary();
-                }, 20);
               }}
             >
               <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
@@ -189,55 +155,8 @@ function ContextMenu() {
               disabled={data === 'primary'}
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  const selectionContext = selectionRef.current.getContext('2d');
-                  const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
-                  let selectionImageData;
-                  if(canvasZoom === 1) {
-                    selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
-                  } else {
-                    const copy = document.createElement('canvas');
-                    const copyContext = copy.getContext('2d');
-                    copy.width = Math.round(selectionSize.width / canvasZoom);
-                    copy.height = Math.round(selectionSize.height / canvasZoom);
-                    copyContext.imageSmoothingEnabled = false;
-                    copyContext.scale(1 / canvasZoom, 1 / canvasZoom);
-                    copyContext.drawImage(selectionRef.current, 0, 0);
-                    selectionImageData = copyContext.getImageData(0, 0, copy.width, copy.height);
-                  }
-                  
-                  clearPrimary();
-                  doSelectionDrawToPrimary(canvasZoom);
-
-                  const usedPosition = {
-                    x: Math.max(Math.round(selectionPosition.x / canvasZoom), 0),
-                    y: Math.max(Math.round(selectionPosition.y / canvasZoom), 0),
-                  };
-                  
-                  for(
-                    let y = usedPosition.y;
-                    y < canvasSize.height && y < Math.round((selectionPosition.y + selectionSize.height) / canvasZoom);
-                    y++
-                  ) {
-                    for(
-                      let x = usedPosition.x;
-                      x < canvasSize.width && x < Math.round((selectionPosition.x + selectionSize.width) / canvasZoom);
-                      x++
-                    ) {
-                      if(ImageDataUtils.getColorFromCoords(selectionImageData, x - usedPosition.x, y - usedPosition.y).a > 0) {
-                        ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 0  , g: 0, b: 0, a: 0   });
-                      }
-                    }
-                  }
-
-                  doSelectionSetPosition({ x: 0, y: 0 });
-                  doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
-                  setIsOpen(false);
-
-                  setTimeout(() => {
-                    doSelectionDrawToSelection(primaryImageData);
-                  }, 20);
-                }
+                doSelectionInvertSelection();
+                setIsOpen(false);
               }}
             >
               <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
@@ -247,13 +166,7 @@ function ContextMenu() {
             <button 
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                if(data === 'selection' && selectionPhase) {
-                  setSelectionPhase(0);
-                } else if(data === 'primary') {
-                  clearPrimary();
-                  lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
-                  doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
-                }
+                doSharedDelete();
                 setIsOpen(false);
               }}
             >
@@ -317,7 +230,7 @@ function ContextMenu() {
                 let usedImageData;
                 const selectionContext = selectionRef.current?.getContext('2d');
 
-                if(data === 'selection' && selectionPhase) {
+                if(data === 'selection') {
                   usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
                 } else if(data === 'primary') {
                   usedImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
@@ -334,7 +247,7 @@ function ContextMenu() {
                   }
                 }
 
-                if(data === 'selection' && selectionPhase) {
+                if(data === 'selection') {
                   selectionContext.putImageData(usedImageData, 0, 0);
                   lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
                 } else if(data === 'primary') {

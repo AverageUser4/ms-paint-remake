@@ -20,7 +20,7 @@ function findClosestMultiplier(offset) {
 }
 
 function ZoomRange() {
-  const { canvasZoom, setCanvasZoom } = useCanvasContext();
+  const { canvasZoom, setCanvasZoom, changeZoom } = useCanvasContext();
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
   
@@ -50,17 +50,6 @@ function ZoomRange() {
       window.removeEventListener('pointermove', onPointerMove);
     };
   }, [isControlFocused, canvasZoom, setCanvasZoom]);
-  
-  function changeZoom(decrease) {
-    const currentIndex = zoomData.findIndex(data => data.multiplier === canvasZoom); 
-    const newIndex = currentIndex + (decrease ? -1 : 1);
-
-    if(newIndex < 0 || newIndex >= zoomData.length) {
-      return;
-    }
-
-    setCanvasZoom(zoomData[newIndex].multiplier);
-  }
 
   return (
     <>
