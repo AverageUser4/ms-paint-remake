@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { initialCanvasSize, MAX_CANVAS_SIZE } from './data';
+import { initialCanvasSize } from './data';
 import { useColorContext } from './ColorContext';
 import { RGBObjectToString } from './utils';
 
@@ -27,6 +27,7 @@ function CanvasProvider({ children }) {
   const [canvasSize, setCanvasSize] = useState(initialCanvasSize);
   const [canvasOutlineSize, setCanvasOutlineSize] = useState(null);
   const [canvasZoom, setCanvasZoom] = useState(1);
+  const [isFullScreenView, setIsFullScreenView] = useState(false);
   const primaryRef = useRef();
   const secondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
@@ -64,6 +65,8 @@ function CanvasProvider({ children }) {
         lastPrimaryStateRef,
         clearPrimary,
         changeZoom,
+        isFullScreenView,
+        setIsFullScreenView,
       }}
     >
       {children}

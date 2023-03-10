@@ -377,8 +377,6 @@ export function checkNumberValue(value, acceptNegative = false) {
     numValue = 0
   }
 
-  console.log(value, numValue, isInvalid)
-
   return {
     value,
     numValue,

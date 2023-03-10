@@ -6,12 +6,13 @@ import CanvasContainer from '../CanvasContainer/CanvasContainer';
 import Ribbon from '../Ribbon/Ribbon';
 import RibbonControls from '../RibbonControls/RibbonControls';
 import TopBar from '../TopBar/TopBar';
-import BottomBar from '../BottomBar/BottomBar';
+import StatusBar from '../StatusBar/StatusBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
+import FullScreen from '../FullScreen/FullScreen';
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 import { ContainerProvider } from '../../misc/ContainerContext';
 import { CanvasProvider } from '../../misc/CanvasContext';
@@ -108,7 +109,7 @@ function Logic({
                 toolbarData={toolbarData}
                 ribbonData={ribbonData}
               />
-              <BottomBar
+              <StatusBar
                 windowWidth={mainWindowSize.width}
               />
               <ContextMenu/>
@@ -120,6 +121,7 @@ function Logic({
       <ResizeWindow/>
       <ColorsWindow/>
       <PromptWindow/>
+      <FullScreen/>
     </div>
   );
 }

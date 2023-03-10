@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import css from './BottomBar.module.css';
+import css from './StatusBar.module.css';
 
 import ZoomRange from "../ZoomRange/ZoomRange";
 import { useWindowsContext } from "../../misc/WindowsContext";
@@ -13,11 +13,15 @@ import fileSize16 from './assets/file-size-16.ico';
 import selection16 from './assets/selection-16.ico';
 import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
-function BottomBar({ windowWidth }) {
-  const { isMainWindowMaximized } = useWindowsContext();
+function StatusBar({ windowWidth }) {
+  const { isMainWindowMaximized, isStatusBarVisible } = useWindowsContext();
   const { canvasSize, canvasOutlineSize, canvasMousePosition, canvasZoom } = useCanvasContext();
   const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
   const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;
+  
+  if(!isStatusBarVisible) {
+    return null;
+  }
   
   return (
     <footer 
@@ -77,8 +81,8 @@ function BottomBar({ windowWidth }) {
   );
 }
 
-BottomBar.propTypes = {
+StatusBar.propTypes = {
   windowWidth: PropTypes.number.isRequired,
 };
 
-export default BottomBar;
+export default StatusBar;

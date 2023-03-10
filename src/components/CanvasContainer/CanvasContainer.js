@@ -4,9 +4,11 @@ import css from './CanvasContainer.module.css';
 
 import Canvas from '../Canvas/Canvas';
 import { useSelectionContext } from '../../misc/SelectionContext';
+import { useWindowsContext } from '../../misc/WindowsContext';
 
 function CanvasContainer({ toolbarData, ribbonData }) {
   const { selectionPhase, setSelectionPhase } = useSelectionContext();
+  const { isStatusBarVisible } = useWindowsContext();
   const containerRef = useRef();
   
   const style = {
@@ -15,7 +17,7 @@ function CanvasContainer({ toolbarData, ribbonData }) {
       ${!ribbonData.minimize ? '- var(--ribbon-height)' : ''}
       - var(--ribbon-controls-height)
       - var(--topbar-height)
-      - var(--bottombar-height)
+      ${isStatusBarVisible ? '- var(--statusbar-height)' : ''}
       ${toolbarData.reposition ? '- var(--qa-toolbar-height)' : ''}
     )`
   };

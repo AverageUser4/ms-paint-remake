@@ -117,9 +117,10 @@ function Canvas() {
     }
     lastCanvasSizeRef.current = canvasSize;
     
+    const primaryContext = primaryRef.current.getContext('2d');
+    clearPrimary();
+    
     if(lastPrimaryStateRef.current) {
-      const primaryContext = primaryRef.current.getContext('2d');
-      clearPrimary();
       primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);

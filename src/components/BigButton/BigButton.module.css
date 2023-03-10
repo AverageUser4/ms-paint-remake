@@ -39,6 +39,7 @@
 }
 .button--disabled {
   opacity: 0.5;
+  filter: grayscale(100%);
 }
 .button--disabled:hover {
   background-color: transparent;

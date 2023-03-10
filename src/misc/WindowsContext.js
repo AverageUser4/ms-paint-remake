@@ -16,6 +16,8 @@ function WindowsProvider({ children, initialPosition, initialSize, isInitiallyMa
   const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
   const isAnyInnerWindowOpen = isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen;
 
+  const [isStatusBarVisible, setIsStatusBarVisible] = useState(true);
+
   useEffect(() => {
     function closeAll(event) {
       if(event.key === 'Escape') {
@@ -80,7 +82,9 @@ function WindowsProvider({ children, initialPosition, initialSize, isInitiallyMa
         isResizeWindowOpen, setIsResizeWindowOpen,
         isColorsWindowOpen, setIsColorsWindowOpen,
         isPromptWindowOpen, setIsPromptWindowOpen,
-        isAnyInnerWindowOpen
+        isAnyInnerWindowOpen,
+        isStatusBarVisible,
+        setIsStatusBarVisible,
      }}
     >
       {children}
