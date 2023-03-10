@@ -169,7 +169,7 @@ function ContextMenu() {
                 }
                 
                 setSelectionPhase(2);
-                doSelectionSetSize(canvasSize);
+                doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
                 doSelectionSetPosition({ x: 0, y: 0 });
                 lastSelectionStateRef.current = null;
                 setIsOpen(false);
@@ -193,13 +193,14 @@ function ContextMenu() {
                   const selectionContext = selectionRef.current.getContext('2d');
                   const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
                   let selectionImageData;
-                  if(canvasZoom >= 1) {
+                  if(canvasZoom === 1) {
                     selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
                   } else {
                     const copy = document.createElement('canvas');
                     const copyContext = copy.getContext('2d');
                     copy.width = Math.round(selectionSize.width / canvasZoom);
                     copy.height = Math.round(selectionSize.height / canvasZoom);
+                    copyContext.imageSmoothingEnabled = false;
                     copyContext.scale(1 / canvasZoom, 1 / canvasZoom);
                     copyContext.drawImage(selectionRef.current, 0, 0);
                     selectionImageData = copyContext.getImageData(0, 0, copy.width, copy.height);
@@ -224,7 +225,7 @@ function ContextMenu() {
                       x++
                     ) {
                       if(ImageDataUtils.getColorFromCoords(selectionImageData, x - usedPosition.x, y - usedPosition.y).a > 0) {
-                        ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 255, g: 0, b: 0, a: 255 });
+                        ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 0  , g: 0, b: 0, a: 0   });
                       }
                     }
                   }
@@ -314,7 +315,7 @@ function ContextMenu() {
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 let usedImageData;
-                const selectionContext = selectionRef.current.getContext('2d');
+                const selectionContext = selectionRef.current?.getContext('2d');
 
                 if(data === 'selection' && selectionPhase) {
                   usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
@@ -325,9 +326,11 @@ function ContextMenu() {
                 for(let y = 0; y < usedImageData.height; y++) {
                   for(let x = 0; x < usedImageData.width; x++) {
                     const color = ImageDataUtils.getColorFromCoords(usedImageData, x, y);
-                    ImageDataUtils.setColorAtCoords(usedImageData, x, y, { 
-                      r: 255 - color.r, g: 255 - color.g, b: 255 - color.b
-                    });
+                    if(color.a > 0) {
+                      ImageDataUtils.setColorAtCoords(usedImageData, x, y, { 
+                        r: 255 - color.r, g: 255 - color.g, b: 255 - color.b, a: color.a
+                      });
+                    }
                   }
                 }
 
