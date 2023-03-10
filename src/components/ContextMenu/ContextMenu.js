@@ -192,8 +192,19 @@ function ContextMenu() {
                 if(data === 'selection' && selectionPhase) {
                   const selectionContext = selectionRef.current.getContext('2d');
                   const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
-                  const selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
-
+                  let selectionImageData;
+                  if(canvasZoom >= 1) {
+                    selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
+                  } else {
+                    const copy = document.createElement('canvas');
+                    const copyContext = copy.getContext('2d');
+                    copy.width = Math.round(selectionSize.width / canvasZoom);
+                    copy.height = Math.round(selectionSize.height / canvasZoom);
+                    copyContext.scale(1 / canvasZoom, 1 / canvasZoom);
+                    copyContext.drawImage(selectionRef.current, 0, 0);
+                    selectionImageData = copyContext.getImageData(0, 0, copy.width, copy.height);
+                  }
+                  
                   clearPrimary();
                   doSelectionDrawToPrimary(canvasZoom);
 
