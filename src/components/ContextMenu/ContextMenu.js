@@ -190,43 +190,40 @@ function ContextMenu() {
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 if(data === 'selection' && selectionPhase) {
-                  // if(
-                  //    <= 0 + selectionPosition.x >= canvasSize.width) ||
-                  //     (selectionPosition.y <= 0 && selectionSize.height + selectionPosition.y >= canvasSize.height)
-                  //   ) {
-                  //   // will not do for freeForm selection
-                  //   doSelectionDrawToPrimary(canvasZoom);
-                  //   return;
-                  // }
-
                   const selectionContext = selectionRef.current.getContext('2d');
-                  
                   const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
                   const selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
 
                   clearPrimary();
                   doSelectionDrawToPrimary(canvasZoom);
 
-                  /*
-                    it seems like the cut out part if of correct size, but gets put always at 0, 0 in selection canvas (not 100% sure, issue may be bit different)
-                  */
+                  const usedPosition = {
+                    x: Math.max(Math.round(selectionPosition.x / canvasZoom), 0),
+                    y: Math.max(Math.round(selectionPosition.y / canvasZoom), 0),
+                  };
                   
-                  for(let y = selectionPosition.y; y < canvasSize.height && y < selectionSize.height; y++) {
-                    for(let x = selectionPosition.x; x < canvasSize.width && x < selectionSize.width; x++) {
-                      if(ImageDataUtils.getColorFromCoords(selectionImageData, x - selectionPosition.x, y - selectionPosition.y).a > 0) {
-                        // should be { r: 0, g: 0, b: 0, a: 0 }
-                        ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 255, g: 0, b: 255, a: 255 });
+                  for(
+                    let y = usedPosition.y;
+                    y < canvasSize.height && y < Math.round((selectionPosition.y + selectionSize.height) / canvasZoom);
+                    y++
+                  ) {
+                    for(
+                      let x = usedPosition.x;
+                      x < canvasSize.width && x < Math.round((selectionPosition.x + selectionSize.width) / canvasZoom);
+                      x++
+                    ) {
+                      if(ImageDataUtils.getColorFromCoords(selectionImageData, x - usedPosition.x, y - usedPosition.y).a > 0) {
+                        ImageDataUtils.setColorAtCoords(primaryImageData, x, y, { r: 255, g: 0, b: 0, a: 255 });
                       }
                     }
                   }
 
                   doSelectionSetPosition({ x: 0, y: 0 });
-                  doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
+                  doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
                   setIsOpen(false);
 
                   setTimeout(() => {
-                    selectionContext.putImageData(primaryImageData, 0, 0);
-                    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+                    doSelectionDrawToSelection(primaryImageData);
                   }, 20);
                 }
               }}
@@ -306,9 +303,10 @@ function ContextMenu() {
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 let usedImageData;
+                const selectionContext = selectionRef.current.getContext('2d');
 
                 if(data === 'selection' && selectionPhase) {
-                  usedImageData = selectionRef.current.getContext('2d').getImageData(0, 0, selectionSize.width, selectionSize.height);
+                  usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
                 } else if(data === 'primary') {
                   usedImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
                 }
@@ -323,7 +321,8 @@ function ContextMenu() {
                 }
 
                 if(data === 'selection' && selectionPhase) {
-                  doSelectionDrawToSelection(usedImageData);
+                  selectionContext.putImageData(usedImageData, 0, 0);
+                  lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
                 } else if(data === 'primary') {
                   primaryRef.current.getContext('2d').putImageData(usedImageData, 0, 0);
                   lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
