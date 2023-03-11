@@ -40,7 +40,22 @@ function Canvas() {
   const lastCanvasZoomRef = useRef();
   const isFirstRenderRef = useRef(true);
   const lastCanvasSizeRef = useRef(canvasSize);
-  const gridLinesRef = useRef();
+  
+  /* https://codereview.stackexchange.com/questions/114702/drawing-a-grid-on-canvas */
+  let gridCellSize = 12;
+  let gridCellColor_1 = 'rgba(0, 0, 0, 0.5)';
+  let gridCellColor_2 = 'rgba(255, 255, 255, 0.5)';
+  if(canvasZoom >= 0.5) {
+    gridCellSize = 10;
+  }
+  if(canvasZoom === 3) {
+    gridCellSize = 15;
+  }
+  if(canvasZoom >= 4) {
+    gridCellSize = canvasZoom;
+    gridCellColor_1 = 'rgb(192, 192, 192)';
+    gridCellColor_2 = 'rgb(128, 128, 128)';
+  }
 
   const {
     onPointerDownBrush
@@ -132,75 +147,6 @@ function Canvas() {
     }
   }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef, clearPrimary]);
 
-  useEffect(() => {
-    if(!isGridLinesVisible) {
-      return;
-    }
-    
-    const gridLinesContext = gridLinesRef.current.getContext('2d');
-    
-    // gridLinesContext.fillRect(10,10,1,1)
-    // gridLinesContext.beginPath();
-    // gridLinesContext.moveTo(10, 15.5);
-    // gridLinesContext.lineTo(20, 15.5);
-    // gridLinesContext.stroke();
-    
-    gridLinesContext.save();
-    let fill_1 = 'rgba(0, 0, 0, 0.5)';
-    let fill_2 = 'rgba(255, 255, 255, 0.5)';
-    let size = 12;
-
-    if(canvasZoom >= 0.5) {
-      size = 10;
-    }
-    if(canvasZoom === 3) {
-      size = 15;
-    }
-    if(canvasZoom >= 4) {
-      size = canvasZoom;
-      fill_1 = 'rgb(192, 192, 192)';
-      fill_2 = 'rgb(128, 128, 128)';
-    }
-
-
-    for(let y = 0; y < canvasStyle.height; y += size) {
-      gridLinesContext.strokeStyle = fill_1;
-      gridLinesContext.lineWidth = 1;
-      gridLinesContext.beginPath();
-      gridLinesContext.setLineDash([1, 1]);
-      gridLinesContext.moveTo(0, y + 0.5);
-      gridLinesContext.lineTo(canvasStyle.width, y + 0.5);
-      gridLinesContext.stroke();
-      
-      gridLinesContext.strokeStyle = fill_2;
-      gridLinesContext.beginPath();
-      gridLinesContext.setLineDash([1, 1]);
-      gridLinesContext.moveTo(1, y + 0.5);
-      gridLinesContext.lineTo(canvasStyle.width, y + 0.5);
-      gridLinesContext.stroke();
-    }
-    
-    for(let x = 0; x < canvasStyle.width; x += size) {
-      gridLinesContext.strokeStyle = fill_1;
-      gridLinesContext.lineWidth = 1;
-      gridLinesContext.beginPath();
-      gridLinesContext.setLineDash([1, 1]);
-      gridLinesContext.moveTo(x + 0.5, 0);
-      gridLinesContext.lineTo(x + 0.5, canvasStyle.height);
-      gridLinesContext.stroke();
-      
-      gridLinesContext.strokeStyle = fill_2;
-      gridLinesContext.beginPath();
-      gridLinesContext.setLineDash([1, 1]);
-      gridLinesContext.moveTo(x + 0.5, 1);
-      gridLinesContext.lineTo(x + 0.5, canvasStyle.height);
-      gridLinesContext.stroke();
-    }
-    
-    gridLinesContext.restore();
-
-  }, [isGridLinesVisible, canvasStyle.width, canvasStyle.height, canvasZoom]);
- 
   return (
     <div className="point-container">
       <div style={canvasStyle}></div>
@@ -285,15 +231,37 @@ function Canvas() {
 
       {
         isGridLinesVisible &&
-          <canvas
-            className={`
-              ${css['canvas']}
-              ${css['canvas--grid-lines']}
-            `}
-            width={canvasStyle.width}
-            height={canvasStyle.height}
-            ref={gridLinesRef}
-          ></canvas>
+        <svg 
+          className={`
+            ${css['canvas']}
+            ${css['canvas--grid-lines']}
+          `}
+          width={canvasStyle.width}
+          height={canvasStyle.height}
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <defs>
+            <pattern id="smallGrid" width={gridCellSize} height={gridCellSize} patternUnits="userSpaceOnUse">
+              <path 
+                d={`M ${gridCellSize},0 L 0,0 0,${gridCellSize}`}
+                fill="none"
+                stroke={gridCellColor_1}
+                strokeWidth="2"
+                strokeDasharray="1 1"
+              />
+              <path 
+                d={`M ${gridCellSize},0 L 0,0 0,${gridCellSize}`}
+                fill="none"
+                stroke={gridCellColor_2}
+                strokeWidth="2"
+                strokeDasharray="1 1"
+                strokeDashoffset="1"
+              />
+            </pattern>
+          </defs>
+
+          <rect width="100%" height="100%" fill="url(#smallGrid)" />
+        </svg>
       }
     </div>
   );
