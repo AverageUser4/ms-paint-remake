@@ -1,0 +1,25 @@
+.ruler {
+  --offset: calc(var(--rulers-size) + var(--canvas-container-padding));
+
+  position: absolute;
+}
+
+.ruler--top {
+  top: 0;
+  left: var(--offset);
+
+  width: calc(100% - var(--offset));
+  height: var(--rulers-size);
+
+  /* background-color: red; */
+}
+
+.ruler--left {
+  top: var(--offset);
+  left: 0;
+
+  width: var(--rulers-size);
+  height: calc(100% - var(--offset));
+
+  background-color: red;
+}

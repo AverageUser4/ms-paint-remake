@@ -59,6 +59,8 @@
   --topbar-height: 30px;
   --qa-toolbar-height: 25px;
   --inner-window-topbar-height: 30px;
+  --rulers-size: 17px;
+  --canvas-container-padding: 5px;
   
   --statusbar-height: 26px;
   --window-shadow: rgb(30, 40, 50);

@@ -17,7 +17,8 @@ function WindowsProvider({ children, initialPosition, initialSize, isInitiallyMa
   const isAnyInnerWindowOpen = isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen;
 
   const [isStatusBarVisible, setIsStatusBarVisible] = useState(true);
-  const [isGridLinesVisible, setIsGridLinesVisible] = useState(true);
+  const [isGridLinesVisible, setIsGridLinesVisible] = useState(false);
+  const [isRulersVisible, setIsRulersVisible] = useState(true);
 
   useEffect(() => {
     function closeAll(event) {
@@ -88,6 +89,8 @@ function WindowsProvider({ children, initialPosition, initialSize, isInitiallyMa
         setIsStatusBarVisible,
         isGridLinesVisible,
         setIsGridLinesVisible,
+        isRulersVisible,
+        setIsRulersVisible,
      }}
     >
       {children}

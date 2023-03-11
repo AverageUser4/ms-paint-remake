@@ -8,7 +8,7 @@ import { useWindowsContext } from '../../misc/WindowsContext';
 function RibbonShowOrHide() {
   const { 
     isStatusBarVisible, setIsStatusBarVisible, isGridLinesVisible,
-    setIsGridLinesVisible
+    setIsGridLinesVisible, isRulersVisible, setIsRulersVisible,
   } = useWindowsContext();
   
   return (
@@ -18,6 +18,8 @@ function RibbonShowOrHide() {
         <label className={css['label']}>
           <input 
             type="checkbox"            
+            checked={isRulersVisible}
+            onChange={() => setIsRulersVisible(prev => !prev)}
           />
           <span className="text text--1">Rulers</span>
         </label>

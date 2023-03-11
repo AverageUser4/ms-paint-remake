@@ -3,15 +3,14 @@ import PropTypes from 'prop-types';
 import css from './CanvasContainer.module.css';
 
 import Canvas from '../Canvas/Canvas';
-import { useSelectionContext } from '../../misc/SelectionContext';
+import Rulers from '../Rulers/Rulers';
 import { useWindowsContext } from '../../misc/WindowsContext';
 
 function CanvasContainer({ toolbarData, ribbonData }) {
-  const { selectionPhase, setSelectionPhase } = useSelectionContext();
-  const { isStatusBarVisible } = useWindowsContext();
-  const containerRef = useRef();
+  const { isStatusBarVisible, isRulersVisible } = useWindowsContext();
+  const canvasContainerRef = useRef();
   
-  const style = {
+  const containerStyle = {
     height: `calc(
       100%
       ${!ribbonData.minimize ? '- var(--ribbon-height)' : ''}
@@ -19,25 +18,25 @@ function CanvasContainer({ toolbarData, ribbonData }) {
       - var(--topbar-height)
       ${isStatusBarVisible ? '- var(--statusbar-height)' : ''}
       ${toolbarData.reposition ? '- var(--qa-toolbar-height)' : ''}
+      ${isRulersVisible ? '- var(--rulers-size)' : ''}
     )`
   };
 
   return (
     <div 
-      style={style} 
-      className={css['container']}
-      ref={containerRef}
-      // onClick={(e) => {
-      //   console.log(e.target)
-      //   if(e.target !== containerRef.current) {
-      //     return;
-      //   }
-      //   if(selectionPhase > 0) {
-      //     setSelectionPhase(0);
-      //   }
-      // }}
+      className={`
+        ${css['container']}
+        ${isRulersVisible && css['container--has-rulers']}
+      `}
+      style={containerStyle}
     >
-      <Canvas/>
+      <Rulers/>
+      <div 
+        className={css['canvas-container']}
+        ref={canvasContainerRef}
+      >
+        <Canvas/>
+      </div>
     </div>
   );
 }
