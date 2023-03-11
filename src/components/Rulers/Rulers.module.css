@@ -10,8 +10,6 @@
 
   width: calc(100% - var(--offset));
   height: var(--rulers-size);
-
-  /* background-color: red; */
 }
 
 .ruler--left {
@@ -20,6 +18,4 @@
 
   width: var(--rulers-size);
   height: calc(100% - var(--offset));
-
-  background-color: red;
 }
