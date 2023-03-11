@@ -146,9 +146,25 @@ function Canvas() {
     // gridLinesContext.stroke();
     
     gridLinesContext.save();
+    let fill_1 = 'rgba(0, 0, 0, 0.5)';
+    let fill_2 = 'rgba(255, 255, 255, 0.5)';
+    let size = 12;
 
-    for(let y = 0; y < canvasStyle.height; y += 10) {
-      gridLinesContext.strokeStyle = 'red';
+    if(canvasZoom >= 0.5) {
+      size = 10;
+    }
+    if(canvasZoom === 3) {
+      size = 15;
+    }
+    if(canvasZoom >= 4) {
+      size = canvasZoom;
+      fill_1 = 'rgb(192, 192, 192)';
+      fill_2 = 'rgb(128, 128, 128)';
+    }
+
+
+    for(let y = 0; y < canvasStyle.height; y += size) {
+      gridLinesContext.strokeStyle = fill_1;
       gridLinesContext.lineWidth = 1;
       gridLinesContext.beginPath();
       gridLinesContext.setLineDash([1, 1]);
@@ -156,7 +172,7 @@ function Canvas() {
       gridLinesContext.lineTo(canvasStyle.width, y + 0.5);
       gridLinesContext.stroke();
       
-      gridLinesContext.strokeStyle = 'blue';
+      gridLinesContext.strokeStyle = fill_2;
       gridLinesContext.beginPath();
       gridLinesContext.setLineDash([1, 1]);
       gridLinesContext.moveTo(1, y + 0.5);
@@ -164,8 +180,8 @@ function Canvas() {
       gridLinesContext.stroke();
     }
     
-    for(let x = 0; x < canvasStyle.width; x += 10) {
-      gridLinesContext.strokeStyle = 'red';
+    for(let x = 0; x < canvasStyle.width; x += size) {
+      gridLinesContext.strokeStyle = fill_1;
       gridLinesContext.lineWidth = 1;
       gridLinesContext.beginPath();
       gridLinesContext.setLineDash([1, 1]);
@@ -173,7 +189,7 @@ function Canvas() {
       gridLinesContext.lineTo(x + 0.5, canvasStyle.height);
       gridLinesContext.stroke();
       
-      gridLinesContext.strokeStyle = 'blue';
+      gridLinesContext.strokeStyle = fill_2;
       gridLinesContext.beginPath();
       gridLinesContext.setLineDash([1, 1]);
       gridLinesContext.moveTo(x + 0.5, 1);
@@ -183,7 +199,7 @@ function Canvas() {
     
     gridLinesContext.restore();
 
-  }, [isGridLinesVisible, canvasStyle.width, canvasStyle.height]);
+  }, [isGridLinesVisible, canvasStyle.width, canvasStyle.height, canvasZoom]);
  
   return (
     <div className="point-container">
