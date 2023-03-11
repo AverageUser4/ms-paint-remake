@@ -8,6 +8,7 @@ export default function useResize({
   containerRect,
   containerRef,
   minimalSize,
+  maximalSize,
   position, 
   setPosition, 
   size, 
@@ -82,6 +83,13 @@ export default function useResize({
     let newX = position.x;
     let newY = position.y;
 
+    if(!resizeData.type.includes('right')) {
+      newWidth = resizeData.initialWidth;
+    }
+    if(!resizeData.type.includes('bottom')) {
+      newHeight = resizeData.initialHeight;
+    }
+
     if(resizeData.type.includes('left')) {
       diffX *= -1;
       newX = containerOffsetX + resizeData.resizerDiffX;
@@ -128,6 +136,11 @@ export default function useResize({
       newHeight = minimalSize.height;
     }
 
+    if(maximalSize) {
+      newWidth = Math.min(newWidth, maximalSize.width);
+      newHeight = Math.min(newHeight, maximalSize.height);
+    }
+
     if(isConstrained) {
       if(newX + newWidth > containerRect.width) {
         newWidth = containerRect.width - newX;
@@ -168,9 +181,11 @@ export default function useResize({
       resizerDiffY = elementPageY - resizerRect.y - offsetY;
     }
 
+    const type = event.target.dataset.name;
+    
     if(isResizable) {
       setResizeData({
-        type: event.target.dataset.name,
+        type,
         initialX: event.clientX,
         initialY: event.clientY,
         initialPositionX: position.x,

@@ -10,7 +10,9 @@ import { useToolContext } from "../../misc/ToolContext";
 import { useColorContext } from "../../misc/ColorContext";
 import { useContextMenuContext } from "../../misc/ContextMenuContext";
 import { useSelectionContext } from "../../misc/SelectionContext";
+import { useWindowsContext } from "../../misc/WindowsContext";
 import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
+import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
   const { 
@@ -31,12 +33,14 @@ function Canvas() {
     selectionRef, selectionSize, selectionPhase, selectionPosition,
   } = useSelectionContext();
   const { openContextMenu } = useContextMenuContext();
+  const { isGridLinesVisible } = useWindowsContext();
   
   const lastPointerPositionRef = useRef({});
   const lastCurrentToolRef = useRef();
   const lastCanvasZoomRef = useRef();
   const isFirstRenderRef = useRef(true);
   const lastCanvasSizeRef = useRef(canvasSize);
+  const gridLinesRef = useRef();
 
   const {
     onPointerDownBrush
@@ -73,6 +77,7 @@ function Canvas() {
     size: canvasOutlineSize || canvasSize,
     setSize: setCanvasOutlineSize,
     minimalSize: { width: 1, height: 1, },
+    maximalSize: { width: MAX_CANVAS_SIZE * canvasZoom, height: MAX_CANVAS_SIZE * canvasZoom },
     zoom: canvasZoom,
     onPointerUpCallback: onPointerUpCallbackResize,
     isConstrained: false,
@@ -127,6 +132,59 @@ function Canvas() {
     }
   }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef, clearPrimary]);
 
+  useEffect(() => {
+    if(!isGridLinesVisible) {
+      return;
+    }
+    
+    const gridLinesContext = gridLinesRef.current.getContext('2d');
+    
+    // gridLinesContext.fillRect(10,10,1,1)
+    // gridLinesContext.beginPath();
+    // gridLinesContext.moveTo(10, 15.5);
+    // gridLinesContext.lineTo(20, 15.5);
+    // gridLinesContext.stroke();
+    
+    gridLinesContext.save();
+
+    for(let y = 0; y < canvasStyle.height; y += 10) {
+      gridLinesContext.strokeStyle = 'red';
+      gridLinesContext.lineWidth = 1;
+      gridLinesContext.beginPath();
+      gridLinesContext.setLineDash([1, 1]);
+      gridLinesContext.moveTo(0, y + 0.5);
+      gridLinesContext.lineTo(canvasStyle.width, y + 0.5);
+      gridLinesContext.stroke();
+      
+      gridLinesContext.strokeStyle = 'blue';
+      gridLinesContext.beginPath();
+      gridLinesContext.setLineDash([1, 1]);
+      gridLinesContext.moveTo(1, y + 0.5);
+      gridLinesContext.lineTo(canvasStyle.width, y + 0.5);
+      gridLinesContext.stroke();
+    }
+    
+    for(let x = 0; x < canvasStyle.width; x += 10) {
+      gridLinesContext.strokeStyle = 'red';
+      gridLinesContext.lineWidth = 1;
+      gridLinesContext.beginPath();
+      gridLinesContext.setLineDash([1, 1]);
+      gridLinesContext.moveTo(x + 0.5, 0);
+      gridLinesContext.lineTo(x + 0.5, canvasStyle.height);
+      gridLinesContext.stroke();
+      
+      gridLinesContext.strokeStyle = 'blue';
+      gridLinesContext.beginPath();
+      gridLinesContext.setLineDash([1, 1]);
+      gridLinesContext.moveTo(x + 0.5, 1);
+      gridLinesContext.lineTo(x + 0.5, canvasStyle.height);
+      gridLinesContext.stroke();
+    }
+    
+    gridLinesContext.restore();
+
+  }, [isGridLinesVisible, canvasStyle.width, canvasStyle.height]);
+ 
   return (
     <div className="point-container">
       <div style={canvasStyle}></div>
@@ -207,6 +265,19 @@ function Canvas() {
               }}
             ></div>
           </div>
+      }
+
+      {
+        isGridLinesVisible &&
+          <canvas
+            className={`
+              ${css['canvas']}
+              ${css['canvas--grid-lines']}
+            `}
+            width={canvasStyle.width}
+            height={canvasStyle.height}
+            ref={gridLinesRef}
+          ></canvas>
       }
     </div>
   );

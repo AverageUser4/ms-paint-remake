@@ -57,7 +57,7 @@ function StatusBar({ windowWidth }) {
               <img draggable="false" src={canvas16} alt="Canvas size."/>
               {
                 canvasOutlineSize ?
-                  <span className="text">{canvasOutlineSize.width} <Cross/> {canvasOutlineSize.height}px</span>
+                  <span className="text">{Math.round(canvasOutlineSize.width / canvasZoom)} <Cross/> {Math.round(canvasOutlineSize.height / canvasZoom)}px</span>
                 :
                   <span className="text">{canvasSize.width} <Cross/> {canvasSize.height}px</span>
               }

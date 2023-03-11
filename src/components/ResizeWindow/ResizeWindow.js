@@ -155,8 +155,8 @@ const ResizeWindow = memo(function ResizeWindow() {
     event.preventDefault();
     
     const newSize = {
-      width: data.resizeHorizontal,
-      height: data.resizeVertical,
+      width: data.resizeHorizontal || 1,
+      height: data.resizeVertical || 1,
     }
 
     if(resizeType === 'percentage') {

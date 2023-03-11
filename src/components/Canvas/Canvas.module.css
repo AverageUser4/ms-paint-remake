@@ -8,10 +8,12 @@
   image-rendering: pixelated;
   image-rendering: crisp-edges;
 }
+
 .canvas--primary {
   background-color: rgb(255, 0, 255);
   box-shadow: 5px 5px 2px rgba(100, 100, 100, 0.2);
 }
+
 .canvas--selection {
   border: 1px dashed rgb(0, 0, 0);
 
@@ -20,6 +22,11 @@
 .canvas--selection--ready {
   border-color: rgb(0, 120, 215);
 }
+
+.canvas--grid-lines {
+  pointer-events: none;
+}
+
 .canvas--cursor-draw {
   cursor: var(--cursor-draw);
 }

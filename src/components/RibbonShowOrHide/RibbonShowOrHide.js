@@ -6,7 +6,10 @@ import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 import { useWindowsContext } from '../../misc/WindowsContext';
 
 function RibbonShowOrHide() {
-  const { isStatusBarVisible, setIsStatusBarVisible } = useWindowsContext();
+  const { 
+    isStatusBarVisible, setIsStatusBarVisible, isGridLinesVisible,
+    setIsGridLinesVisible
+  } = useWindowsContext();
   
   return (
     <RibbonItemExpanded name="Show or hide">
@@ -20,7 +23,11 @@ function RibbonShowOrHide() {
         </label>
 
         <label className={css['label']}>
-          <input type="checkbox"/>
+          <input 
+            type="checkbox"
+            checked={isGridLinesVisible}
+            onChange={() => setIsGridLinesVisible(prev => !prev)}
+          />
           <span className="text text--1">Grid lines</span>
         </label>
 
