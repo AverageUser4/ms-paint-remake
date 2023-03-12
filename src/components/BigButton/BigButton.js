@@ -19,10 +19,12 @@ function BigButton({
   onPointerDown,
   isOnlyChildren = false,
   isActive,
-  isDisabled
+  isDisabled,
+  tooltip
 }) {
   const dropdownContainerRef = useRef();
   const buttonClasses = `
+    tooltip-container
     ${css['button']}
     ${css[`button--${iconSize}`]}
     ${isActive && css['button--active']}
@@ -58,6 +60,8 @@ function BigButton({
 
         {hasArrow && <TriangleDown className={css['triangle']}/>}
 
+        {tooltip && tooltip}
+
       </button>
 
       {
@@ -87,7 +91,8 @@ BigButton.propTypes = {
   onPointerDown: PropTypes.func,
   isOnlyChildren: PropTypes.bool,
   isActive: PropTypes.bool,
-  isDisabled: PropTypes.bool
+  isDisabled: PropTypes.bool,
+  tooltip: PropTypes.node,
 };
 
 export default BigButton;

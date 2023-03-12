@@ -2,6 +2,8 @@ import React, { useRef, useState } from "react";
 import css from './RibbonBrushes.module.css';
 
 import BigButtonDuo from "../BigButtonDuo/BigButtonDuo";
+import Tooltip from "../Tooltip/Tooltip";
+
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
 import { useToolContext } from "../../misc/ToolContext";
@@ -67,6 +69,18 @@ function RibbonBrushes() {
       onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       onPointerDownTop={() => !currentTool.startsWith('brushes-') && doSetCurrentTool(latestTools.brushes)}
       isActive={currentTool.startsWith('brushes-')}
+      tooltipTop={
+        <Tooltip
+          heading="Brushes"
+          text="Draw with different kinds of brushes."
+        />
+      }
+      tooltipBottom={
+        <Tooltip
+          heading="Brushes"
+          text="Draw with different kinds of brushes."
+        />
+      }
     >
       <div 
         className="popup"
@@ -75,93 +89,120 @@ function RibbonBrushes() {
       >
         <div className={css['grid']}>
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-brush' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-brush' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-brush');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={brush32} alt=""/>
+            <Tooltip
+              text="Brush"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-calligraphy-1' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-calligraphy-1' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-calligraphy-1');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={calligraphy132} alt=""/>
+            <Tooltip
+              text="Calligraphy brush 1"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-calligraphy-2' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-calligraphy-2' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-calligraphy-2');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={calligraphy232} alt=""/>
+            <Tooltip
+              text="Calligraphy brush 2"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-airbrush' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-airbrush' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-airbrush');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={air32} alt=""/>
+            <Tooltip
+              text="Airbrush"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-oilbrush' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-oilbrush' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-oilbrush');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={oil32} alt=""/>
+            <Tooltip
+              text="Oil brush"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-crayon' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-crayon' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-crayon');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={crayon32} alt=""/>
+            <Tooltip
+              text="Crayon"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-marker' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-marker' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-marker');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={marker32} alt=""/>
+            <Tooltip
+              text="Marker"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-natural-pencil' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-natural-pencil' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-natural-pencil');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={pencil32} alt=""/>
+            <Tooltip
+              text="Natural pencil"
+            />
           </button>
 
           <button 
-            className={`${css['button']} ${currentTool === 'brushes-watercolor' && css['button--active']}`}
+            className={`tooltip-container ${css['button']} ${currentTool === 'brushes-watercolor' && css['button--active']}`}
             onClick={() => { 
               doSetCurrentTool('brushes-watercolor');
               setIsDropdownOpen(false);
             }}
           >
             <img draggable="false" src={water32} alt=""/>
+            <Tooltip
+              text="Watercolor brush"
+            />
           </button>
         </div>
       </div>

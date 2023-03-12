@@ -4,6 +4,7 @@ import css from './FileDropdown.module.css';
 
 import FileDropdownMore from '../FileDropdownMore/FileDropdownMore';
 import Dropdown from '../Dropdown/Dropdown';
+import Tooltip from '../Tooltip/Tooltip';
 
 import about32 from './assets/about-32.png';
 import email32 from './assets/email-32.png';
@@ -60,19 +61,31 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
         <div className={css['middle']}>
           <div className={css['left']}>
     
-            <button className={css['button']}>
+            <button className={`tooltip-container ${css['button']}`}>
               <img src={new32} alt=""/>
               <span className="text text--1"><span className="text--underline">N</span>ew</span>
+              <Tooltip
+                heading="New (Ctrl+N)"
+                text="Create a new picture."
+              />
             </button>
     
-            <button className={css['button']}>
+            <button className={`tooltip-container ${css['button']}`}>
               <img src={open32} alt=""/>
               <span className="text text--1"><span className="text--underline">O</span>pen</span>
+              <Tooltip
+                heading="Open (Ctrl+O)"
+                text="Open an existing picture."
+              />
             </button>
     
-            <button className={css['button']}>
+            <button className={`tooltip-container ${css['button']}`}>
               <img src={save32} alt=""/>
               <span className="text text--1"><span className="text--underline">S</span>ave</span>
+              <Tooltip
+                heading="Save (Ctrl+S)"
+                text="Save the current picture."
+              />
             </button>
     
             <div 
@@ -81,9 +94,13 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-save"
             >
-              <button className={css['button']}>
+              <button className={`tooltip-container ${css['button']}`}>
                 <img src={saveAs32} alt=""/>
                 <span className="text text--1">Save <span className="text--underline">a</span>s</span>
+                <Tooltip
+                  heading="Save as (F12)"
+                  text="Save the current picture as a new file."
+                />
               </button>
     
               <button 
@@ -102,9 +119,13 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-print"
             >
-              <button className={css['button']}>
+              <button className={`tooltip-container ${css['button']}`}>
                 <img src={print32} alt=""/>
                 <span className="text text--1"><span className="text--underline">P</span>rint</span>
+                <Tooltip
+                  heading="Print (Ctrl+P)"
+                  text="Print the current picture."
+                />
               </button>
     
               <button 
@@ -115,14 +136,21 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               </button>
             </div>
             
-            <button className={css['button']}>
+            <button className={`tooltip-container ${css['button']}`}>
               <img src={scanner32} alt=""/>
               <span className="text text--1">Fro<span className="text--underline">m</span> scanner or camera</span>
+              <Tooltip
+                text="Import from scanner or camera."
+              />
             </button>
     
-            <button className={css['button']}>
+            <button className={`tooltip-container ${css['button']}`}>
               <img src={email32} alt=""/>
               <span className="text text--1">Sen<span className="text--underline">d</span> in email</span>
+              <Tooltip
+                heading="Email"
+                text="Send a copy of the picture in an email message as an attachment."
+              />
             </button>
     
             <div className={css['border']}></div>
@@ -133,9 +161,13 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-set"
             >
-              <button className={css['button']}>
+              <button className={`tooltip-container ${css['button']}`}>
                 <img src={set32} alt=""/>
                 <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
+                <Tooltip
+                  heading="Desktop background"
+                  text="Set the current picture as your desktop background."
+                />
               </button>
     
               <button 
@@ -148,21 +180,25 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
     
             <div className={css['border']}></div>
     
-            <button className={css['button']}>
+            <button className={`tooltip-container ${css['button']}`}>
               <img src={properties32} alt=""/>
               <span className="text text--1">Prop<span className="text--underline">e</span>rties</span>
+              <Tooltip
+                heading="Properties (Ctrl+E)"
+                text="Change the properties of the picture."
+              />
             </button>
     
             <div className={css['border']}></div>
     
-            <button className={css['button']}>
+            <button className={`${css['button']}`}>
               <img src={about32} alt=""/>
               <span className="text text--1">Abou<span className="text--underline">t</span> paint</span>
             </button>
     
             <div className={css['border']}></div>
     
-            <button className={css['button']}>
+            <button className={`${css['button']}`}>
               <img src={exit32} alt=""/>
               <span className="text text--1">E<span className="text--underline">x</span>it</span>
             </button>

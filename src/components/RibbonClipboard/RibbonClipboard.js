@@ -5,6 +5,8 @@ import css from './RibbonClipboard.module.css';
 import BigButtonDuo from '../BigButtonDuo/BigButtonDuo';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
+import Tooltip from "../Tooltip/Tooltip";
+
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { toggleBoolState } from "../../misc/utils";
@@ -40,6 +42,18 @@ function RibbonClipboard({ ribbonWidth }) {
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
               onPointerDownTop={() => selectionPasteFromClipboard()}
+              tooltipTop={
+                <Tooltip
+                  heading="Paste (Ctrl+V)"
+                  text="Paste the contents of the Clipboard."
+                />
+              }
+              tooltipBottom={
+                <Tooltip
+                  heading="Paste (Ctrl+V)"
+                  text="Click here for more options, such as pasting contents from the Clipboard or from a file."
+                />
+              }
             >
               <div 
                 className="popup"
@@ -48,7 +62,7 @@ function RibbonClipboard({ ribbonWidth }) {
               >
                 <div className="popup__part">
                   <button 
-                    className="popup__button text text--4 text--nowrap"
+                    className="tooltip-container popup__button text text--4 text--nowrap"
                     onPointerDown={() => {
                       selectionPasteFromClipboard();
                       setIsDropdownOpen(false);
@@ -56,10 +70,14 @@ function RibbonClipboard({ ribbonWidth }) {
                   >
                     <img className="popup__image" src={clipboard16} alt=""/>
                     <span><span className="text--underline">P</span>aste</span>
+                    <Tooltip
+                      heading="Paste (Ctrl+V)"
+                      text="Paste the contents of the Clipboard."
+                    />
                   </button>
 
                   <button 
-                    className="popup__button text text--4 text--nowrap"
+                    className="tooltip-container popup__button text text--4 text--nowrap"
                     onPointerDown={() => {
                       selectionBrowseFile();
                       setIsDropdownOpen(false);
@@ -67,6 +85,9 @@ function RibbonClipboard({ ribbonWidth }) {
                   >
                     <img className="popup__image" src={pasteFrom16} alt=""/>
                     <span>Paste <span className="text--underline">f</span>rom</span>
+                    <Tooltip
+                      text="Show the Paste From dialog box and pick a file to paste."
+                    />
                   </button>
                 </div>
               </div>
@@ -74,7 +95,7 @@ function RibbonClipboard({ ribbonWidth }) {
 
             <div data-cy="Clipboard-buttons">
               <button 
-                className="button"
+                className="tooltip-container button"
                 onClick={() => {
                   doSharedCut();
                   setIsDropdownOpen(false);
@@ -82,10 +103,14 @@ function RibbonClipboard({ ribbonWidth }) {
               >
                 <img draggable="false" src={cut16} alt="Cut."/>
                 {showText && <span className="text text--1">Cut</span>}
+                <Tooltip
+                  heading="Cut (Ctrl+X)"
+                  text="Cut the selection from the canvas and put it on the Clipboard."
+                />
               </button>
 
               <button 
-                className="button"
+                className="tooltip-container button"
                 onClick={() => {
                   doSharedCopy();
                   setIsDropdownOpen(false);
@@ -93,6 +118,10 @@ function RibbonClipboard({ ribbonWidth }) {
               >
                 <img draggable="false" src={copy16} alt="Copy."/>
                 {showText && <span className="text text--1">Copy</span>}
+                <Tooltip
+                  heading="Copy (Ctrl+C)"
+                  text="Copy the selection from the canvas and put it on the Clipboard."
+                />
               </button>
             </div>
           </div>

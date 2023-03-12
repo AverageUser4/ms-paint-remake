@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import css from './RibbonSize.module.css';
 
 import BigButton from "../BigButton/BigButton";
+import Tooltip from "../Tooltip/Tooltip";
+
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { toggleBoolState } from "../../misc/utils";
 import { useToolContext } from "../../misc/ToolContext";
@@ -25,6 +27,12 @@ function RibbonSize() {
       setShowChildren={setIsDropdownOpen}
       onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       isDisabled={!sizes}
+      tooltip={
+        <Tooltip
+          heading="Size (Ctrl++, Ctrl+-)"
+          text="Select the width for the selected tool."
+        />
+      }
     >
       {
         sizes &&
@@ -37,7 +45,7 @@ function RibbonSize() {
               sizes.map((size, index) => 
                 <button 
                   key={size}
-                  className={`${css['button']} ${index === toolsData.get(currentTool).chosenSizeIndex ? css['button--active'] : ''}`}
+                  className={`tooltip-container ${css['button']} ${index === toolsData.get(currentTool).chosenSizeIndex ? css['button--active'] : ''}`}
                   onClick={() => {
                     setToolsData(prev => {
                       const newToolsData = new Map(prev);
@@ -50,6 +58,9 @@ function RibbonSize() {
                   }}
                 >
                   <div className={css['size']} style={{ height: size < 20 ? size : Math.round(size / 1.4) }}></div>
+                  <Tooltip
+                    text={`${size}px`}
+                  />
                 </button>)
             }
           </div>

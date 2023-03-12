@@ -5,6 +5,7 @@ import css from './RibbonColors.module.css';
 import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
+import Tooltip from "../Tooltip/Tooltip";
 
 import { useWindowsContext } from "../../misc/WindowsContext";
 import { useColorContext } from "../../misc/ColorContext";
@@ -47,6 +48,12 @@ function RibbonColors({ ribbonWidth }) {
               strName="Color-1"
               isActive={colorData.selected === 'primary'}
               onPointerDown={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
+              tooltip={
+                <Tooltip
+                  heading="Color 1 (foreground color)"
+                  text="Click here and then select a color from the color palette. This color is used with the pencil and with brushes, as well as for shape outlines."
+                />
+              }
             />
             <BigButton 
               backgroundColor={RGBObjectToString(colorData.secondary)}
@@ -56,6 +63,12 @@ function RibbonColors({ ribbonWidth }) {
               strName="Color-2"
               isActive={colorData.selected === 'secondary'}
               onPointerDown={() => colorData.selected !== 'secondary' && setColorData(prev => ({ ...prev, selected: 'secondary' }))}
+              tooltip={
+                <Tooltip
+                  heading="Color 2 (background color)"
+                  text="Click here and then select a color from the color palette. This color is used with the eraser and for shape fills."
+                />
+              }
             />
 
             <div 
@@ -71,6 +84,12 @@ function RibbonColors({ ribbonWidth }) {
               name={<div>Edit <div className="line-break"></div> colors</div>}
               strName="Edit-colors"
               onPointerDown={() => setIsColorsWindowOpen(true)}
+              tooltip={
+                <Tooltip
+                  heading="Edit colors"
+                  text="Select a color from the color palette."
+                />
+              }
             />
           </div>
 

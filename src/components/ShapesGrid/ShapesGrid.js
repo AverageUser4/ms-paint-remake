@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './ShapesGrid.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
+import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
@@ -34,29 +35,29 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
 const shapesData = [
-  { src: line16 },
-  { src: curve16 },
-  { src: oval16 },
-  { src: rectangle16 },
-  { src: roundedRectangle16 },
-  { src: polygon16 },
-  { src: triangle16 },
-  { src: rightTriangle16 },
-  { src: diamond16 },
-  { src: pentagon16 },
-  { src: hexagon16 },
-  { src: rightArrow16 },
-  { src: leftArrow16 },
-  { src: upArrow16 },
-  { src: downArrow16 },
-  { src: fourPointStar16 },
-  { src: fivePointStar16 },
-  { src: sixPointStar16 },
-  { src: callout16 },
-  { src: ovalCallout16 },
-  { src: cloudCallout16 },
-  { src: heart16 },
-  { src: lightning16 },
+  { src: line16, name: 'Line' },
+  { src: curve16, name: 'Curve' },
+  { src: oval16, name: 'Oval' },
+  { src: rectangle16, name: 'Rectangle' },
+  { src: roundedRectangle16, name: 'Rounded rectangle' },
+  { src: polygon16, name: 'Polygon' },
+  { src: triangle16, name: 'Triangle' },
+  { src: rightTriangle16, name: 'Right triangle' },
+  { src: diamond16, name: 'Diamond' },
+  { src: pentagon16, name: 'Pentagon' },
+  { src: hexagon16, name: 'Hexagon' },
+  { src: rightArrow16, name: 'Right arrow' },
+  { src: leftArrow16, name: 'Left arrow' },
+  { src: upArrow16, name: 'Up arrow' },
+  { src: downArrow16, name: 'Down arrow' },
+  { src: fourPointStar16, name: 'Four-point star' },
+  { src: fivePointStar16, name: 'Five-point star' },
+  { src: sixPointStar16, name: 'Six-point star' },
+  { src: callout16, name: 'Rounded rectangular callout' },
+  { src: ovalCallout16, name: 'Oval callout' },
+  { src: cloudCallout16, name: 'Cloud callout' },
+  { src: heart16, name: 'Hear' },
+  { src: lightning16, name: 'Lightning' },
 ];
 
 function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
@@ -76,8 +77,14 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   const maxRow = rows - 3;
 
   const shapes = shapesData.map(shape => 
-    <button className="button" key={shape.src}>
+    <button 
+      key={shape.src}
+      className="tooltip-container button"
+    >
       <img src={shape.src} alt=""/>
+      <Tooltip
+        text={shape.name}
+      />
     </button>
   );
 

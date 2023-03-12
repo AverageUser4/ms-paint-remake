@@ -8,6 +8,7 @@ import { toggleBoolState } from "../../misc/utils";
 import { useWindowsContext } from "../../misc/WindowsContext";
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
+import Tooltip from "../Tooltip/Tooltip";
 
 function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
   const { isMainWindowFocused } = useWindowsContext();
@@ -35,7 +36,10 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
       data-cy={`RibbonItemContainer-${name}`}
     >
 
-      <button className={css['button']} onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}>
+      <button 
+        className={`tooltip-container ${css['button']}`}
+        onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      >
 
         <div className={css['image-container']}>
           <img draggable="false" src={icon} alt=""/>
@@ -44,6 +48,10 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
         <span className="text text--1">{name}</span>
 
         <TriangleDown className={css['triangle']}/>
+
+        <Tooltip
+          text={name}
+        />
 
       </button>
 

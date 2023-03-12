@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './QuickAccessDropdown.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
+import Tooltip from '../Tooltip/Tooltip';
 
 function QuickAccessDropdown({ 
   isVisible,
@@ -48,7 +49,7 @@ function QuickAccessDropdown({
 
         <form onSubmit={(e) => e.preventDefault()} className={css['form']} onClick={close}>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-newFile"
               className={css['checkbox']}
@@ -58,9 +59,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">New</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('newFile') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-open"
               className={css['checkbox']}
@@ -70,9 +77,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Open</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('open') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-save"
               className={css['checkbox']}
@@ -82,9 +95,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Save</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('save') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-print"
               className={css['checkbox']}
@@ -94,9 +113,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Print</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('print') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-printPreview"
               className={css['checkbox']}
@@ -106,9 +131,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Print preview</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('printPreview') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-email"
               className={css['checkbox']}
@@ -118,9 +149,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Send in email</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('email') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-undo"
               className={css['checkbox']}
@@ -130,9 +167,15 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Undo</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('undo') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
-          <label className={css['label']}>
+          <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-redo"
               className={css['checkbox']}
@@ -142,6 +185,12 @@ function QuickAccessDropdown({
               onChange={onChange}
             />
             <span className="text text--1">Redo</span>
+            <Tooltip
+              left="32px"
+              text={toolbarData.buttons.includes('redo') ? 
+                'Remove from Quick Access Toolbar' :
+                'Add to Qucik Access Toolbar'}
+            />
           </label>
 
           <div className={css['line']}></div>

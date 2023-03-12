@@ -45,6 +45,7 @@
     color: rgb(110, 110, 110);
     font-weight: 600;
     text-align: left;
+    letter-spacing: 0;
   }
   .head--2 {
     margin-bottom: 4px;
@@ -57,6 +58,9 @@
   }
   .head--dark {
     color: rgb(88, 88, 88);
+  }
+  .head--super-bold {
+    font-weight: 700;
   }
   
   .clean-list {
@@ -83,6 +87,19 @@
     height: 100%;
   
     background-color: rgb(227, 228, 229);
+  }
+  
+  .tooltip-container {
+    position: relative;
+  }
+  .tooltip {
+    display: none;
+  }
+  .tooltip-container:hover .tooltip {
+    display: block;
+  }
+  .tooltip:hover {
+    /* display: none !important; */
   }
   
 }

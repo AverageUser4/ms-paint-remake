@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import css from './RibbonControls.module.css';
 
 import FileDropdown from '../FileDropdown/FileDropdown';
+import Tooltip from '../Tooltip/Tooltip';
+
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { toggleBoolState } from '../../misc/utils';
 
@@ -20,11 +22,15 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
 
       <div className={css['left']}>
         <button
-          className="ribbon-button ribbon-button--blue"
+          className="tooltip-container ribbon-button ribbon-button--blue"
           onPointerDown={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
           data-cy="RibbonControls-toggle-FileDropdown"
         >
           File
+          <Tooltip
+            heading="Paint"
+            text="Click here to open, save, or print and to see everything else you can do with your picture."
+          />
         </button>
         <button
           className={
@@ -55,7 +61,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
 
       <div className={css['right']}>
         <button 
-          className="button button--height-20"
+          className="tooltip-container button button--height-20"
           onPointerDown={(e) => e.button === 0 && ribbonData.toggleMinimize()}
           data-cy="RibbonControls-toggle-Ribbon"
         >
@@ -65,9 +71,32 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
             :
               <ArrowUp className={ribbonData.minimize ? css['arrow-down'] : ''}/>
           }
+          {
+            ribbonData.minimize ?
+              <Tooltip
+                heading="Expand the Ribbon (Ctrl+F1)"
+                text="Show the Ribbon so that it is always expanded even after you click a command."
+              />
+            :
+              <Tooltip
+                heading="Minimize the Ribbon (Ctrl+F1)"
+                text="Show only the tab names on the Ribbon."
+              />
+          }
         </button>
-        <a draggable="false" className="button" rel="noreferrer" target="_blank" href="https://www.bing.com/search?q=pomoc+dotycz%c4%85ca+aplikacji+paint+w+systemie+windows&filters=guid:%224462489-pl-dia%22%20lang:%22pl%22&form=T00032&ocid=HelpPane-BingIA">
+
+        <a 
+          draggable="false"
+          className="tooltip-container button"
+          rel="noreferrer"
+          target="_blank"
+          href="https://www.bing.com/search?q=pomoc+dotycz%c4%85ca+aplikacji+paint+w+systemie+windows&filters=guid:%224462489-pl-dia%22%20lang:%22pl%22&form=T00032&ocid=HelpPane-BingIA"
+        >
           <img draggable="false" src={info} alt="Paint help."/>
+          <Tooltip
+            heading="Paint Help (F1)"
+            text="Get help on using Paint."
+          />
         </a>
       </div>
 

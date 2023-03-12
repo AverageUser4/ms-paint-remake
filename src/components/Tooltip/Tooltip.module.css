@@ -1,0 +1,30 @@
+.container {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 4;
+  
+  padding: 6px 8px;
+  width: max-content;
+  max-width: 210px;
+  
+  background-color: rgb(228, 236, 247);
+  background-image: linear-gradient(rgb(255, 255, 255), rgb(228, 236, 247));
+  border: 1px solid rgb(118, 118, 118);
+  border-radius: 3px;
+  box-shadow: 2px 2px rgba(170, 170, 170, 0.2);
+  
+  white-space: break-spaces;
+}
+.container--generic {
+  padding: 2px;
+
+  background-image: none;
+  background-color: rgb(255, 255, 255);
+  border-color: rgb(100, 100, 100);
+  border-radius: 0;
+}
+
+.pushed {
+  margin: 8px 0 0 10px;
+}

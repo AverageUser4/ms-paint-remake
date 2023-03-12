@@ -18,7 +18,7 @@ function WindowsProvider({ children, initialPosition, initialSize, isInitiallyMa
 
   const [isStatusBarVisible, setIsStatusBarVisible] = useState(true);
   const [isGridLinesVisible, setIsGridLinesVisible] = useState(false);
-  const [isRulersVisible, setIsRulersVisible] = useState(true);
+  const [isRulersVisible, setIsRulersVisible] = useState(false);
 
   useEffect(() => {
     function closeAll(event) {

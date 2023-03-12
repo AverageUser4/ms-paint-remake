@@ -7,6 +7,8 @@ import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from '../RibbonItemContainer/RibbonItemContainer';
 import useOutsideClick from "../../hooks/useOutsideClick";
 import Dropdown from "../Dropdown/Dropdown";
+import Tooltip from "../Tooltip/Tooltip";
+
 import { toggleBoolState } from "../../misc/utils";
 import { useSelectionContext } from "../../misc/SelectionContext";
 import { useToolContext } from "../../misc/ToolContext";
@@ -71,6 +73,18 @@ function RibbonImage({ ribbonWidth }) {
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
               onPointerDownTop={() => !currentTool.startsWith('selection-') && doSetCurrentTool(latestTools.selection)}
               isActive={currentTool.startsWith('selection-')}
+              tooltipTop={
+                <Tooltip
+                  heading="Selection"
+                  text="Select a part of the picture."
+                />
+              }
+              tooltipBottom={
+                <Tooltip
+                  heading="Selection"
+                  text="Click here for selection shapes and options."
+                />
+              }
             >
               <div 
                 className="popup" 
@@ -82,7 +96,7 @@ function RibbonImage({ ribbonWidth }) {
                 <div className="popup__part">
                   <button 
                     className={`
-                      popup__button 
+                      tooltip-container popup__button 
                       ${currentTool === 'selection-rectangle' && 'popup__button--selected'}
                       text text--4 text--nowrap
                     `}
@@ -90,11 +104,14 @@ function RibbonImage({ ribbonWidth }) {
                   >
                     <img draggable="false" className="popup__image" src={image16} alt=""/>
                     <span><span className="text--underline">R</span>ectangular selection</span>
+                    <Tooltip
+                      text="Select a rectangular area by drawing on the canvas."
+                    />
                   </button>
 
                   <button 
                     className={`
-                      popup__button 
+                      tooltip-container popup__button 
                       ${currentTool === 'selection-free-form' && 'popup__button--selected'}
                       text text--4 text--nowrap
                     `}
@@ -102,6 +119,9 @@ function RibbonImage({ ribbonWidth }) {
                   >
                     <img draggable="false" className="popup__image" src={freeForm16} alt=""/>
                     <span><span className="text--underline">F</span>ree-form selection</span>
+                    <Tooltip
+                      text="Select an area of any shape by drawing on the canvas."
+                    />
                   </button>
                 </div>
 
@@ -110,7 +130,7 @@ function RibbonImage({ ribbonWidth }) {
 
                 <div className="popup__part">
                   <button 
-                    className="popup__button text text--4 text--nowrap"
+                    className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionSelectAll();
                       setIsDropdownOpen(false);
@@ -118,11 +138,15 @@ function RibbonImage({ ribbonWidth }) {
                   >
                     <img draggable="false" className="popup__image" src={selectAll16} alt=""/>
                     <span>Select <span className="text--underline">a</span>ll</span>
+                    <Tooltip
+                      heading="Select all (Ctrl+A)"
+                      text="Select the entire picture."
+                    />
                   </button>
 
                   <button 
                     disabled={selectionPhase !== 2}
-                    className="popup__button text text--4 text--nowrap"
+                    className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionInvertSelection();
                       setIsDropdownOpen(false);
@@ -130,10 +154,13 @@ function RibbonImage({ ribbonWidth }) {
                   >
                     <img draggable="false" className="popup__image" src={invertSelection16} alt=""/>
                     <span><span className="text--underline">I</span>nvert selection</span>
+                    <Tooltip
+                      text="Reverse the current selection."
+                    />
                   </button>
 
                   <button 
-                    className="popup__button text text--4 text--nowrap"
+                    className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedDelete();
                       setIsDropdownOpen(false);
@@ -141,11 +168,18 @@ function RibbonImage({ ribbonWidth }) {
                   >
                     <img draggable="false" className="popup__image" src={delete16} alt=""/>
                     <span><span className="text--underline">D</span>elete</span>
+                    <Tooltip
+                      heading="Delete selection"
+                      text="Delete the current selection from the canvas."
+                    />
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button className="tooltip-container popup__button text text--4 text--nowrap">
                     <span className="popup__image"></span>
                     <span><span className="text--underline">T</span>ransparent selection</span>
+                    <Tooltip
+                      text="Make the background color in the selection transparent or opaque."
+                    />
                   </button>
                 </div>
               </div>
@@ -153,32 +187,44 @@ function RibbonImage({ ribbonWidth }) {
 
             <div data-cy="Image-buttons">
               <button 
-                className="button"
+                className="tooltip-container button"
                 onPointerDown={() => doSelectionCrop()}
                 disabled={selectionPhase !== 2}
               >
                 <img draggable="false" src={crop16} alt="Crop."/>
                 {showText && <span className="text text--1">Crop</span>}
+                <Tooltip
+                  heading="Crop (Ctrl+Shift+X)"
+                  text="Crop the picture so it only contains the current selection."
+                />
               </button>
 
               <button 
-                className="button"
+                className="tooltip-container button"
                 onClick={() => setIsResizeWindowOpen(true)}
                 data-cy="Image-open-ResizeWindow"
               >
                 <img draggable="false" src={resize16} alt="Resize."/>
                 {showText && <span className="text text--1">Resize</span>}
+                <Tooltip
+                  heading="Resize and skew (Ctrl+W)"
+                  text="Resize and skew the picture or selection."
+                />
               </button>
 
               <div className="dropdown-container" ref={dropdownContainerRef}>
                 <button 
-                  className="button"
+                  className="tooltip-container button"
                   onPointerDown={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
                   data-cy="Image-toggle-Rotate"
                 >
                   <img draggable="false" src={rotate16} alt="Rotate."/>
                   {showText && <span className="text text--1">Rotate</span>}
                   <TriangleDown/>
+                  <Tooltip
+                    heading="Rotate or flip"
+                    text="Rotate or flip the picture or selection."
+                  />
                 </button>
 
                 <Dropdown 
@@ -192,34 +238,48 @@ function RibbonImage({ ribbonWidth }) {
                     data-cy="Image-Rotate-Dropdown"
                   >
                     <div className="popup__part">
-                      <button className="popup__button text text--4 text--nowrap">
+                      <button className="tooltip-container popup__button text text--4 text--nowrap">
                         <img draggable="false" className="popup__image" src={rotate16} alt=""/>
                         <span>Rotate <span className="text--underline">r</span>ight 90°</span>
+                        <Tooltip
+                          text="Rotate the picture or selection by 90 degrees right."
+                        />
                       </button>
 
-                      <button className="popup__button text text--4 text--nowrap">
+                      <button className="tooltip-container popup__button text text--4 text--nowrap">
                         <img draggable="false" className="popup__image" src={rotateLeft16} alt=""/>
                         <span>Rotate <span className="text--underline">l</span>eft 90°</span>
+                        <Tooltip
+                          text="Rotate the picture or selection by 90 degrees left."
+                        />
                       </button>
 
-                      <button className="popup__button text text--4 text--nowrap">
+                      <button className="tooltip-container popup__button text text--4 text--nowrap">
                         <img draggable="false" className="popup__image" src={rotate18016} alt=""/>
                         <span>Ro<span className="text--underline">t</span>ate 180°</span>
+                        <Tooltip
+                          text="Rotate the picture or selection by 180 degrees."
+                        />
                       </button>
 
-                      <button className="popup__button text text--4 text--nowrap">
+                      <button className="tooltip-container popup__button text text--4 text--nowrap">
                         <img draggable="false" className="popup__image" src={filpVertical16} alt=""/>
                         <span>Flip <span className="text--underline">v</span>ertical</span>
+                        <Tooltip
+                          text="Flip the picture or selection vertically."
+                        />
                       </button>
 
-                      <button className="popup__button text text--4 text--nowrap">
+                      <button className="tooltip-container popup__button text text--4 text--nowrap">
                         <img draggable="false" className="popup__image" src={filpHorizontal16} alt=""/>
                         <span>Flip <span className="text--underline">h</span>orizontal</span>
+                        <Tooltip
+                          text="Flip the picture or selection horizontally."
+                        />
                       </button>
                     </div>
                   </div>
                 </Dropdown>
-
               </div>
             </div>
           </div>

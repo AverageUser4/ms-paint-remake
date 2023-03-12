@@ -6,6 +6,8 @@ import BigButton from '../BigButton/BigButton';
 import ShapesGrid from "../ShapesGrid/ShapesGrid";
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
+import Tooltip from "../Tooltip/Tooltip";
+
 import Dropdown from "../Dropdown/Dropdown";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
@@ -58,6 +60,12 @@ function RibbonShapes({ ribbonWidth }) {
               strName="Shapes"
               isOnlyChildren={isBigButtonHidden}
               onPointerDown={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
+              tooltip={
+                <Tooltip
+                  heading="Shapes"
+                  text="Insert ready-made shapes such as rectangles and circles, triangles, arrows, stars, and callouts."
+                />
+              }
             >
               <ShapesGrid
                 ribbonWidth={ribbonWidth}
@@ -81,13 +89,17 @@ function RibbonShapes({ ribbonWidth }) {
           <div data-cy="Shapes-buttons">
             <div className="dropdown-container" ref={outlineDropdownContainerRef}>
               <button 
-                className="button"
+                className="tooltip-container button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
                 data-cy="Shapes-toggle-Outline"
               >
                 <img draggable="false" src={outline16} alt="Outline."/>
                 {showText && <span className="text text--1">Outline</span>}
                 <TriangleDown/>
+                <Tooltip
+                  heading="Shape outline"
+                  text="Select the medium for the shape outline."
+                />
               </button>
 
               <Dropdown 
@@ -142,13 +154,17 @@ function RibbonShapes({ ribbonWidth }) {
 
             <div className="dropdown-container" ref={fillDropdownContainerRef}>
               <button 
-                className="button"
+                className="tooltip-container button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
                 data-cy="Shapes-toggle-Fill"
               >
                 <img draggable="false" src={fill16} alt="Fill."/>
                 {showText && <span className="text text--1">Fill</span>}
                 <TriangleDown/>
+                <Tooltip
+                  heading="Shape fill"
+                  text="Select the medium for the shape fill."
+                />
               </button>
 
               <Dropdown 

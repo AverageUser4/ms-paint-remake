@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from  './QuickAccessToolbar.module.css';
 
 import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
+import Tooltip from '../Tooltip/Tooltip';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { useHistoryContext } from '../../misc/HistoryContext';
@@ -30,42 +31,57 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
     {
       id: 'email',
       src: email,
-      onClick: ()=>0
+      onClick: ()=>0,
+      heading: 'Email',
+      text: 'Send a copy of the picture in an email message as an attachment.',
     },
     {
       id: 'newFile',
       src: newFile,
-      onClick: ()=>0
+      onClick: ()=>0,
+      heading: 'New (Ctrl+N)',
+      text: 'Create a new picture.',
     },
     {
       id: 'open',
       src: open,
-      onClick: ()=>0
+      onClick: ()=>0,
+      heading: 'Open (Ctrl+O)',
+      text: 'Open an existing picture.',
     },
     {
       id: 'print',
       src: print,
-      onClick: ()=>0
+      onClick: ()=>0,
+      heading: 'Print (Ctrl+P)',
+      text: 'Print the current picture.',
     },
     {
       id: 'printPreview',
       src: printPreview,
-      onClick: ()=>0
+      onClick: ()=>0,
+      text: 'Print preview.',
     },
     {
       id: 'save',
       src: save,
-      onClick: ()=>0
+      onClick: ()=>0,
+      heading: 'Save (Ctrl+S)',
+      text: 'Save the current picture.',
     },
     {
       id: 'undo',
       src: isHistoryOnFirst ? undoDis : undoEn,
-      onClick: () => doHistoryGoBack()
+      onClick: () => doHistoryGoBack(),
+      heading: 'Undo (Ctrl+Z)',
+      text: 'Undo last action.',
     },
     {
       id: 'redo',
       src: isHistoryOnLast ? redoDis : redoEn,
-      onClick: () => doHistoryGoForward()
+      onClick: () => doHistoryGoForward(),
+      heading: 'Redo (Ctrl+Y)',
+      text: 'Redo last action.',
     },
   ];
 
@@ -77,11 +93,15 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
     return (
       <button 
         key={data.id}
-        className="button"
+        className="tooltip-container button"
         onClick={data.onClick}
         data-cy={`QuickAccessToolbar-element-${data.id}`}
       >
         <img draggable="false" src={data.src} alt={data.id}/>
+        <Tooltip
+          heading={data.heading}
+          text={data.text}
+        />
       </button>
     );
   });
@@ -98,10 +118,13 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
       <div ref={dropdownRef} className={css['dropdown-container']}>
         <button 
           onPointerDown={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
-          className="button button--height-20"
+          className="tooltip-container button button--height-20"
           data-cy="QuickAccessToolbar-toggle-QuickAccessDropdown"
         >
           <TriangleLine/>
+          <Tooltip
+            text="Customize Qucik Access Toolbar"
+          />
         </button>
 
         <QuickAccessDropdown 

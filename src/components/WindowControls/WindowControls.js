@@ -8,6 +8,7 @@ import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
 import { ReactComponent as Minimize } from './assets/minimize.svg';
 import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
+import Tooltip from "../Tooltip/Tooltip";
 
 function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doSetWindowToMinimalSize }) {
   const { isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize } = useWindowsContext();
@@ -35,15 +36,21 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
     <div className={css['container']}>
       <button 
         className={`
+          tooltip-container
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
         onClick={doSetWindowToMinimalSize}
       >
         <Minimize draggable="false"/>
+        <Tooltip
+          type="generic"
+          text="Minimize"
+        />
       </button>
       <button 
         className={`
+          tooltip-container
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
@@ -51,13 +58,26 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
       >
         {
           isMainWindowMaximized ?
-            <RestoreDown draggable="false"/>
+            <>
+              <RestoreDown draggable="false"/>
+              <Tooltip
+                type="generic"
+                text="Restore Down"
+              />
+            </>
           :
-            <Maximize draggable="false"/>
+            <>
+              <Maximize draggable="false"/>
+              <Tooltip
+                type="generic"
+                text="Maximize"
+              />
+            </>
         }
       </button>
       <button 
         className={`
+          tooltip-container
           ${css['button']} ${css['button--danger']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
@@ -65,6 +85,10 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
         data-cy="WindowControls-close"
       >
         <Close draggable="false"/>
+        <Tooltip
+          type="generic"
+          text="Close"
+        />
       </button>
     </div>  
   );
