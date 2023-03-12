@@ -1,10 +1,11 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import css from './Rulers.module.css';
 
 import { useCanvasContext } from '../../misc/CanvasContext';
 
-function Rulers() {
-  const { canvasZoom, canvasSize } = useCanvasContext();
+function Rulers({ containerRef }) {
+  const { canvasZoom, canvasSize, canvasMousePosition } = useCanvasContext();
   
   let fullStep = 125;
   if(canvasZoom >= 0.5) { fullStep = 100; }
@@ -22,36 +23,50 @@ function Rulers() {
   if(canvasZoom >= 3) { stepValue = 20; }
   if(canvasZoom >= 6) { stepValue = 10; }
 
-  const rulerWidth = canvasSize.width;
+  const containerWidth = containerRef.current?.clientWidth || 0;
+  const containerHeight = containerRef.current?.clientHeight || 0;
+  const rulerWidth = Math.max(canvasSize.width, containerWidth);
+  const rulerHeight = Math.max(canvasSize.height, containerHeight);
+  const topTextArray = [];
+  const leftTextArray = [];
   
-  const textArray = [];
-  let i = 0;
-  // should be ruler width instead of window inner width
-  for(let x = 0; x < rulerWidth; x += fullStep) {
-    textArray.push(
+  // 30 is size of resizer (the dots you press when resizing canvas)
+  for(let x = 0; x < rulerWidth + 30; x += fullStep) {
+    topTextArray.push(
       <text
-        className="text"
         key={x}
-        x={x + 5}
-        y="11"
+        x={x + 5} y="11"
         style={{ fontSize: 12 }}
         fill="rgb(51, 75, 106)"
       >
-        {stepValue * i}
+        {stepValue * x / fullStep}
       </text>
     );
-
-    i++;
+  }
+  for(let y = 0; y < rulerHeight + 30; y += fullStep) {
+    leftTextArray.push(
+      <text
+        key={y}
+        x={0} y={y + 20}
+        style={{ fontSize: 12 }}
+        fill="rgb(51, 75, 106)"
+        transform={`translate(${25 + y} ${5 + y}) rotate(90)`}
+      >
+        {stepValue * y / fullStep}
+      </text>
+    );
   }
 
-  
   return (
     <>
       <svg 
         className={`${css['ruler']} ${css['ruler--top']}`}
         xmlns="http://www.w3.org/2000/svg"
         style={{
-          width: `calc(${rulerWidth}px - var(--canvas-container-padding) - var(--rulers-size))`
+          width: rulerWidth === containerWidth ?
+            `calc(${rulerWidth}px - var(--canvas-container-padding) - var(--rulers-size))`
+          : 
+            `calc(${rulerWidth}px + var(--resizer-size))`
         }}
       >
         <defs>
@@ -76,13 +91,28 @@ function Rulers() {
 
         <rect width="100%" height="100%" fill="url(#mainPatternTop)" />
 
-        {textArray}
-        
+        {topTextArray}
+
+        {
+          canvasMousePosition &&
+            <line
+              x1={canvasMousePosition.x + 0.5} y1={0}
+              x2={canvasMousePosition.x + 0.5} y2={17}
+              stroke="red"
+              strokeWidth="1"
+            />
+        }
       </svg>
 
       <svg 
         className={`${css['ruler']} ${css['ruler--left']}`}
         xmlns="http://www.w3.org/2000/svg"
+        style={{
+          height: rulerHeight === containerHeight ?
+            `calc(${rulerHeight}px - var(--canvas-container-padding) - var(--rulers-size))`
+          : 
+            `calc(${rulerHeight}px + var(--resizer-size))`
+        }}
       >
         <defs>
           <pattern id="helperPatternLeft" width={17} height={10} patternUnits="userSpaceOnUse">
@@ -105,9 +135,25 @@ function Rulers() {
         </defs>
 
         <rect width="100%" height="100%" fill="url(#mainPatternLeft)" />
+
+        {leftTextArray}
+
+        {
+          canvasMousePosition &&
+            <line
+              x1="0" y1={canvasMousePosition.y + 0.5}
+              x2="17" y2={canvasMousePosition.y + 0.5}
+              stroke="red"
+              strokeWidth="1"
+            />
+        }
       </svg>
     </>
   );
 }
+
+Rulers.propTypes = {
+  containerRef: PropTypes.object.isRequired,
+};
 
 export default Rulers;

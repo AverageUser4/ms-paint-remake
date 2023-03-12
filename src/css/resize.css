@@ -132,8 +132,6 @@
 /**** point ****/
 
 .point-container {
-  --resizer-size: 30px;
-
   position: relative;
 
   width: max-content;

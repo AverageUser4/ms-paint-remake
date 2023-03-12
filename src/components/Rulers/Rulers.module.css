@@ -21,7 +21,7 @@
   left: 0;
 
   width: var(--rulers-size);
-  height: calc(100% - var(--offset));
+  /* height: calc(100% - var(--offset)); */
 
   border-right: 1px solid rgb(142, 156, 175);
 }
