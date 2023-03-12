@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from 'prop-types';
 import css from './Rulers.module.css';
 
 import { useCanvasContext } from '../../misc/CanvasContext';
 
 function Rulers({ containerRef }) {
+  const [forceRender, setForceRender] = useState(true);
   const { canvasZoom, canvasSize, canvasMousePosition } = useCanvasContext();
   
   let fullStep = 125;
@@ -57,8 +58,38 @@ function Rulers({ containerRef }) {
     );
   }
 
+  useEffect(() => {
+    // in some cases containerWidth/Height would be incorrect because containerRef.current
+    // hasn't yet updated, this effect fixes that, alternatively may move all calculations
+    // to this effect instead, but variables would have to be put into state
+    if(!containerRef.current) {
+      return;
+    }
+
+    if(
+        containerWidth !== containerRef.current.clientWidth || 
+        containerHeight !== containerRef.current.clientHeight
+      ) {
+      setForceRender(prev => !prev);
+    }
+  })
+
   return (
     <>
+      <svg
+        className={`${css['ruler']} ${css['ruler--top-left']}`}
+      >
+        <path
+          d="M 0,0 L 22,0 22,17 Q 16,17 17,22 L 0,22 Z"
+          fill="rgb(241, 243, 248)"
+        />
+        <path
+          d="M 22.5,17.5 Q 16.5,17.5 17.5,22.5"
+          fill="none"
+          stroke="rgb(142, 156, 175)"
+        />
+      </svg>
+    
       <svg 
         className={`${css['ruler']} ${css['ruler--top']}`}
         xmlns="http://www.w3.org/2000/svg"

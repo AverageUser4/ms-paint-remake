@@ -10,7 +10,6 @@
   top: 0;
   left: var(--offset);
 
-  /* width: calc(100% - var(--offset)); */
   height: var(--rulers-size);
 
   border-bottom: 1px solid rgb(142, 156, 175);
@@ -21,7 +20,16 @@
   left: 0;
 
   width: var(--rulers-size);
-  /* height: calc(100% - var(--offset)); */
 
   border-right: 1px solid rgb(142, 156, 175);
+}
+
+.ruler--top-left {
+  top: 0;
+  left: 0;
+  
+  width: var(--offset);
+  height: var(--offset);
+
+  background-color: transparent;
 }
