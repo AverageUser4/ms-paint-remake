@@ -5,10 +5,13 @@ import css from './CanvasContainer.module.css';
 import Canvas from '../Canvas/Canvas';
 import Rulers from '../Rulers/Rulers';
 import { useWindowsContext } from '../../misc/WindowsContext';
+import { useCanvasContext } from '../../misc/CanvasContext';
 
 function CanvasContainer({ toolbarData, ribbonData }) {
+  // called so it rerenders when canvas size changes
+  useCanvasContext();
   const { isStatusBarVisible, isRulersVisible } = useWindowsContext();
-  const canvasContainerRef = useRef();
+  const containerRef = useRef();
   
   const containerStyle = {
     height: `calc(
@@ -18,7 +21,6 @@ function CanvasContainer({ toolbarData, ribbonData }) {
       - var(--topbar-height)
       ${isStatusBarVisible ? '- var(--statusbar-height)' : ''}
       ${toolbarData.reposition ? '- var(--qa-toolbar-height)' : ''}
-      ${isRulersVisible ? '- var(--rulers-size)' : ''}
     )`
   };
 
@@ -28,15 +30,11 @@ function CanvasContainer({ toolbarData, ribbonData }) {
         ${css['container']}
         ${isRulersVisible && css['container--has-rulers']}
       `}
+      ref={containerRef}
       style={containerStyle}
     >
-      <Rulers/>
-      <div 
-        className={css['canvas-container']}
-        ref={canvasContainerRef}
-      >
-        <Canvas/>
-      </div>
+      {isRulersVisible && <Rulers/>}
+      <Canvas/>
     </div>
   );
 }

@@ -2,14 +2,18 @@
   --offset: calc(var(--rulers-size) + var(--canvas-container-padding));
 
   position: absolute;
+
+  background-color: rgb(241, 243, 248);
 }
 
 .ruler--top {
   top: 0;
   left: var(--offset);
 
-  width: calc(100% - var(--offset));
+  /* width: calc(100% - var(--offset)); */
   height: var(--rulers-size);
+
+  border-bottom: 1px solid rgb(142, 156, 175);
 }
 
 .ruler--left {
@@ -18,4 +22,6 @@
 
   width: var(--rulers-size);
   height: calc(100% - var(--offset));
+
+  border-right: 1px solid rgb(142, 156, 175);
 }
