@@ -4,6 +4,8 @@ import css from './FileDropdownMore.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
 
+import { useActionsContext } from '../../misc/ActionsContext';
+
 import bmp32 from './assets/bmp-32.png';
 import center32 from './assets/center-32.png';
 import fill32 from './assets/fill-32.png';
@@ -16,37 +18,52 @@ import tile32 from './assets/tile-32.png';
 import saveAs32 from '../FileDropdown/assets/save-as-32.png';
 import print32 from '../FileDropdown/assets/print-32.png';
 
-function FileDropdownMore({ currentMore }) {
+function FileDropdownMore({ currentMore, setIsShown }) {
+  const { doSaveFile } = useActionsContext();
+  
   const saveData = [
     {
       src: png32,
       heading: <><span className="head--underline">P</span>NG picture</>,
       text: 'Save a photo or drawing with high quality and use it on your computer or on the web.',
-      onClick: ()=>0
+      onClick: () => {
+        doSaveFile('image/png');
+        setIsShown(false);
+      }
     },
     {
       src: jpeg32,
       heading: <><span className="head--underline">J</span>PEG picture</>,
       text: 'Save a photo with good quality and use it on your computer, in email, or on the web.',
-      onClick: ()=>0
+      onClick: () => {
+        doSaveFile('image/jpeg');
+        setIsShown(false);
+      }
     },
     {
       src: bmp32,
       heading: <><span className="head--underline">B</span>MP picture</>,
       text: 'Save any kind of picture with high quality and use it on your computer.',
-      onClick: ()=>0
+      onClick: () => {
+        doSaveFile('image/bmp');
+        setIsShown(false);
+      }
     },
     {
       src: gif32,
       heading: <><span className="head--underline">G</span>IF picture</>,
       text: 'Save a simple drawing with lower quality and use it in email or on the web.',
-      onClick: ()=>0
+      onClick: () => {
+        doSaveFile('image/gif');
+        setIsShown(false);
+      }
     },
     {
       src: saveAs32,
       heading: <><span className="head--underline">O</span>ther formats</>,
       text: 'Open the Save As dialog box to select from all possible file types.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true
     },
   ];
   const printData = [
@@ -54,19 +71,22 @@ function FileDropdownMore({ currentMore }) {
       src: print32,
       heading: <><span className="head--underline">P</span>rint</>,
       text: 'Select a printer, number of copies, and other printing options before printing.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true,
     },
     {
       src: pageSetup32,
       heading: <>Page <span className="head--underline">s</span>etup</>,
       text: 'Change the layout of the picture.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true,
     },
     {
       src: printPreview32,
       heading: <>Print pre<span className="head--underline">v</span>iew</>,
       text: 'Preview and make changes before printing.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true,
     },
   ];
   const setData = [
@@ -74,19 +94,22 @@ function FileDropdownMore({ currentMore }) {
       src: fill32,
       heading: <><span className="head--underline">F</span>ill</>,
       text: 'Fill the entire screen with the picture.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true,
     },
     {
       src: tile32,
       heading: <><span className="head--underline">T</span>ile</>,
       text: 'Tile the picture so it repeats and fills the entire screen.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true,
     },
     {
       src: center32,
       heading: <><span className="head--underline">C</span>enter</>,
       text: 'Center the picture in the middle of the screen.',
-      onClick: ()=>0
+      onClick: ()=>0,
+      isDisabled: true,
     },
   ];
 
@@ -129,7 +152,11 @@ function FileDropdownMore({ currentMore }) {
   function mapItems(data, index) {
     return (
       <li key={index}>
-        <button className={css['button']} onClick={data.onClick}>
+        <button 
+          disabled={data.isDisabled}
+          className={css['button']} 
+          onClick={data.onClick}
+        >
           <img src={data.src} alt=""/>
           <div>
             <h4 className="head head--2">{data.heading}</h4>
@@ -185,6 +212,7 @@ function FileDropdownMore({ currentMore }) {
 
 FileDropdownMore.propTypes = {
   currentMore: PropTypes.string.isRequired,
+  setIsShown: PropTypes.func.isRequired,
 };
 
 export default FileDropdownMore;

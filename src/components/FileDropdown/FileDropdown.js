@@ -140,7 +140,8 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               </button>
     
               <button 
-                onPointerDown={(e) => e.button === 0 && setCurrentMore('save')} className={css['arrow-button']}
+                onPointerDown={(e) => e.button === 0 && setCurrentMore('save')} 
+                className={css['arrow-button']}
                 data-cy="FileDropdown-duo-arrow-save"
               >
                 <ArrowRight/>
@@ -149,13 +150,14 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
     
             <div className={css['border']}></div>
     
-            <div 
+            <div
               className={`${css['duo-container']} ${currentMore === 'print' ? css['duo-container--active'] : ''}`}
               onMouseEnter={() => onMouseEnter('print')}
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-print"
             >
               <button 
+                disabled
                 aria-describedby="id-fd-print"
                 className={`tooltip-container ${css['button']}`}
                 onClick={() => {
@@ -172,7 +174,8 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               </button>
     
               <button 
-                onPointerDown={(e) => e.button === 0 && setCurrentMore('print')} className={css['arrow-button']}
+                onPointerDown={(e) => e.button === 0 && setCurrentMore('print')} 
+                className={css['arrow-button']}
                 data-cy="FileDropdown-duo-arrow-print"
               >
                 <ArrowRight/>
@@ -180,8 +183,9 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
             </div>
             
             <button 
+              disabled
               aria-describedby="id-fd-scanner"
-              className={`tooltip-container ${css['button']}`}
+              className={`tooltip-container ${css['button']} ${css['button--disabled']}`}
               onClick={() => {
                 setIsShown(false);
               }}
@@ -195,8 +199,9 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
             </button>
     
             <button 
+              disabled
               aria-describedby="id-fd-email"
-              className={`tooltip-container ${css['button']}`}
+              className={`tooltip-container ${css['button']} ${css['button--disabled']}`}
               onClick={() => {
                 setIsShown(false);
               }}
@@ -219,6 +224,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               data-cy="FileDropdown-duo-set"
             >
               <button 
+                disabled
                 aria-describedby="id-fd-desktop"
                 className={`tooltip-container ${css['button']}`}
                 onClick={() => {
@@ -235,7 +241,8 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               </button>
     
               <button 
-                onPointerDown={(e) => e.button === 0 && setCurrentMore('set')} className={css['arrow-button']}
+                onPointerDown={(e) => e.button === 0 && setCurrentMore('set')} 
+                className={css['arrow-button']}
                 data-cy="FileDropdown-duo-arrow-set"
               >
                 <ArrowRight/>
@@ -291,7 +298,10 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
             onMouseEnter={() => clearTimeout(timeoutRef.current)}
             onMouseLeave={onMouseLeave}
           >
-            <FileDropdownMore currentMore={currentMore}/>
+            <FileDropdownMore 
+              currentMore={currentMore}
+              setIsShown={setIsShown}
+            />
           </div>
         </div>
     

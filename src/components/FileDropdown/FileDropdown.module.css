@@ -75,6 +75,13 @@
   background-color: rgb(234, 244, 252);
   border-color: rgb(168, 210, 253);
 }
+.button:disabled * {
+  filter: opacity(0.5);
+}
+.button--disabled:hover {
+  background-color: transparent;
+  border-color: transparent;
+}
 
 .arrow-button {
   display: flex;
@@ -97,6 +104,9 @@
 .duo-container--active .arrow-button {
   background-color: rgb(234, 244, 252);
   border-color: rgb(168, 210, 253);
+}
+.arrow-button:disabled * {
+  filter: opacity(0.5);
 }
 
 .border {
