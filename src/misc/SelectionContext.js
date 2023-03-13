@@ -1,5 +1,8 @@
-import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
 import PropTypes from 'prop-types';
+
+import ImageInput from '../components/ImageInput/ImageInput';
+
 import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
@@ -191,27 +194,6 @@ function SelectionProvider({ children }) {
       .catch(error => console.error(error));
   }
 
-  useEffect(() => {
-    function onChange() {
-      const image = new Image();
-      image.src = URL.createObjectURL(inputFileRef.current.files[0]);
-
-      image.addEventListener('load', onLoadImage);
-
-      image.addEventListener('error', () => {
-        console.error('de_Provided file does not appear to be an image.');
-      });
-    }
-
-    const inputFileElement = inputFileRef.current;
-    
-    inputFileElement.addEventListener('change', onChange);
-
-    return () => {
-      inputFileElement.removeEventListener('change', onChange);
-    };
-  }, [setCanvasSize, canvasZoom, onLoadImage]);
-
   function doSharedCut() {
     if(selectionPhase === 2) {
       writeCanvasToClipboard(selectionRef.current);
@@ -338,10 +320,9 @@ function SelectionProvider({ children }) {
         doSharedDelete,
       }}
     >
-      <input 
-        type="file"
-        ref={inputFileRef}
-        style={{ display: 'none' }}
+      <ImageInput
+        inputRef={inputFileRef}
+        onLoad={onLoadImage}
       />
       {children}
     </SelectionContext.Provider>

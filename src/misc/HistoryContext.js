@@ -58,6 +58,18 @@ function HistoryProvider({ children }) {
     }
   }
 
+  function doHistoryClear() {
+    const data = history.dataArray[history.currentIndex];
+    const canvas = document.createElement('canvas');
+    canvas.width = data.width;
+    canvas.height = data.height;
+
+    setHistory({
+      dataArray: [{ ...data, element: canvas }],
+      currentIndex: 0
+    });
+  }
+
   return (
     <HistoryContext.Provider
       value={{
@@ -66,6 +78,7 @@ function HistoryProvider({ children }) {
         doHistoryAdd,
         doHistoryGoBack,
         doHistoryGoForward,
+        doHistoryClear,
         isHistoryOnFirst,
         isHistoryOnLast,
       }}

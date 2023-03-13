@@ -28,6 +28,7 @@ function CanvasProvider({ children }) {
   const [canvasOutlineSize, setCanvasOutlineSize] = useState(null);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [isFullScreenView, setIsFullScreenView] = useState(false);
+  const [fileData, setFileData] = useState(null);
   const primaryRef = useRef();
   const secondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
@@ -48,25 +49,30 @@ function CanvasProvider({ children }) {
 
     setCanvasZoom(zoomData[newIndex].multiplier);
   }
+
+  function doCanvasFullReset() {
+    clearPrimary();
+    setCanvasZoom(1);
+    setFileData(null);
+    lastPrimaryStateRef.current = null;
+  }
   
   return (
     <CanvasContext.Provider
       value={{
         canvasMousePosition,
         setCanvasMousePosition,
-        canvasSize,
-        setCanvasSize,
-        canvasOutlineSize,
-        setCanvasOutlineSize,
-        canvasZoom, 
-        setCanvasZoom,
+        canvasSize, setCanvasSize,
+        canvasOutlineSize, setCanvasOutlineSize,
+        canvasZoom, setCanvasZoom,
         primaryRef,
         secondaryRef,
         lastPrimaryStateRef,
         clearPrimary,
         changeZoom,
-        isFullScreenView,
-        setIsFullScreenView,
+        doCanvasFullReset,
+        fileData, setFileData,
+        isFullScreenView, setIsFullScreenView,
       }}
     >
       {children}

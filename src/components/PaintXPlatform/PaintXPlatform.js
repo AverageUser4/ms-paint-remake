@@ -13,6 +13,7 @@ import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
 import FullScreen from '../FullScreen/FullScreen';
+
 import { ContextMenuProvider } from '../../misc/ContextMenuContext';
 import { ContainerProvider } from '../../misc/ContainerContext';
 import { CanvasProvider } from '../../misc/CanvasContext';
@@ -21,6 +22,7 @@ import { useWindowsContext, WindowsProvider } from '../../misc/WindowsContext';
 import { ColorProvider } from '../../misc/ColorContext';
 import { ToolProvider } from '../../misc/ToolContext';
 import { SelectionProvider } from '../../misc/SelectionContext';
+import { ActionsProvider } from '../../misc/ActionsContext';
 
 function Logic({ 
   minimalSize,
@@ -176,12 +178,14 @@ function PaintXPlatform({
                     isInitiallyMaximized={isInitiallyMaximized}
                   >
                     <ContextMenuProvider>
-                      <Logic 
-                        minimalSize={minimalSize}
-                        isResizable={isResizable}
-                        isAutoShrink={isAutoShrink}
-                        isOpen={isOpen}
-                      />
+                      <ActionsProvider>
+                        <Logic 
+                          minimalSize={minimalSize}
+                          isResizable={isResizable}
+                          isAutoShrink={isAutoShrink}
+                          isOpen={isOpen}
+                        />
+                      </ActionsProvider>
                     </ContextMenuProvider>
                   </WindowsProvider>
                 </SelectionProvider>

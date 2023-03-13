@@ -4,8 +4,10 @@ import css from './TopBar.module.css';
 
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
+
 import { useContextMenuContext } from '../../misc/ContextMenuContext';
 import { useWindowsContext } from '../../misc/WindowsContext';
+import { useCanvasContext } from '../../misc/CanvasContext';
 
 import logoMini from './assets/logo-mini.png';
 
@@ -17,10 +19,11 @@ const TopBar = memo(function TopBar({
   ribbonData,
   doSetWindowToMinimalSize,
 }) {
-  const containerRef = useRef();
-  const textRef = useRef();
   const { openContextMenu } = useContextMenuContext();
   const { doMainWindowToggleMaximize, setIsPromptWindowOpen } = useWindowsContext();
+  const { fileData } = useCanvasContext();
+  const containerRef = useRef();
+  const textRef = useRef();
   
   function isExpectedTarget(event) {
     return event.target === containerRef.current || event.target === textRef.current;
@@ -52,7 +55,9 @@ const TopBar = memo(function TopBar({
         <h1 
           className={`text ${!windowHasFocus ? 'text--disabled' : ''}`}
           ref={textRef}
-        >Untitled - Paint</h1>
+        >
+          {fileData?.name || 'Untitled'} - Paint
+        </h1>
         
       </div>
 

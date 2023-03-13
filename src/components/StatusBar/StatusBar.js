@@ -15,14 +15,27 @@ import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
 function StatusBar({ windowWidth }) {
   const { isMainWindowMaximized, isStatusBarVisible } = useWindowsContext();
-  const { canvasSize, canvasOutlineSize, canvasMousePosition, canvasZoom } = useCanvasContext();
+  const { 
+    canvasSize, canvasOutlineSize, canvasMousePosition,
+    canvasZoom, fileData } = useCanvasContext();
   const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
   const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;
+  let parsedFileSize;
+
+  if(fileData?.size) {
+    if(fileData.size >= 1_000_000) {
+      parsedFileSize = (fileData.size / 1_000_000).toFixed(1) + 'MB';
+    } else if(fileData.size >= 1_000) {
+      parsedFileSize = (fileData.size / 1_000).toFixed(1) + 'KB';
+    } else {
+      parsedFileSize = fileData.size + 'B';
+    }
+  }
   
   if(!isStatusBarVisible) {
     return null;
   }
-  
+
   return (
     <footer 
       className={`
@@ -68,7 +81,7 @@ function StatusBar({ windowWidth }) {
           windowWidth >= 880 &&
           <div className={css['data']}>
             <img draggable="false" src={fileSize16} alt="File size."/>
-            <span className="text">Size: 4.8KB</span>
+            {parsedFileSize && <span className="text">Size: {parsedFileSize}</span>}
           </div>
         }
       </div>
