@@ -18,6 +18,8 @@ function BigButtonDuo({
   isActive,
   tooltipTop,
   tooltipBottom,
+  describedByTop,
+  describedByBottom,
 }) {
   const dropdownContainerRef = useRef();
   
@@ -30,6 +32,7 @@ function BigButtonDuo({
       <button 
         className={`tooltip-container ${css['top']}`}
         onPointerDown={onPointerDownTop ? onPointerDownTop : ()=>0}
+        aria-describedby={describedByTop}
       >
         <img draggable="false" className={css['image']} src={icon} alt=""/>
         {tooltipTop && tooltipTop}
@@ -39,6 +42,7 @@ function BigButtonDuo({
         className={`tooltip-container ${css['bottom']}`}
         onPointerDown={onPointerDownBottom ? onPointerDownBottom : ()=>0}
         data-cy={`BigButtonDuo-bottom-${name}`}
+        aria-describedby={describedByBottom}
       >
         <span className="text text--1">{name}</span>
         <TriangleDown className={css['triangle']}/>
@@ -70,6 +74,8 @@ BigButtonDuo.propTypes = {
   isActive: PropTypes.bool,
   tooltipTop: PropTypes.node,
   tooltipBottom: PropTypes.node,
+  describedByTop: PropTypes.string,
+  describedByBottom: PropTypes.string,
 };
 
 export default BigButtonDuo;

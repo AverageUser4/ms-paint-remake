@@ -60,8 +60,10 @@ function RibbonShapes({ ribbonWidth }) {
               strName="Shapes"
               isOnlyChildren={isBigButtonHidden}
               onPointerDown={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
+              describedBy="id-shapes-big-button"
               tooltip={
                 <Tooltip
+                  ID="id-shapes-big-button"
                   heading="Shapes"
                   text="Insert ready-made shapes such as rectangles and circles, triangles, arrows, stars, and callouts."
                 />
@@ -92,11 +94,13 @@ function RibbonShapes({ ribbonWidth }) {
                 className="tooltip-container button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
                 data-cy="Shapes-toggle-Outline"
+                aria-describedby="id-shapes-outline"
               >
                 <img draggable="false" src={outline16} alt="Outline."/>
                 {showText && <span className="text text--1">Outline</span>}
                 <TriangleDown/>
                 <Tooltip
+                  ID="id-shapes-outline"
                   heading="Shape outline"
                   text="Select the medium for the shape outline."
                 />
@@ -157,11 +161,13 @@ function RibbonShapes({ ribbonWidth }) {
                 className="tooltip-container button"
                 onPointerDown={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
                 data-cy="Shapes-toggle-Fill"
+                aria-describedby="id-shapes-fill"
               >
                 <img draggable="false" src={fill16} alt="Fill."/>
                 {showText && <span className="text text--1">Fill</span>}
                 <TriangleDown/>
                 <Tooltip
+                  ID="id-shapes-fill"
                   heading="Shape fill"
                   text="Select the medium for the shape fill."
                 />

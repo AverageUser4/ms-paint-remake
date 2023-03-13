@@ -41,6 +41,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
         onClick={doSetWindowToMinimalSize}
+        aria-label="Minimize"
       >
         <Minimize draggable="false"/>
         <Tooltip
@@ -55,6 +56,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
         onClick={doMainWindowToggleMaximize}
+        aria-label={isMainWindowMaximized ? 'Restore Down' : 'Maximize'}
       >
         {
           isMainWindowMaximized ?
@@ -83,6 +85,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
         `}
         onClick={close}
         data-cy="WindowControls-close"
+        aria-label="Close"
       >
         <Close draggable="false"/>
         <Tooltip

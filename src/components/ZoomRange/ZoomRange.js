@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import css from './ZoomRange.module.css';
 
+import Tooltip from '../Tooltip/Tooltip';
+
 import { useCanvasContext, zoomData } from '../../misc/CanvasContext';
 
 function getOffsetForMultiplier(multiplier) {
@@ -53,23 +55,56 @@ function ZoomRange() {
 
   return (
     <>
-      <span style={{ width: 35 }} className="text">{canvasZoom * 100}%</span>
+      <span 
+        className="tooltip-container text"
+        style={{ width: 35 }}
+        aria-description="Zoom level"
+      >
+        {canvasZoom * 100}%
+        <Tooltip
+          type="generic"
+          text="Zoom level"
+        />
+      </span>
 
-      <button className={css['minus']} onClick={() => changeZoom(true)}></button>
+      <button 
+        className={`tooltip-container ${css['minus']}`}
+        onClick={() => changeZoom(true)}
+        aria-label="Zoom out"
+      >
+        <Tooltip
+          type="generic"
+          text="Zoom out"
+        />
+      </button>
 
       <div 
+        className={`tooltip-container ${css['range']}`}
         tabIndex="0" 
-        className={css['range']}
         ref={rangeRef}
+        aria-description="Zoom"
       >
         <div 
           style={{ left: getOffsetForMultiplier(canvasZoom) }} 
           className={css['range-control']}
           onPointerDown={(e) => e.button === 0 && setIsControlFocused(true)}
         ></div>
+        <Tooltip
+          type="generic"
+          text="Zoom"
+        />
       </div>
 
-      <button className={css['plus']} onClick={() => changeZoom(false)}></button>
+      <button 
+        className={`tooltip-container ${css['plus']}`}
+        onClick={() => changeZoom(false)}
+        aria-label="Zoom in"
+      >
+        <Tooltip
+          type="generic"
+          text="Zoom in"
+        />
+      </button>
     </>
   );
 }

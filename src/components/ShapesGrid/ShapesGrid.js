@@ -80,8 +80,9 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
     <button 
       key={shape.src}
       className="tooltip-container button"
+      aria-label={shape.name}
     >
-      <img src={shape.src} alt=""/>
+      <img draggable="false" src={shape.src} alt=""/>
       <Tooltip
         text={shape.name}
       />

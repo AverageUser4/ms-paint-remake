@@ -57,9 +57,11 @@ function QuickAccessDropdown({
               name="newFile"
               checked={toolbarData.buttons.includes('newFile')}
               onChange={onChange}
+              aria-describedby="id-qad-new-file"
             />
             <span className="text text--1">New</span>
             <Tooltip
+              ID="id-qad-new-file"
               left="32px"
               text={toolbarData.buttons.includes('newFile') ? 
                 'Remove from Quick Access Toolbar' :
@@ -75,9 +77,11 @@ function QuickAccessDropdown({
               name="open"
               checked={toolbarData.buttons.includes('open')}
               onChange={onChange}
+              aria-describedby="id-qad-open"
             />
             <span className="text text--1">Open</span>
             <Tooltip
+              ID="id-qad-open"
               left="32px"
               text={toolbarData.buttons.includes('open') ? 
                 'Remove from Quick Access Toolbar' :
@@ -93,9 +97,11 @@ function QuickAccessDropdown({
               name="save"
               checked={toolbarData.buttons.includes('save')}
               onChange={onChange}
+              aria-describedby="id-qad-save"
             />
             <span className="text text--1">Save</span>
             <Tooltip
+              ID="id-qad-save"
               left="32px"
               text={toolbarData.buttons.includes('save') ? 
                 'Remove from Quick Access Toolbar' :
@@ -111,9 +117,11 @@ function QuickAccessDropdown({
               name="print"
               checked={toolbarData.buttons.includes('print')}
               onChange={onChange}
+              aria-describedby="id-qad-print"
             />
             <span className="text text--1">Print</span>
             <Tooltip
+              ID="id-qad-print"
               left="32px"
               text={toolbarData.buttons.includes('print') ? 
                 'Remove from Quick Access Toolbar' :
@@ -129,9 +137,11 @@ function QuickAccessDropdown({
               name="printPreview"
               checked={toolbarData.buttons.includes('printPreview')}
               onChange={onChange}
+              aria-describedby="id-qad-print-preview"
             />
             <span className="text text--1">Print preview</span>
             <Tooltip
+              ID="id-qad-print-preview"
               left="32px"
               text={toolbarData.buttons.includes('printPreview') ? 
                 'Remove from Quick Access Toolbar' :
@@ -147,9 +157,11 @@ function QuickAccessDropdown({
               name="email"
               checked={toolbarData.buttons.includes('email')}
               onChange={onChange}
+              aria-describedby="id-qad-email"
             />
             <span className="text text--1">Send in email</span>
             <Tooltip
+              ID="id-qad-email"
               left="32px"
               text={toolbarData.buttons.includes('email') ? 
                 'Remove from Quick Access Toolbar' :
@@ -165,9 +177,11 @@ function QuickAccessDropdown({
               name="undo"
               checked={toolbarData.buttons.includes('undo')}
               onChange={onChange}
+              aria-describedby="id-qad-undo"
             />
             <span className="text text--1">Undo</span>
             <Tooltip
+              ID="id-qad-undo"
               left="32px"
               text={toolbarData.buttons.includes('undo') ? 
                 'Remove from Quick Access Toolbar' :
@@ -183,9 +197,11 @@ function QuickAccessDropdown({
               name="redo"
               checked={toolbarData.buttons.includes('redo')}
               onChange={onChange}
+              aria-describedby="id-qad-redo"
             />
             <span className="text text--1">Redo</span>
             <Tooltip
+              ID="id-qad-redo"
               left="32px"
               text={toolbarData.buttons.includes('redo') ? 
                 'Remove from Quick Access Toolbar' :

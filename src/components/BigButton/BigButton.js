@@ -20,7 +20,8 @@ function BigButton({
   isOnlyChildren = false,
   isActive,
   isDisabled,
-  tooltip
+  tooltip,
+  describedBy,
 }) {
   const dropdownContainerRef = useRef();
   const buttonClasses = `
@@ -47,6 +48,7 @@ function BigButton({
       <button 
         className={buttonClasses}
         onPointerDown={onPointerDown && !isDisabled ? onPointerDown : ()=>0}
+        aria-describedby={describedBy}
       >
 
         {
@@ -93,6 +95,7 @@ BigButton.propTypes = {
   isActive: PropTypes.bool,
   isDisabled: PropTypes.bool,
   tooltip: PropTypes.node,
+  describedBy: PropTypes.string,
 };
 
 export default BigButton;

@@ -61,28 +61,31 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
         <div className={css['middle']}>
           <div className={css['left']}>
     
-            <button className={`tooltip-container ${css['button']}`}>
+            <button aria-describedby="id-fd-new" className={`tooltip-container ${css['button']}`}>
               <img src={new32} alt=""/>
               <span className="text text--1"><span className="text--underline">N</span>ew</span>
               <Tooltip
+                ID="id-fd-new"
                 heading="New (Ctrl+N)"
                 text="Create a new picture."
               />
             </button>
     
-            <button className={`tooltip-container ${css['button']}`}>
+            <button aria-describedby="id-fd-open" className={`tooltip-container ${css['button']}`}>
               <img src={open32} alt=""/>
               <span className="text text--1"><span className="text--underline">O</span>pen</span>
               <Tooltip
+                ID="id-fd-open"
                 heading="Open (Ctrl+O)"
                 text="Open an existing picture."
               />
             </button>
     
-            <button className={`tooltip-container ${css['button']}`}>
+            <button aria-describedby="id-fd-save" className={`tooltip-container ${css['button']}`}>
               <img src={save32} alt=""/>
               <span className="text text--1"><span className="text--underline">S</span>ave</span>
               <Tooltip
+                ID="id-fd-save"
                 heading="Save (Ctrl+S)"
                 text="Save the current picture."
               />
@@ -94,10 +97,11 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-save"
             >
-              <button className={`tooltip-container ${css['button']}`}>
+              <button aria-describedby="id-fd-save-as" className={`tooltip-container ${css['button']}`}>
                 <img src={saveAs32} alt=""/>
                 <span className="text text--1">Save <span className="text--underline">a</span>s</span>
                 <Tooltip
+                  ID="id-fd-save-as"
                   heading="Save as (F12)"
                   text="Save the current picture as a new file."
                 />
@@ -119,10 +123,11 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-print"
             >
-              <button className={`tooltip-container ${css['button']}`}>
+              <button aria-describedby="id-fd-print" className={`tooltip-container ${css['button']}`}>
                 <img src={print32} alt=""/>
                 <span className="text text--1"><span className="text--underline">P</span>rint</span>
                 <Tooltip
+                  ID="id-fd-print"
                   heading="Print (Ctrl+P)"
                   text="Print the current picture."
                 />
@@ -136,18 +141,20 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               </button>
             </div>
             
-            <button className={`tooltip-container ${css['button']}`}>
+            <button aria-describedby="id-fd-scanner" className={`tooltip-container ${css['button']}`}>
               <img src={scanner32} alt=""/>
               <span className="text text--1">Fro<span className="text--underline">m</span> scanner or camera</span>
               <Tooltip
+                ID="id-fd-scanner"
                 text="Import from scanner or camera."
               />
             </button>
     
-            <button className={`tooltip-container ${css['button']}`}>
+            <button aria-describedby="id-fd-email" className={`tooltip-container ${css['button']}`}>
               <img src={email32} alt=""/>
               <span className="text text--1">Sen<span className="text--underline">d</span> in email</span>
               <Tooltip
+                ID="id-fd-email"
                 heading="Email"
                 text="Send a copy of the picture in an email message as an attachment."
               />
@@ -161,10 +168,11 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
               onMouseLeave={onMouseLeave}
               data-cy="FileDropdown-duo-set"
             >
-              <button className={`tooltip-container ${css['button']}`}>
+              <button aria-describedby="id-fd-desktop" className={`tooltip-container ${css['button']}`}>
                 <img src={set32} alt=""/>
                 <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>
                 <Tooltip
+                  ID="id-fd-desktop"
                   heading="Desktop background"
                   text="Set the current picture as your desktop background."
                 />
@@ -180,10 +188,11 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
     
             <div className={css['border']}></div>
     
-            <button className={`tooltip-container ${css['button']}`}>
+            <button aria-describedby="id-fd-properties" className={`tooltip-container ${css['button']}`}>
               <img src={properties32} alt=""/>
               <span className="text text--1">Prop<span className="text--underline">e</span>rties</span>
               <Tooltip
+                ID="id-fd-properties"
                 heading="Properties (Ctrl+E)"
                 text="Change the properties of the picture."
               />

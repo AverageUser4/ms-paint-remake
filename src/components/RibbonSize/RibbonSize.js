@@ -15,7 +15,6 @@ function RibbonSize() {
   const dropdownRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
-  // will come from props
   const { sizes } = toolsData.get(currentTool);
 
   return (
@@ -27,8 +26,10 @@ function RibbonSize() {
       setShowChildren={setIsDropdownOpen}
       onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       isDisabled={!sizes}
+      describedBy="id-size-big-button"
       tooltip={
         <Tooltip
+          ID="id-size-big-button"
           heading="Size (Ctrl++, Ctrl+-)"
           text="Select the width for the selected tool."
         />
@@ -56,6 +57,7 @@ function RibbonSize() {
                     });
                     setIsDropdownOpen(false);
                   }}
+                  aria-label={`${size} pixels`}
                 >
                   <div className={css['size']} style={{ height: size < 20 ? size : Math.round(size / 1.4) }}></div>
                   <Tooltip

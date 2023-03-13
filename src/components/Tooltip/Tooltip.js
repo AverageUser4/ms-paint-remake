@@ -2,9 +2,10 @@ import React from 'react';
 import css from './Tooltip.module.css';
 import PropTypes from 'prop-types';
 
-function Tooltip({ heading, text, type = 'specific', top = '100%', left = '0' }) {
+function Tooltip({ heading, text, type = 'specific', top = '100%', left = '0', ID }) {
   return (
-    <div 
+    <div
+      id={ID}
       className={`tooltip ${css['container']} ${(type === 'generic') && css['container--generic']}`}
       style={{ top, left }}
     >
@@ -34,6 +35,7 @@ Tooltip.propTypes = {
     PropTypes.string,
     PropTypes.number,
   ]),
+  ID: PropTypes.string
 };
 
 export default Tooltip;

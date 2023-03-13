@@ -96,9 +96,11 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
         className="tooltip-container button"
         onClick={data.onClick}
         data-cy={`QuickAccessToolbar-element-${data.id}`}
+        aria-describedby={`id-qat-${data.id}`}
       >
         <img draggable="false" src={data.src} alt={data.id}/>
         <Tooltip
+          ID={`id-qat-${data.id}`}
           heading={data.heading}
           text={data.text}
         />
@@ -120,9 +122,11 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
           onPointerDown={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
           className="tooltip-container button button--height-20"
           data-cy="QuickAccessToolbar-toggle-QuickAccessDropdown"
+          aria-describedby="id-qat-customize"
         >
           <TriangleLine/>
           <Tooltip
+            ID="id-qat-customize"
             text="Customize Qucik Access Toolbar"
           />
         </button>

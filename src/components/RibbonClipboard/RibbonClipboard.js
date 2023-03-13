@@ -42,14 +42,18 @@ function RibbonClipboard({ ribbonWidth }) {
               setShowChildren={setIsDropdownOpen}
               onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
               onPointerDownTop={() => selectionPasteFromClipboard()}
+              describedByTop="id-clipboard-bbd-top"
               tooltipTop={
                 <Tooltip
-                  heading="Paste (Ctrl+V)"
-                  text="Paste the contents of the Clipboard."
+                ID="id-clipboard-bbd-top"
+                heading="Paste (Ctrl+V)"
+                text="Paste the contents of the Clipboard."
                 />
               }
+              describedByBottom="id-clipboard-bbd-bottom"
               tooltipBottom={
                 <Tooltip
+                  ID="id-clipboard-bbd-bottom"
                   heading="Paste (Ctrl+V)"
                   text="Click here for more options, such as pasting contents from the Clipboard or from a file."
                 />
@@ -67,10 +71,12 @@ function RibbonClipboard({ ribbonWidth }) {
                       selectionPasteFromClipboard();
                       setIsDropdownOpen(false);
                     }}
+                    aria-describedby="id-clipboard-paste"
                   >
                     <img className="popup__image" src={clipboard16} alt=""/>
                     <span><span className="text--underline">P</span>aste</span>
                     <Tooltip
+                      ID="id-clipboard-paste"
                       heading="Paste (Ctrl+V)"
                       text="Paste the contents of the Clipboard."
                     />
@@ -82,10 +88,12 @@ function RibbonClipboard({ ribbonWidth }) {
                       selectionBrowseFile();
                       setIsDropdownOpen(false);
                     }}
+                    aria-describedby="id-clipboard-paste-from"
                   >
                     <img className="popup__image" src={pasteFrom16} alt=""/>
                     <span>Paste <span className="text--underline">f</span>rom</span>
                     <Tooltip
+                      ID="id-clipboard-paste-from"
                       text="Show the Paste From dialog box and pick a file to paste."
                     />
                   </button>
@@ -100,10 +108,12 @@ function RibbonClipboard({ ribbonWidth }) {
                   doSharedCut();
                   setIsDropdownOpen(false);
                 }}
+                aria-describedby="id-clipboard-cut"
               >
                 <img draggable="false" src={cut16} alt="Cut."/>
                 {showText && <span className="text text--1">Cut</span>}
                 <Tooltip
+                  ID="id-clipboard-cut"
                   heading="Cut (Ctrl+X)"
                   text="Cut the selection from the canvas and put it on the Clipboard."
                 />
@@ -115,10 +125,12 @@ function RibbonClipboard({ ribbonWidth }) {
                   doSharedCopy();
                   setIsDropdownOpen(false);
                 }}
+                aria-describedby="id-clipboard-copy"
               >
                 <img draggable="false" src={copy16} alt="Copy."/>
                 {showText && <span className="text text--1">Copy</span>}
                 <Tooltip
+                  ID="id-clipboard-copy"
                   heading="Copy (Ctrl+C)"
                   text="Copy the selection from the canvas and put it on the Clipboard."
                 />

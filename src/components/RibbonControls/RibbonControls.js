@@ -25,9 +25,11 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           className="tooltip-container ribbon-button ribbon-button--blue"
           onPointerDown={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
           data-cy="RibbonControls-toggle-FileDropdown"
+          aria-describedby="id-ribbon-controls-file"
         >
           File
           <Tooltip
+            ID="id-ribbon-controls-file"
             heading="Paint"
             text="Click here to open, save, or print and to see everything else you can do with your picture."
           />
@@ -64,6 +66,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           className="tooltip-container button button--height-20"
           onPointerDown={(e) => e.button === 0 && ribbonData.toggleMinimize()}
           data-cy="RibbonControls-toggle-Ribbon"
+          aria-describedby={`id-ribbon-controls-${ribbonData.minimize ? 'expand' : 'minimize'}`}
         >
           {
             ribbonData.minimize && ribbonData.expand ?
@@ -74,11 +77,13 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           {
             ribbonData.minimize ?
               <Tooltip
+                ID="id-ribbon-controls-expand"
                 heading="Expand the Ribbon (Ctrl+F1)"
                 text="Show the Ribbon so that it is always expanded even after you click a command."
               />
             :
               <Tooltip
+                ID="id-ribbon-controls-minimize"
                 heading="Minimize the Ribbon (Ctrl+F1)"
                 text="Show only the tab names on the Ribbon."
               />
@@ -90,10 +95,12 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           className="tooltip-container button"
           rel="noreferrer"
           target="_blank"
-          href="https://www.bing.com/search?q=pomoc+dotycz%c4%85ca+aplikacji+paint+w+systemie+windows&filters=guid:%224462489-pl-dia%22%20lang:%22pl%22&form=T00032&ocid=HelpPane-BingIA"
+          href="https://github.com/AverageUser4/paint"
+          aria-describedby="id-ribbon-controls-help"
         >
           <img draggable="false" src={info} alt="Paint help."/>
           <Tooltip
+            ID="id-ribbon-controls-help"
             heading="Paint Help (F1)"
             text="Get help on using Paint."
           />

@@ -32,9 +32,11 @@ function RibbonTools({ ribbonWidth }) {
             onClick={() => {
               doSetCurrentTool('pencil');
             }}
+            aria-describedby="id-tools-pencil"
           >
             <img draggable="false" src={pencil16} alt="Pencil."/>
             <Tooltip
+              ID="id-tools-pencil"
               heading="Pencil"
               text="Draw a free-form line with the selected line width."
             />
@@ -45,9 +47,11 @@ function RibbonTools({ ribbonWidth }) {
             onClick={() => {
               doSetCurrentTool('fill');
             }}
+            aria-describedby="id-tools-fill"
           >
             <img draggable="false" src={fill16} alt="Fill color."/>
             <Tooltip
+              ID="id-tools-fill"
               heading="Fill with color"
               text="Click an area on the canvas to fill it with the foreground color, or right-click to fill it with the background color."
             />
@@ -58,9 +62,11 @@ function RibbonTools({ ribbonWidth }) {
             onClick={() => {
               doSetCurrentTool('text');
             }}
+            aria-describedby="id-tools-text"
           >
             <img draggable="false" src={text16} alt="Text."/>
             <Tooltip
+              ID="id-tools-text"
               heading="Text"
               text="Insert text into the picture."
             />
@@ -71,9 +77,11 @@ function RibbonTools({ ribbonWidth }) {
             onClick={() => {
               doSetCurrentTool('eraser');
             }}
+            aria-describedby="id-tools-eraser"
           >
             <img draggable="false" src={eraser16} alt="Eraser."/>
             <Tooltip
+              ID="id-tools-eraser"
               heading="Eraser"
               text="Erase part of the picture and replace it with the background color."
             />
@@ -84,9 +92,11 @@ function RibbonTools({ ribbonWidth }) {
             onClick={() => {
               doSetCurrentTool('color-picker');
             }}
+            aria-describedby="id-tools-color-picker"
           >
             <img draggable="false" src={colorPicker16} alt="Color picker."/>
             <Tooltip
+              ID="id-tools-color-picker"
               heading="Color picker"
               text="Pick a color from the picture and use it for drawing."
             />
@@ -97,9 +107,11 @@ function RibbonTools({ ribbonWidth }) {
             onClick={() => {
               doSetCurrentTool('magnifier');
             }}
+            aria-describedby="id-tools-magnifier"
           >
             <img draggable="false" src={magnifier16} alt="Magnifier."/>
             <Tooltip
+              ID="id-tools-magnifier"
               heading="Magnifier"
               text="Change the magnification for a part of the picture."
             />

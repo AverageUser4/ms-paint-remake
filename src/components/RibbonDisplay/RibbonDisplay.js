@@ -3,6 +3,7 @@ import css from './RibbonDisplay.module.css';
 
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 import BigButton from '../BigButton/BigButton';
+import Tooltip from '../Tooltip/Tooltip';
 
 import { useCanvasContext } from '../../misc/CanvasContext';
 
@@ -23,6 +24,14 @@ function RibbonDisplay() {
           onPointerDown={() => {
             setIsFullScreenView(true);
           }}
+          describedBy="id-display-full-screen"
+          tooltip={
+            <Tooltip
+              ID="id-display-full-screen"
+              heading="Full screen (F11)"
+              text="View the picture in full screen."
+            />
+          }
         />
         <BigButton 
           icon={thumb32}
@@ -30,6 +39,14 @@ function RibbonDisplay() {
           name="Thumbnail"
           strName="Thumbnail"
           isDisabled={true}
+          describedBy="id-display-thumbnail"
+          tooltip={
+            <Tooltip
+              ID="id-display-thumbnail"
+              heading="Thumbnail"
+              text="Show or hide the Thumbnail window."
+            />
+          }
         />
       </div>
     </RibbonItemExpanded>

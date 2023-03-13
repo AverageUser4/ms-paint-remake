@@ -48,8 +48,10 @@ function RibbonColors({ ribbonWidth }) {
               strName="Color-1"
               isActive={colorData.selected === 'primary'}
               onPointerDown={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
+              describedBy="id-colors-color-1"
               tooltip={
                 <Tooltip
+                  ID="id-colors-color-1"
                   heading="Color 1 (foreground color)"
                   text="Click here and then select a color from the color palette. This color is used with the pencil and with brushes, as well as for shape outlines."
                 />
@@ -63,8 +65,10 @@ function RibbonColors({ ribbonWidth }) {
               strName="Color-2"
               isActive={colorData.selected === 'secondary'}
               onPointerDown={() => colorData.selected !== 'secondary' && setColorData(prev => ({ ...prev, selected: 'secondary' }))}
+              describedBy="id-colors-color-2"
               tooltip={
                 <Tooltip
+                  ID="id-colors-color-2"
                   heading="Color 2 (background color)"
                   text="Click here and then select a color from the color palette. This color is used with the eraser and for shape fills."
                 />
@@ -84,8 +88,10 @@ function RibbonColors({ ribbonWidth }) {
               name={<div>Edit <div className="line-break"></div> colors</div>}
               strName="Edit-colors"
               onPointerDown={() => setIsColorsWindowOpen(true)}
+              describedBy="id-colors-edit-color"
               tooltip={
                 <Tooltip
+                  ID="id-colors-edit-color"
                   heading="Edit colors"
                   text="Select a color from the color palette."
                 />
