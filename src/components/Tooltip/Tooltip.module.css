@@ -13,8 +13,12 @@
   border: 1px solid rgb(118, 118, 118);
   border-radius: 3px;
   box-shadow: 2px 2px rgba(170, 170, 170, 0.2);
+  filter: none !important;
   
   white-space: break-spaces;
+}
+.container * {
+  filter: none !important;
 }
 .container--generic {
   padding: 2px;

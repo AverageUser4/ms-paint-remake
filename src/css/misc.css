@@ -92,14 +92,19 @@
   .tooltip-container {
     position: relative;
   }
+  .tooltip-container--out {
+    position: static;
+  }
   .tooltip {
-    display: none;
+    visibility: hidden;
   }
   .tooltip-container:hover .tooltip {
-    display: block;
+    visibility: visible;
+    transition: visibility 0s linear 1000ms;
   }
   .tooltip:hover {
-    /* display: none !important; */
+    transition-delay: 0s !important;
+    visibility: hidden !important;
   }
   
 }

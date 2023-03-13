@@ -76,18 +76,27 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   const rows = Math.ceil(shapesData.length / columns);
   const maxRow = rows - 3;
 
-  const shapes = shapesData.map(shape => 
-    <button 
-      key={shape.src}
-      className="tooltip-container button"
-      aria-label={shape.name}
-    >
-      <img draggable="false" src={shape.src} alt=""/>
-      <Tooltip
-        text={shape.name}
-      />
-    </button>
-  );
+  function mapToButtons(isOut, shape) {
+    return (
+      <button 
+        key={shape.src}
+        className={`
+          button
+          tooltip-container 
+          ${isOut && 'tooltip-container--out'}
+        `}
+        aria-label={shape.name}
+        >
+        <img draggable="false" src={shape.src} alt=""/>
+        <Tooltip
+          text={shape.name}
+        />
+      </button>
+    );
+  }
+  
+  const shapeButtonsTooltipIn = shapesData.map(mapToButtons.bind(null, false));
+  const shapeButtonsTooltipOut = shapesData.map(mapToButtons.bind(null, true));
 
   useEffect(() => {
     if(lastColumnCount.current !== columns) {
@@ -125,7 +134,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
               style={{ gridTemplateColumns: `repeat(${columns}, auto)`}}
               ref={gridRef}
             >
-              {shapes}
+              {shapeButtonsTooltipOut}
             </div>
 
             <div>
@@ -174,7 +183,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
           data-cy="ShapesGrid-Dropdown"
         >
           <div className={css['expanded__grid']}>
-            {shapes}
+            {shapeButtonsTooltipIn}
           </div>
 
           <div className={css['expanded__scrollbar']}>

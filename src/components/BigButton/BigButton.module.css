@@ -37,9 +37,8 @@
 .button--small {
   padding-top: calc(4px + (var(--ribbon-icon-size) - var(--ribbon-icon-small-size)) / 2);
 }
-.button--disabled {
-  opacity: 0.5;
-  filter: grayscale(100%);
+.button--disabled * {
+  filter: opacity(50%) grayscale(100%);
 }
 .button--disabled:hover {
   background-color: transparent;
