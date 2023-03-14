@@ -70,8 +70,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
               name="Select"
               showChildren={isDropdownOpen}
               setShowChildren={setIsDropdownOpen}
-              onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-              onPointerDownTop={() => !currentTool.startsWith('selection-') && doSetCurrentTool(latestTools.selection)}
+              onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              onClickTop={() => !currentTool.startsWith('selection-') && doSetCurrentTool(latestTools.selection)}
               isActive={currentTool.startsWith('selection-')}
               describedByTop="id-image-bbd-top"
               tooltipTop={
@@ -212,7 +212,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
             <div data-cy="Image-buttons">
               <button 
                 className="tooltip-container button"
-                onPointerDown={() => doSelectionCrop()}
+                onClick={() => doSelectionCrop()}
                 disabled={selectionPhase !== 2}
                 aria-describedby="id-image-crop"
               >
@@ -243,7 +243,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
               <div className="dropdown-container" ref={dropdownContainerRef}>
                 <button 
                   className="tooltip-container button"
-                  onPointerDown={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
+                  onClick={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
                   data-cy="Image-toggle-Rotate"
                   aria-describedby="id-image-rotate"
                 >

@@ -16,7 +16,7 @@ function BigButton({
   children,
   showChildren = false,
   setShowChildren,
-  onPointerDown,
+  onClick,
   isOnlyChildren = false,
   isActive,
   isDisabled,
@@ -48,7 +48,7 @@ function BigButton({
     >
       <button 
         className={buttonClasses}
-        onPointerDown={onPointerDown && !isDisabled ? onPointerDown : ()=>0}
+        onClick={onClick && !isDisabled ? onClick : ()=>0}
         aria-describedby={describedBy}
       >
 
@@ -97,7 +97,7 @@ BigButton.propTypes = {
   children: PropTypes.node,
   showChildren: PropTypes.bool,
   setShowChildren: PropTypes.func,
-  onPointerDown: PropTypes.func,
+  onClick: PropTypes.func,
   isOnlyChildren: PropTypes.bool,
   isActive: PropTypes.bool,
   isDisabled: PropTypes.bool,

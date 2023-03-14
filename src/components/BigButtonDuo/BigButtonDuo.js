@@ -10,8 +10,8 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 function BigButtonDuo({ 
   name,
   icon,
-  onPointerDownTop,
-  onPointerDownBottom,
+  onClickTop,
+  onClickBottom,
   children,
   showChildren = false,
   setShowChildren,
@@ -31,7 +31,7 @@ function BigButtonDuo({
     >
       <button 
         className={`tooltip-container ${css['top']}`}
-        onPointerDown={onPointerDownTop ? onPointerDownTop : ()=>0}
+        onClick={onClickTop ? onClickTop : ()=>0}
         aria-describedby={describedByTop}
       >
         <img draggable="false" className={css['image']} src={icon} alt=""/>
@@ -40,7 +40,7 @@ function BigButtonDuo({
 
       <button 
         className={`tooltip-container ${css['bottom']}`}
-        onPointerDown={onPointerDownBottom ? onPointerDownBottom : ()=>0}
+        onClick={onClickBottom ? onClickBottom : ()=>0}
         data-cy={`BigButtonDuo-bottom-${name}`}
         aria-describedby={describedByBottom}
       >
@@ -66,8 +66,8 @@ function BigButtonDuo({
 BigButtonDuo.propTypes = {
   name: PropTypes.string.isRequired,
   icon: PropTypes.string.isRequired,
-  onPointerDownTop: PropTypes.func,
-  onPointerDownBottom: PropTypes.func,
+  onClickTop: PropTypes.func,
+  onClickBottom: PropTypes.func,
   children: PropTypes.node,
   showChildren: PropTypes.bool,
   setShowChildren: PropTypes.func,

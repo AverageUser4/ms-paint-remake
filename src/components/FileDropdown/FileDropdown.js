@@ -38,12 +38,6 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
     clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => setCurrentMore('recent'), 500);
   }
-
-  function close() {
-    if(isShown) {
-      setIsShown(false);
-    }
-  }
   
   return (
     <Dropdown 
@@ -56,7 +50,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
       <div data-cy="FileDropdown">
         <div className={css['top']}>
           <button 
-            onPointerDown={close}
+            onClick={() => setIsShown(false)}
             className="ribbon-button ribbon-button--blue"
             data-cy="FileDropdown-close"
           >
@@ -142,7 +136,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
               </button>
     
               <button 
-                onPointerDown={(e) => e.button === 0 && setCurrentMore('save')} 
+                onClick={(e) => e.button === 0 && setCurrentMore('save')} 
                 className={css['arrow-button']}
                 data-cy="FileDropdown-duo-arrow-save"
               >
@@ -176,7 +170,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
               </button>
     
               <button 
-                onPointerDown={(e) => e.button === 0 && setCurrentMore('print')} 
+                onClick={(e) => e.button === 0 && setCurrentMore('print')} 
                 className={css['arrow-button']}
                 data-cy="FileDropdown-duo-arrow-print"
               >
@@ -243,7 +237,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
               </button>
     
               <button 
-                onPointerDown={(e) => e.button === 0 && setCurrentMore('set')} 
+                onClick={(e) => e.button === 0 && setCurrentMore('set')} 
                 className={css['arrow-button']}
                 data-cy="FileDropdown-duo-arrow-set"
               >

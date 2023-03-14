@@ -59,7 +59,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
               name="Shapes"
               strName="Shapes"
               isOnlyChildren={isBigButtonHidden}
-              onPointerDown={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
+              onClick={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
               describedBy="id-shapes-big-button"
               tooltip={
                 <Tooltip
@@ -92,7 +92,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
             <div className="dropdown-container" ref={outlineDropdownContainerRef}>
               <button 
                 className="tooltip-container button"
-                onPointerDown={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
+                onClick={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
                 data-cy="Shapes-toggle-Outline"
                 aria-describedby="id-shapes-outline"
               >
@@ -159,7 +159,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
             <div className="dropdown-container" ref={fillDropdownContainerRef}>
               <button 
                 className="tooltip-container button"
-                onPointerDown={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
+                onClick={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
                 data-cy="Shapes-toggle-Fill"
                 aria-describedby="id-shapes-fill"
               >

@@ -38,7 +38,7 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
 
       <button 
         className={`tooltip-container ${css['button']}`}
-        onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+        onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       >
 
         <div className={css['image-container']}>

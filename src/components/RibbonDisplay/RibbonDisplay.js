@@ -21,7 +21,7 @@ const RibbonDisplay = memo(function RibbonDisplay() {
           hasArrow={false}
           name={<div>Full <div className="line-break"></div> screen</div>}
           strName="Full-screen"
-          onPointerDown={() => {
+          onClick={() => {
             setIsFullScreenView(true);
           }}
           describedBy="id-display-full-screen"

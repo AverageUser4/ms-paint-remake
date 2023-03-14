@@ -119,7 +119,7 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
 
       <div ref={dropdownRef} className={css['dropdown-container']}>
         <button 
-          onPointerDown={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
+          onClick={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
           className="tooltip-container button button--height-20"
           data-cy="QuickAccessToolbar-toggle-QuickAccessDropdown"
           aria-describedby="id-qat-customize"

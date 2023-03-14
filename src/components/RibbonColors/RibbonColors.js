@@ -53,7 +53,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               name={<div>Color <div className="line-break"></div> 1</div>}
               strName="Color-1"
               isActive={colorData.selected === 'primary'}
-              onPointerDown={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
+              onClick={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
               describedBy="id-colors-color-1"
               tooltip={
                 <Tooltip
@@ -71,7 +71,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               iconSize="small"
               strName="Color-2"
               isActive={colorData.selected === 'secondary'}
-              onPointerDown={() => colorData.selected !== 'secondary' && setColorData(prev => ({ ...prev, selected: 'secondary' }))}
+              onClick={() => colorData.selected !== 'secondary' && setColorData(prev => ({ ...prev, selected: 'secondary' }))}
               describedBy="id-colors-color-2"
               tooltip={
                 <Tooltip
@@ -95,7 +95,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               hasArrow={false}
               name={<div>Edit <div className="line-break"></div> colors</div>}
               strName="Edit-colors"
-              onPointerDown={() => setIsColorsWindowOpen(true)}
+              onClick={() => setIsColorsWindowOpen(true)}
               describedBy="id-colors-edit-color"
               tooltip={
                 <Tooltip

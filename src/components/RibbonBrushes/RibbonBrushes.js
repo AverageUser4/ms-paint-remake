@@ -99,8 +99,8 @@ const RibbonBrushes = memo(function RibbonBrushes() {
       name="Brushes"
       showChildren={isDropdownOpen}
       setShowChildren={setIsDropdownOpen}
-      onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-      onPointerDownTop={() => !currentTool.startsWith('brushes-') && doSetCurrentTool(latestTools.brushes)}
+      onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      onClickTop={() => !currentTool.startsWith('brushes-') && doSetCurrentTool(latestTools.brushes)}
       isActive={currentTool.startsWith('brushes-')}
       describedByTop="id-brushes-bbd-top"
       tooltipTop={

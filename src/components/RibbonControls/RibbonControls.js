@@ -23,7 +23,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
       <div className={css['left']}>
         <button
           className="tooltip-container ribbon-button ribbon-button--blue"
-          onPointerDown={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
+          onClick={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
           data-cy="RibbonControls-toggle-FileDropdown"
           aria-describedby="id-ribbon-controls-file"
         >
@@ -41,7 +41,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
             ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
           }
           data-control="ribbon"
-          onPointerDown={(e) => e.button === 0 && ribbonData.setTab('home')}
+          onClick={(e) => e.button === 0 && ribbonData.setTab('home')}
           data-cy="RibbonControls-setTab-home"
         >
           Home
@@ -54,7 +54,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
             ${ribbonData.minimize && !ribbonData.expand ? 'ribbon-button--no-ribbon' : ''}`
           }
           data-control="ribbon"
-          onPointerDown={(e) => e.button === 0 && ribbonData.setTab('view')}
+          onClick={(e) => e.button === 0 && ribbonData.setTab('view')}
           data-cy="RibbonControls-setTab-view"
         >
           View
@@ -64,7 +64,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
       <div className={css['right']}>
         <button 
           className="tooltip-container button button--height-20"
-          onPointerDown={(e) => e.button === 0 && ribbonData.toggleMinimize()}
+          onClick={(e) => e.button === 0 && ribbonData.toggleMinimize()}
           data-cy="RibbonControls-toggle-Ribbon"
           aria-describedby={`id-ribbon-controls-${ribbonData.minimize ? 'expand' : 'minimize'}`}
         >

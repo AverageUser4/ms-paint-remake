@@ -40,8 +40,8 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
               name="Paste"
               showChildren={isDropdownOpen}
               setShowChildren={setIsDropdownOpen}
-              onPointerDownBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-              onPointerDownTop={() => selectionPasteFromClipboard()}
+              onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+              onClickTop={() => selectionPasteFromClipboard()}
               describedByTop="id-clipboard-bbd-top"
               tooltipTop={
                 <Tooltip
@@ -67,7 +67,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                 <div className="popup__part">
                   <button 
                     className="tooltip-container popup__button text text--4 text--nowrap"
-                    onPointerDown={() => {
+                    onClick={() => {
                       selectionPasteFromClipboard();
                       setIsDropdownOpen(false);
                     }}
@@ -84,7 +84,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
 
                   <button 
                     className="tooltip-container popup__button text text--4 text--nowrap"
-                    onPointerDown={() => {
+                    onClick={() => {
                       selectionBrowseFile();
                       setIsDropdownOpen(false);
                     }}

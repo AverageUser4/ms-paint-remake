@@ -28,14 +28,10 @@ const ZoomRange = memo(function ZoomRange() {
   
   useEffect(() => {
     function onPointerUp() {
-      if(isControlFocused)
-        setIsControlFocused(false);
+      setIsControlFocused(false);
     }
 
     function onPointerMove(event) {
-      if(!isControlFocused)
-        return;
-
       const difference = event.clientX - rangeRef.current.getBoundingClientRect().x;
       const multiplier = findClosestMultiplier(difference);
 
@@ -44,8 +40,10 @@ const ZoomRange = memo(function ZoomRange() {
       }
     }
 
-    window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointermove', onPointerMove);
+    if(isControlFocused) {
+      window.addEventListener('pointerup', onPointerUp);
+      window.addEventListener('pointermove', onPointerMove);
+    }
 
     return () => {
       window.removeEventListener('pointerup', onPointerUp);

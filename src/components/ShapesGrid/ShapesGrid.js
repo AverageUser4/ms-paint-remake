@@ -162,7 +162,7 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
                   ${css['button']}
                   ${currentRow === maxRow ? css['button--has-border'] : ''}
                 `}
-                onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+                onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
                 data-cy="ShapesGrid-toggle-Dropdown"
               >
                 <TriangleLine/>

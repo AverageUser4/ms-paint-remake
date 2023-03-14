@@ -84,7 +84,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> in</div>}
           strName="Zoom-in"
-          onPointerDown={() => changeZoom(false)}
+          onClick={() => changeZoom(false)}
           describedBy="id-zoom-zoom-in"
           tooltip={zoomInTooltip}
         />
@@ -93,7 +93,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> out</div>}
           strName="Zoom-out"
-          onPointerDown={() => changeZoom(true)}
+          onClick={() => changeZoom(true)}
           describedBy="id-zoom-zoom-out"
           tooltip={zoomOutTooltip}
         />
@@ -102,7 +102,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
           hasArrow={false}
           name={<div>100 <div className="line-break"></div> %</div>}
           strName="100%"
-          onPointerDown={() => setCanvasZoom(1)}
+          onClick={() => setCanvasZoom(1)}
           describedBy="id-zoom-zoom-100"
           tooltip={zoom100Tooltip}
         />

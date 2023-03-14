@@ -24,7 +24,7 @@ const RibbonSize = memo(function RibbonSize() {
       strName="Size"
       showChildren={isDropdownOpen}
       setShowChildren={setIsDropdownOpen}
-      onPointerDown={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       isDisabled={!sizes}
       describedBy="id-size-big-button"
       tooltip={

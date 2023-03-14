@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 function useOutsideClick(containerRef, callback, dataControl = 'veryRandomString') {
   useEffect(() => {
-    function onPointerDown(event) {
+    function onClick(event) {
       if(
           !containerRef.current ||
           containerRef.current === event.target ||
@@ -14,10 +14,10 @@ function useOutsideClick(containerRef, callback, dataControl = 'veryRandomString
       callback();
     }
 
-    window.addEventListener('pointerdown', onPointerDown);
+    window.addEventListener('click', onClick);
 
     return () => {
-      window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('click', onClick);
     };
   }, [containerRef, callback, dataControl]);
 }

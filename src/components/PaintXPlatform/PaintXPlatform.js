@@ -147,7 +147,7 @@ Logic.propTypes = {
 function PaintXPlatform({
   minimalSize = { width: 460, height: 300 },
   initialPosition = { x: 200, y: 100 },
-  initialSize = { width: 900, height: 600 }, //{ width: 600, height: 500 },
+  initialSize = { width: 600, height: 500 },//{ width: 900, height: 600 },
   isResizable = true,
   isConstrained = true,
   isAutoShrink = true,

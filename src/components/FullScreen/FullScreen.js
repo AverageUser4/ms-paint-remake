@@ -8,6 +8,22 @@ const FullScreen = memo(function FullScreen() {
   const showcaseRef = useRef();
 
   useEffect(() => {
+    function onKeyDown(event) {
+      if(event.key === 'Escape') {
+        setIsFullScreenView(false);
+      }
+    }
+
+    if(isFullScreenView) {
+      window.addEventListener('keydown', onKeyDown);
+    }
+
+    return () => {
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isFullScreenView, setIsFullScreenView]);
+
+  useEffect(() => {
     if(!isFullScreenView) {
       return;
     }
