@@ -8,7 +8,7 @@ function WindowsProvider({ children }) {
   const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
   const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
   const [isAboutWindowOpen, setIsAboutWindowOpen] = useState(false);
-  const [isPropertiesWindowOpen, setIsPropertiesWindowOpen] = useState(true);
+  const [isPropertiesWindowOpen, setIsPropertiesWindowOpen] = useState(false);
   const isAnyInnerWindowOpen = 
     isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen ||
     isAboutWindowOpen || isPropertiesWindowOpen;

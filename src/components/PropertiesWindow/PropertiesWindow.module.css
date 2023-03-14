@@ -14,11 +14,28 @@
   display: inline-block;
   width: 120px;
 }
+.text-push--small {
+  width: 50px;
+}
 
 .siblings {
   display: flex;
   gap: 8px;
+
+  margin: 12px 0; 
 }
 .siblings > * {
   width: 100%;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buttons-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
 }

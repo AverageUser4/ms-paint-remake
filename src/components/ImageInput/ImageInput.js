@@ -15,7 +15,7 @@ function ImageInput({ inputRef, onLoad, isSetFileData }) {
         const image = new Image();
         const file = event.target.files[0];
 
-        isSetFileData && setFileData({ name: file.name, size: file.size });
+        isSetFileData && setFileData({ name: file.name, size: file.size, lastModified: file.lastModified });
         image.src = URL.createObjectURL(file);
         image.addEventListener('load', onLoad);
         image.addEventListener('error', () => {

@@ -27,6 +27,9 @@
   background-color: rgb(203, 228, 253);
   border-color: rgb(100, 165, 231);
 }
+.color--black-and-white {
+  filter: grayscale(100%);
+}
 .color::after {
   content: '';
 

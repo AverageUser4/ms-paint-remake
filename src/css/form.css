@@ -70,6 +70,9 @@
   .form-radio-label--pushed {
     margin-left: 28px;
   }
+  .form-radio-label--disabled {
+    opacity: 0.5;
+  }
   
   .form-radio {
     display: flex;
@@ -99,7 +102,7 @@
     background-color: currentColor;
     border-radius: 50%;
   }
-  .form-radio:hover {
+  .form-radio:hover:not(.form-radio:disabled) {
     color: rgb(0, 120, 215);
   }
 

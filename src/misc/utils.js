@@ -428,3 +428,21 @@ export function writeCanvasToClipboard(canvas) {
     console.error(error);
   }
 }
+
+export function doGetParsedFileSize(bytes) {
+  if(!Number.isInteger(bytes)) {
+    console.error(`This function takes integer as its first argument, provided: "${bytes}".`);
+  }
+  
+  let parsedSize;
+
+  if(bytes >= 1_000_000) {
+    parsedSize = (bytes / 1_000_000).toFixed(1) + 'MB';
+  } else if(bytes >= 1_000) {
+    parsedSize = (bytes / 1_000).toFixed(1) + 'KB';
+  } else {
+    parsedSize = bytes + 'B';
+  }
+
+  return parsedSize;
+}

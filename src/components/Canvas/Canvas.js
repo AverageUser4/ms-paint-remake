@@ -18,7 +18,8 @@ import { MAX_CANVAS_SIZE } from "../../misc/data";
 function Canvas() {
   const { 
     canvasSize, canvasZoom, setCanvasZoom, setCanvasSize,
-    primaryRef, secondaryRef, lastPrimaryStateRef, clearPrimary
+    primaryRef, secondaryRef, lastPrimaryStateRef, clearPrimary,
+    isBlackAndWhite
   } = useCanvasContext();
   const { 
     canvasOutlineSize, setCanvasOutlineSize, canvasMousePosition,
@@ -31,6 +32,7 @@ function Canvas() {
   const canvasStyle = { 
     width: canvasSize.width * canvasZoom,
     height: canvasSize.height * canvasZoom,
+    filter: isBlackAndWhite ? 'grayscale(100%)' : '',
   };
   const { 
     selectionRef, selectionSize, selectionPhase, selectionPosition,

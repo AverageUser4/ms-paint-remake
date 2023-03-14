@@ -15,7 +15,7 @@ function ActionsProvider({ children }) {
   const { doHistoryClear } = useHistoryContext();
   const { 
     doCanvasFullReset, setCanvasSize, primaryRef,
-    lastPrimaryStateRef, fileData
+    lastPrimaryStateRef, fileData, isBlackAndWhite
   } = useCanvasContext();
   const { doRequirePromptWindow } = useWindowsContext();
   const { setSelectionPhase } = useSelectionContext();
@@ -54,8 +54,19 @@ function ActionsProvider({ children }) {
   }
   
   function doSaveFile(mimeType = 'image/png') {
+    let usedCanvas = primaryRef.current;
+
+    if(isBlackAndWhite) {
+      usedCanvas = document.createElement('canvas')
+      const context = usedCanvas.getContext('2d');
+      usedCanvas.width = primaryRef.current.width;
+      usedCanvas.height = primaryRef.current.height;
+      context.filter = 'grayscale(100%)';
+      context.drawImage(primaryRef.current, 0, 0);
+    }
+    
     const link = document.createElement('a');
-    link.href = primaryRef.current.toDataURL(mimeType);
+    link.href = usedCanvas.toDataURL(mimeType);
     link.download = fileData?.name || 'untitled';
     link.click();
   }

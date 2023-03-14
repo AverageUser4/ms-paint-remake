@@ -22,6 +22,7 @@ function BigButton({
   isDisabled,
   tooltip,
   describedBy,
+  isBlackAndWhite,
 }) {
   const dropdownContainerRef = useRef();
   const buttonClasses = `
@@ -55,7 +56,13 @@ function BigButton({
           icon ?
             <img draggable="false" className={iconClasses} src={icon} alt=""/>
           :
-            <div style={{ color: backgroundColor }} className={iconClasses}></div>
+            <div 
+              style={{ 
+                color: backgroundColor,
+                filter: isBlackAndWhite ? 'grayscale(100%)' : ''
+              }}
+              className={iconClasses}
+            ></div>
         }
 
         <span className="text text--1">{name}</span>
@@ -96,6 +103,7 @@ BigButton.propTypes = {
   isDisabled: PropTypes.bool,
   tooltip: PropTypes.node,
   describedBy: PropTypes.string,
+  isBlackAndWhite: PropTypes.bool,
 };
 
 export default BigButton;

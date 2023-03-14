@@ -28,7 +28,7 @@ const initialData = {
 
 const ResizeWindow = memo(function ResizeWindow() {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
-  const { canvasSize, setCanvasSize, primaryRef } = useCanvasContext();
+  const { canvasSize, setCanvasSize, primaryRef, clearPrimary } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -159,7 +159,7 @@ const ResizeWindow = memo(function ResizeWindow() {
     const newSize = {
       width: data.resizeHorizontal || 1,
       height: data.resizeVertical || 1,
-    }
+    };
 
     if(resizeType === 'percentage') {
       newSize.width = Math.round((usedSize.width * data.resizeHorizontal) / 100);
@@ -167,20 +167,39 @@ const ResizeWindow = memo(function ResizeWindow() {
     }
 
     const usedResize = isSelectionActive ? doSelectionResize : setCanvasSize;
+    const oldCanvasSize = canvasSize;
+    const primaryCopy = doGetCanvasCopy(primaryRef.current);
 
     if(newSize.width !== usedSize.width || newSize.height !== usedSize.height) {
       usedResize(newSize);
-      if(!isSelectionActive) {
-        doHistoryAdd({
-          element: doGetCanvasCopy(primaryRef.current),
-          ...newSize,
-        });
-      }
     }
 
     const usedSkewHorizontal = data.skewHorizontal === '-' ? 0 : data.skewHorizontal;
     const usedSkewVertical = data.skewVertical === '-' ? 0 : data.skewVertical;
 
+    if(!isSelectionActive) {
+      setTimeout(() => {
+        const primaryContext = primaryRef.current.getContext('2d');
+        const scale = {
+          x: newSize.width / oldCanvasSize.width,
+          y: newSize.height / oldCanvasSize.height,
+        };
+
+        clearPrimary();
+        primaryContext.save();
+        primaryContext.scale(scale.x, scale.y);
+        primaryContext.drawImage(primaryCopy, 0, 0);
+        primaryContext.restore();
+
+        if(usedSkewHorizontal === 0 && usedSkewVertical === 0) {
+          doHistoryAdd({
+            element: doGetCanvasCopy(primaryRef.current),
+            ...newSize,
+          });
+        }
+      }, 20);
+    }
+    
     if(usedSkewHorizontal !== 0 || usedSkewVertical !== 0) {
       setTimeout(() => {
         const usedSize = newSize;

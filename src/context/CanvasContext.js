@@ -27,6 +27,7 @@ function CanvasProvider({ children }) {
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [isFullScreenView, setIsFullScreenView] = useState(false);
   const [fileData, setFileData] = useState(null);
+  const [isBlackAndWhite, setIsBlackAndWhite] = useState(false);
   const primaryRef = useRef();
   const secondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
@@ -68,6 +69,7 @@ function CanvasProvider({ children }) {
         doCanvasFullReset,
         fileData, setFileData,
         isFullScreenView, setIsFullScreenView,
+        isBlackAndWhite, setIsBlackAndWhite,
       }}
     >
       {children}

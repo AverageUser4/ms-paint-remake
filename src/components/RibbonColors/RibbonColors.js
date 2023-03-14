@@ -9,6 +9,7 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import { useWindowsContext } from "../../context/WindowsContext";
 import { useColorContext } from "../../context/ColorContext";
+import { useCanvasContext } from "../../context/CanvasContext";
 import { RGBObjectToString } from "../../misc/utils";
 
 import colors16 from './assets/colors-16.png';
@@ -17,6 +18,7 @@ import colors32 from './assets/colors-32.png';
 const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
   const { setIsColorsWindowOpen } = useWindowsContext();
   const { colorData, setColorData, ribbonColorsArray } = useColorContext();
+  const { isBlackAndWhite } = useCanvasContext();
   const isOnlyContent = ribbonWidth >= 725;
   
   const colorButtons = [];
@@ -27,7 +29,11 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
         key={i}
         data-color={data ? RGBObjectToString(data) : ''}
         style={{ color: data ? RGBObjectToString(data) : '' }}
-        className={`${css['color']} ${data && css['color--has-color']}`}
+        className={
+          `${css['color']}
+          ${data && css['color--has-color']}
+          ${isBlackAndWhite && css['color--black-and-white']}
+        `}
         onClick={() => data && setColorData(prev => ({ ...prev, [prev.selected]: data }))}
       ></button>
     );
@@ -56,6 +62,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
                   text="Click here and then select a color from the color palette. This color is used with the pencil and with brushes, as well as for shape outlines."
                 />
               }
+              isBlackAndWhite={isBlackAndWhite}
             />
             <BigButton 
               backgroundColor={RGBObjectToString(colorData.secondary)}
@@ -73,6 +80,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
                   text="Click here and then select a color from the color palette. This color is used with the eraser and for shape fills."
                 />
               }
+              isBlackAndWhite={isBlackAndWhite}
             />
 
             <div 
