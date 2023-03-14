@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
-import { useCanvasContext } from '../../misc/CanvasContext';
-import { useHistoryContext } from '../../misc/HistoryContext';
-import { useSelectionContext } from '../../misc/SelectionContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { useHistoryContext } from '../../context/HistoryContext';
+import { useSelectionContext } from '../../context/SelectionContext';
 import { checkArgs, doGetCanvasCopy } from '../../misc/utils';
 
 function useRectangularSelection({

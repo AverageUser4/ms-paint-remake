@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './FileDropdownMore.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
 
-import { useActionsContext } from '../../misc/ActionsContext';
+import { useActionsContext } from '../../context/ActionsContext';
 
 import bmp32 from './assets/bmp-32.png';
 import center32 from './assets/center-32.png';
@@ -18,7 +18,7 @@ import tile32 from './assets/tile-32.png';
 import saveAs32 from '../FileDropdown/assets/save-as-32.png';
 import print32 from '../FileDropdown/assets/print-32.png';
 
-function FileDropdownMore({ currentMore, setIsShown }) {
+const FileDropdownMore = memo(function FileDropdownMore({ currentMore, setCurrentMore, setIsShown }) {
   const { doSaveFile } = useActionsContext();
   
   const saveData = [
@@ -29,6 +29,7 @@ function FileDropdownMore({ currentMore, setIsShown }) {
       onClick: () => {
         doSaveFile('image/png');
         setIsShown(false);
+        setCurrentMore('recent');
       }
     },
     {
@@ -38,6 +39,7 @@ function FileDropdownMore({ currentMore, setIsShown }) {
       onClick: () => {
         doSaveFile('image/jpeg');
         setIsShown(false);
+        setCurrentMore('recent');
       }
     },
     {
@@ -47,6 +49,7 @@ function FileDropdownMore({ currentMore, setIsShown }) {
       onClick: () => {
         doSaveFile('image/bmp');
         setIsShown(false);
+        setCurrentMore('recent');
       }
     },
     {
@@ -56,6 +59,7 @@ function FileDropdownMore({ currentMore, setIsShown }) {
       onClick: () => {
         doSaveFile('image/gif');
         setIsShown(false);
+        setCurrentMore('recent');
       }
     },
     {
@@ -208,10 +212,11 @@ function FileDropdownMore({ currentMore, setIsShown }) {
       
     </div>
   );
-}
+});
 
 FileDropdownMore.propTypes = {
   currentMore: PropTypes.string.isRequired,
+  setCurrentMore: PropTypes.func.isRequired,
   setIsShown: PropTypes.func.isRequired,
 };
 

@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import css from './ContextMenu.module.css';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { useContextMenuContext } from '../../misc/ContextMenuContext';
-import { useWindowsContext } from '../../misc/WindowsContext';
-import { useSelectionContext } from '../../misc/SelectionContext';
-import { useCanvasContext } from '../../misc/CanvasContext';
-import { useHistoryContext } from '../../misc/HistoryContext';
+import { useContextMenuContext } from '../../context/ContextMenuContext';
+import { useWindowsContext } from '../../context/WindowsContext';
+import { useSelectionContext } from '../../context/SelectionContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { useHistoryContext } from '../../context/HistoryContext';
 
 import close from './assets/close.png';
 import minimize from './assets/minimize.png';
@@ -29,7 +29,7 @@ import rotateLeft16 from '../../assets/global/rotate-left-16.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
 import { doGetCanvasCopy, ImageDataUtils } from '../../misc/utils';
 
-function ContextMenu() {
+const ContextMenu = memo(function ContextMenu() {
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
   const { 
@@ -280,6 +280,6 @@ function ContextMenu() {
       {contents}
     </div>
   )
-}
+});
 
 export default ContextMenu;

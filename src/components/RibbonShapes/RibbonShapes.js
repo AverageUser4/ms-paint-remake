@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonShapes.module.css';
 
@@ -25,7 +25,7 @@ import waterColor16 from './assets/water-color-16.png';
 import solidColor16 from './assets/solid-color-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonShapes({ ribbonWidth }) {
+const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
   const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);
   const fillDropdownRef = useRef();
   const fillDropdownContainerRef = useRef();
@@ -231,7 +231,7 @@ function RibbonShapes({ ribbonWidth }) {
 
     </RibbonItemContainer>
   );
-}
+});
 
 RibbonShapes.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

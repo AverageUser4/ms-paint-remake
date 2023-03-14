@@ -3,9 +3,11 @@ import css from './ResizeWindow.module.css';
 
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
-import { useWindowsContext } from '../../misc/WindowsContext';
-import { useSelectionContext } from '../../misc/SelectionContext';
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useWindowsContext } from '../../context/WindowsContext';
+import { useSelectionContext } from '../../context/SelectionContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { useHistoryContext } from '../../context/HistoryContext';
+import { useMainWindowContext } from '../../context/MainWindowContext';
 import { innerWindowConfig, MAX_CANVAS_SIZE } from '../../misc/data';
 
 import resizeHorizontal from './assets/resize-horizontal.ico';
@@ -14,7 +16,6 @@ import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
 import { checkNumberValue, clamp, doGetCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
-import { useHistoryContext } from '../../misc/HistoryContext';
 
 const WIDTH = 280;
 const HEIGHT = 400;
@@ -28,7 +29,8 @@ const initialData = {
 const ResizeWindow = memo(function ResizeWindow() {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
   const { canvasSize, setCanvasSize, primaryRef } = useCanvasContext();
-  const { mainWindowPosition, isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
+  const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
+  const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });

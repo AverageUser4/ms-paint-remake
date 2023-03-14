@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { memo } from 'react';
 import css from './RibbonShowOrHide.module.css';
 
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useWindowsContext } from '../../misc/WindowsContext';
+import { useWindowsContext } from '../../context/WindowsContext';
 
-function RibbonShowOrHide() {
+const RibbonShowOrHide = memo(function RibbonShowOrHide() {
   const { 
     isStatusBarVisible, setIsStatusBarVisible, isGridLinesVisible,
     setIsGridLinesVisible, isRulersVisible, setIsRulersVisible,
@@ -64,6 +64,6 @@ function RibbonShowOrHide() {
       </form>
     </RibbonItemExpanded>
   );
-}
+});
 
 export default RibbonShowOrHide;

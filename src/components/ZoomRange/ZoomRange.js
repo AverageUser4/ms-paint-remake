@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import css from './ZoomRange.module.css';
 
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useCanvasContext, zoomData } from '../../misc/CanvasContext';
+import { useCanvasContext, zoomData } from '../../context/CanvasContext';
 
 function getOffsetForMultiplier(multiplier) {
   return zoomData.find(data => data.multiplier === multiplier).offset;
@@ -21,7 +21,7 @@ function findClosestMultiplier(offset) {
   return closest.multiplier;
 }
 
-function ZoomRange() {
+const ZoomRange = memo(function ZoomRange() {
   const { canvasZoom, setCanvasZoom, changeZoom } = useCanvasContext();
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
@@ -107,6 +107,6 @@ function ZoomRange() {
       </button>
     </>
   );
-}
+});
 
 export default ZoomRange;

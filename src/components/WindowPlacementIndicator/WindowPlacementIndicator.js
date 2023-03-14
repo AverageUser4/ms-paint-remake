@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import PropTypes from 'prop-types';
 import css from './WindowPlacementIndicator.module.css';
 
-import { useContainerContext } from "../../misc/ContainerContext";
+import { useContainerContext } from "../../context/ContainerContext";
 
-function WindowPlacementIndicator({ 
+const WindowPlacementIndicator = memo(function WindowPlacementIndicator({ 
   isConstrained,
   isMaximized,
   isBeingMoved,
@@ -79,7 +79,7 @@ function WindowPlacementIndicator({
       }}
     ></div>
   );
-}
+});
 
 WindowPlacementIndicator.propTypes = {
   position: PropTypes.shape({

@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef, useState } from 'react';
+import React, { forwardRef, memo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './FileDropdown.module.css';
 
@@ -6,7 +6,7 @@ import FileDropdownMore from '../FileDropdownMore/FileDropdownMore';
 import Dropdown from '../Dropdown/Dropdown';
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useActionsContext } from '../../misc/ActionsContext';
+import { useActionsContext } from '../../context/ActionsContext';
 
 import about32 from './assets/about-32.png';
 import email32 from './assets/email-32.png';
@@ -21,7 +21,7 @@ import scanner32 from './assets/scanner-32.png';
 import set32 from './assets/set-32.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
 
-const FileDropdown = forwardRef(function FileDropdown(props, ref) {
+const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
   const { doStartNewProject, doOpenNewFile, doSaveFile } = useActionsContext();
   const [currentMore, setCurrentMore] = useState('recent');
   const timeoutRef = useRef();
@@ -284,6 +284,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
             <button 
               className={`${css['button']}`}
               onClick={() => {
+                doStartNewProject();
                 setIsShown(false);
               }}
             >
@@ -300,6 +301,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
           >
             <FileDropdownMore 
               currentMore={currentMore}
+              setCurrentMore={setCurrentMore}
               setIsShown={setIsShown}
             />
           </div>
@@ -309,7 +311,7 @@ const FileDropdown = forwardRef(function FileDropdown(props, ref) {
       </div>
     </Dropdown>
   );
-});
+}));
 
 FileDropdown.propTypes = {
   isShown: PropTypes.bool.isRequired,

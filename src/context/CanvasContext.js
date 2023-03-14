@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
-import { initialCanvasSize } from './data';
 import { useColorContext } from './ColorContext';
-import { RGBObjectToString } from './utils';
+import { initialCanvasSize } from '../misc/data';
+import { RGBObjectToString } from '../misc/utils';
 
 const zoomData = [
   { multiplier: 0.125, offset: 7 },
@@ -23,9 +23,7 @@ const CanvasContext = createContext();
 
 function CanvasProvider({ children }) {
   const { colorData } = useColorContext();
-  const [canvasMousePosition, setCanvasMousePosition] = useState(null);
   const [canvasSize, setCanvasSize] = useState(initialCanvasSize);
-  const [canvasOutlineSize, setCanvasOutlineSize] = useState(null);
   const [canvasZoom, setCanvasZoom] = useState(1);
   const [isFullScreenView, setIsFullScreenView] = useState(false);
   const [fileData, setFileData] = useState(null);
@@ -60,10 +58,7 @@ function CanvasProvider({ children }) {
   return (
     <CanvasContext.Provider
       value={{
-        canvasMousePosition,
-        setCanvasMousePosition,
         canvasSize, setCanvasSize,
-        canvasOutlineSize, setCanvasOutlineSize,
         canvasZoom, setCanvasZoom,
         primaryRef,
         secondaryRef,

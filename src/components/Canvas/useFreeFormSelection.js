@@ -1,9 +1,9 @@
 import { useRef } from "react";
 import { ImageDataUtils, checkArgs, getDrawData, doGetCanvasCopy } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
-import { useSelectionContext } from "../../misc/SelectionContext";
-import { useCanvasContext } from "../../misc/CanvasContext";
-import { useHistoryContext } from "../../misc/HistoryContext";
+import { useSelectionContext } from "../../context/SelectionContext";
+import { useCanvasContext } from "../../context/CanvasContext";
+import { useHistoryContext } from "../../context/HistoryContext";
 
 function useFreeFormSelection({
   lastPointerPositionRef,

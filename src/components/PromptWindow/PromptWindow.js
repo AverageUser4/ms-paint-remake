@@ -3,18 +3,24 @@ import css from './PromptWindow.module.css';
 
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
-import { getWindowCenteredPosition } from '../../misc/utils';
-import { useWindowsContext } from '../../misc/WindowsContext';
+
+import { useWindowsContext } from '../../context/WindowsContext';
+import { useActionsContext } from '../../context/ActionsContext';
+import { useMainWindowContext } from '../../context/MainWindowContext';
+
 import { innerWindowConfig } from '../../misc/data';
+import { getWindowCenteredPosition } from '../../misc/utils';
 
 const WIDTH = 350;
 const HEIGHT = 135;
 
 const PromptWindow = memo(function PromptWindow() {
+  const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const { 
-    mainWindowPosition, mainWindowSize,
-    isPromptWindowOpen: isOpen, setIsPromptWindowOpen: setIsOpen
+    isPromptWindowOpen: isOpen, setIsPromptWindowOpen: setIsOpen,
+    promptWindowCallbackRef: callbackRef,
   } = useWindowsContext();
+  const { doSaveFile } = useActionsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   
@@ -54,14 +60,21 @@ const PromptWindow = memo(function PromptWindow() {
                 <button 
                   type="button"
                   className="form-button form-button--active"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => { 
+                    doSaveFile();
+                    callbackRef.current();
+                    setIsOpen(false);
+                  }}
                 >
                   Save
                 </button>
                 <button 
                   type="button"
                   className="form-button"
-                  onClick={() => setIsOpen(false)}
+                  onClick={() => {
+                    callbackRef.current();
+                    setIsOpen(false);
+                  }}
                 >
                   Don&apos;t Save
                 </button>

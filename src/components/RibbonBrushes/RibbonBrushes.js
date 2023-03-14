@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import css from './RibbonBrushes.module.css';
 
 import BigButtonDuo from "../BigButtonDuo/BigButtonDuo";
@@ -6,7 +6,7 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
-import { useToolContext } from "../../misc/ToolContext";
+import { useToolContext } from "../../context/ToolContext";
 
 import air32 from './assets/air-32.png';
 import brush32 from './assets/brush-32.png';
@@ -18,7 +18,7 @@ import oil32 from './assets/oil-32.png';
 import pencil32 from './assets/pencil-32.png';
 import water32 from './assets/water-32.png';
 
-function RibbonBrushes() {
+const RibbonBrushes = memo(function RibbonBrushes() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
@@ -130,6 +130,6 @@ function RibbonBrushes() {
       </div>
     </BigButtonDuo>
   );
-}
+});
 
 export default RibbonBrushes;

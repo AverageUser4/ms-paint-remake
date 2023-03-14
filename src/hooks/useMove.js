@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import WindowPlacementIndicator from "../components/WindowPlacementIndicator/WindowPlacementIndicator";
 
-import { useWindowsContext } from '../misc/WindowsContext';
+import { useMainWindowContext } from '../context/MainWindowContext';
 import usePointerTrack from "./usePointerTrack";
 import { checkArgs } from "../misc/utils";
 
@@ -28,7 +28,7 @@ export default function useMove({
     { name: 'isConstrained', value: isConstrained, type: 'boolean' },
   ]);
 
-  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize } = useWindowsContext();
+  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize } = useMainWindowContext();
   const [positionDifference, setPositionDifference] = useState(null);
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 

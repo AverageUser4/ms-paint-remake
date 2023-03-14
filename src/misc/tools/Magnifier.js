@@ -1,4 +1,4 @@
-import { zoomData } from "../CanvasContext";
+import { zoomData } from "../../context/CanvasContext";
 
 export default {
   cursor: 'magnifier',

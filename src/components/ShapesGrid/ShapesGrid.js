@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, memo } from "react";
 import PropTypes from 'prop-types';
 import css from './ShapesGrid.module.css';
 
@@ -60,7 +60,7 @@ const shapesData = [
   { src: lightning16, name: 'Lightning' },
 ];
 
-function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
+const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   const [currentRow, setCurrentRow] = useState(0);
   const gridRef = useRef();
   const lastColumnCount = useRef(4);
@@ -198,7 +198,7 @@ function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
       </Dropdown>
     </div>
   );
-}
+});
 
 ShapesGrid.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

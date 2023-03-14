@@ -1,14 +1,13 @@
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './QuickAccessDropdown.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
 import Tooltip from '../Tooltip/Tooltip';
 
-function QuickAccessDropdown({ 
+const QuickAccessDropdown = memo(function QuickAccessDropdown({ 
   isVisible,
   setIsVisible,
-  close,
   toolbarData,
   setToolbarData,
   ribbonData
@@ -47,7 +46,11 @@ function QuickAccessDropdown({
           <h3 className="head head--dark">Customize Quick Access Toolbar</h3>
         </div>
 
-        <form onSubmit={(e) => e.preventDefault()} className={css['form']} onClick={close}>
+        <form 
+          onSubmit={(e) => e.preventDefault()}
+          className={css['form']}
+          onClick={() => setIsVisible(false)}
+        >
 
           <label className={`tooltip-container ${css['label']}`}>
             <input 
@@ -240,10 +243,9 @@ function QuickAccessDropdown({
       </div>
     </Dropdown>
   );
-}
+});
 
 QuickAccessDropdown.propTypes = {
-  close: PropTypes.func.isRequired,
   isVisible: PropTypes.bool.isRequired,
   setIsVisible: PropTypes.func,
   toolbarData: PropTypes.object.isRequired,

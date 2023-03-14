@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { initialCanvasSize } from './data';
-import { doGetCanvasCopy } from './utils';
 import { useCanvasContext } from './CanvasContext';
+import { initialCanvasSize } from '../misc/data';
+import { doGetCanvasCopy } from '../misc/utils';
 
 const HistoryContext = createContext();
 

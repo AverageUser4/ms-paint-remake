@@ -1,12 +1,12 @@
-import React, { useRef } from 'react';
+import React, { memo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './CanvasContainer.module.css';
 
 import Canvas from '../Canvas/Canvas';
 import Rulers from '../Rulers/Rulers';
-import { useWindowsContext } from '../../misc/WindowsContext';
+import { useWindowsContext } from '../../context/WindowsContext';
 
-function CanvasContainer({ toolbarData, ribbonData }) {
+const CanvasContainer = memo(function CanvasContainer({ toolbarData, ribbonData }) {
   const { isStatusBarVisible, isRulersVisible } = useWindowsContext();
   const containerRef = useRef();
   
@@ -34,7 +34,7 @@ function CanvasContainer({ toolbarData, ribbonData }) {
       <Canvas/>
     </div>
   );
-}
+});
 
 CanvasContainer.propTypes = {
   ribbonData: PropTypes.object.isRequired,

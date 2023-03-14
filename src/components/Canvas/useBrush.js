@@ -1,6 +1,6 @@
-import { RGBObjectToString, doGetCanvasCopy, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
-import { useCanvasContext } from "../../misc/CanvasContext";
+import { useCanvasContext } from "../../context/CanvasContext";
+import { RGBObjectToString, doGetCanvasCopy, getDrawData } from "../../misc/utils";
 
 function useBrush({
   lastPointerPositionRef,

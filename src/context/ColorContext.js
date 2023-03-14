@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
-import { HSLtoRGB, objectEquals } from "./utils";
+import { HSLtoRGB, objectEquals } from "../misc/utils";
 
 const initialCustomColors = [];
 for(let i = 0; i < 16; i ++) {

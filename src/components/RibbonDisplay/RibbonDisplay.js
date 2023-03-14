@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { memo } from 'react';
 import css from './RibbonDisplay.module.css';
 
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 import BigButton from '../BigButton/BigButton';
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useCanvasContext } from '../../context/CanvasContext';
 
 import full32 from './assets/full-32.png';
 import thumb32 from './assets/thumb-32.png';
 
-function RibbonDisplay() {
+const RibbonDisplay = memo(function RibbonDisplay() {
   const { setIsFullScreenView } = useCanvasContext();
   
   return (
@@ -51,6 +51,6 @@ function RibbonDisplay() {
       </div>
     </RibbonItemExpanded>
   );
-}
+});
 
 export default RibbonDisplay;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import css from './RibbonZoom.module.css';
 
@@ -6,7 +6,7 @@ import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useCanvasContext } from '../../context/CanvasContext';
 
 import zoomIn16 from './assets/zoom-in-16.png';
 import zoomIn32 from './assets/zoom-in-32.png';
@@ -15,7 +15,7 @@ import zoomOut32 from './assets/zoom-out-32.png';
 import percent16 from './assets/100-percent-16.png';
 import percent32 from './assets/100-percent-32.png';
 
-function RibbonZoom({ ribbonWidth }) {
+const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
   const { setCanvasZoom, changeZoom } = useCanvasContext();
   
   const zoomInTooltip = (
@@ -109,7 +109,7 @@ function RibbonZoom({ ribbonWidth }) {
       </div>
     </RibbonItemExpanded>
   );
-}
+});
 
 RibbonZoom.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

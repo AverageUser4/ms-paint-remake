@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import PropTypes from 'prop-types';
 import css from './Rulers.module.css';
 
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
 
-function Rulers({ containerRef }) {
+const Rulers = memo(function Rulers({ containerRef }) {
   const [forceRender, setForceRender] = useState(true);
-  const { canvasZoom, canvasSize, canvasMousePosition } = useCanvasContext();
+  const { canvasZoom, canvasSize } = useCanvasContext();
+  const { canvasMousePosition } = useCanvasMiscContext();
   
   let fullStep = 125;
   if(canvasZoom >= 0.5) { fullStep = 100; }
@@ -181,7 +183,7 @@ function Rulers({ containerRef }) {
       </svg>
     </>
   );
-}
+});
 
 Rulers.propTypes = {
   containerRef: PropTypes.object.isRequired,

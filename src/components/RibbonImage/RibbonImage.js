@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, memo } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonImage.module.css';
 
@@ -10,9 +10,9 @@ import Dropdown from "../Dropdown/Dropdown";
 import Tooltip from "../Tooltip/Tooltip";
 
 import { toggleBoolState } from "../../misc/utils";
-import { useSelectionContext } from "../../misc/SelectionContext";
-import { useToolContext } from "../../misc/ToolContext";
-import { useWindowsContext } from "../../misc/WindowsContext";
+import { useSelectionContext } from "../../context/SelectionContext";
+import { useToolContext } from "../../context/ToolContext";
+import { useWindowsContext } from "../../context/WindowsContext";
 
 import crop16 from '../../assets/global/crop-16.png';
 import selectAll16 from '../../assets/global/select-all-16.png';
@@ -30,7 +30,7 @@ import freeForm16 from './assets/free-form-16.png';
 import freeForm32 from './assets/free-form-32.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
-function RibbonImage({ ribbonWidth }) {
+const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   const { 
     doSelectionCrop, selectionPhase, doSelectionSelectAll,
     doSelectionInvertSelection, doSharedDelete
@@ -340,7 +340,7 @@ function RibbonImage({ ribbonWidth }) {
 
     </RibbonItemContainer>
   );
-}
+});
 
 RibbonImage.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

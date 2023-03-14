@@ -4,32 +4,33 @@ import css from './ColorsWindow.module.css';
 import Window from '../Window/Window';
 import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import ColorPicker from '../ColorPicker/ColorPicker';
+
+import { useWindowsContext } from '../../context/WindowsContext';
+import { useColorContext } from '../../context/ColorContext';
+import { useMainWindowContext } from '../../context/MainWindowContext';
+
 import { getWindowCenteredPosition, RGBtoHSL, RGBObjectToString } from '../../misc/utils';
-import { useWindowsContext } from '../../misc/WindowsContext';
-import { useColorContext } from '../../misc/ColorContext';
 import { innerWindowConfig } from '../../misc/data';
 
 import duoArrow from './assets/duo-arrow.png';
 
 const WIDTH = 448;
 const HEIGHT = 340;
+const basicColors = [
+  { r: 255, g: 128, b: 128 }, { r: 255, g: 255, b: 128 }, { r: 128, g: 255, b: 128 }, { r: 0, g: 255, b: 128 }, { r: 128, g: 255, b: 255 }, { r: 0, g: 128, b: 255 }, { r: 255, g: 128, b: 192 }, { r: 255, g: 128, b: 255 },
+  { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }, { r: 128, g: 255, b: 0 }, { r: 0, g: 255, b: 64 }, { r: 0, g: 255, b: 255 }, { r: 0, g: 128, b: 192 }, { r: 128, g: 128, b: 192 }, { r: 255, g: 0, b: 255 },
+  { r: 128, g: 64, b: 64 }, { r: 255, g: 128, b: 64 }, { r: 0, g: 255, b: 0 }, { r: 0, g: 128, b: 128 }, { r: 0, g: 64, b: 128 }, { r: 128, g: 128, b: 255 }, { r: 128, g: 0, b: 64 }, { r: 255, g: 0, b: 128 },
+  { r: 128, g: 0, b: 0 }, { r: 255, g: 128, b: 0 }, { r: 0, g: 128, b: 0 }, { r: 0, g: 128, b: 64 }, { r: 0, g: 0, b: 255 }, { r: 0, g: 0, b: 160 }, { r: 128, g: 0, b: 128 }, { r: 128, g: 0, b: 255 },
+  { r: 64, g: 0, b: 0 }, { r: 128, g: 64, b: 0 }, { r: 0, g: 64, b: 0 }, { r: 0, g: 64, b: 64 }, { r: 0, g: 0, b: 128 }, { r: 0, g: 0, b: 64 }, { r: 64, g: 0, b: 64 }, { r: 64, g: 0, b: 128 },
+  { r: 0, g: 0, b: 0 }, { r: 128, g: 128, b: 0 }, { r: 128, g: 128, b: 64 }, { r: 128, g: 128, b: 128 }, { r: 64, g: 128, b: 128 }, { r: 192, g: 192, b: 192 }, { r: 64, g: 0, b: 64 }, { r: 255, g: 255, b: 255 },
+];
 
 const ColorsWindow = memo(function ColorsWindow() {
-  const { 
-    mainWindowPosition, mainWindowSize,
-    isColorsWindowOpen: isOpen, setIsColorsWindowOpen: setIsOpen 
-  } = useWindowsContext();
+  const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
+  const { isColorsWindowOpen: isOpen, setIsColorsWindowOpen: setIsOpen } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   const { customColors, setColorPickerData, colorPickerData, doCustomColorsAdd, doRibbonColorsArrayAdd } = useColorContext();
-  const basicColors = [
-    { r: 255, g: 128, b: 128 }, { r: 255, g: 255, b: 128 }, { r: 128, g: 255, b: 128 }, { r: 0, g: 255, b: 128 }, { r: 128, g: 255, b: 255 }, { r: 0, g: 128, b: 255 }, { r: 255, g: 128, b: 192 }, { r: 255, g: 128, b: 255 },
-    { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }, { r: 128, g: 255, b: 0 }, { r: 0, g: 255, b: 64 }, { r: 0, g: 255, b: 255 }, { r: 0, g: 128, b: 192 }, { r: 128, g: 128, b: 192 }, { r: 255, g: 0, b: 255 },
-    { r: 128, g: 64, b: 64 }, { r: 255, g: 128, b: 64 }, { r: 0, g: 255, b: 0 }, { r: 0, g: 128, b: 128 }, { r: 0, g: 64, b: 128 }, { r: 128, g: 128, b: 255 }, { r: 128, g: 0, b: 64 }, { r: 255, g: 0, b: 128 },
-    { r: 128, g: 0, b: 0 }, { r: 255, g: 128, b: 0 }, { r: 0, g: 128, b: 0 }, { r: 0, g: 128, b: 64 }, { r: 0, g: 0, b: 255 }, { r: 0, g: 0, b: 160 }, { r: 128, g: 0, b: 128 }, { r: 128, g: 0, b: 255 },
-    { r: 64, g: 0, b: 0 }, { r: 128, g: 64, b: 0 }, { r: 0, g: 64, b: 0 }, { r: 0, g: 64, b: 64 }, { r: 0, g: 0, b: 128 }, { r: 0, g: 0, b: 64 }, { r: 64, g: 0, b: 64 }, { r: 64, g: 0, b: 128 },
-    { r: 0, g: 0, b: 0 }, { r: 128, g: 128, b: 0 }, { r: 128, g: 128, b: 64 }, { r: 128, g: 128, b: 128 }, { r: 64, g: 128, b: 128 }, { r: 192, g: 192, b: 192 }, { r: 64, g: 0, b: 64 }, { r: 255, g: 255, b: 255 },
-  ];
   const basicButtons = basicColors.map(mapToButtons);
   const customButtons = customColors.map(mapToButtons);
 

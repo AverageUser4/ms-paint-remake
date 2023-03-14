@@ -1,11 +1,11 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonTools.module.css';
 
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import Tooltip from "../Tooltip/Tooltip";
-import { useToolContext } from "../../misc/ToolContext";
+import { useToolContext } from "../../context/ToolContext";
 
 import tools16 from './assets/tools-16.png';
 import pencil16 from './assets/pencil-16.png';
@@ -15,7 +15,7 @@ import eraser16 from './assets/eraser-16.png';
 import colorPicker16 from './assets/color-picker-16.png';
 import magnifier16 from './assets/magnifier-16.png';
 
-function RibbonTools({ ribbonWidth }) {
+const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
   const isOnlyContent = ribbonWidth >= 760;
   const { currentTool, doSetCurrentTool } = useToolContext();
 
@@ -124,7 +124,7 @@ function RibbonTools({ ribbonWidth }) {
 
     </RibbonItemContainer>
   );
-}
+});
 
 RibbonTools.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

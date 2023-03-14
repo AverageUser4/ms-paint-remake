@@ -6,7 +6,7 @@ import ImageInput from '../components/ImageInput/ImageInput';
 import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
-import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from './utils';
+import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from '../misc/utils';
 
 const SelectionContext = createContext();
 

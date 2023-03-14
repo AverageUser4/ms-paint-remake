@@ -4,23 +4,26 @@ import css from './Canvas.module.css';
 import useResize from "../../hooks/useResize";
 import useSelection from "./useSelection";
 import useBrush from "./useBrush";
-import { useCanvasContext } from "../../misc/CanvasContext";
-import { useHistoryContext } from "../../misc/HistoryContext";
-import { useToolContext } from "../../misc/ToolContext";
-import { useColorContext } from "../../misc/ColorContext";
-import { useContextMenuContext } from "../../misc/ContextMenuContext";
-import { useSelectionContext } from "../../misc/SelectionContext";
-import { useWindowsContext } from "../../misc/WindowsContext";
+import { useCanvasContext } from "../../context/CanvasContext";
+import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
+import { useHistoryContext } from "../../context/HistoryContext";
+import { useToolContext } from "../../context/ToolContext";
+import { useColorContext } from "../../context/ColorContext";
+import { useContextMenuContext } from "../../context/ContextMenuContext";
+import { useSelectionContext } from "../../context/SelectionContext";
+import { useWindowsContext } from "../../context/WindowsContext";
 import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
 import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
   const { 
-    canvasSize, canvasOutlineSize, canvasZoom, setCanvasZoom,
-    setCanvasOutlineSize, setCanvasSize, canvasMousePosition,
-    setCanvasMousePosition, primaryRef, secondaryRef, lastPrimaryStateRef,
-    clearPrimary
+    canvasSize, canvasZoom, setCanvasZoom, setCanvasSize,
+    primaryRef, secondaryRef, lastPrimaryStateRef, clearPrimary
   } = useCanvasContext();
+  const { 
+    canvasOutlineSize, setCanvasOutlineSize, canvasMousePosition,
+    setCanvasMousePosition 
+  } = useCanvasMiscContext();
   const { toolsData, currentTool } = useToolContext();
   const { colorData, setColorData } = useColorContext()
   const { doHistoryAdd } = useHistoryContext();

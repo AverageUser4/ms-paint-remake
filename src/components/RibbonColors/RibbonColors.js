@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonColors.module.css';
 
@@ -7,14 +7,14 @@ import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import Tooltip from "../Tooltip/Tooltip";
 
-import { useWindowsContext } from "../../misc/WindowsContext";
-import { useColorContext } from "../../misc/ColorContext";
+import { useWindowsContext } from "../../context/WindowsContext";
+import { useColorContext } from "../../context/ColorContext";
 import { RGBObjectToString } from "../../misc/utils";
 
 import colors16 from './assets/colors-16.png';
 import colors32 from './assets/colors-32.png';
 
-function RibbonColors({ ribbonWidth }) {
+const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
   const { setIsColorsWindowOpen } = useWindowsContext();
   const { colorData, setColorData, ribbonColorsArray } = useColorContext();
   const isOnlyContent = ribbonWidth >= 725;
@@ -102,7 +102,7 @@ function RibbonColors({ ribbonWidth }) {
       </RibbonItemExpanded>
     </RibbonItemContainer>
   );
-}
+});
 
 RibbonColors.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

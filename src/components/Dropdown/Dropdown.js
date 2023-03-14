@@ -2,12 +2,12 @@ import React, { useState, useEffect, forwardRef, useRef } from 'react';
 import PropTypes from 'prop-types';
 import css from './Dropdown.module.css';
 
-import { useContainerContext } from '../../misc/ContainerContext';
-import { useWindowsContext } from "../../misc/WindowsContext";
+import { useContainerContext } from '../../context/ContainerContext';
+import { useMainWindowContext } from "../../context/MainWindowContext";
 
 const Dropdown = forwardRef(function Dropdown(props, ref) {
   const { isVisible, setIsVisible, classes, children, adjustPosition = true, dropdownContainerRef } = props;
-  const { isMainWindowFocused } = useWindowsContext();
+  const { isMainWindowFocused } = useMainWindowContext();
   const { containerRect: paintContainerRect } = useContainerContext();
   const dropdownRef = useRef();
   const [position, setPosition] = useState(adjustPosition ? { left: 0, right: 'auto', top: '100%', bottom: 'auto' } : {});

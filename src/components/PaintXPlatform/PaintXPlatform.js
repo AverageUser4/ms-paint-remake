@@ -14,15 +14,17 @@ import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
 import FullScreen from '../FullScreen/FullScreen';
 
-import { ContextMenuProvider } from '../../misc/ContextMenuContext';
-import { ContainerProvider } from '../../misc/ContainerContext';
-import { CanvasProvider } from '../../misc/CanvasContext';
-import { HistoryProvider } from '../../misc/HistoryContext';
-import { useWindowsContext, WindowsProvider } from '../../misc/WindowsContext';
-import { ColorProvider } from '../../misc/ColorContext';
-import { ToolProvider } from '../../misc/ToolContext';
-import { SelectionProvider } from '../../misc/SelectionContext';
-import { ActionsProvider } from '../../misc/ActionsContext';
+import { ContextMenuProvider } from '../../context/ContextMenuContext';
+import { ContainerProvider } from '../../context/ContainerContext';
+import { CanvasProvider } from '../../context/CanvasContext';
+import { HistoryProvider } from '../../context/HistoryContext';
+import { useWindowsContext, WindowsProvider } from '../../context/WindowsContext';
+import { useMainWindowContext, MainWindowProvider } from '../../context/MainWindowContext';
+import { ColorProvider } from '../../context/ColorContext';
+import { ToolProvider } from '../../context/ToolContext';
+import { SelectionProvider } from '../../context/SelectionContext';
+import { ActionsProvider } from '../../context/ActionsContext';
+import { CanvasMiscProvider } from '../../context/CanvasMiscContext';
 
 function Logic({ 
   minimalSize,
@@ -34,16 +36,15 @@ function Logic({
     isMainWindowFocused, setIsMainWindowFocused,
     mainWindowPosition, setMainWindowPosition,
     mainWindowSize, setMainWindowSize,
-    isMainWindowMaximized, setIsMainWindowMaximized
-  } = useWindowsContext();
+    isMainWindowMaximized, setIsMainWindowMaximized,
+  } = useMainWindowContext();
+  const { isAnyInnerWindowOpen } = useWindowsContext();
 
   const doSetWindowToMinimalSize = useCallback(() => {
     setMainWindowSize(minimalSize);
     setIsMainWindowMaximized(false);
   }, [setMainWindowSize, minimalSize, setIsMainWindowMaximized]);
 
-  const { isAnyInnerWindowOpen } = useWindowsContext();
-  
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
   const [ribbonData, setRibbonData] = useState({ 
@@ -113,6 +114,7 @@ function Logic({
               />
               <StatusBar
                 windowWidth={mainWindowSize.width}
+                isMainWindowMaximized={isMainWindowMaximized}
               />
               <ContextMenu/>
             </>
@@ -169,28 +171,32 @@ function PaintXPlatform({
       >
         <ColorProvider>
           <CanvasProvider>
-            <HistoryProvider>
-              <ToolProvider>
-                <SelectionProvider>
-                  <WindowsProvider
-                    initialPosition={initialPosition}
-                    initialSize={initialSize}
-                    isInitiallyMaximized={isInitiallyMaximized}
-                  >
-                    <ContextMenuProvider>
-                      <ActionsProvider>
-                        <Logic 
-                          minimalSize={minimalSize}
-                          isResizable={isResizable}
-                          isAutoShrink={isAutoShrink}
-                          isOpen={isOpen}
-                        />
-                      </ActionsProvider>
-                    </ContextMenuProvider>
-                  </WindowsProvider>
-                </SelectionProvider>
-              </ToolProvider>
-            </HistoryProvider>
+            <CanvasMiscProvider>
+              <HistoryProvider>
+                <ToolProvider>
+                  <SelectionProvider>
+                    <MainWindowProvider
+                      initialPosition={initialPosition}
+                      initialSize={initialSize}
+                      isInitiallyMaximized={isInitiallyMaximized}
+                    >
+                      <WindowsProvider>
+                        <ContextMenuProvider>
+                          <ActionsProvider>
+                            <Logic 
+                              minimalSize={minimalSize}
+                              isResizable={isResizable}
+                              isAutoShrink={isAutoShrink}
+                              isOpen={isOpen}
+                            />
+                          </ActionsProvider>
+                        </ContextMenuProvider>
+                      </WindowsProvider>
+                    </MainWindowProvider>
+                  </SelectionProvider>
+                </ToolProvider>
+              </HistoryProvider>
+            </CanvasMiscProvider>
           </CanvasProvider>
         </ColorProvider>
       </ContainerProvider>

@@ -4,8 +4,8 @@ import useResize from "../../hooks/useResize";
 import { checkArgs } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
-import { useSelectionContext } from '../../misc/SelectionContext';
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useSelectionContext } from '../../context/SelectionContext';
+import { useCanvasContext } from '../../context/CanvasContext';
 
 function useSelection({
   lastCurrentToolRef,

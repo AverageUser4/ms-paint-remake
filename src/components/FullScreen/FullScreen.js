@@ -1,9 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import css from './FullScreen.module.css';
 
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useCanvasContext } from '../../context/CanvasContext';
 
-function FullScreen() {
+const FullScreen = memo(function FullScreen() {
   const { isFullScreenView, setIsFullScreenView, primaryRef } = useCanvasContext();
   const showcaseRef = useRef();
 
@@ -52,6 +52,6 @@ function FullScreen() {
       ></canvas>
     </div>
   );
-}
+});
 
 export default FullScreen;

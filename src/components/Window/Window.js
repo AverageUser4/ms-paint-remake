@@ -7,7 +7,7 @@ import useResize from '../../hooks/useResize';
 import useMove from '../../hooks/useMove';
 import useAutoFit from '../../hooks/useAutoFit';
 import useAutoShrink from '../../hooks/useAutoShrink';
-import { useContainerContext } from '../../misc/ContainerContext';
+import { useContainerContext } from '../../context/ContainerContext';
 
 function Window({ 
   ID,

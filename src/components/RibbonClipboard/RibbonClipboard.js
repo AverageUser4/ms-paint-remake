@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonClipboard.module.css';
 
@@ -8,7 +8,7 @@ import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { useSelectionContext } from "../../misc/SelectionContext";
+import { useSelectionContext } from "../../context/SelectionContext";
 import { toggleBoolState } from "../../misc/utils";
 
 import clipboard32 from './assets/clipboard-32.png';
@@ -17,7 +17,7 @@ import clipboard16 from '../../assets/global/clipboard-16.png';
 import copy16 from '../../assets/global/copy-16.png';
 import cut16 from '../../assets/global/cut-16.png';
 
-function RibbonClipboard({ ribbonWidth }) {
+const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
   const { selectionBrowseFile, selectionPasteFromClipboard, doSharedCut, doSharedCopy } = useSelectionContext();
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -144,7 +144,7 @@ function RibbonClipboard({ ribbonWidth }) {
       
     </RibbonItemContainer>
   );
-}
+});
 
 RibbonClipboard.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,

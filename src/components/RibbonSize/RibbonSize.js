@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, memo } from "react";
 import css from './RibbonSize.module.css';
 
 import BigButton from "../BigButton/BigButton";
@@ -6,11 +6,11 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from '../../hooks/useOutsideClick';
 import { toggleBoolState } from "../../misc/utils";
-import { useToolContext } from "../../misc/ToolContext";
+import { useToolContext } from "../../context/ToolContext";
 
 import size32 from './assets/size-32.png';
 
-function RibbonSize() {
+const RibbonSize = memo(function RibbonSize() {
   const { toolsData, setToolsData, currentTool } = useToolContext();
   const dropdownRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -69,6 +69,6 @@ function RibbonSize() {
       }
     </BigButton>
   );
-}
+});
 
 export default RibbonSize;

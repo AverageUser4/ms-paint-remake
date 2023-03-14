@@ -6,7 +6,8 @@ import ImageInput from '../components/ImageInput/ImageInput';
 import { useHistoryContext } from './HistoryContext';
 import { useCanvasContext } from './CanvasContext';
 import { useSelectionContext } from './SelectionContext';
-import { doGetCanvasCopy } from './utils';
+import { useWindowsContext } from './WindowsContext';
+import { doGetCanvasCopy } from '../misc/utils';
 
 const ActionsContext = createContext();
 
@@ -16,6 +17,7 @@ function ActionsProvider({ children }) {
     doCanvasFullReset, setCanvasSize, primaryRef,
     lastPrimaryStateRef, fileData
   } = useCanvasContext();
+  const { doRequirePromptWindow } = useWindowsContext();
   const { setSelectionPhase } = useSelectionContext();
   const inputFileRef = useRef();
   
@@ -35,16 +37,20 @@ function ActionsProvider({ children }) {
   }
 
   function doStartNewProject() {
-    doHistoryClear();
-    doCanvasFullReset();
-    setSelectionPhase(0);
+    doRequirePromptWindow(() => {
+      doHistoryClear();
+      doCanvasFullReset();
+      setSelectionPhase(0);
+    });
   }
   
   function doOpenNewFile() {
-    doHistoryClear();
-    doCanvasFullReset();
-    setSelectionPhase(0);
-    inputFileRef.current.click();
+    doRequirePromptWindow(() => {
+      doHistoryClear();
+      doCanvasFullReset();
+      setSelectionPhase(0);
+      inputFileRef.current.click();
+    });
   }
   
   function doSaveFile(mimeType = 'image/png') {

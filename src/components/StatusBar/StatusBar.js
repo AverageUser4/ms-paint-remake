@@ -1,11 +1,12 @@
-import React from "react";
+import React, { memo } from "react";
 import PropTypes from 'prop-types';
 import css from './StatusBar.module.css';
 
 import ZoomRange from "../ZoomRange/ZoomRange";
-import { useWindowsContext } from "../../misc/WindowsContext";
-import { useCanvasContext } from "../../misc/CanvasContext";
-import { useSelectionContext } from "../../misc/SelectionContext";
+import { useWindowsContext } from "../../context/WindowsContext";
+import { useCanvasContext } from "../../context/CanvasContext";
+import { useSelectionContext } from "../../context/SelectionContext";
+import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
 
 import canvas16 from './assets/canvas-16.ico';
 import cursor16 from './assets/cursor-16.ico';
@@ -13,14 +14,17 @@ import fileSize16 from './assets/file-size-16.ico';
 import selection16 from './assets/selection-16.ico';
 import { ReactComponent as Cross } from '../../assets/global/cross.svg';
 
-function StatusBar({ windowWidth }) {
-  const { isMainWindowMaximized, isStatusBarVisible } = useWindowsContext();
-  const { 
-    canvasSize, canvasOutlineSize, canvasMousePosition,
-    canvasZoom, fileData } = useCanvasContext();
+const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }) {
+  const { isStatusBarVisible } = useWindowsContext();
+  const { canvasSize, canvasZoom, fileData } = useCanvasContext();
+  const { canvasOutlineSize, canvasMousePosition } = useCanvasMiscContext();
   const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
   const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;
   let parsedFileSize;
+  
+  if(!isStatusBarVisible) {
+    return null;
+  }
 
   if(fileData?.size) {
     if(fileData.size >= 1_000_000) {
@@ -30,10 +34,6 @@ function StatusBar({ windowWidth }) {
     } else {
       parsedFileSize = fileData.size + 'B';
     }
-  }
-  
-  if(!isStatusBarVisible) {
-    return null;
   }
 
   return (
@@ -92,10 +92,11 @@ function StatusBar({ windowWidth }) {
       
     </footer>
   );
-}
+});
 
 StatusBar.propTypes = {
   windowWidth: PropTypes.number.isRequired,
+  isMainWindowMaximized: PropTypes.bool.isRequired,
 };
 
 export default StatusBar;

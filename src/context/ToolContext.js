@@ -1,23 +1,23 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Pencil from './tools/Pencil.js';
-import Fill from './tools/Fill.js';
-import Text from './tools/Text.js';
-import Eraser from './tools/Eraser.js';
-import ColorPicker from './tools/ColorPicker.js';
-import Magnifier from './tools/Magnifier.js';
-import Brush from './tools/Brush.js';
-import Calligraphy1 from './tools/Calligraphy-1.js';
-import Calligraphy2 from './tools/Calligraphy-2.js';
-import Airbrush from './tools/Airbrush';
-import Crayon from './tools/Crayon';
-import Marker from './tools/Marker';
-import NaturalPencil from './tools/NaturalPencil';
-import Oilbrush from './tools/Oilbrush';
-import Watercolor from './tools/Watercolor';
-import RectangularSelection from './tools/RectangularSelection';
-import FreeFormSelection from './tools/FreeFormSelection';
+import Pencil from '../misc/tools/Pencil.js';
+import Fill from '../misc/tools/Fill.js';
+import Text from '../misc/tools/Text.js';
+import Eraser from '../misc/tools/Eraser.js';
+import ColorPicker from '../misc/tools/ColorPicker.js';
+import Magnifier from '../misc/tools/Magnifier.js';
+import Brush from '../misc/tools/Brush.js';
+import Calligraphy1 from '../misc/tools/Calligraphy-1.js';
+import Calligraphy2 from '../misc/tools/Calligraphy-2.js';
+import Airbrush from '../misc/tools/Airbrush';
+import Crayon from '../misc/tools/Crayon';
+import Marker from '../misc/tools/Marker';
+import NaturalPencil from '../misc/tools/NaturalPencil';
+import Oilbrush from '../misc/tools/Oilbrush';
+import Watercolor from '../misc/tools/Watercolor';
+import RectangularSelection from '../misc/tools/RectangularSelection';
+import FreeFormSelection from '../misc/tools/FreeFormSelection';
 
 const ToolContext = createContext();
 

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './WindowControls.module.css';
 
-import { useWindowsContext } from "../../misc/WindowsContext";
+import { useWindowsContext } from "../../context/WindowsContext";
 
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';

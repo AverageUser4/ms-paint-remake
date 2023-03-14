@@ -1,13 +1,13 @@
-import React, { useRef } from "react";
+import React, { memo, useRef } from "react";
 import css from './ColorPicker.module.css';
 
 import usePointerTrack from "../../hooks/usePointerTrack";
-import { useColorContext } from "../../misc/ColorContext";
+import { useColorContext } from "../../context/ColorContext";
 import { checkNumberValue, HSLtoRGB, RGBtoHSL } from "../../misc/utils";
 
 import cursor from './assets/cursor.png';
 
-function ColorPicker() {
+const ColorPicker = memo(function ColorPicker() {
   const { colorPickerData, setColorPickerData } = useColorContext();
   const { HSL, RGB } = colorPickerData;
   
@@ -186,6 +186,6 @@ function ColorPicker() {
       </div>
     </div>
   );
-}
+});
 
 export default ColorPicker;

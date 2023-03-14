@@ -6,7 +6,7 @@ import QuickAccessDropdown from '../QuickAccessDropdown/QuickAccessDropdown';
 import Tooltip from '../Tooltip/Tooltip';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { useHistoryContext } from '../../misc/HistoryContext';
+import { useHistoryContext } from '../../context/HistoryContext';
 
 import email from './assets/email.png';
 import newFile from './assets/new.png';
@@ -134,7 +134,6 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
         <QuickAccessDropdown 
           isVisible={showDropdown}
           setIsVisible={setShowDropdown}
-          close={() => setShowDropdown(false)}
           toolbarData={toolbarData}
           setToolbarData={setToolbarData}
           ribbonData={ribbonData}

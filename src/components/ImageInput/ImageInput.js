@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useCanvasContext } from '../../context/CanvasContext';
 
 function ImageInput({ inputRef, onLoad, isSetFileData }) {
   const { setFileData } = useCanvasContext();

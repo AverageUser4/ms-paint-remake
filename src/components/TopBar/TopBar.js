@@ -5,9 +5,10 @@ import css from './TopBar.module.css';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
 
-import { useContextMenuContext } from '../../misc/ContextMenuContext';
-import { useWindowsContext } from '../../misc/WindowsContext';
-import { useCanvasContext } from '../../misc/CanvasContext';
+import { useContextMenuContext } from '../../context/ContextMenuContext';
+import { useWindowsContext } from '../../context/WindowsContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { useActionsContext } from '../../context/ActionsContext';
 
 import logoMini from './assets/logo-mini.png';
 
@@ -20,7 +21,8 @@ const TopBar = memo(function TopBar({
   doSetWindowToMinimalSize,
 }) {
   const { openContextMenu } = useContextMenuContext();
-  const { doMainWindowToggleMaximize, setIsPromptWindowOpen } = useWindowsContext();
+  const { doMainWindowToggleMaximize } = useWindowsContext();
+  const { doStartNewProject } = useActionsContext();
   const { fileData } = useCanvasContext();
   const containerRef = useRef();
   const textRef = useRef();
@@ -62,7 +64,7 @@ const TopBar = memo(function TopBar({
       </div>
 
       <WindowControls 
-        close={() => setIsPromptWindowOpen(true)}
+        close={() => doStartNewProject()}
         doSetWindowToMinimalSize={doSetWindowToMinimalSize}
       />
 

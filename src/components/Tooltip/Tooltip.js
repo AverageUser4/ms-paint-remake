@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import css from './Tooltip.module.css';
 import PropTypes from 'prop-types';
 
-function Tooltip({ heading, text, type = 'specific', top = '100%', left = '0', ID }) {
+const Tooltip = memo(function Tooltip({ heading, text, type = 'specific', top = '100%', left = '0', ID }) {
   return (
     <div
       id={ID}
@@ -21,7 +21,7 @@ function Tooltip({ heading, text, type = 'specific', top = '100%', left = '0', I
       </p>
     </div>
   );
-}
+});
 
 Tooltip.propTypes = {
   heading: PropTypes.string,
