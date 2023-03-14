@@ -71,8 +71,7 @@ function SelectionProvider({ children }) {
       Math.round(selectionSize.height / zoom),
     );
 
-    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
-
+    // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     doHistoryAdd({ 
       element: doGetCanvasCopy(primaryRef.current),
       width: canvasSize.width,
@@ -201,7 +200,7 @@ function SelectionProvider({ children }) {
     } else {
       writeCanvasToClipboard(primaryRef.current);
       clearPrimary();
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }
@@ -289,7 +288,7 @@ function SelectionProvider({ children }) {
       setSelectionPhase(0);
     } else {
       clearPrimary();
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }

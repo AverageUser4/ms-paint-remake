@@ -28,7 +28,7 @@ const initialData = {
 
 const ResizeWindow = memo(function ResizeWindow() {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
-  const { canvasSize, setCanvasSize, primaryRef, clearPrimary } = useCanvasContext();
+  const { canvasSize, setCanvasSize, primaryRef, clearPrimary, lastPrimaryStateRef } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -192,6 +192,7 @@ const ResizeWindow = memo(function ResizeWindow() {
         primaryContext.restore();
 
         if(usedSkewHorizontal === 0 && usedSkewVertical === 0) {
+          // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
           doHistoryAdd({
             element: doGetCanvasCopy(primaryRef.current),
             ...newSize,
@@ -228,6 +229,7 @@ const ResizeWindow = memo(function ResizeWindow() {
           usedContext.restore();
 
           if(!isSelectionActive) {
+            // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
             doHistoryAdd({
               element: doGetCanvasCopy(primaryRef.current),
               ...usedNewSize,

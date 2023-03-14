@@ -6,3 +6,4 @@
 - adjust cursor centers (used in variables.css), as theses should be slightly different depending on canvasZoom
 - brushes should have shape indicating where they will be painting (smiliar to eraser)
 - when going into full screen window mode, rulers dont adjust size until render is caused by eg. moving mouse over canvas
+- adjust size of resizers in Canvas (dots)

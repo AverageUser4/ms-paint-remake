@@ -80,7 +80,7 @@ function useBrush({
     primaryRef.current.getContext('2d').drawImage(secondaryRef.current, 0, 0);
     secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
 
-    lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+    // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     doHistoryAdd({ 
       element: doGetCanvasCopy(primaryRef.current),
       width: canvasSize.width,

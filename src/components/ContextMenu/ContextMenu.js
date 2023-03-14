@@ -252,7 +252,7 @@ const ContextMenu = memo(function ContextMenu() {
                   lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
                 } else if(data === 'primary') {
                   primaryRef.current.getContext('2d').putImageData(usedImageData, 0, 0);
-                  lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+                  // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
                   doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
                 }
 

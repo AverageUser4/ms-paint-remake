@@ -18,6 +18,7 @@ function HistoryProvider({ children }) {
 
   function doHistoryAdd(data) {
     // { element: canvas, width: number, height: number }
+    lastPrimaryStateRef.current = doGetCanvasCopy(data.element);
     setHistory(prev => {
       const newIndex = prev.currentIndex + 1;
       const newDataArray = prev.dataArray.slice(0, newIndex);
