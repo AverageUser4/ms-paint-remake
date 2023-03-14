@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from 'prop-types';
 import css from './WindowControls.module.css';
 
-import { useWindowsContext } from "../../context/WindowsContext";
+import { useMainWindowContext } from "../../context/MainWindowContext";
 
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
@@ -11,7 +11,7 @@ import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 import Tooltip from "../Tooltip/Tooltip";
 
 function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doSetWindowToMinimalSize }) {
-  const { isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize } = useWindowsContext();
+  const { isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize } = useMainWindowContext();
   
   // inner window
   if(isInnerWindow) {

@@ -6,7 +6,7 @@ import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import WindowControls from '../WindowControls/WindowControls';
 
 import { useContextMenuContext } from '../../context/ContextMenuContext';
-import { useWindowsContext } from '../../context/WindowsContext';
+import { useMainWindowContext } from '../../context/MainWindowContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useActionsContext } from '../../context/ActionsContext';
 
@@ -21,7 +21,7 @@ const TopBar = memo(function TopBar({
   doSetWindowToMinimalSize,
 }) {
   const { openContextMenu } = useContextMenuContext();
-  const { doMainWindowToggleMaximize } = useWindowsContext();
+  const { doMainWindowToggleMaximize } = useMainWindowContext();
   const { doStartNewProject } = useActionsContext();
   const { fileData } = useCanvasContext();
   const containerRef = useRef();

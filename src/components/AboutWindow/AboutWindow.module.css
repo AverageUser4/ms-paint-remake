@@ -1,0 +1,49 @@
+.body {
+  position: relative;
+  
+  padding: 10px 16px;
+  height: calc(100% - var(--inner-window-topbar-height));
+
+  background-color: rgb(240, 240, 240);
+
+  box-sizing: border-box;
+}
+
+.top {
+  position: relative;
+  
+  display: flex;
+  justify-content: center;
+
+  padding-bottom: 10px;
+
+  border-bottom: 1px solid rgb(160, 160, 160);
+}
+.top::after {
+  content: '';
+
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  
+  display: block;
+  width: 100%;
+  height: 1px;
+
+  background-color: rgb(255, 255, 255);
+}
+
+.image {
+  display: block;
+}
+
+.middle {
+  display: flex;
+  align-items: flex-start;
+}
+
+.button {
+  position: absolute;
+  bottom: 10px;
+  right: 16px;
+}

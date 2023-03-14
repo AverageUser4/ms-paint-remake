@@ -7,7 +7,9 @@ function WindowsProvider({ children }) {
   const [isResizeWindowOpen, setIsResizeWindowOpen] = useState(false);
   const [isColorsWindowOpen, setIsColorsWindowOpen] = useState(false);
   const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
-  const isAnyInnerWindowOpen = isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen;
+  const [isAboutWindowOpen, setIsAboutWindowOpen] = useState(true);
+  const isAnyInnerWindowOpen = 
+    isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen || isAboutWindowOpen;
   const promptWindowCallbackRef = useRef(()=>0);
 
   const [isStatusBarVisible, setIsStatusBarVisible] = useState(true);
@@ -43,6 +45,7 @@ function WindowsProvider({ children }) {
         isResizeWindowOpen, setIsResizeWindowOpen,
         isColorsWindowOpen, setIsColorsWindowOpen,
         isPromptWindowOpen, setIsPromptWindowOpen,
+        isAboutWindowOpen, setIsAboutWindowOpen,
         isAnyInnerWindowOpen,
         isStatusBarVisible,
         setIsStatusBarVisible,

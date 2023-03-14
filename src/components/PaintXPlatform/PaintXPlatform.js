@@ -9,10 +9,11 @@ import TopBar from '../TopBar/TopBar';
 import StatusBar from '../StatusBar/StatusBar';
 import QuickAccessToolbar from '../QuickAccessToolbar/QuickAccessToolbar';
 import ContextMenu from '../ContextMenu/ContextMenu';
+import FullScreen from '../FullScreen/FullScreen';
 import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
-import FullScreen from '../FullScreen/FullScreen';
+import AboutWindow from '../AboutWindow/AboutWindow';
 
 import { ContextMenuProvider } from '../../context/ContextMenuContext';
 import { ContainerProvider } from '../../context/ContainerContext';
@@ -125,6 +126,7 @@ function Logic({
       <ResizeWindow/>
       <ColorsWindow/>
       <PromptWindow/>
+      <AboutWindow/>
       <FullScreen/>
     </div>
   );
