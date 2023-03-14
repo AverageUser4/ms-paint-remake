@@ -14,6 +14,7 @@ import ResizeWindow from '../ResizeWindow/ResizeWindow';
 import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
 import AboutWindow from '../AboutWindow/AboutWindow';
+import PropertiesWindow from '../PropertiesWindow/PropertiesWindow';
 
 import { ContextMenuProvider } from '../../context/ContextMenuContext';
 import { ContainerProvider } from '../../context/ContainerContext';
@@ -127,6 +128,7 @@ function Logic({
       <ColorsWindow/>
       <PromptWindow/>
       <AboutWindow/>
+      <PropertiesWindow/>
       <FullScreen/>
     </div>
   );

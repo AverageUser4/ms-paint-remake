@@ -7,6 +7,7 @@ import Dropdown from '../Dropdown/Dropdown';
 import Tooltip from '../Tooltip/Tooltip';
 
 import { useActionsContext } from '../../context/ActionsContext';
+import { useWindowsContext } from '../../context/WindowsContext';
 
 import about32 from './assets/about-32.png';
 import email32 from './assets/email-32.png';
@@ -23,6 +24,7 @@ import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.sv
 
 const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
   const { doStartNewProject, doOpenNewFile, doSaveFile } = useActionsContext();
+  const { setIsAboutWindowOpen, setIsPropertiesWindowOpen } = useWindowsContext();
   const [currentMore, setCurrentMore] = useState('recent');
   const timeoutRef = useRef();
   const { isShown, setIsShown } = props;
@@ -255,6 +257,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
               aria-describedby="id-fd-properties"
               className={`tooltip-container ${css['button']}`}
               onClick={() => {
+                setIsPropertiesWindowOpen(true);
                 setIsShown(false);
               }}
             >
@@ -272,6 +275,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
             <button 
               className={`${css['button']}`}
               onClick={() => {
+                setIsAboutWindowOpen(true);
                 setIsShown(false);
               }}
             >
@@ -315,7 +319,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
 
 FileDropdown.propTypes = {
   isShown: PropTypes.bool.isRequired,
-  setIsShown: PropTypes.func.isRequired
+  setIsShown: PropTypes.func.isRequired,
 };
 
 export default FileDropdown;

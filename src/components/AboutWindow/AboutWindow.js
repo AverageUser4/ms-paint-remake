@@ -58,14 +58,16 @@ const AboutWindow = memo(function AboutWindow() {
                 <img className={css['image']} draggable="false" src={paintLogo} alt=""/>
 
                 <div>
-                  <p>Microsoft Windows</p>
-                  <p>Version 22H2 (OS Build 19045.2604)</p>
-                  <p>&copy;Microsoft Corporation. All rights reserved.</p>
+                  <p className="text text--7">Microsoft Windows</p>
+                  <p className="text text--7">Version 22H2 (OS Build 19045.2604)</p>
+                  <p className="text text--7">&copy;Microsoft Corporation. All rights reserved.</p>
 
-                  <p>The Windows 10 Pro operating system and its user interface are protected by trademark and other pending or existing intellectual property rights in the United States and other countries/regions.</p>
+                  <div className={css['gap']}/>
+                  <p className="text text--7">The Windows 10 Pro operating system and its user interface are protected by trademark and other pending or existing intellectual property rights in the United States and other countries/regions.</p>
+                  <div className={`${css['gap']} ${css['gap--big']}`}/>
 
-                  <p>This product is licensed under the <a href="https://www.microsoft.com/en-us/useterms/">Microsoft Software License Terms</a> to:</p>
-                  <p>User</p>
+                  <p className="text text--7">This product is licensed under the <a target="_blank" rel="noreferrer" draggable="false" className="link" href="https://www.microsoft.com/en-us/useterms/">Microsoft Software License Terms</a> to:</p>
+                  <p className="text text--7 text--indented">User</p>
                 </div>
               </div>
               

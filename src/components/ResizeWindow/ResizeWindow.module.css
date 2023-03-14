@@ -10,26 +10,6 @@
   box-sizing: border-box;
 }
 
-.group {
-  position: relative;
-  
-  padding: 12px;
-  
-  border: 1px solid rgb(220, 220, 220);
-}
-
-.group-label {
-  position: absolute;
-  top: 0;
-  left: 6px;
-
-  padding: 0 2px;
-  
-  background-color: rgb(240, 240, 240);
-
-  transform: translateY(-55%);
-}
-
 .row {
   display: flex;
   align-items: center;
@@ -81,13 +61,6 @@
 }
 .checkbox:hover ~ .checkmark {
   color: rgb(0, 120, 215);
-}
-
-.radio-label {
-  display: flex;
-  align-items: center;
-
-  margin-left: 28px;
 }
 
 .buttons-container {

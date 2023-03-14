@@ -40,6 +40,17 @@
 .middle {
   display: flex;
   align-items: flex-start;
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+.gap {
+  width: 100%;
+  height: 20px;
+}
+.gap--big {
+  height: 46px;
 }
 
 .button {

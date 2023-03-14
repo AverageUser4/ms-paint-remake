@@ -106,5 +106,9 @@
     transition-delay: 0s !important;
     visibility: hidden !important;
   }
+ 
+  .link {
+    color: rgb(0, 102, 204);
+  }
   
 }

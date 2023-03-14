@@ -60,6 +60,17 @@
     padding: 0 2px 2px;
   }
   
+  .form-radio-label {
+    display: flex;
+    align-items: center;
+  }
+  .form-radio-label--spaced {
+    margin: 6px 0;
+  }
+  .form-radio-label--pushed {
+    margin-left: 28px;
+  }
+  
   .form-radio {
     display: flex;
     align-items: center;
@@ -91,5 +102,26 @@
   .form-radio:hover {
     color: rgb(0, 120, 215);
   }
+
+  .form-group {
+    position: relative;
+    
+    padding: 12px;
+    
+    border: 1px solid rgb(220, 220, 220);
+  }
+  
+  .form-group-label {
+    position: absolute;
+    top: 0;
+    left: 6px;
+  
+    padding: 0 2px;
+    
+    background-color: rgb(240, 240, 240);
+  
+    transform: translateY(-55%);
+  }
+  
   
 }

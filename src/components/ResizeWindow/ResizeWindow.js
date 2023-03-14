@@ -243,16 +243,16 @@ const ResizeWindow = memo(function ResizeWindow() {
       
             <form className={css['body']} onSubmit={(e) => onSubmit(e)}>
 
-              <div className={css['group']}>
-                <h3 className={`text ${css['group-label']}`}>Resize</h3>
+              <div className="form-group">
+                <h3 className={`text form-group-label`}>Resize</h3>
 
                 <div className={css['row']}>
                   <span className='text'>By:</span>
 
-                  <label className={css['radio-label']}>
+                  <label className="form-radio-label form-radio-label--pushed">
                     <input 
                       type="radio"
-                      className="form-raadio"
+                      className="form-radio"
                       name="resize-type"
                       data-cy="ResizeWindow-radio-percentage"
                       checked={resizeType === 'percentage'}
@@ -261,10 +261,10 @@ const ResizeWindow = memo(function ResizeWindow() {
                     <span className="text">Percentage</span>
                   </label>
                   
-                  <label className={css['radio-label']}>
+                  <label className="form-radio-label form-radio-label--pushed">
                     <input 
                       type="radio"
-                      className="form-raadio"
+                      className="form-radio"
                       name="resize-type"
                       data-cy="ResizeWindow-radio-pixels"
                       checked={resizeType === 'pixels'}
@@ -324,8 +324,8 @@ const ResizeWindow = memo(function ResizeWindow() {
                 </label>
               </div>
 
-              <div className={css['group']}>
-                <h3 className={`text ${css['group-label']}`}>Skew (Degrees)</h3>
+              <div className="form-group">
+                <h3 className={`text form-group-label`}>Skew (Degrees)</h3>
 
                 <div className={css['row']}>
                   <img src={skewHorizontal} alt=""/>

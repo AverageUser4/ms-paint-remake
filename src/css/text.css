@@ -46,6 +46,15 @@
     letter-spacing: 0;
   }
 
+  .text--7 {
+    color: rgb(0, 0, 0);
+    line-height: 1.25;
+  }
+
+  .text--indented {
+    padding-left: 10px;
+  }
+  
   .text--black {
     color: rgb(0, 0, 0);
   }
