@@ -8,7 +8,10 @@ import { doGetCanvasCopy } from '../misc/utils';
 const HistoryContext = createContext();
 
 function HistoryProvider({ children }) {
-  const { primaryRef, clearPrimary, lastPrimaryStateRef, setCanvasSize } = useCanvasContext();  
+  const { 
+    primaryRef, clearPrimary, lastPrimaryStateRef, 
+    setCanvasSize, thumbnailPrimaryRef,
+  } = useCanvasContext();  
   const [history, setHistory] = useState({
     dataArray: [{ ...initialCanvasSize, element: document.createElement('canvas') }],
     currentIndex: 0
@@ -39,8 +42,10 @@ function HistoryProvider({ children }) {
     bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
   
     const primaryContext = primaryRef.current.getContext('2d');
+    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
     clearPrimary({ ...data });
     primaryContext.drawImage(bufCanvas, 0, 0);
+    thumbnailPrimaryContext?.drawImage(bufCanvas, 0, 0);
     lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
   
     setCanvasSize({ width: data.width, height: data.height });

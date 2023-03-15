@@ -9,10 +9,12 @@ function WindowsProvider({ children }) {
   const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
   const [isAboutWindowOpen, setIsAboutWindowOpen] = useState(false);
   const [isPropertiesWindowOpen, setIsPropertiesWindowOpen] = useState(false);
-  const isAnyInnerWindowOpen = 
+  const [isThumbnailWindowOpen, setIsThumbnailWindowOpen] = useState(true);
+  const promptWindowCallbackRef = useRef(()=>0);
+  const isAnyBlockingWindowOpen = 
     isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen ||
     isAboutWindowOpen || isPropertiesWindowOpen;
-  const promptWindowCallbackRef = useRef(()=>0);
+  const isAnyInnerWindowOpen = isAnyBlockingWindowOpen || isThumbnailWindowOpen;
 
   const [isStatusBarVisible, setIsStatusBarVisible] = useState(true);
   const [isGridLinesVisible, setIsGridLinesVisible] = useState(false);
@@ -29,6 +31,9 @@ function WindowsProvider({ children }) {
         setIsResizeWindowOpen(false);
         setIsColorsWindowOpen(false);
         setIsPromptWindowOpen(false);
+        setIsAboutWindowOpen(false);
+        setIsPropertiesWindowOpen(false);
+        setIsThumbnailWindowOpen(false);
       }
     }
 
@@ -49,6 +54,8 @@ function WindowsProvider({ children }) {
         isPromptWindowOpen, setIsPromptWindowOpen,
         isAboutWindowOpen, setIsAboutWindowOpen,
         isPropertiesWindowOpen, setIsPropertiesWindowOpen,
+        isThumbnailWindowOpen, setIsThumbnailWindowOpen,
+        isAnyBlockingWindowOpen,
         isAnyInnerWindowOpen,
         isStatusBarVisible,
         setIsStatusBarVisible,

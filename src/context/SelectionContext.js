@@ -11,7 +11,10 @@ import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from '../misc
 const SelectionContext = createContext();
 
 function SelectionProvider({ children }) {
-  const { setCanvasSize, canvasZoom, canvasSize, primaryRef, lastPrimaryStateRef, clearPrimary } = useCanvasContext();
+  const { 
+    setCanvasSize, canvasZoom, canvasSize,
+    primaryRef, clearPrimary, thumbnailPrimaryRef
+  } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { setCurrentTool } = useToolContext();
   
@@ -62,16 +65,22 @@ function SelectionProvider({ children }) {
     }
     // using zoom argument is important as it isn't always canvasZoom
     const primaryContext = primaryRef.current.getContext('2d');
-    primaryContext.imageSmoothingEnabled = false;
-    primaryContext.drawImage(
-      doGetCanvasCopy(selectionRef.current),
-      Math.round((adjustedPosition ? adjustedPosition.x : selectionPosition.x) / zoom),
-      Math.round((adjustedPosition ? adjustedPosition.y : selectionPosition.y) / zoom),
-      Math.round(selectionSize.width / zoom),
-      Math.round(selectionSize.height / zoom),
-    );
+    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
 
-    // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+    function draw(context) {
+      context.imageSmoothingEnabled = false;
+      context.drawImage(
+        doGetCanvasCopy(selectionRef.current),
+        Math.round((adjustedPosition ? adjustedPosition.x : selectionPosition.x) / zoom),
+        Math.round((adjustedPosition ? adjustedPosition.y : selectionPosition.y) / zoom),
+        Math.round(selectionSize.width / zoom),
+        Math.round(selectionSize.height / zoom),
+      );
+    }
+
+    draw(primaryContext);
+    thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
+
     doHistoryAdd({ 
       element: doGetCanvasCopy(primaryRef.current),
       width: canvasSize.width,
@@ -200,7 +209,6 @@ function SelectionProvider({ children }) {
     } else {
       writeCanvasToClipboard(primaryRef.current);
       clearPrimary();
-      // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }
@@ -288,7 +296,6 @@ function SelectionProvider({ children }) {
       setSelectionPhase(0);
     } else {
       clearPrimary();
-      // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }

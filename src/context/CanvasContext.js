@@ -30,12 +30,21 @@ function CanvasProvider({ children }) {
   const [isBlackAndWhite, setIsBlackAndWhite] = useState(false);
   const primaryRef = useRef();
   const secondaryRef = useRef();
+  const thumbnailPrimaryRef = useRef();
+  const thumbnailSecondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
 
   function clearPrimary({ x = 0, y = 0, width, height } = {}) {
     const primaryContext = primaryRef.current.getContext('2d');
-    primaryContext.fillStyle = RGBObjectToString(colorData.secondary);
-    primaryContext.fillRect(x, y, width || canvasSize.width, height || canvasSize.height);
+    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+
+    function clear(context) {
+      context.fillStyle = RGBObjectToString(colorData.secondary);
+      context.fillRect(x, y, width || canvasSize.width, height || canvasSize.height);
+    }
+    
+    clear(primaryContext);
+    thumbnailPrimaryContext && clear(thumbnailPrimaryContext);
   }
 
   function changeZoom(decrease) {
@@ -64,6 +73,8 @@ function CanvasProvider({ children }) {
         primaryRef,
         secondaryRef,
         lastPrimaryStateRef,
+        thumbnailPrimaryRef,
+        thumbnailSecondaryRef,
         clearPrimary,
         changeZoom,
         doCanvasFullReset,

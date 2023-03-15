@@ -6,6 +6,7 @@ export const innerWindowConfig = {
   isAutoShrink: false,
   isIgnorePointerEvents: false,
   isMaximized: false,
+  isBlockingMainWindow: true,
   setIsFocused: ()=>0,
 };
 

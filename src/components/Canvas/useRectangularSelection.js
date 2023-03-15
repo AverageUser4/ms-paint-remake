@@ -147,7 +147,6 @@ function useRectangularSelection({
         height: Math.round(lastSelectionSizeRef.current.height / canvasZoom),
       });
 
-      // lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
       doHistoryAdd({
         element: doGetCanvasCopy(primaryRef.current),
         ...canvasSize,

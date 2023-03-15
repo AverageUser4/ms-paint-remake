@@ -19,7 +19,7 @@ function Canvas() {
   const { 
     canvasSize, canvasZoom, setCanvasZoom, setCanvasSize,
     primaryRef, secondaryRef, lastPrimaryStateRef, clearPrimary,
-    isBlackAndWhite
+    isBlackAndWhite, thumbnailPrimaryRef
   } = useCanvasContext();
   const { 
     canvasOutlineSize, setCanvasOutlineSize, canvasMousePosition,
@@ -143,14 +143,16 @@ function Canvas() {
     lastCanvasSizeRef.current = canvasSize;
     
     const primaryContext = primaryRef.current.getContext('2d');
+    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
     clearPrimary();
     
     if(lastPrimaryStateRef.current) {
       primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
+      thumbnailPrimaryContext?.drawImage(lastPrimaryStateRef.current, 0, 0);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     }
-  }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef, clearPrimary]);
+  }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef, clearPrimary, thumbnailPrimaryRef]);
 
   return (
     <div className="point-container">

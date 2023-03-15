@@ -15,7 +15,8 @@ function ActionsProvider({ children }) {
   const { doHistoryClear } = useHistoryContext();
   const { 
     doCanvasFullReset, setCanvasSize, primaryRef,
-    lastPrimaryStateRef, fileData, isBlackAndWhite
+    lastPrimaryStateRef, fileData, isBlackAndWhite,
+    thumbnailPrimaryRef,
   } = useCanvasContext();
   const { doRequirePromptWindow } = useWindowsContext();
   const { setSelectionPhase } = useSelectionContext();
@@ -29,8 +30,16 @@ function ActionsProvider({ children }) {
     
     setTimeout(() => {
       const primaryContext = primaryRef.current.getContext('2d');
-      primaryContext.imageSmoothingEnabled = false;
-      primaryContext.drawImage(image, 0, 0);
+      const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+
+      function draw(context) {
+        context.imageSmoothingEnabled = false;
+        context.drawImage(image, 0, 0);
+      }
+
+      draw(primaryContext);
+      thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
+      
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
       URL.revokeObjectURL(image.src);
     }, 20);

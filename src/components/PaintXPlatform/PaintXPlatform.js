@@ -15,6 +15,7 @@ import ColorsWindow from '../ColorsWindow/ColorsWindow';
 import PromptWindow from '../PromptWindow/PromptWindow';
 import AboutWindow from '../AboutWindow/AboutWindow';
 import PropertiesWindow from '../PropertiesWindow/PropertiesWindow';
+import ThumbnailWindow from '../ThumbnailWindow/ThumbnailWindow';
 
 import { ContextMenuProvider } from '../../context/ContextMenuContext';
 import { ContainerProvider } from '../../context/ContainerContext';
@@ -40,7 +41,7 @@ function Logic({
     mainWindowSize, setMainWindowSize,
     isMainWindowMaximized, setIsMainWindowMaximized,
   } = useMainWindowContext();
-  const { isAnyInnerWindowOpen } = useWindowsContext();
+  const { isAnyBlockingWindowOpen } = useWindowsContext();
 
   const doSetWindowToMinimalSize = useCallback(() => {
     setMainWindowSize(minimalSize);
@@ -60,10 +61,10 @@ function Logic({
   });
 
   useEffect(() => {
-    if(isAnyInnerWindowOpen && isMainWindowFocused) {
+    if(isAnyBlockingWindowOpen && isMainWindowFocused) {
       setIsMainWindowFocused(false);
     }
-  }, [isAnyInnerWindowOpen, isMainWindowFocused, setIsMainWindowFocused]);
+  }, [isAnyBlockingWindowOpen, isMainWindowFocused, setIsMainWindowFocused]);
 
   return (
     <div 
@@ -80,10 +81,11 @@ function Logic({
         setIsFocused={setIsMainWindowFocused}
         isResizable={isResizable}
         isAutoShrink={isAutoShrink}
-        isIgnorePointerEvents={isAnyInnerWindowOpen}
+        isIgnorePointerEvents={isAnyBlockingWindowOpen}
         isMaximized={isMainWindowMaximized}
         isOpen={isOpen}
         isInnerWindow={false}
+        isBlockingMainWindow={false}
         render={(isAttentionAnimated, onPointerDownMove) => {
           return (
             <>
@@ -129,6 +131,7 @@ function Logic({
       <PromptWindow/>
       <AboutWindow/>
       <PropertiesWindow/>
+      <ThumbnailWindow/>
       <FullScreen/>
     </div>
   );

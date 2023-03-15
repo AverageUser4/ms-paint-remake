@@ -6,12 +6,14 @@ import BigButton from '../BigButton/BigButton';
 import Tooltip from '../Tooltip/Tooltip';
 
 import { useCanvasContext } from '../../context/CanvasContext';
+import { useWindowsContext } from '../../context/WindowsContext';
 
 import full32 from './assets/full-32.png';
 import thumb32 from './assets/thumb-32.png';
 
 const RibbonDisplay = memo(function RibbonDisplay() {
   const { setIsFullScreenView } = useCanvasContext();
+  const { setIsThumbnailWindowOpen } = useWindowsContext();
   
   return (
     <RibbonItemExpanded name="Display">
@@ -38,7 +40,7 @@ const RibbonDisplay = memo(function RibbonDisplay() {
           hasArrow={false}
           name="Thumbnail"
           strName="Thumbnail"
-          isDisabled={true}
+          onClick={() => setIsThumbnailWindowOpen(true)}
           describedBy="id-display-thumbnail"
           tooltip={
             <Tooltip

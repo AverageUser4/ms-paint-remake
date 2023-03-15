@@ -13,59 +13,54 @@ function Window({
   ID,
   render,
   minimalSize,
-  size,
-  setSize,
-  position,
-  setPosition,
-  isFocused,
-  setIsFocused,
+  size, setSize,
+  position, setPosition,
+  isFocused, setIsFocused,
   isResizable,
   isAutoShrink,
   isInnerWindow,
   isOpen,
   isIgnorePointerEvents,
   isMaximized,
+  isBlockingMainWindow,
 }) {
-  isResizable = isResizable && !isMaximized && !isInnerWindow;
+  isResizable = isResizable && !isMaximized;
   const { containerRect, isConstrained, isAutoFit, isAllowToLeaveViewport } = useContainerContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
+  let zIndex = 'auto';
+  zIndex = isInnerWindow ? '4' : zIndex;
+  zIndex = isBlockingMainWindow ? '5' : zIndex;
+  
   const { resizeElements } = useResize({ 
-    position,
-    setPosition,
-    isAllowToLeaveViewport,
-    size,
-    setSize,
-    isConstrained,
+    containerRect,
+    position, setPosition,
+    size, setSize,
     minimalSize,
     isResizable,
-    containerRect,
+    isConstrained,
+    isAllowToLeaveViewport,
   });
   const { onPointerDownMove, tempElement } = useMove({ 
-    position,
-    setPosition,
-    isInnerWindow,
-    isMaximized,
-    size,
-    setSize,
-    isConstrained,
     containerRect,
+    position, setPosition,
+    size, setSize,
+    isMaximized,
+    isInnerWindow,
+    isConstrained,
   });
   useAutoFit({ 
     containerRect,
-    position,
-    setPosition,
-    size,
-    setSize,
+    position, setPosition,
+    size, setSize,
     isAutoFit 
   });
   useAutoShrink({ 
     containerRect,
     minimalSize,
     position,
-    size,
-    setSize,
+    size, setSize,
     isAutoShrink,
     isAutoFit,
     isResizable 
@@ -75,7 +70,7 @@ function Window({
     if(!isInnerWindow && isFocused) {
       setIsFocused(false);
     }
-    else if(isInnerWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
+    else if(isBlockingMainWindow && isInnerWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
       setIsAttentionAnimated(true);
       setTimeout(() => setIsAttentionAnimated(false), 1000);
     }
@@ -102,8 +97,9 @@ function Window({
       setIsFocused(true);
   }
   
-  if(!isOpen && !isActuallyOpen)
+  if(!isOpen && !isActuallyOpen) {
     return null;
+  }
   
   return (
     <article
@@ -115,7 +111,7 @@ function Window({
         left: position.x,
         width: size.width,
         height: size.height,
-        zIndex: isInnerWindow ? '4' : 'auto',
+        zIndex,
       }} 
       className={`
         ${css['container']}
@@ -159,6 +155,7 @@ Window.propTypes = {
   isAutoShrink: PropTypes.bool.isRequired,
   isIgnorePointerEvents: PropTypes.bool.isRequired,
   isMaximized: PropTypes.bool.isRequired,
+  isBlockingMainWindow: PropTypes.bool.isRequired,
 };
 
 export default Window;

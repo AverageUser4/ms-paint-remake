@@ -26,7 +26,7 @@ function useFreeFormSelection({
     { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
   ]);
 
-  const { primaryRef, secondaryRef } = useCanvasContext();
+  const { primaryRef, secondaryRef, thumbnailPrimaryRef } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const {
@@ -119,6 +119,7 @@ function useFreeFormSelection({
     const zoomedHeight = Math.round(height * canvasZoom);
 
     const primaryContext = primaryRef.current.getContext('2d');
+    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
     const secondaryContext = secondaryRef.current.getContext('2d');
     
     const boundariesImageData = secondaryContext.getImageData(x, y, width, height);
@@ -173,6 +174,7 @@ function useFreeFormSelection({
       doSelectionDrawToSelection(selectionImageData);
 
       primaryContext.putImageData(primaryImageData, x, y);
+      thumbnailPrimaryContext?.putImageData(primaryImageData, x, y);
       doHistoryAdd({
         element: doGetCanvasCopy(primaryRef.current),
         ...canvasSize,
