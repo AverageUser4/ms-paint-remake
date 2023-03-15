@@ -44,7 +44,7 @@ export default {
     checkAndChange(offsetX, offsetY);
 
     primaryContext.putImageData(imageData, 0, 0);
-    thumbnailPrimaryContext.putImageData(imageData, 0, 0);
+    thumbnailPrimaryContext && thumbnailPrimaryContext.putImageData(imageData, 0, 0);
   },
   onPointerMove() {
     return;

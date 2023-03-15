@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
@@ -17,36 +17,25 @@ import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
   const { 
-    canvasSize, canvasZoom, setCanvasZoom, setCanvasSize,
-    primaryRef, secondaryRef, lastPrimaryStateRef, clearPrimary,
-    isBlackAndWhite, thumbnailPrimaryRef
+    canvasSize, canvasZoom, setCanvasSize,
+    primaryRef, secondaryRef, isBlackAndWhite,
   } = useCanvasContext();
   const { 
     canvasOutlineSize, setCanvasOutlineSize, canvasMousePosition,
     setCanvasMousePosition 
   } = useCanvasMiscContext();
-  const { toolsData, currentTool } = useToolContext();
-  const { colorData, setColorData } = useColorContext()
+  const { currentTool, currentToolData } = useToolContext();
+  const { colorData } = useColorContext()
   const { doHistoryAdd } = useHistoryContext();
-  const currentToolData = toolsData.get(currentTool);
   const canvasStyle = { 
     width: canvasSize.width * canvasZoom,
     height: canvasSize.height * canvasZoom,
     filter: isBlackAndWhite ? 'grayscale(100%)' : '',
   };
-  const { 
-    selectionRef, selectionSize, selectionPhase, selectionPosition,
-  } = useSelectionContext();
+  const { selectionRef, selectionSize, selectionPhase, selectionPosition } = useSelectionContext();
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
   
-  const lastPointerPositionRef = useRef({});
-  const lastCurrentToolRef = useRef();
-  const lastCanvasZoomRef = useRef();
-  const isFirstRenderRef = useRef(true);
-  const lastCanvasSizeRef = useRef(canvasSize);
-  
-  /* https://codereview.stackexchange.com/questions/114702/drawing-a-grid-on-canvas */
   let gridCellSize = 12;
   let gridCellColor_1 = 'rgba(0, 0, 0, 0.5)';
   let gridCellColor_2 = 'rgba(255, 255, 255, 0.5)';
@@ -62,27 +51,12 @@ function Canvas() {
     gridCellColor_2 = 'rgb(128, 128, 128)';
   }
 
-  const {
-    onPointerDownBrush
-  } = useBrush({
-    currentTool, lastPointerPositionRef, canvasZoom,
-    colorData, currentToolData,
-    doHistoryAdd, canvasSize,
-    setColorData, setCanvasZoom,
-  });
+  const { onPointerDownBrush } = useBrush();
 
   const { 
     selectionResizeElements, onPointerDownSelectionMove,
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
-  } = useSelection({
-    currentTool, selectionRef,
-    canvasZoom, lastCurrentToolRef,
-    lastCanvasZoomRef, colorData,
-    lastPointerPositionRef,
-    lastPrimaryStateRef,
-    currentToolData,
-    canvasSize,
-  });
+  } = useSelection();
 
   let onPointerDownSecondary = onPointerDownBrush;
   if(currentTool === 'selection-rectangle') {
@@ -121,38 +95,6 @@ function Canvas() {
     setCanvasOutlineSize(null);
     doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), width, height });
   }
-
-  useEffect(() => {
-    // by default canvas background is transparent, in paint it is supposed to always be in secondary color
-    if(!isFirstRenderRef.current) {
-      return;
-    }
-    isFirstRenderRef.current = false;
-
-    clearPrimary();
-  }, [colorData.secondary, clearPrimary, canvasSize]);
-
-  useEffect(() => {
-    // changing width or height attribute (which happens whenever canvasSize changes)
-    // of canvas causes it to lose its entire context (both 'settings' like
-    // fillStyle and pixels drawn to it), this effect makes sure that after every change
-    // to canvas' dimensions its latest pixels are put back on it
-    if(lastCanvasSizeRef.current === canvasSize) {
-      return;
-    }
-    lastCanvasSizeRef.current = canvasSize;
-    
-    const primaryContext = primaryRef.current.getContext('2d');
-    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
-    clearPrimary();
-    
-    if(lastPrimaryStateRef.current) {
-      primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
-      thumbnailPrimaryContext?.drawImage(lastPrimaryStateRef.current, 0, 0);
-      // so the parts of image that end up outside the viewable are are cut off
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
-    }
-  }, [canvasSize, colorData.secondary, primaryRef, lastPrimaryStateRef, clearPrimary, thumbnailPrimaryRef]);
 
   return (
     <div className="point-container">
@@ -237,6 +179,7 @@ function Canvas() {
       }
 
       {
+        /* https://codereview.stackexchange.com/questions/114702/drawing-a-grid-on-canvas */
         isGridLinesVisible &&
         <svg 
           className={`

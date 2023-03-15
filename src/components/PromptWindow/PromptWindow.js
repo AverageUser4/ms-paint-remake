@@ -7,6 +7,8 @@ import InnerWindowTopBar from '../InnerWindowTopBar/InnerWindowTopBar';
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useActionsContext } from '../../context/ActionsContext';
 import { useMainWindowContext } from '../../context/MainWindowContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+
 
 import { innerWindowConfig } from '../../misc/data';
 import { getWindowCenteredPosition } from '../../misc/utils';
@@ -16,6 +18,7 @@ const HEIGHT = 135;
 
 const PromptWindow = memo(function PromptWindow() {
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
+  const { fileData } = useCanvasContext();
   const { 
     isPromptWindowOpen: isOpen, setIsPromptWindowOpen: setIsOpen,
     promptWindowCallbackRef: callbackRef,
@@ -53,7 +56,7 @@ const PromptWindow = memo(function PromptWindow() {
       
             <div className={css['body']}>
               <div className={css['top']}>
-                <h3 className="text text--5">Do you want to save changes to Untitled?</h3>
+                <h3 className="text text--5">Do you want to save changes to {fileData ? fileData.name : 'Untitled'}?</h3>
               </div>
 
               <div className={css['buttons-container']}>

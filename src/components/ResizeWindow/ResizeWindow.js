@@ -28,7 +28,7 @@ const initialData = {
 
 const ResizeWindow = memo(function ResizeWindow() {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
-  const { canvasSize, setCanvasSize, primaryRef, clearPrimary, thumbnailPrimaryRef } = useCanvasContext();
+  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, thumbnailPrimaryRef } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -193,7 +193,7 @@ const ResizeWindow = memo(function ResizeWindow() {
           context.restore();
         }
 
-        clearPrimary();
+        doCanvasClearPrimary();
         draw(primaryContext);
         thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
 

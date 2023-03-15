@@ -4,22 +4,10 @@ import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
-import { checkArgs, doGetCanvasCopy } from '../../misc/utils';
+import { doGetCanvasCopy } from '../../misc/utils';
 
-function useRectangularSelection({
-  canvasZoom,
-  colorData,
-  doSelectionSetSize,
-  doSelectionSetPosition,
-}) {
-  checkArgs([
-    { name: 'canvasZoom', value: canvasZoom, type: 'number' },
-    { name: 'colorData', value: colorData, type: 'object' },
-    { name: 'doSelectionSetSize', value: doSelectionSetSize, type: 'function' },
-    { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
-  ]);
-
-  const { primaryRef, clearPrimary, canvasSize, lastPrimaryStateRef } = useCanvasContext();
+function useRectangularSelection() {
+  const { primaryRef, doCanvasClearPrimary, canvasSize, canvasZoom } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const {
@@ -31,6 +19,8 @@ function useRectangularSelection({
     lastSelectionPositionRef,
     doSelectionDrawToPrimary,
     doSelectionDrawToSelection,
+    doSelectionSetSize,
+    doSelectionSetPosition,
   } = useSelectionContext();
 
   const [selectionResizeData, setSelectionResizeData] = useState(null);
@@ -140,7 +130,7 @@ function useRectangularSelection({
       );
   
       doSelectionDrawToSelection(imageData);
-      clearPrimary({
+      doCanvasClearPrimary({
         x: Math.round(lastSelectionPositionRef.current.x / canvasZoom),
         y: Math.round(lastSelectionPositionRef.current.y / canvasZoom),
         width: Math.round(lastSelectionSizeRef.current.width / canvasZoom),

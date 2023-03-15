@@ -62,7 +62,7 @@ function ActionsProvider({ children }) {
     });
   }
   
-  function doSaveFile(mimeType = 'image/png') {
+  function doSaveFile(mimeType = fileData?.type) {
     let usedCanvas = primaryRef.current;
 
     if(isBlackAndWhite) {
@@ -75,7 +75,7 @@ function ActionsProvider({ children }) {
     }
     
     const link = document.createElement('a');
-    link.href = usedCanvas.toDataURL(mimeType);
+    link.href = usedCanvas.toDataURL(mimeType)
     link.download = fileData?.name || 'untitled';
     link.click();
   }

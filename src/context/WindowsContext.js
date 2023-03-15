@@ -9,7 +9,7 @@ function WindowsProvider({ children }) {
   const [isPromptWindowOpen, setIsPromptWindowOpen] = useState(false);
   const [isAboutWindowOpen, setIsAboutWindowOpen] = useState(false);
   const [isPropertiesWindowOpen, setIsPropertiesWindowOpen] = useState(false);
-  const [isThumbnailWindowOpen, setIsThumbnailWindowOpen] = useState(true);
+  const [isThumbnailWindowOpen, setIsThumbnailWindowOpen] = useState(false);
   const promptWindowCallbackRef = useRef(()=>0);
   const isAnyBlockingWindowOpen = 
     isResizeWindowOpen || isColorsWindowOpen || isPromptWindowOpen ||

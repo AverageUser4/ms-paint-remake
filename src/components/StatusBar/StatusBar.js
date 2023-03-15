@@ -22,7 +22,7 @@ const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }
   const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
   const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;
   let parsedFileSize;
-  
+
   if(!isStatusBarVisible) {
     return null;
   }

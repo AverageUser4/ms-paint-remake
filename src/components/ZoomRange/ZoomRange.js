@@ -22,7 +22,7 @@ function findClosestMultiplier(offset) {
 }
 
 const ZoomRange = memo(function ZoomRange() {
-  const { canvasZoom, setCanvasZoom, changeZoom } = useCanvasContext();
+  const { canvasZoom, setCanvasZoom, doCanvasChangeZoom } = useCanvasContext();
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
   
@@ -67,7 +67,7 @@ const ZoomRange = memo(function ZoomRange() {
 
       <button 
         className={`tooltip-container ${css['minus']}`}
-        onClick={() => changeZoom(true)}
+        onClick={() => doCanvasChangeZoom(true)}
         aria-label="Zoom out"
       >
         <Tooltip
@@ -95,7 +95,7 @@ const ZoomRange = memo(function ZoomRange() {
 
       <button 
         className={`tooltip-container ${css['plus']}`}
-        onClick={() => changeZoom(false)}
+        onClick={() => doCanvasChangeZoom(false)}
         aria-label="Zoom in"
       >
         <Tooltip

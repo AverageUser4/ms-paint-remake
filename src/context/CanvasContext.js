@@ -1,9 +1,9 @@
-import React, { createContext, useContext, useState, useRef } from 'react';
+import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { useColorContext } from './ColorContext';
 import { initialCanvasSize } from '../misc/data';
-import { RGBObjectToString } from '../misc/utils';
+import { RGBObjectToString, doGetCanvasCopy } from '../misc/utils';
 
 const zoomData = [
   { multiplier: 0.125, offset: 7 },
@@ -33,8 +33,12 @@ function CanvasProvider({ children }) {
   const thumbnailPrimaryRef = useRef();
   const thumbnailSecondaryRef = useRef();
   const lastPrimaryStateRef = useRef();
+  const isFirstRenderRef = useRef(true);
+  const lastCanvasSizeRef = useRef(canvasSize);
+  const lastPointerPositionRef = useRef({});
+  const lastCanvasZoomRef = useRef();
 
-  function clearPrimary({ x = 0, y = 0, width, height } = {}) {
+  const doCanvasClearPrimary = useCallback(({ x = 0, y = 0, width, height } = {}) => {
     const primaryContext = primaryRef.current.getContext('2d');
     const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
 
@@ -45,9 +49,9 @@ function CanvasProvider({ children }) {
     
     clear(primaryContext);
     thumbnailPrimaryContext && clear(thumbnailPrimaryContext);
-  }
+  }, [canvasSize, colorData.secondary]);
 
-  function changeZoom(decrease) {
+  function doCanvasChangeZoom(decrease) {
     const currentIndex = zoomData.findIndex(data => data.multiplier === canvasZoom); 
     const newIndex = currentIndex + (decrease ? -1 : 1);
 
@@ -59,11 +63,44 @@ function CanvasProvider({ children }) {
   }
 
   function doCanvasFullReset() {
-    clearPrimary();
+    doCanvasClearPrimary();
     setCanvasZoom(1);
     setFileData(null);
     lastPrimaryStateRef.current = null;
   }
+
+  useEffect(() => {
+    // by default canvas background is transparent,
+    // in paint it is supposed to always be in secondary color
+    if(!isFirstRenderRef.current) {
+      return;
+    }
+    isFirstRenderRef.current = false;
+
+    doCanvasClearPrimary();
+  }, [doCanvasClearPrimary, canvasSize]);
+
+  useEffect(() => {
+    // changing width or height attribute (which happens whenever canvasSize changes)
+    // of canvas causes it to lose its entire context (both 'settings' like
+    // fillStyle and pixels drawn to it), this effect makes sure that after every change
+    // to canvas' dimensions, its latest pixels are put back on it
+    if(lastCanvasSizeRef.current === canvasSize) {
+      return;
+    }
+    lastCanvasSizeRef.current = canvasSize;
+    
+    const primaryContext = primaryRef.current.getContext('2d');
+    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+    doCanvasClearPrimary();
+    
+    if(lastPrimaryStateRef.current) {
+      primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
+      thumbnailPrimaryContext?.drawImage(lastPrimaryStateRef.current, 0, 0);
+      // so the parts of image that end up outside the viewable are are cut off
+      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+    }
+  }, [canvasSize, doCanvasClearPrimary]);
   
   return (
     <CanvasContext.Provider
@@ -73,10 +110,12 @@ function CanvasProvider({ children }) {
         primaryRef,
         secondaryRef,
         lastPrimaryStateRef,
+        lastPointerPositionRef,
+        lastCanvasZoomRef,
         thumbnailPrimaryRef,
         thumbnailSecondaryRef,
-        clearPrimary,
-        changeZoom,
+        doCanvasClearPrimary,
+        doCanvasChangeZoom,
         doCanvasFullReset,
         fileData, setFileData,
         isFullScreenView, setIsFullScreenView,

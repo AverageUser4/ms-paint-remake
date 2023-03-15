@@ -16,7 +16,7 @@ import percent16 from './assets/100-percent-16.png';
 import percent32 from './assets/100-percent-32.png';
 
 const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
-  const { setCanvasZoom, changeZoom } = useCanvasContext();
+  const { setCanvasZoom, doCanvasChangeZoom } = useCanvasContext();
   
   const zoomInTooltip = (
     <Tooltip
@@ -45,7 +45,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
       <RibbonItemExpanded name="Zoom">
         <button 
           className="tooltip-container button"
-          onClick={() => changeZoom(false)}
+          onClick={() => doCanvasChangeZoom(false)}
           aria-describedby="id-zoom-zoom-in"
         >
           <img src={zoomIn16} alt=""/>
@@ -55,7 +55,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
 
         <button 
           className="tooltip-container button"
-          onClick={() => changeZoom(true)}
+          onClick={() => doCanvasChangeZoom(true)}
           aria-describedby="id-zoom-zoom-out"
         >
           <img src={zoomOut16} alt=""/>
@@ -84,7 +84,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> in</div>}
           strName="Zoom-in"
-          onClick={() => changeZoom(false)}
+          onClick={() => doCanvasChangeZoom(false)}
           describedBy="id-zoom-zoom-in"
           tooltip={zoomInTooltip}
         />
@@ -93,7 +93,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
           hasArrow={false}
           name={<div>Zoom <div className="line-break"></div> out</div>}
           strName="Zoom-out"
-          onClick={() => changeZoom(true)}
+          onClick={() => doCanvasChangeZoom(true)}
           describedBy="id-zoom-zoom-out"
           tooltip={zoomOutTooltip}
         />

@@ -15,7 +15,16 @@ function ImageInput({ inputRef, onLoad, isSetFileData }) {
         const image = new Image();
         const file = event.target.files[0];
 
-        isSetFileData && setFileData({ name: file.name, size: file.size, lastModified: file.lastModified });
+        // don't destructure, properties of this object are not enumerable
+        if(isSetFileData && file.type.includes('image/')) {
+          setFileData({ 
+            name: file.name, size: file.size,
+            lastModified: file.lastModified, type: file.type
+          });
+        } else if(isSetFileData) {
+          setFileData(null);
+        }
+
         image.src = URL.createObjectURL(file);
         image.addEventListener('load', onLoad);
         image.addEventListener('error', () => {

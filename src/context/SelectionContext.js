@@ -13,7 +13,7 @@ const SelectionContext = createContext();
 function SelectionProvider({ children }) {
   const { 
     setCanvasSize, canvasZoom, canvasSize,
-    primaryRef, clearPrimary, thumbnailPrimaryRef
+    primaryRef, doCanvasClearPrimary, thumbnailPrimaryRef
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { setCurrentTool } = useToolContext();
@@ -123,7 +123,7 @@ function SelectionProvider({ children }) {
 
     setTimeout(() => {
       setSelectionPhase(0);
-      clearPrimary();
+      doCanvasClearPrimary();
       doSelectionDrawToPrimary(canvasZoom, newPosition);
     }, 20);
   }
@@ -208,7 +208,7 @@ function SelectionProvider({ children }) {
       setSelectionPhase(0);
     } else {
       writeCanvasToClipboard(primaryRef.current);
-      clearPrimary();
+      doCanvasClearPrimary();
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }
@@ -234,7 +234,7 @@ function SelectionProvider({ children }) {
     setTimeout(() => {
       const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
       doSelectionDrawToSelection(primaryImageData);
-      clearPrimary();
+      doCanvasClearPrimary();
     }, 20);
   }
 
@@ -259,7 +259,7 @@ function SelectionProvider({ children }) {
       selectionImageData = copyContext.getImageData(0, 0, copy.width, copy.height);
     }
     
-    clearPrimary();
+    doCanvasClearPrimary();
     doSelectionDrawToPrimary(canvasZoom);
 
     const usedPosition = {
@@ -295,7 +295,7 @@ function SelectionProvider({ children }) {
     if(selectionPhase === 2) {
       setSelectionPhase(0);
     } else {
-      clearPrimary();
+      doCanvasClearPrimary();
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }

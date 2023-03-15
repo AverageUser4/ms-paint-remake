@@ -1,34 +1,15 @@
 import { useEffect } from 'react';
 import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
-import { checkArgs } from '../../misc/utils';
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
+import { useToolContext } from '../../context/ToolContext';
 
-function useSelection({
-  lastCurrentToolRef,
-  lastCanvasZoomRef,
-  currentTool,
-  canvasZoom,
-  colorData,
-  lastPointerPositionRef,
-  currentToolData,
-  canvasSize,
-}) {
-  checkArgs([
-    { name: 'lastCurrentToolRef', value: lastCurrentToolRef, type: 'object' },
-    { name: 'lastCanvasZoomRef', value: lastCanvasZoomRef, type: 'object' },
-    { name: 'currentTool', value: currentTool, type: 'string' },
-    { name: 'colorData', value: colorData, type: 'object' },
-    { name: 'canvasZoom', value: canvasZoom, type: 'number' },
-    { name: 'lastPointerPositionRef', value: lastPointerPositionRef, type: 'object' },
-    { name: 'currentToolData', value: currentToolData, type: 'object' },
-    { name: 'canvasSize', value: canvasSize, type: 'object' },
-  ]);
-
-  const { primaryRef } = useCanvasContext();
+function useSelection() {
+  const { primaryRef, canvasZoom, lastCanvasZoomRef } = useCanvasContext();
+  const { currentTool, lastCurrentToolRef } = useToolContext();
   
   const {
     selectionRef,
@@ -43,23 +24,8 @@ function useSelection({
     doSelectionDrawToPrimary
   } = useSelectionContext();
 
-  const { onPointerDownRectangularSelection } = useRectangularSelection({
-    canvasZoom,
-    colorData,
-    doSelectionSetSize,
-    doSelectionSetPosition,
-  });
-
-  const { onPointerDownFreeFormSelection } = useFreeFormSelection({
-    lastPointerPositionRef,
-    currentTool,
-    currentToolData,
-    canvasZoom,
-    canvasSize,
-    colorData,
-    doSelectionSetSize,
-    doSelectionSetPosition,
-  });
+  const { onPointerDownRectangularSelection } = useRectangularSelection();
+  const { onPointerDownFreeFormSelection } = useFreeFormSelection();
   
   function onPointerUpCallbackResize() {
     if(!selectionOutlineSize) {

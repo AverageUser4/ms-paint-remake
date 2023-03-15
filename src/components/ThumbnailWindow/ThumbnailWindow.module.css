@@ -13,4 +13,9 @@
   position: absolute;
   top: 0;
   left: 0;
+
+  display: block;
+  
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }

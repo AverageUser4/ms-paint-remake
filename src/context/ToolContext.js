@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import Pencil from '../misc/tools/Pencil.js';
@@ -49,6 +49,9 @@ function ToolProvider({ children }) {
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'
   });
+  const lastCurrentToolRef = useRef();
+  const currentToolData = toolsData.get(currentTool);
+
   function doSetCurrentTool(tool) {
     if(currentTool.startsWith('brushes')) {
       setLatestTools(prev => ({ ...prev, brushes: currentTool }));
@@ -66,7 +69,9 @@ function ToolProvider({ children }) {
         currentTool,
         setCurrentTool,
         doSetCurrentTool,
-        latestTools
+        latestTools,
+        currentToolData,
+        lastCurrentToolRef,
       }}
     >
       {children}
