@@ -7,7 +7,7 @@ export default {
   cursor: 'draw',
   sizes: [4, 8, 16, 24],
   chosenSizeIndex: 1,
-  draw({ secondaryContext, currentPixel, currentlyPressedRef }) {
+  draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef }) {
     validateDrawArgs({ secondaryContext, currentPixel, currentlyPressedRef, 
       toBeValidatedArray: ['secondaryContext', 'currentPixel', 'currentlyPressedRef']
     });
@@ -20,6 +20,7 @@ export default {
       for(let i = 0; i < size; i++) {
         const { x: randX, y: randY } = getRandomPointWithinCircle(currentPixel.x, currentPixel.y, size);
         secondaryContext.fillRect(Math.round(randX), Math.round(randY), 1, 1);
+        thumbnailSecondaryContext?.fillRect(Math.round(randX), Math.round(randY), 1, 1);
       }
     }
 

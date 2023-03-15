@@ -26,7 +26,7 @@ function useFreeFormSelection({
     { name: 'doSelectionSetPosition', value: doSelectionSetPosition, type: 'function' },
   ]);
 
-  const { primaryRef, secondaryRef, thumbnailPrimaryRef } = useCanvasContext();
+  const { primaryRef, secondaryRef, thumbnailPrimaryRef, thumbnailSecondaryRef } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const {
@@ -87,12 +87,13 @@ function useFreeFormSelection({
     };
 
     const secondaryContext = secondaryRef.current.getContext('2d');
-    secondaryContext.fillStyle = 'black';
+    const thumbnailSecondaryContext = thumbnailSecondaryRef.current?.getContext('2d');
 
     function doDraw(isRepeated) {
       currentToolData.draw({
         primaryContext: primaryRef.current.getContext('2d'),
         secondaryContext,
+        thumbnailSecondaryContext,
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
@@ -121,9 +122,11 @@ function useFreeFormSelection({
     const primaryContext = primaryRef.current.getContext('2d');
     const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
     const secondaryContext = secondaryRef.current.getContext('2d');
+    const thumbnailSecondaryContext = thumbnailSecondaryRef.current?.getContext('2d');
     
     const boundariesImageData = secondaryContext.getImageData(x, y, width, height);
     secondaryContext.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    thumbnailSecondaryContext?.clearRect(0, 0, canvasSize.width, canvasSize.height);
     lastSelectionStateRef.current = null;
 
     if(width < 6 || height < 6) {
@@ -186,6 +189,7 @@ function useFreeFormSelection({
     setSelectionPhase(0);
     lastPointerPositionRef.current = {};
     secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+    thumbnailSecondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
 
   const { onPointerDown, currentlyPressedRef, doCancel } = usePointerTrack({ 

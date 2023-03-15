@@ -17,7 +17,7 @@ const HEIGHT = 230;
 
 const ThumbnailWindow = memo(function ThumbnailWindow() {
   const { colorData } = useColorContext();
-  const { canvasSize, thumbnailPrimaryRef } = useCanvasContext();
+  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef } = useCanvasContext();
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const { isThumbnailWindowOpen: isOpen, setIsThumbnailWindowOpen: setIsOpen } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
@@ -48,10 +48,17 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
       
             <div className={css['body']}>
               <canvas
+                className={css['canvas']}
                 ref={thumbnailPrimaryRef}
                 width={canvasSize.width}
                 height={canvasSize.height}
                 style={{ backgroundColor: RGBObjectToString(colorData.secondary) }}
+              />
+              <canvas
+                className={css['canvas']}
+                ref={thumbnailSecondaryRef}
+                width={canvasSize.width}
+                height={canvasSize.height}
               />
             </div>
           </>

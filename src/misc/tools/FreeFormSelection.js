@@ -4,7 +4,7 @@ import { ImageDataUtils, RGBObjectToString } from "../utils";
 export default {
   cursor: 'selection',
   sizes: null,
-  draw({ primaryContext, secondaryContext, currentPixel, primaryImageData }) {
+  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, primaryImageData }) {
     validateDrawArgs({ primaryContext, secondaryContext, currentPixel, primaryImageData,
       toBeValidatedArray: ['primaryContext', 'secondaryContext', 'currentPixel', 'primaryImageData']
     });
@@ -24,14 +24,18 @@ export default {
           invertedColor = { r: 255, g: 255, b: 255 };
       }
 
-      secondaryContext.fillStyle = RGBObjectToString(invertedColor);
-      secondaryContext.fillRect(x, y, 1, 1);
+      function drawToContext(context) {
+        context.fillStyle = RGBObjectToString(invertedColor);
+        context.fillRect(x, y, 1, 1);
+      }
+
+      drawToContext(secondaryContext);
+      thumbnailSecondaryContext && drawToContext(thumbnailSecondaryContext);
     }
 
     drawAtCoords(currentPixel.x, currentPixel.y);
     drawAtCoords(currentPixel.x + 1, currentPixel.y);
     drawAtCoords(currentPixel.x, currentPixel.y + 1);
     drawAtCoords(currentPixel.x + 1, currentPixel.y + 1);
-
   },
 };

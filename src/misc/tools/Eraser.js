@@ -5,7 +5,7 @@ export default {
   cursor: 'none',
   sizes: [4, 6, 8, 10],
   chosenSizeIndex: 2,
-  draw({ primaryContext, secondaryContext, currentPixel, currentlyPressedRef, color }) {
+  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, color }) {
     validateDrawArgs({ primaryContext, secondaryContext, currentPixel, currentlyPressedRef, color,
       toBeValidatedArray: ['primaryContext', 'secondaryContext', 'currentPixel', 'currentlyPressedRef', 'color']
     });
@@ -14,9 +14,15 @@ export default {
     const startX = currentPixel.x - size / 2;
     const startY = currentPixel.y - size / 2;
 
+    
     if(currentlyPressedRef.current === 0) {
-      secondaryContext.fillStyle = RGBObjectToString(color.secondary);
-      secondaryContext.fillRect(startX, startY, size, size);
+      const drawToContext = (context) => {
+        context.fillStyle = RGBObjectToString(color.secondary);
+        context.fillRect(startX, startY, size, size);
+      };
+
+      drawToContext(secondaryContext);
+      thumbnailSecondaryContext && drawToContext(thumbnailSecondaryContext);
     } else {
       const square = primaryContext.getImageData(startX, startY, size, size);
       for(let i = 0; i < square.data.length; i += 4) {
@@ -34,6 +40,7 @@ export default {
         }
       }
       secondaryContext.putImageData(square, startX, startY);
+      thumbnailSecondaryContext?.putImageData(square, startX, startY);
     }
   },
 };

@@ -13,7 +13,10 @@ function useBrush({
   setColorData,
   doHistoryAdd,
 }) {
-  const { primaryRef, secondaryRef, thumbnailPrimaryRef } = useCanvasContext();
+  const { 
+    primaryRef, secondaryRef, thumbnailPrimaryRef,
+    thumbnailSecondaryRef 
+  } = useCanvasContext();
   
   let usedMoveCallback = onPointerMoveCallback;
   let usedDownCallback = onPointerMoveCallback;
@@ -28,6 +31,7 @@ function useBrush({
       event,
       currentZoom: canvasZoom,
       primaryContext: primaryRef.current.getContext('2d'),
+      thumbnailPrimaryContext: thumbnailPrimaryRef.current?.getContext('2d'),
       canvasSize: canvasSize,
       colorData,
       setColorData,
@@ -55,14 +59,21 @@ function useBrush({
 
     const primaryContext = primaryRef.current.getContext('2d');
     const secondaryContext = secondaryRef.current.getContext('2d');
-    
-    secondaryContext.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-    secondaryContext.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    const thumbnailSecondaryContext = thumbnailSecondaryRef.current?.getContext('2d');
+
+    function setStyle(context) {
+      context.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+      context.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
+    }
+
+    setStyle(secondaryContext);
+    thumbnailSecondaryContext && setStyle(thumbnailSecondaryContext);
 
     function doDraw(isRepeated) {
       currentToolData.draw({
         primaryContext,
         secondaryContext,
+        thumbnailSecondaryContext,
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
@@ -80,6 +91,7 @@ function useBrush({
     primaryRef.current.getContext('2d').drawImage(secondaryRef.current, 0, 0);
     thumbnailPrimaryRef.current?.getContext('2d').drawImage(secondaryRef.current, 0, 0);
     secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     doHistoryAdd({ 
       element: doGetCanvasCopy(primaryRef.current),
@@ -91,6 +103,7 @@ function useBrush({
   function onCancelCallback() {
     lastPointerPositionRef.current = {};
     secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+    thumbnailSecondaryRef.current?.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
   }
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 

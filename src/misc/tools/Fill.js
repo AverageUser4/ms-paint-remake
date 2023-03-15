@@ -4,7 +4,7 @@ import { ImageDataUtils } from "../utils";
 export default {
   cursor: 'fill',
   sizes: null,
-  onPointerDown({ event, primaryContext, canvasSize, currentZoom, colorData }) {
+  onPointerDown({ event, primaryContext, thumbnailPrimaryContext, canvasSize, currentZoom, colorData }) {
     const { width, height } = canvasSize;
     let { offsetX, offsetY } = event.nativeEvent;
     offsetX = Math.round(offsetX / currentZoom);
@@ -44,6 +44,7 @@ export default {
     checkAndChange(offsetX, offsetY);
 
     primaryContext.putImageData(imageData, 0, 0);
+    thumbnailPrimaryContext.putImageData(imageData, 0, 0);
   },
   onPointerMove() {
     return;
