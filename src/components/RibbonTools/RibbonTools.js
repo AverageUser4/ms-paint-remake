@@ -20,7 +20,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
   const { currentTool, doSetCurrentTool } = useToolContext();
 
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={tools16} name="Tools">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={tools16} name="Tools">
       <RibbonItemExpanded name="Tools">
 
         <div 

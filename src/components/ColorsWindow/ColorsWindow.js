@@ -16,7 +16,7 @@ import duoArrow from './assets/duo-arrow.png';
 
 const WIDTH = 448;
 const HEIGHT = 340;
-const basicColors = [
+const basicColorsArray = [
   { r: 255, g: 128, b: 128 }, { r: 255, g: 255, b: 128 }, { r: 128, g: 255, b: 128 }, { r: 0, g: 255, b: 128 }, { r: 128, g: 255, b: 255 }, { r: 0, g: 128, b: 255 }, { r: 255, g: 128, b: 192 }, { r: 255, g: 128, b: 255 },
   { r: 255, g: 0, b: 0 }, { r: 255, g: 255, b: 0 }, { r: 128, g: 255, b: 0 }, { r: 0, g: 255, b: 64 }, { r: 0, g: 255, b: 255 }, { r: 0, g: 128, b: 192 }, { r: 128, g: 128, b: 192 }, { r: 255, g: 0, b: 255 },
   { r: 128, g: 64, b: 64 }, { r: 255, g: 128, b: 64 }, { r: 0, g: 255, b: 0 }, { r: 0, g: 128, b: 128 }, { r: 0, g: 64, b: 128 }, { r: 128, g: 128, b: 255 }, { r: 128, g: 0, b: 64 }, { r: 255, g: 0, b: 128 },
@@ -30,9 +30,9 @@ const ColorsWindow = memo(function ColorsWindow() {
   const { isColorsWindowOpen: isOpen, setIsColorsWindowOpen: setIsOpen } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
-  const { customColors, setColorPickerData, colorPickerData, doCustomColorsAdd, doRibbonColorsArrayAdd } = useColorContext();
-  const basicButtons = basicColors.map(mapToButtons);
-  const customButtons = customColors.map(mapToButtons);
+  const { customColorsArray, setColorPickerData, colorPickerData, doCustomColorsArrayAdd, doRibbonColorsArrayAdd } = useColorContext();
+  const basicButtonsArray = basicColorsArray.map(mapToButtons);
+  const customButtonsArray = customColorsArray.map(mapToButtons);
 
   function mapToButtons(color, index) {
     return (
@@ -68,9 +68,9 @@ const ColorsWindow = memo(function ColorsWindow() {
           <>
             <InnerWindowTopBar
               text={'Edit Colors'}
-              close={() => setIsOpen(false)}
+              closeCallback={() => setIsOpen(false)}
               isAttentionAnimated={isAttentionAnimated}
-              onPointerDownMove={onPointerDownMove}
+              onPointerDownMoveCallback={onPointerDownMove}
             />
       
             <form className={css['body']}>
@@ -79,7 +79,7 @@ const ColorsWindow = memo(function ColorsWindow() {
                   <h3 className="text">Basic colors:</h3>
 
                   <div className={css['grid']}>
-                    {basicButtons}
+                    {basicButtonsArray}
                   </div>
                 </div>
 
@@ -87,7 +87,7 @@ const ColorsWindow = memo(function ColorsWindow() {
                   <h3 className="text">Custom colors:</h3>
 
                   <div className={`${css['grid']} ${css['grid--alt']}`}>
-                    {customButtons}
+                    {customButtonsArray}
                   </div>
                 </div>
 
@@ -128,7 +128,7 @@ const ColorsWindow = memo(function ColorsWindow() {
                 <button 
                   type="button"
                   className="form-button form-button--full-width"
-                  onClick={() => doCustomColorsAdd(colorPickerData.RGB)}
+                  onClick={() => doCustomColorsArrayAdd(colorPickerData.RGB)}
                 >
                   Add to Custom Colors
                 </button>

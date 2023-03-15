@@ -6,11 +6,11 @@ import { useContainerContext } from '../../context/ContainerContext';
 import { useMainWindowContext } from "../../context/MainWindowContext";
 
 const Dropdown = forwardRef(function Dropdown(props, ref) {
-  const { isVisible, setIsVisible, classes, children, adjustPosition = true, dropdownContainerRef } = props;
+  const { isVisible, setIsVisible, classes, children, isAdjustPosition = true, dropdownContainerRef } = props;
   const { isMainWindowFocused } = useMainWindowContext();
   const { containerRect: paintContainerRect } = useContainerContext();
   const dropdownRef = useRef();
-  const [position, setPosition] = useState(adjustPosition ? { left: 0, right: 'auto', top: '100%', bottom: 'auto' } : {});
+  const [position, setPosition] = useState(isAdjustPosition ? { left: 0, right: 'auto', top: '100%', bottom: 'auto' } : {});
   const [isActuallyVisible, setIsActuallyVisible] = useState(isVisible);
   const [isPositionAdjusted, setIsPositionAdjusted] = useState(false);
   
@@ -30,7 +30,7 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
   }, [isVisible, isActuallyVisible]);
 
   useEffect(() => {
-    if(!adjustPosition || !dropdownContainerRef.current || !paintContainerRect || !dropdownRef.current)
+    if(!isAdjustPosition || !dropdownContainerRef.current || !paintContainerRect || !dropdownRef.current)
       return;
 
     const dropdownContainerRect = dropdownContainerRef.current.getBoundingClientRect();
@@ -52,7 +52,7 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
 
     if(!isPositionAdjusted)
       setIsPositionAdjusted(true);
-  }, [paintContainerRect, position, isActuallyVisible, adjustPosition, dropdownContainerRef, isPositionAdjusted]);
+  }, [paintContainerRect, position, isActuallyVisible, isAdjustPosition, dropdownContainerRef, isPositionAdjusted]);
 
   if(!isActuallyVisible)
     return null;
@@ -60,7 +60,7 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
   return (
     <div className={`
         ${css['dropdown']}
-        ${!isVisible || (adjustPosition && !isPositionAdjusted) ? css['dropdown--hidden'] : ''}
+        ${!isVisible || (isAdjustPosition && !isPositionAdjusted) ? css['dropdown--hidden'] : ''}
         ${classes ? classes : ''}
       `}
       ref={(element) => {
@@ -80,7 +80,7 @@ Dropdown.propTypes = {
   isVisible: PropTypes.bool.isRequired,
   setIsVisible: PropTypes.func,
   classes: PropTypes.string,
-  adjustPosition: PropTypes.bool,
+  isAdjustPosition: PropTypes.bool,
   dropdownContainerRef: PropTypes.object,
 }
 

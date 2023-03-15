@@ -42,11 +42,11 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
   useOutsideClick(gridDropdownRef, () => isGridDropdownOpen && setIsGridDropdownOpen(false));
   
   const isOnlyContent = ribbonWidth >= 800;
-  const showText = ribbonWidth < 800 || ribbonWidth >= 900;
+  const isShowText = ribbonWidth < 800 || ribbonWidth >= 900;
   const isBigButtonHidden = ribbonWidth < 800 || ribbonWidth >= 950;
 
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={shapes16} name="Shapes">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={shapes16} name="Shapes">
       <RibbonItemExpanded name="Shapes">
 
         <div 
@@ -54,14 +54,15 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
           data-cy="Shapes"
         >
           <div className="dropdown-container" ref={gridDropdownContainerRef}>
-            <BigButton 
-              icon={shapes32}
+            <BigButton
+              iconSrc={shapes32}
               name="Shapes"
               strName="Shapes"
+              isHasArrow={true}
               isOnlyChildren={isBigButtonHidden}
               onClick={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
-              describedBy="id-shapes-big-button"
-              tooltip={
+              ariaDescribedBy="id-shapes-big-button"
+              tooltipElement={
                 <Tooltip
                   ID="id-shapes-big-button"
                   heading="Shapes"
@@ -97,7 +98,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
                 aria-describedby="id-shapes-outline"
               >
                 <img draggable="false" src={outline16} alt="Outline."/>
-                {showText && <span className="text text--1">Outline</span>}
+                {isShowText && <span className="text text--1">Outline</span>}
                 <TriangleDown/>
                 <Tooltip
                   ID="id-shapes-outline"
@@ -164,7 +165,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
                 aria-describedby="id-shapes-fill"
               >
                 <img draggable="false" src={fill16} alt="Fill."/>
-                {showText && <span className="text text--1">Fill</span>}
+                {isShowText && <span className="text text--1">Fill</span>}
                 <TriangleDown/>
                 <Tooltip
                   ID="id-shapes-fill"

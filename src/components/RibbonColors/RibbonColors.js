@@ -21,10 +21,10 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
   const { isBlackAndWhite } = useCanvasContext();
   const isOnlyContent = ribbonWidth >= 725;
   
-  const colorButtons = [];
+  const colorButtonsArray = [];
   for(let i = 0; i < 30; i++) {
     const data = ribbonColorsArray[i];
-    colorButtons.push(
+    colorButtonsArray.push(
       <button 
         key={i}
         data-color={data ? RGBObjectToString(data) : ''}
@@ -40,7 +40,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
   }
   
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={colors16} name="Colors">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={colors16} name="Colors">
       <RibbonItemExpanded name="Colors">
 
           <div 
@@ -49,13 +49,12 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
           >
             <BigButton 
               backgroundColor={RGBObjectToString(colorData.primary)}
-              hasArrow={false}
               name={<div>Color <div className="line-break"></div> 1</div>}
               strName="Color-1"
               isActive={colorData.selected === 'primary'}
               onClick={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
-              describedBy="id-colors-color-1"
-              tooltip={
+              ariaDescribedBy="id-colors-color-1"
+              tooltipElement={
                 <Tooltip
                   ID="id-colors-color-1"
                   heading="Color 1 (foreground color)"
@@ -66,14 +65,13 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
             />
             <BigButton 
               backgroundColor={RGBObjectToString(colorData.secondary)}
-              hasArrow={false}
               name={<div>Color <div className="line-break"></div> 2</div>} 
               iconSize="small"
               strName="Color-2"
               isActive={colorData.selected === 'secondary'}
               onClick={() => colorData.selected !== 'secondary' && setColorData(prev => ({ ...prev, selected: 'secondary' }))}
-              describedBy="id-colors-color-2"
-              tooltip={
+              ariaDescribedBy="id-colors-color-2"
+              tooltipElement={
                 <Tooltip
                   ID="id-colors-color-2"
                   heading="Color 2 (background color)"
@@ -87,17 +85,16 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               className={css['colors-grid']}
               data-cy="Colors-grid"
             >
-              {colorButtons}
+              {colorButtonsArray}
             </div>
 
             <BigButton 
-              icon={colors32}
-              hasArrow={false}
+              iconSrc={colors32}
               name={<div>Edit <div className="line-break"></div> colors</div>}
               strName="Edit-colors"
               onClick={() => setIsColorsWindowOpen(true)}
-              describedBy="id-colors-edit-color"
-              tooltip={
+              ariaDescribedBy="id-colors-edit-color"
+              tooltipElement={
                 <Tooltip
                   ID="id-colors-edit-color"
                   heading="Edit colors"

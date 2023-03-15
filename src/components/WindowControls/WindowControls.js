@@ -10,8 +10,11 @@ import { ReactComponent as Minimize } from './assets/minimize.svg';
 import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 import Tooltip from "../Tooltip/Tooltip";
 
-function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doSetWindowToMinimalSize }) {
-  const { isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize } = useMainWindowContext();
+function WindowControls({ isAttentionAnimated, isInnerWindow = false, closeCallback }) {
+  const { 
+    isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize,
+    setMainWindowSize, mainWindowMinimalSize, setIsMainWindowMaximized,
+  } = useMainWindowContext();
   
   // inner window
   if(isInnerWindow) {
@@ -23,7 +26,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${css['button--only']}
           ${isAttentionAnimated ? css['button--attention'] : ''}
         `}
-        onClick={close}
+        onClick={closeCallback}
         data-cy="WindowControls-InnerWindow-close"
       >
         <Close draggable="false"/>
@@ -40,7 +43,10 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
-        onClick={doSetWindowToMinimalSize}
+        onClick={() => {
+          setMainWindowSize(mainWindowMinimalSize);
+          setIsMainWindowMaximized(false);
+        }}
         aria-label="Minimize"
       >
         <Minimize draggable="false"/>
@@ -83,7 +89,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
           ${css['button']} ${css['button--danger']} 
           ${!isMainWindowFocused ? css['button--disabled'] : ''}
         `}
-        onClick={close}
+        onClick={closeCallback}
         data-cy="WindowControls-close"
         aria-label="Close"
       >
@@ -99,8 +105,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, close, doS
 
 WindowControls.propTypes = {
   isInnerWindow: PropTypes.bool,
-  close: PropTypes.func.isRequired,
-  doSetWindowToMinimalSize: PropTypes.func,
+  closeCallback: PropTypes.func.isRequired,
   isAttentionAnimated: PropTypes.bool,
 };
 

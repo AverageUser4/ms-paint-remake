@@ -267,9 +267,9 @@ const ResizeWindow = memo(function ResizeWindow() {
           <>
             <InnerWindowTopBar
               text={'Resize and Skew'}
-              close={() => setIsOpen(false)}
+              closeCallback={() => setIsOpen(false)}
               isAttentionAnimated={isAttentionAnimated}
-              onPointerDownMove={onPointerDownMove}
+              onPointerDownMoveCallback={onPointerDownMove}
             />
       
             <form className={css['body']} onSubmit={(e) => onSubmit(e)}>

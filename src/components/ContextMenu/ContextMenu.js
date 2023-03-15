@@ -33,7 +33,7 @@ const ContextMenu = memo(function ContextMenu() {
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
   const { 
-    selectionRef, selectionPasteFromClipboard, doSelectionCrop,
+    selectionRef, doSelectionPasteFromClipboard, doSelectionCrop,
     lastSelectionStateRef, selectionSize, doSharedCut, doSharedCopy,
     doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete
   } = useSelectionContext();
@@ -118,7 +118,7 @@ const ContextMenu = memo(function ContextMenu() {
             <button 
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
-                selectionPasteFromClipboard();
+                doSelectionPasteFromClipboard();
                 setIsOpen(false);
               }}
             >

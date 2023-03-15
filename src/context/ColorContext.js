@@ -2,9 +2,9 @@ import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { HSLtoRGB, objectEquals } from "../misc/utils";
 
-const initialCustomColors = [];
+const initialCustomColorsArray = [];
 for(let i = 0; i < 16; i ++) {
-  initialCustomColors.push({ r: 255, g: 255, b: 255 });
+  initialCustomColorsArray.push({ r: 255, g: 255, b: 255 });
 }
 
 const ColorContext = createContext();
@@ -16,16 +16,16 @@ function ColorProvider({ children }) {
     selected: 'primary'
   });
   
-  const [customColors, setCustomColors] = useState(initialCustomColors);
-  const [customColorsPointer, setCustomColorsPointer] = useState(0);
-  function doCustomColorsAdd(color) {
-    setCustomColors(prev => {
+  const [customColorsArray, setCustomColorsArray] = useState(initialCustomColorsArray);
+  const [customColorsArrayPointer, setCustomColorsArrayPointer] = useState(0);
+  function doCustomColorsArrayAdd(color) {
+    setCustomColorsArray(prev => {
       const copy = [...prev];
-      copy[customColorsPointer] = color;
+      copy[customColorsArrayPointer] = color;
       return copy;
     });
 
-    setCustomColorsPointer(prev => prev + 1 > 15 ? 0 : prev + 1);
+    setCustomColorsArrayPointer(prev => prev + 1 > 15 ? 0 : prev + 1);
   }
 
   const [ribbonColorsArray, setRibbonColorsArray] = useState([
@@ -61,9 +61,9 @@ function ColorProvider({ children }) {
       value={{
         colorData,
         setColorData,
-        customColors,
-        setCustomColors,
-        doCustomColorsAdd,
+        customColorsArray,
+        setCustomColorsArray,
+        doCustomColorsArrayAdd,
         colorPickerData,
         setColorPickerData,
         ribbonColorsArray,

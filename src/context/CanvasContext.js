@@ -11,8 +11,8 @@ function CanvasProvider({ children }) {
   const { colorData } = useColorContext();
   const [canvasSize, setCanvasSize] = useState(initialCanvasSize);
   const [canvasZoom, setCanvasZoom] = useState(1);
-  const [isFullScreenView, setIsFullScreenView] = useState(false);
   const [fileData, setFileData] = useState(null);
+  const [isFullScreenView, setIsFullScreenView] = useState(false);
   const [isBlackAndWhite, setIsBlackAndWhite] = useState(false);
   const primaryRef = useRef();
   const secondaryRef = useRef();

@@ -13,12 +13,11 @@ import { useActionsContext } from '../../context/ActionsContext';
 import logoMini from './assets/logo-mini.png';
 
 const TopBar = memo(function TopBar({ 
-  onPointerDownMove,
-  windowHasFocus,
   toolbarData,
   setToolbarData,
   ribbonData,
-  doSetWindowToMinimalSize,
+  onPointerDownMoveCallback,
+  isMainWindowFocused,
 }) {
   const { openContextMenu } = useContextMenuContext();
   const { doMainWindowToggleMaximize } = useMainWindowContext();
@@ -34,7 +33,7 @@ const TopBar = memo(function TopBar({
   return (
     <header 
       className={css['container']} 
-      onPointerDown={(e) => isExpectedTarget(e) && onPointerDownMove(e)}
+      onPointerDown={(e) => isExpectedTarget(e) && onPointerDownMoveCallback(e)}
       onContextMenu={(e) => isExpectedTarget(e) && openContextMenu(e, 'window')}
       onDoubleClick={(e) => isExpectedTarget(e) && doMainWindowToggleMaximize(e)}
       ref={containerRef}
@@ -55,7 +54,7 @@ const TopBar = memo(function TopBar({
         }
 
         <h1 
-          className={`text ${!windowHasFocus ? 'text--disabled' : ''}`}
+          className={`text ${!isMainWindowFocused ? 'text--disabled' : ''}`}
           ref={textRef}
         >
           {fileData?.name || 'Untitled'} - Paint
@@ -64,8 +63,7 @@ const TopBar = memo(function TopBar({
       </div>
 
       <WindowControls 
-        close={() => doStartNewProject()}
-        doSetWindowToMinimalSize={doSetWindowToMinimalSize}
+        closeCallback={() => doStartNewProject()}
       />
 
     </header>
@@ -73,12 +71,11 @@ const TopBar = memo(function TopBar({
 });
 
 TopBar.propTypes = {
-  onPointerDownMove: PropTypes.func.isRequired,
-  windowHasFocus: PropTypes.bool.isRequired,
+  onPointerDownMoveCallback: PropTypes.func.isRequired,
+  isMainWindowFocused: PropTypes.bool.isRequired,
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
-  doSetWindowToMinimalSize: PropTypes.func.isRequired,
 };
 
 export default TopBar;

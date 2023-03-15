@@ -24,10 +24,11 @@ function useRectangularSelection() {
     doSelectionDrawToSelection,
     doSelectionSetSize,
     doSelectionSetPosition,
+    doSelectionEnd,
   } = useSelectionContext();
 
-  const [selectionResizeData, setSelectionResizeData] = useState(null);
-  useResizeCursor(selectionResizeData);
+  const [resizeData, setResizeData] = useState(null);
+  useResizeCursor(resizeData);
 
   const { onPointerDown, doCancel } = usePointerTrack({ 
     onPointerMoveCallback,
@@ -49,7 +50,7 @@ function useRectangularSelection() {
     const offsetX = event.pageX - primaryRect.x;
     const offsetY = event.pageY - primaryRect.y;
     
-    setSelectionResizeData({
+    setResizeData({
       type: 'selection',
       initialX: clientX,
       initialY: clientY,
@@ -69,31 +70,31 @@ function useRectangularSelection() {
     const offsetX = event.pageX - primaryRect.x;
     const offsetY = event.pageY - primaryRect.y;
 
-    let diffX = clientX - selectionResizeData.initialX;
-    let diffY = clientY - selectionResizeData.initialY;
+    let diffX = clientX - resizeData.initialX;
+    let diffY = clientY - resizeData.initialY;
 
     let newWidth = selectionSize.width;
     let newHeight = selectionSize.height;
     let newX = selectionPosition.x;
     let newY = selectionPosition.y;
 
-    newWidth = selectionResizeData.initialWidth + diffX;
-    newHeight = selectionResizeData.initialHeight + diffY;
+    newWidth = resizeData.initialWidth + diffX;
+    newHeight = resizeData.initialHeight + diffY;
     
     if(newWidth < 0) {
       newWidth *= -1;
-      newWidth = Math.min(newWidth, selectionResizeData.initialOffsetX);
+      newWidth = Math.min(newWidth, resizeData.initialOffsetX);
       newX = Math.max(offsetX, 0);
     } else {
-      newX = selectionResizeData.initialOffsetX;
+      newX = resizeData.initialOffsetX;
       newWidth = Math.min(newWidth, primaryRect.width - newX);
     }
     if(newHeight < 0) {
       newHeight *= -1;
-      newHeight = Math.min(newHeight, selectionResizeData.initialOffsetY);
+      newHeight = Math.min(newHeight, resizeData.initialOffsetY);
       newY = Math.max(offsetY, 0);
     } else {
-      newY = selectionResizeData.initialOffsetY;
+      newY = resizeData.initialOffsetY;
       newHeight = Math.min(newHeight, primaryRect.height - newY);
     }
 
@@ -109,10 +110,10 @@ function useRectangularSelection() {
 
   function onPointerUpCallback(event) {
     if(
-        selectionResizeData.initialX === event.clientX &&
-        selectionResizeData.initialY === event.clientY
+        resizeData.initialX === event.clientX &&
+        resizeData.initialY === event.clientY
       ) {
-      setSelectionPhase(0);
+      doSelectionEnd();
       return;
     }
     
@@ -121,7 +122,7 @@ function useRectangularSelection() {
          that's why timeout is used, if it still happens increasing timeout my help */
 
       setSelectionPhase(2);
-      setSelectionResizeData(null);
+      setResizeData(null);
 
       const { primaryContext } = doGetEveryContext();
   
@@ -148,8 +149,8 @@ function useRectangularSelection() {
   }
 
   function onCancelCallback() {
-    setSelectionPhase(0);
-    setSelectionResizeData(null);
+    doSelectionEnd();
+    setResizeData(null);
   }
 
   return {

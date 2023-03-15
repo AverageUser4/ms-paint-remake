@@ -137,9 +137,7 @@ function Canvas() {
               `}
               onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
               onContextMenu={(e) => openContextMenu(e, 'canvas', 'selection')}
-              ref={(element) => { 
-                selectionRef.current = element;
-              }}
+              ref={selectionRef}
             ></canvas>
 
             {selectionPhase === 2 && selectionResizeElements}

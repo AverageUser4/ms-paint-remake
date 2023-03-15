@@ -55,10 +55,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   useOutsideClick(rotateDropdownRef, () => isRotateDropdownOpen && setIsRotateDropdownOpen(false));
 
   const isOnlyContent = ribbonWidth >= 840;
-  const showText = ribbonWidth < 840 || ribbonWidth >= 1000;
+  const isShowText = ribbonWidth < 840 || ribbonWidth >= 1000;
   
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={image16} name="Image">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={image16} name="Image">
       <RibbonItemExpanded name="Image">
 
           <div 
@@ -66,23 +66,23 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
             data-cy="Image"
           >
             <BigButtonDuo 
-              icon={icon} 
+              iconSrc={icon} 
               name="Select"
-              showChildren={isDropdownOpen}
-              setShowChildren={setIsDropdownOpen}
+              isShowChildren={isDropdownOpen}
+              setIsShowChildren={setIsDropdownOpen}
               onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
               onClickTop={() => !currentTool.startsWith('selection-') && doSetCurrentTool(latestTools.selection)}
               isActive={currentTool.startsWith('selection-')}
-              describedByTop="id-image-bbd-top"
-              tooltipTop={
+              ariaDescribedByTop="id-image-bbd-top"
+              tooltipElementTop={
                 <Tooltip
                   ID="id-image-bbd-top"
                   heading="Selection"
                   text="Select a part of the picture."
                 />
               }
-              describedByBottom="id-image-bbd-bottom"
-              tooltipBottom={
+              ariaDescribedByBottom="id-image-bbd-bottom"
+              tooltipElementBottom={
                 <Tooltip
                   ID="id-image-bbd-bottom"
                   heading="Selection"
@@ -217,7 +217,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                 aria-describedby="id-image-crop"
               >
                 <img draggable="false" src={crop16} alt="Crop."/>
-                {showText && <span className="text text--1">Crop</span>}
+                {isShowText && <span className="text text--1">Crop</span>}
                 <Tooltip
                   ID="id-image-crop"
                   heading="Crop (Ctrl+Shift+X)"
@@ -232,7 +232,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                 aria-describedby="id-image-resize"
               >
                 <img draggable="false" src={resize16} alt="Resize."/>
-                {showText && <span className="text text--1">Resize</span>}
+                {isShowText && <span className="text text--1">Resize</span>}
                 <Tooltip
                   ID="id-image-resize"
                   heading="Resize and skew (Ctrl+W)"
@@ -248,7 +248,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                   aria-describedby="id-image-rotate"
                 >
                   <img draggable="false" src={rotate16} alt="Rotate."/>
-                  {showText && <span className="text text--1">Rotate</span>}
+                  {isShowText && <span className="text text--1">Rotate</span>}
                   <TriangleDown/>
                   <Tooltip
                     ID="id-image-rotate"

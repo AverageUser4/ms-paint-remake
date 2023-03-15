@@ -194,7 +194,7 @@ const FileDropdownMore = memo(function FileDropdownMore({ currentMore, setCurren
       </ul>
 
       <Dropdown 
-        adjustPosition={false}
+        isAdjustPosition={false}
         isVisible={currentMore !== 'recent'} classes={css['dropdown']}
       >
         <div 

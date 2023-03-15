@@ -41,7 +41,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
   
   return (
     <Dropdown 
-      adjustPosition={false}
+      isAdjustPosition={false}
       isVisible={isShown}
       setIsVisible={setIsShown}
       classes={css['container']}

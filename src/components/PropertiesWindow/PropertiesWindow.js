@@ -96,9 +96,9 @@ const PropertiesWindow = memo(function PropertiesWindow() {
           <>
             <InnerWindowTopBar
               text={'Image Properties'}
-              close={() => setIsOpen(false)}
+              closeCallback={() => setIsOpen(false)}
               isAttentionAnimated={isAttentionAnimated}
-              onPointerDownMove={onPointerDownMove}
+              onPointerDownMoveCallback={onPointerDownMove}
             />
       
             <form onSubmit={(e) => onSubmit(e)} className={css['body']}>

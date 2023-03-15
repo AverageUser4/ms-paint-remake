@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const MainWindowContext = createContext();
 
-function MainWindowProvider({ children, initialPosition, initialSize, isInitiallyMaximized }) {
+function MainWindowProvider({ children, initialPosition, initialSize, isInitiallyMaximized, minimalSize }) {
   const [mainWindowPosition, setMainWindowPosition] = useState(initialPosition);
   const [mainWindowSize, setMainWindowSize] = useState(initialSize);
   const [mainWindowLatestSize, setMainWindowLatestSize] = useState(initialSize);
@@ -54,6 +54,7 @@ function MainWindowProvider({ children, initialPosition, initialSize, isInitiall
         doMainWindowRestoreSize,
         mainWindowLatestSize,
         mainWindowLatestPosition,
+        mainWindowMinimalSize: minimalSize,
      }}
     >
       {children}
@@ -69,6 +70,10 @@ MainWindowProvider.propTypes = {
     y: PropTypes.number.isRequired
   }).isRequired,
   initialSize: PropTypes.shape({ 
+    width: PropTypes.number.isRequired,
+    height: PropTypes.number.isRequired
+  }).isRequired,
+  minimalSize: PropTypes.shape({ 
     width: PropTypes.number.isRequired,
     height: PropTypes.number.isRequired
   }).isRequired,

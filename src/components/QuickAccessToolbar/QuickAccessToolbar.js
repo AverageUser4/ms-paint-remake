@@ -23,9 +23,9 @@ import { ReactComponent as TriangleLine } from '../../assets/global/triangle-lin
 const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setToolbarData, ribbonData }) {
   const { doHistoryGoBack, doHistoryGoForward, isHistoryOnFirst, isHistoryOnLast } = useHistoryContext();
   
-  const [showDropdown, setShowDropdown] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => showDropdown && setShowDropdown(false));
+  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   const buttonsData = [
     {
@@ -119,7 +119,7 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
 
       <div ref={dropdownRef} className={css['dropdown-container']}>
         <button 
-          onClick={(e) => e.button === 0 && setShowDropdown(prev => !prev)}
+          onClick={(e) => e.button === 0 && setIsDropdownOpen(prev => !prev)}
           className="tooltip-container button button--height-20"
           data-cy="QuickAccessToolbar-toggle-QuickAccessDropdown"
           aria-describedby="id-qat-customize"
@@ -132,8 +132,8 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
         </button>
 
         <QuickAccessDropdown 
-          isVisible={showDropdown}
-          setIsVisible={setShowDropdown}
+          isOpen={isDropdownOpen}
+          setIsOpen={setIsDropdownOpen}
           toolbarData={toolbarData}
           setToolbarData={setToolbarData}
           ribbonData={ribbonData}

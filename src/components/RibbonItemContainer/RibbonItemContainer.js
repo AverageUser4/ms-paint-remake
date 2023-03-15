@@ -10,7 +10,7 @@ import { useMainWindowContext } from "../../context/MainWindowContext";
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 import Tooltip from "../Tooltip/Tooltip";
 
-function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
+function RibbonItemContainer({ iconSrc, name, children, isOnlyContent }) {
   const { isMainWindowFocused } = useMainWindowContext();
   const containerRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,7 +42,7 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
       >
 
         <div className={css['image-container']}>
-          <img draggable="false" src={icon} alt=""/>
+          <img draggable="false" src={iconSrc} alt=""/>
         </div>
 
         <span className="text text--1">{name}</span>
@@ -70,7 +70,7 @@ function RibbonItemContainer({ icon, name, children, isOnlyContent }) {
 
 RibbonItemContainer.propTypes = {
   name: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
+  iconSrc: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isOnlyContent: PropTypes.bool.isRequired,
 };

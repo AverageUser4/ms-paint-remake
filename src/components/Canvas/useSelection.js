@@ -16,12 +16,13 @@ function useSelection() {
     selectionSize,
     selectionPosition,
     selectionOutlineSize, setSelectionOutlineSize,
-    selectionPhase, setSelectionPhase,
+    selectionPhase,
     lastSelectionStateRef,
     doSelectionSetSize,
     doSelectionResize,
     doSelectionSetPosition,
-    doSelectionDrawToPrimary
+    doSelectionDrawToPrimary,
+    doSelectionEnd,
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection();
@@ -51,16 +52,17 @@ function useSelection() {
       ) {
       return;
     }
-    
-    lastCurrentToolRef.current = currentTool;
-    lastCanvasZoomRef.current = canvasZoom;
 
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary(lastCanvasZoomRef.current);
     }
-    setSelectionPhase(0);
-  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, lastCanvasZoomRef,
-      lastCurrentToolRef, primaryRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
+    doSelectionEnd();
+
+    // it has to be down here (below doSelectionDrawToPrimary)
+    lastCurrentToolRef.current = currentTool;
+    lastCanvasZoomRef.current = canvasZoom;
+  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, lastCanvasZoomRef, doSelectionEnd,
+      lastCurrentToolRef, primaryRef, selectionRef, doSelectionDrawToPrimary]
   );
 
   const { resizeElements: selectionResizeElements } = useResize({ 

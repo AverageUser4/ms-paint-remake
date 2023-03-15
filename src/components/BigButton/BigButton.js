@@ -9,20 +9,19 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 function BigButton({ 
   name,
   strName,
-  icon,
-  backgroundColor = '#ff00ff',
+  iconSrc,
   iconSize = '',
-  hasArrow = true,
+  backgroundColor = '#ff00ff',
   children,
-  showChildren = false,
-  setShowChildren,
   onClick,
+  tooltipElement,
+  ariaDescribedBy,
+  isShowChildren = false, setIsShowChildren,
   isOnlyChildren = false,
   isActive,
   isDisabled,
-  tooltip,
-  describedBy,
   isBlackAndWhite,
+  isHasArrow,
 }) {
   const dropdownContainerRef = useRef();
   const buttonClasses = `
@@ -34,8 +33,8 @@ function BigButton({
   `;
   let iconClasses = `${css['icon']} ${css[`icon--${iconSize}`]}`;
 
-  if(!icon)
-    iconClasses += !icon ? ` ${css['icon--only-color']}` : '';
+  if(!iconSrc)
+    iconClasses += !iconSrc ? ` ${css['icon--only-color']}` : '';
 
   if(isOnlyChildren)
     return children;
@@ -49,12 +48,12 @@ function BigButton({
       <button 
         className={buttonClasses}
         onClick={onClick && !isDisabled ? onClick : ()=>0}
-        aria-describedby={describedBy}
+        aria-describedby={ariaDescribedBy}
       >
 
         {
-          icon ?
-            <img draggable="false" className={iconClasses} src={icon} alt=""/>
+          iconSrc ?
+            <img draggable="false" className={iconClasses} src={iconSrc} alt=""/>
           :
             <div 
               style={{ 
@@ -67,17 +66,17 @@ function BigButton({
 
         <span className="text text--1">{name}</span>
 
-        {hasArrow && <TriangleDown className={css['triangle']}/>}
+        {isHasArrow && <TriangleDown className={css['triangle']}/>}
 
-        {tooltip && tooltip}
+        {tooltipElement && tooltipElement}
 
       </button>
 
       {
         children &&
           <Dropdown 
-            isVisible={showChildren}
-            setIsVisible={setShowChildren}
+            isVisible={isShowChildren}
+            setIsVisible={setIsShowChildren}
             dropdownContainerRef={dropdownContainerRef}
           >
             {children}
@@ -90,19 +89,19 @@ function BigButton({
 BigButton.propTypes = {
   name: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
   strName: PropTypes.string.isRequired,
-  icon: PropTypes.string,
+  iconSrc: PropTypes.string,
   backgroundColor: PropTypes.string,
   iconSize: PropTypes.oneOf(['', 'small']),
-  hasArrow: PropTypes.bool,
+  isHasArrow: PropTypes.bool,
   children: PropTypes.node,
-  showChildren: PropTypes.bool,
-  setShowChildren: PropTypes.func,
+  isShowChildren: PropTypes.bool,
+  setIsShowChildren: PropTypes.func,
   onClick: PropTypes.func,
   isOnlyChildren: PropTypes.bool,
   isActive: PropTypes.bool,
   isDisabled: PropTypes.bool,
-  tooltip: PropTypes.node,
-  describedBy: PropTypes.string,
+  tooltipElement: PropTypes.element,
+  ariaDescribedBy: PropTypes.string,
   isBlackAndWhite: PropTypes.bool,
 };
 

@@ -49,9 +49,9 @@ const PromptWindow = memo(function PromptWindow() {
           <>
             <InnerWindowTopBar
               text={'Paint'}
-              close={() => setIsOpen(false)}
+              closeCallback={() => setIsOpen(false)}
               isAttentionAnimated={isAttentionAnimated}
-              onPointerDownMove={onPointerDownMove}
+              onPointerDownMoveCallback={onPointerDownMove}
             />
       
             <div className={css['body']}>

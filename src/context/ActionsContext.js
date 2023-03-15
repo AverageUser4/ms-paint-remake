@@ -19,7 +19,7 @@ function ActionsProvider({ children }) {
     doGetEveryContext,
   } = useCanvasContext();
   const { doRequirePromptWindow } = useWindowsContext();
-  const { setSelectionPhase } = useSelectionContext();
+  const { doSelectionEnd } = useSelectionContext();
   const inputFileRef = useRef();
   
   function onLoadImage(event) {
@@ -48,7 +48,7 @@ function ActionsProvider({ children }) {
     doRequirePromptWindow(() => {
       doHistoryClear();
       doCanvasFullReset();
-      setSelectionPhase(0);
+      doSelectionEnd();
     });
   }
   
@@ -56,7 +56,7 @@ function ActionsProvider({ children }) {
     doRequirePromptWindow(() => {
       doHistoryClear();
       doCanvasFullReset();
-      setSelectionPhase(0);
+      doSelectionEnd();
       inputFileRef.current.click();
     });
   }

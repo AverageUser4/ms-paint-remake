@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import css from './InnerWindowTopBar.module.css';
 import WindowControls from '../WindowControls/WindowControls';
 
-function InnerWindowTopBar({ onPointerDownMove, text, close, isAttentionAnimated }) {
+function InnerWindowTopBar({ onPointerDownMoveCallback, text, closeCallback, isAttentionAnimated }) {
   return (
     <header 
       className={css['container']}
-      onPointerDown={onPointerDownMove}
+      onPointerDown={onPointerDownMoveCallback}
     >
       <span className={`text ${isAttentionAnimated ? 'text--attention' : ''}`}>{text}</span>
       <WindowControls 
         isInnerWindow={true}
-        close={close}
+        closeCallback={closeCallback}
         isAttentionAnimated={isAttentionAnimated}
       />
     </header>
@@ -21,9 +21,9 @@ function InnerWindowTopBar({ onPointerDownMove, text, close, isAttentionAnimated
 
 InnerWindowTopBar.propTypes = {
   text: PropTypes.string.isRequired,
-  onPointerDownMove: PropTypes.func.isRequired,
+  onPointerDownMoveCallback: PropTypes.func.isRequired,
+  closeCallback: PropTypes.func.isRequired,
   isAttentionAnimated: PropTypes.bool,
-  close: PropTypes.func.isRequired,
 }
 
 export default InnerWindowTopBar;

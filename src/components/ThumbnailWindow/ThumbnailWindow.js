@@ -41,9 +41,9 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
           <>
             <InnerWindowTopBar
               text={'Thumbnail'}
-              close={() => setIsOpen(false)}
+              closeCallback={() => setIsOpen(false)}
               isAttentionAnimated={isAttentionAnimated}
-              onPointerDownMove={onPointerDownMove}
+              onPointerDownMoveCallback={onPointerDownMove}
             />
       
             <div className={css['body']}>

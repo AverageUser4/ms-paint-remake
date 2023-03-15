@@ -18,17 +18,17 @@ import copy16 from '../../assets/global/copy-16.png';
 import cut16 from '../../assets/global/cut-16.png';
 
 const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
-  const { selectionBrowseFile, selectionPasteFromClipboard, doSharedCut, doSharedCopy } = useSelectionContext();
+  const { doSelectionBrowseFile, doSelectionPasteFromClipboard, doSharedCut, doSharedCopy } = useSelectionContext();
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   const isOnlyContent = ribbonWidth >= 855;
-  const showText = ribbonWidth < 855 || ribbonWidth >= 1025; 
+  const isShowText = ribbonWidth < 855 || ribbonWidth >= 1025; 
 
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} icon={clipboard16} name="Clipboard">
+    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={clipboard16} name="Clipboard">
       <RibbonItemExpanded name="Clipboard">
 
           <div 
@@ -36,22 +36,22 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
             data-cy="Clipboard"
           >
             <BigButtonDuo 
-              icon={clipboard32} 
+              iconSrc={clipboard32} 
               name="Paste"
-              showChildren={isDropdownOpen}
-              setShowChildren={setIsDropdownOpen}
+              isShowChildren={isDropdownOpen}
+              setIsShowChildren={setIsDropdownOpen}
               onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-              onClickTop={() => selectionPasteFromClipboard()}
-              describedByTop="id-clipboard-bbd-top"
-              tooltipTop={
+              onClickTop={() => doSelectionPasteFromClipboard()}
+              ariaDescribedByTop="id-clipboard-bbd-top"
+              tooltipElementTop={
                 <Tooltip
                 ID="id-clipboard-bbd-top"
                 heading="Paste (Ctrl+V)"
                 text="Paste the contents of the Clipboard."
                 />
               }
-              describedByBottom="id-clipboard-bbd-bottom"
-              tooltipBottom={
+              ariaDescribedByBottom="id-clipboard-bbd-bottom"
+              tooltipElementBottom={
                 <Tooltip
                   ID="id-clipboard-bbd-bottom"
                   heading="Paste (Ctrl+V)"
@@ -68,7 +68,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                   <button 
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
-                      selectionPasteFromClipboard();
+                      doSelectionPasteFromClipboard();
                       setIsDropdownOpen(false);
                     }}
                     aria-describedby="id-clipboard-paste"
@@ -85,7 +85,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                   <button 
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
-                      selectionBrowseFile();
+                      doSelectionBrowseFile();
                       setIsDropdownOpen(false);
                     }}
                     aria-describedby="id-clipboard-paste-from"
@@ -111,7 +111,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                 aria-describedby="id-clipboard-cut"
               >
                 <img draggable="false" src={cut16} alt="Cut."/>
-                {showText && <span className="text text--1">Cut</span>}
+                {isShowText && <span className="text text--1">Cut</span>}
                 <Tooltip
                   ID="id-clipboard-cut"
                   heading="Cut (Ctrl+X)"
@@ -128,7 +128,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                 aria-describedby="id-clipboard-copy"
               >
                 <img draggable="false" src={copy16} alt="Copy."/>
-                {showText && <span className="text text--1">Copy</span>}
+                {isShowText && <span className="text text--1">Copy</span>}
                 <Tooltip
                   ID="id-clipboard-copy"
                   heading="Copy (Ctrl+C)"

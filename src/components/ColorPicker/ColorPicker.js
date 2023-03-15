@@ -16,9 +16,9 @@ const ColorPicker = memo(function ColorPicker() {
   const { onPointerDown: onPointerDownField } = usePointerTrack({ onPointerMoveCallback: onPointerField });
   const { onPointerDown: onPointerDownBar } = usePointerTrack({ onPointerMoveCallback: onPointerBar });
 
-  const cursorPosition = { 
-    top: `calc(${Math.round(100 - HSL.s)}% - 10px)`,
-    left: `calc(${Math.round(HSL.h / 359 * 100)}% - 10px)`
+  const cursorPosition = {
+    x: `calc(${Math.round(HSL.h / 359 * 100)}% - 10px)`,
+    y: `calc(${Math.round(100 - HSL.s)}% - 10px)`,
   };
   
   function onPointerField(event) {
@@ -76,7 +76,10 @@ const ColorPicker = memo(function ColorPicker() {
               draggable="false"
               src={cursor}
               alt=""
-              style={cursorPosition}
+              style={{
+                top: cursorPosition.y,
+                left: cursorPosition.x,
+              }}
             />
           </div>
 

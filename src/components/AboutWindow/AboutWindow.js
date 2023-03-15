@@ -44,9 +44,9 @@ const AboutWindow = memo(function AboutWindow() {
           <>
             <InnerWindowTopBar
               text={'About Paint'}
-              close={() => setIsOpen(false)}
+              closeCallback={() => setIsOpen(false)}
               isAttentionAnimated={isAttentionAnimated}
-              onPointerDownMove={onPointerDownMove}
+              onPointerDownMoveCallback={onPointerDownMove}
             />
       
             <div className={css['body']}>

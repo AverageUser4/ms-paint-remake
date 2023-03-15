@@ -39,14 +39,9 @@ function Logic({
     isMainWindowFocused, setIsMainWindowFocused,
     mainWindowPosition, setMainWindowPosition,
     mainWindowSize, setMainWindowSize,
-    isMainWindowMaximized, setIsMainWindowMaximized,
+    isMainWindowMaximized,
   } = useMainWindowContext();
   const { isAnyBlockingWindowOpen } = useWindowsContext();
-
-  const doSetWindowToMinimalSize = useCallback(() => {
-    setMainWindowSize(minimalSize);
-    setIsMainWindowMaximized(false);
-  }, [setMainWindowSize, minimalSize, setIsMainWindowMaximized]);
 
   const [toolbarData, setToolbarData] = useState({ reposition: false, buttons: ['save', 'undo', 'redo'] });
 
@@ -93,9 +88,8 @@ function Logic({
                 toolbarData={toolbarData}
                 setToolbarData={setToolbarData}
                 ribbonData={ribbonData}
-                doSetWindowToMinimalSize={doSetWindowToMinimalSize}
-                windowHasFocus={isMainWindowFocused}
-                onPointerDownMove={onPointerDownMove}
+                isMainWindowFocused={isMainWindowFocused}
+                onPointerDownMoveCallback={onPointerDownMove}
               />
               <RibbonControls
                 ribbonData={ribbonData}
@@ -186,6 +180,7 @@ function PaintXPlatform({
                       initialPosition={initialPosition}
                       initialSize={initialSize}
                       isInitiallyMaximized={isInitiallyMaximized}
+                      minimalSize={minimalSize}
                     >
                       <WindowsProvider>
                         <ContextMenuProvider>

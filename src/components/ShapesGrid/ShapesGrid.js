@@ -34,7 +34,7 @@ import upArrow16 from './assets/up-arrow-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 import { ReactComponent as TriangleLine } from '../../assets/global/triangle-line.svg';
 
-const shapesData = [
+const shapesDataArray = [
   { src: line16, name: 'Line' },
   { src: curve16, name: 'Curve' },
   { src: oval16, name: 'Oval' },
@@ -63,7 +63,7 @@ const shapesData = [
 const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   const [currentRow, setCurrentRow] = useState(0);
   const gridRef = useRef();
-  const lastColumnCount = useRef(4);
+  const lastColumnCountRef = useRef(4);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
@@ -73,7 +73,7 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   if(ribbonWidth >= 1060) columns = 5;
   if(ribbonWidth >= 1080) columns = 6;
   if(ribbonWidth >= 1100) columns = 7;
-  const rows = Math.ceil(shapesData.length / columns);
+  const rows = Math.ceil(shapesDataArray.length / columns);
   const maxRow = rows - 3;
 
   function mapToButtons(isOut, shape) {
@@ -95,13 +95,13 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
     );
   }
   
-  const shapeButtonsTooltipIn = shapesData.map(mapToButtons.bind(null, false));
-  const shapeButtonsTooltipOut = shapesData.map(mapToButtons.bind(null, true));
+  const shapeButtonsTooltipIn = shapesDataArray.map(mapToButtons.bind(null, false));
+  const shapeButtonsTooltipOut = shapesDataArray.map(mapToButtons.bind(null, true));
 
   useEffect(() => {
-    if(lastColumnCount.current !== columns) {
+    if(lastColumnCountRef.current !== columns) {
       setCurrentRow(0);
-      lastColumnCount.current = columns;
+      lastColumnCountRef.current = columns;
     }
   }, [columns]);
   

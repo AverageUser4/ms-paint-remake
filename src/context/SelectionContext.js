@@ -28,6 +28,16 @@ function SelectionProvider({ children }) {
   const lastSelectionSizeRef = useRef(null);
   const lastSelectionPositionRef = useRef(null);
 
+  function doSelectionEnd() {
+    setSelectionSize(null);
+    setSelectionPosition(null);
+    setSelectionOutlineSize(null);
+    setSelectionPhase(0);
+    lastSelectionStateRef.current = null;
+    lastSelectionSizeRef.current = null;
+    lastSelectionPositionRef.current = null;
+  }
+  
   function doSelectionSetSize(newSize) {
     setSelectionSize(newSize);
     lastSelectionSizeRef.current = newSize;
@@ -121,7 +131,7 @@ function SelectionProvider({ children }) {
     setCanvasSize(newSize);
 
     setTimeout(() => {
-      setSelectionPhase(0);
+      doSelectionEnd();
       doCanvasClearPrimary();
       doSelectionDrawToPrimary(canvasZoom, newPosition);
     }, 20);
@@ -155,20 +165,20 @@ function SelectionProvider({ children }) {
     }, 20);
   }, [canvasZoom, setCanvasSize]);
   
-  function selectionBrowseFile() {
+  function doSelectionBrowseFile() {
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary(canvasZoom);
-      setSelectionPhase(0);
+      doSelectionEnd();
     }
 
     inputFileRef.current.click();
     setCurrentTool('selection-rectangle');
   }
 
-  function selectionPasteFromClipboard() {   
+  function doSelectionPasteFromClipboard() {   
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary(canvasZoom);
-      setSelectionPhase(0);
+      doSelectionEnd();
     }
 
     if(!navigator.clipboard.read) {
@@ -204,7 +214,7 @@ function SelectionProvider({ children }) {
   function doSharedCut() {
     if(selectionPhase === 2) {
       writeCanvasToClipboard(selectionRef.current);
-      setSelectionPhase(0);
+      doSelectionEnd();
     } else {
       writeCanvasToClipboard(primaryRef.current);
       doCanvasClearPrimary();
@@ -292,7 +302,7 @@ function SelectionProvider({ children }) {
 
   function doSharedDelete() {
     if(selectionPhase === 2) {
-      setSelectionPhase(0);
+      doSelectionEnd();
     } else {
       doCanvasClearPrimary();
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
@@ -312,8 +322,8 @@ function SelectionProvider({ children }) {
         doSelectionSetSize,
         doSelectionSetPosition,
         selectionRef,
-        selectionBrowseFile,
-        selectionPasteFromClipboard,
+        doSelectionBrowseFile,
+        doSelectionPasteFromClipboard,
         doSelectionDrawToPrimary,
         doSelectionDrawToSelection,
         doSelectionCrop,
@@ -323,6 +333,7 @@ function SelectionProvider({ children }) {
         doSelectionSelectAll,
         doSelectionInvertSelection,
         doSharedDelete,
+        doSelectionEnd,
       }}
     >
       <ImageInput

@@ -19,15 +19,14 @@ const RibbonDisplay = memo(function RibbonDisplay() {
     <RibbonItemExpanded name="Display">
       <div className={css['container']}>
         <BigButton 
-          icon={full32}
-          hasArrow={false}
+          iconSrc={full32}
           name={<div>Full <div className="line-break"></div> screen</div>}
           strName="Full-screen"
           onClick={() => {
             setIsFullScreenView(true);
           }}
-          describedBy="id-display-full-screen"
-          tooltip={
+          ariaDescribedBy="id-display-full-screen"
+          tooltipElement={
             <Tooltip
               ID="id-display-full-screen"
               heading="Full screen (F11)"
@@ -36,13 +35,12 @@ const RibbonDisplay = memo(function RibbonDisplay() {
           }
         />
         <BigButton 
-          icon={thumb32}
-          hasArrow={false}
+          iconSrc={thumb32}
           name="Thumbnail"
           strName="Thumbnail"
           onClick={() => setIsThumbnailWindowOpen(true)}
-          describedBy="id-display-thumbnail"
-          tooltip={
+          ariaDescribedBy="id-display-thumbnail"
+          tooltipElement={
             <Tooltip
               ID="id-display-thumbnail"
               heading="Thumbnail"

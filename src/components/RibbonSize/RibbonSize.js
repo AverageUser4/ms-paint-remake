@@ -19,15 +19,16 @@ const RibbonSize = memo(function RibbonSize() {
 
   return (
     <BigButton 
-      icon={size32}
+      iconSrc={size32}
       name="Size"
       strName="Size"
-      showChildren={isDropdownOpen}
-      setShowChildren={setIsDropdownOpen}
+      isShowChildren={isDropdownOpen}
+      setIsShowChildren={setIsDropdownOpen}
       onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       isDisabled={!sizes}
-      describedBy="id-size-big-button"
-      tooltip={
+      isHasArrow={true}
+      ariaDescribedBy="id-size-big-button"
+      tooltipElement={
         <Tooltip
           ID="id-size-big-button"
           heading="Size (Ctrl++, Ctrl+-)"

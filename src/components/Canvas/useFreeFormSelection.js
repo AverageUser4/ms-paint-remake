@@ -15,7 +15,6 @@ function useFreeFormSelection() {
   const { doHistoryAdd } = useHistoryContext();
   const { currentToolData } = useToolContext();
   const { colorData } = useColorContext();
-  const { doSelectionSetSize, doSelectionSetPosition } = useSelectionContext();
 
   const {
     setSelectionPhase,
@@ -23,7 +22,10 @@ function useFreeFormSelection() {
     lastSelectionStateRef,
     selectionPhase,
     doSelectionDrawToPrimary,
-    doSelectionDrawToSelection
+    doSelectionDrawToSelection,
+    doSelectionEnd,
+    doSelectionSetSize,
+    doSelectionSetPosition,
   } = useSelectionContext();
 
   const edgePositionRef = useRef();
@@ -166,7 +168,7 @@ function useFreeFormSelection() {
   }
 
   function onCancelCallback() {
-    setSelectionPhase(0);
+    doSelectionEnd();
     lastPointerPositionRef.current = {};
     secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
     thumbnailSecondaryRef.current?.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);

@@ -60,7 +60,7 @@ const RibbonBrushes = memo(function RibbonBrushes() {
       break;
   }
 
-  const brushesData = [
+  const brushesDataArray = [
     { id: 'brushes-brush', name: 'Brush', icon: brush32 },
     { id: 'brushes-calligraphy-1', name: 'Calligraphy brush 1', icon: calligraphy132 },
     { id: 'brushes-calligraphy-2', name: 'Calligraphy brush 2', icon: calligraphy232 },
@@ -72,7 +72,7 @@ const RibbonBrushes = memo(function RibbonBrushes() {
     { id: 'brushes-watercolor', name: 'Watercolor brush', icon: water32 },
   ];
 
-  const brushesButtons = brushesData.map(data => (
+  const brushesButtonsArray = brushesDataArray.map(data => (
     <button 
       key={data.id}
       className={
@@ -95,23 +95,23 @@ const RibbonBrushes = memo(function RibbonBrushes() {
   
   return (
     <BigButtonDuo 
-      icon={icon} 
+      iconSrc={icon} 
       name="Brushes"
-      showChildren={isDropdownOpen}
-      setShowChildren={setIsDropdownOpen}
+      isShowChildren={isDropdownOpen}
+      setIsShowChildren={setIsDropdownOpen}
       onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
       onClickTop={() => !currentTool.startsWith('brushes-') && doSetCurrentTool(latestTools.brushes)}
       isActive={currentTool.startsWith('brushes-')}
-      describedByTop="id-brushes-bbd-top"
-      tooltipTop={
+      ariaDescribedByTop="id-brushes-bbd-top"
+      tooltipElementTop={
         <Tooltip
           ID="id-brushes-bbd-top"
           heading="Brushes"
           text="Draw with different kinds of brushes."
         />
       }
-      describedByBottom="id-brushes-bbd-bottom"
-      tooltipBottom={
+      ariaDescribedByBottom="id-brushes-bbd-bottom"
+      tooltipElementBottom={
         <Tooltip
           ID="id-brushes-bbd-bottom"
           heading="Brushes"
@@ -125,7 +125,7 @@ const RibbonBrushes = memo(function RibbonBrushes() {
         data-cy="Brushes-Dropdown"
       >
         <div className={css['grid']}>
-          {brushesButtons}
+          {brushesButtonsArray}
         </div>
       </div>
     </BigButtonDuo>

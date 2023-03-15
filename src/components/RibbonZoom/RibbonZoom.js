@@ -80,31 +80,28 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
     <RibbonItemExpanded name="Zoom">
       <div className={css['container']}>
         <BigButton 
-          icon={zoomIn32}
-          hasArrow={false}
+          iconSrc={zoomIn32}
           name={<div>Zoom <div className="line-break"></div> in</div>}
           strName="Zoom-in"
           onClick={() => doCanvasChangeZoom(false)}
-          describedBy="id-zoom-zoom-in"
-          tooltip={zoomInTooltip}
+          ariaDescribedBy="id-zoom-zoom-in"
+          tooltipElement={zoomInTooltip}
         />
         <BigButton 
-          icon={zoomOut32}
-          hasArrow={false}
+          iconSrc={zoomOut32}
           name={<div>Zoom <div className="line-break"></div> out</div>}
           strName="Zoom-out"
           onClick={() => doCanvasChangeZoom(true)}
-          describedBy="id-zoom-zoom-out"
-          tooltip={zoomOutTooltip}
+          ariaDescribedBy="id-zoom-zoom-out"
+          tooltipElement={zoomOutTooltip}
         />
         <BigButton 
-          icon={percent32}
-          hasArrow={false}
+          iconSrc={percent32}
           name={<div>100 <div className="line-break"></div> %</div>}
           strName="100%"
           onClick={() => setCanvasZoom(1)}
-          describedBy="id-zoom-zoom-100"
-          tooltip={zoom100Tooltip}
+          ariaDescribedBy="id-zoom-zoom-100"
+          tooltipElement={zoom100Tooltip}
         />
       </div>
     </RibbonItemExpanded>

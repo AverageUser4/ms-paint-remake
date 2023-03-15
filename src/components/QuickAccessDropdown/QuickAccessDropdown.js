@@ -6,8 +6,8 @@ import Dropdown from '../Dropdown/Dropdown';
 import Tooltip from '../Tooltip/Tooltip';
 
 const QuickAccessDropdown = memo(function QuickAccessDropdown({ 
-  isVisible,
-  setIsVisible,
+  isOpen,
+  setIsOpen,
   toolbarData,
   setToolbarData,
   ribbonData
@@ -32,8 +32,8 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
   
   return (
     <Dropdown 
-      isVisible={isVisible} 
-      setIsVisible={setIsVisible}
+      isVisible={isOpen} 
+      setIsVisible={setIsOpen}
       classes={css['container']}
       dropdownContainerRef={dropdownContainerRef}
       ref={dropdownContainerRef}
@@ -49,7 +49,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
         <form 
           onSubmit={(e) => e.preventDefault()}
           className={css['form']}
-          onClick={() => setIsVisible(false)}
+          onClick={() => setIsOpen(false)}
         >
 
           <label className={`tooltip-container ${css['label']}`}>
@@ -246,8 +246,8 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
 });
 
 QuickAccessDropdown.propTypes = {
-  isVisible: PropTypes.bool.isRequired,
-  setIsVisible: PropTypes.func,
+  isOpen: PropTypes.bool.isRequired,
+  setIsOpen: PropTypes.func,
   toolbarData: PropTypes.object.isRequired,
   setToolbarData: PropTypes.func.isRequired,
   ribbonData: PropTypes.object.isRequired,
