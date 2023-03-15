@@ -28,7 +28,7 @@ const initialData = {
 
 const ResizeWindow = memo(function ResizeWindow() {
   const { selectionPhase, selectionSize, doSelectionResize, doSelectionSetSize, selectionRef } = useSelectionContext();
-  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, thumbnailPrimaryRef } = useCanvasContext();
+  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, doGetEveryContext } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -179,8 +179,7 @@ const ResizeWindow = memo(function ResizeWindow() {
 
     if(!isSelectionActive) {
       setTimeout(() => {
-        const primaryContext = primaryRef.current.getContext('2d');
-        const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+        const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
         const scale = {
           x: newSize.width / oldCanvasSize.width,
           y: newSize.height / oldCanvasSize.height,
@@ -215,8 +214,8 @@ const ResizeWindow = memo(function ResizeWindow() {
         const movedX = usedSkewHorizontal < 0 ? width - usedSize.width : 0;
         const movedY = usedSkewVertical < 0 ? height - usedSize.height : 0;
     
-        const usedContext = isSelectionActive ? selectionRef.current.getContext('2d') : primaryRef.current.getContext('2d');
-        const thumbnailPrimaryContext = primaryRef.current?.getContext('2d');
+        const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+        const usedContext = isSelectionActive ? selectionRef.current.getContext('2d') : primaryContext;
         const usedCopy = doGetCanvasCopy(isSelectionActive ? selectionRef.current : primaryRef.current);
         
         const usedNewSize = {

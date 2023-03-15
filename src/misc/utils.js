@@ -446,3 +446,25 @@ export function doGetParsedFileSize(bytes) {
 
   return parsedSize;
 }
+
+export function doGetGridData(zoom) {
+  const gridData = {
+    cellSize: 12,
+    color_1: 'rgba(0, 0, 0, 0.5)',
+    color_2: 'rgba(255, 255, 255, 0.5)',
+  };
+
+  if(zoom >= 0.5) {
+    gridData.cellSize = 10;
+  }
+  if(zoom === 3) {
+    gridData.cellSize = 15;
+  }
+  if(zoom >= 4) {
+    gridData.cellSize = zoom;
+    gridData.color_1 = 'rgb(192, 192, 192)';
+    gridData.color_2 = 'rgb(128, 128, 128)';
+  }
+
+  return gridData;
+}

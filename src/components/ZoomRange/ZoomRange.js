@@ -3,7 +3,8 @@ import css from './ZoomRange.module.css';
 
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useCanvasContext, zoomData } from '../../context/CanvasContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { zoomData } from '../../misc/data';
 
 function getOffsetForMultiplier(multiplier) {
   return zoomData.find(data => data.multiplier === multiplier).offset;

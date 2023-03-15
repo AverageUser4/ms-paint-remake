@@ -9,7 +9,7 @@ function useBrush() {
   const { 
     primaryRef, secondaryRef, thumbnailPrimaryRef,
     thumbnailSecondaryRef, canvasZoom, setCanvasZoom,
-    canvasSize, lastPointerPositionRef,
+    canvasSize, lastPointerPositionRef, doGetEveryContext
   } = useCanvasContext();
   const { currentTool, currentToolData } = useToolContext();
   const { colorData, setColorData } = useColorContext();
@@ -25,10 +25,9 @@ function useBrush() {
   }
   if(currentToolData.onPointerDown) {
     usedDownCallback = (event) => currentToolData.onPointerDown({
+      ...doGetEveryContext(),
       event,
       currentZoom: canvasZoom,
-      primaryContext: primaryRef.current?.getContext('2d'),
-      thumbnailPrimaryContext: thumbnailPrimaryRef.current?.getContext('2d'),
       canvasSize: canvasSize,
       colorData,
       setColorData,
@@ -54,9 +53,7 @@ function useBrush() {
 
     lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
 
-    const primaryContext = primaryRef.current.getContext('2d');
-    const secondaryContext = secondaryRef.current.getContext('2d');
-    const thumbnailSecondaryContext = thumbnailSecondaryRef.current?.getContext('2d');
+    const { primaryContext, secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
 
     function setStyle(context) {
       context.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
@@ -87,7 +84,6 @@ function useBrush() {
 
     primaryRef.current.getContext('2d').drawImage(secondaryRef.current, 0, 0);
     thumbnailPrimaryRef.current?.getContext('2d').drawImage(secondaryRef.current, 0, 0);
-    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
     secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
 
     doHistoryAdd({ 

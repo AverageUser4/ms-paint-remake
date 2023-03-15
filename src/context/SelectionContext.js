@@ -13,7 +13,7 @@ const SelectionContext = createContext();
 function SelectionProvider({ children }) {
   const { 
     setCanvasSize, canvasZoom, canvasSize,
-    primaryRef, doCanvasClearPrimary, thumbnailPrimaryRef
+    primaryRef, doCanvasClearPrimary, doGetEveryContext,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { setCurrentTool } = useToolContext();
@@ -64,8 +64,7 @@ function SelectionProvider({ children }) {
       console.error(`This function requires first argument (zoom) to be of type "number", provided: "${zoom}".`);
     }
     // using zoom argument is important as it isn't always canvasZoom
-    const primaryContext = primaryRef.current.getContext('2d');
-    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
 
     function draw(context) {
       context.imageSmoothingEnabled = false;

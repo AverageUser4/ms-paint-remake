@@ -2,22 +2,8 @@ import React, { createContext, useContext, useState, useRef, useEffect, useCallb
 import PropTypes from 'prop-types';
 
 import { useColorContext } from './ColorContext';
-import { initialCanvasSize } from '../misc/data';
+import { initialCanvasSize, zoomData } from '../misc/data';
 import { RGBObjectToString, doGetCanvasCopy } from '../misc/utils';
-
-const zoomData = [
-  { multiplier: 0.125, offset: 7 },
-  { multiplier: 0.25, offset: 12 },
-  { multiplier: 0.50, offset: 23 },
-  { multiplier: 1, offset: 45 },
-  { multiplier: 2, offset: 51 },
-  { multiplier: 3, offset: 57 },
-  { multiplier: 4, offset: 63 },
-  { multiplier: 5, offset: 68 },
-  { multiplier: 6, offset: 73 },
-  { multiplier: 7, offset: 78 },
-  { multiplier: 8, offset: 83 },
-];
 
 const CanvasContext = createContext();
 
@@ -39,8 +25,7 @@ function CanvasProvider({ children }) {
   const lastCanvasZoomRef = useRef();
 
   const doCanvasClearPrimary = useCallback(({ x = 0, y = 0, width, height } = {}) => {
-    const primaryContext = primaryRef.current.getContext('2d');
-    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
 
     function clear(context) {
       context.fillStyle = RGBObjectToString(colorData.secondary);
@@ -67,6 +52,15 @@ function CanvasProvider({ children }) {
     setCanvasZoom(1);
     setFileData(null);
     lastPrimaryStateRef.current = null;
+  }
+
+  function doGetEveryContext() {
+    return {
+      primaryContext: primaryRef.current.getContext('2d'),
+      secondaryContext: secondaryRef.current.getContext('2d'),
+      thumbnailPrimaryContext: thumbnailPrimaryRef.current?.getContext('2d'),
+      thumbnailSecondaryContext: thumbnailSecondaryRef.current?.getContext('2d'),
+    };
   }
 
   useEffect(() => {
@@ -120,6 +114,7 @@ function CanvasProvider({ children }) {
         fileData, setFileData,
         isFullScreenView, setIsFullScreenView,
         isBlackAndWhite, setIsBlackAndWhite,
+        doGetEveryContext,
       }}
     >
       {children}
@@ -128,7 +123,7 @@ function CanvasProvider({ children }) {
 }
 
 CanvasProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 function useCanvasContext() {
@@ -138,5 +133,4 @@ function useCanvasContext() {
 export {
   CanvasProvider,
   useCanvasContext,
-  zoomData
 };

@@ -52,13 +52,13 @@ function useSelection() {
       return;
     }
     
+    lastCurrentToolRef.current = currentTool;
+    lastCanvasZoomRef.current = canvasZoom;
+
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary(lastCanvasZoomRef.current);
     }
-
     setSelectionPhase(0);
-    lastCurrentToolRef.current = currentTool;
-    lastCanvasZoomRef.current = canvasZoom;
   }, [currentTool, canvasZoom, selectionPosition, selectionPhase, lastCanvasZoomRef,
       lastCurrentToolRef, primaryRef, selectionRef, setSelectionPhase, doSelectionDrawToPrimary]
   );

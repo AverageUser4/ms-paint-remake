@@ -7,7 +7,10 @@ import { useSelectionContext } from '../../context/SelectionContext';
 import { doGetCanvasCopy } from '../../misc/utils';
 
 function useRectangularSelection() {
-  const { primaryRef, doCanvasClearPrimary, canvasSize, canvasZoom } = useCanvasContext();
+  const { 
+    primaryRef, doCanvasClearPrimary, canvasSize,
+    canvasZoom, doGetEveryContext 
+  } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
 
   const {
@@ -120,7 +123,7 @@ function useRectangularSelection() {
       setSelectionPhase(2);
       setSelectionResizeData(null);
 
-      const primaryContext = primaryRef.current.getContext('2d');
+      const { primaryContext } = doGetEveryContext();
   
       const imageData = primaryContext.getImageData(
         Math.round(lastSelectionPositionRef.current.x / canvasZoom),

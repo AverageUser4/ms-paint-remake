@@ -9,9 +9,8 @@ import { useColorContext } from "../../context/ColorContext";
 
 function useFreeFormSelection() {
   const { 
-    primaryRef, secondaryRef, thumbnailPrimaryRef,
-    thumbnailSecondaryRef, canvasZoom, canvasSize,
-    lastPointerPositionRef,
+    primaryRef, secondaryRef, thumbnailSecondaryRef,
+    canvasZoom, canvasSize, lastPointerPositionRef, doGetEveryContext,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { currentToolData } = useToolContext();
@@ -75,14 +74,9 @@ function useFreeFormSelection() {
       maxY: Math.max(edgePositionRef.current.maxY, destinationPixel.y),
     };
 
-    const secondaryContext = secondaryRef.current.getContext('2d');
-    const thumbnailSecondaryContext = thumbnailSecondaryRef.current?.getContext('2d');
-
     function doDraw(isRepeated) {
       currentToolData.draw({
-        primaryContext: primaryRef.current.getContext('2d'),
-        secondaryContext,
-        thumbnailSecondaryContext,
+        ...doGetEveryContext(),
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
@@ -107,12 +101,9 @@ function useFreeFormSelection() {
     const zoomedY = Math.round(y * canvasZoom);
     const zoomedWidth = Math.round(width * canvasZoom);
     const zoomedHeight = Math.round(height * canvasZoom);
-
-    const primaryContext = primaryRef.current.getContext('2d');
-    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
-    const secondaryContext = secondaryRef.current.getContext('2d');
-    const thumbnailSecondaryContext = thumbnailSecondaryRef.current?.getContext('2d');
     
+    const { primaryContext, thumbnailPrimaryContext, secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
+
     const boundariesImageData = secondaryContext.getImageData(x, y, width, height);
     secondaryContext.clearRect(0, 0, canvasSize.width, canvasSize.height);
     thumbnailSecondaryContext?.clearRect(0, 0, canvasSize.width, canvasSize.height);

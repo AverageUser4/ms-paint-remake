@@ -16,7 +16,7 @@ function ActionsProvider({ children }) {
   const { 
     doCanvasFullReset, setCanvasSize, primaryRef,
     lastPrimaryStateRef, fileData, isBlackAndWhite,
-    thumbnailPrimaryRef,
+    doGetEveryContext,
   } = useCanvasContext();
   const { doRequirePromptWindow } = useWindowsContext();
   const { setSelectionPhase } = useSelectionContext();
@@ -29,8 +29,7 @@ function ActionsProvider({ children }) {
     setCanvasSize({ width, height });
     
     setTimeout(() => {
-      const primaryContext = primaryRef.current.getContext('2d');
-      const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
+      const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
 
       function draw(context) {
         context.imageSmoothingEnabled = false;

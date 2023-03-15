@@ -12,7 +12,7 @@ import { useColorContext } from "../../context/ColorContext";
 import { useContextMenuContext } from "../../context/ContextMenuContext";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useWindowsContext } from "../../context/WindowsContext";
-import { RGBObjectToString, doGetCanvasCopy } from "../../misc/utils";
+import { RGBObjectToString, doGetCanvasCopy, doGetGridData } from "../../misc/utils";
 import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
@@ -35,21 +35,7 @@ function Canvas() {
   const { selectionRef, selectionSize, selectionPhase, selectionPosition } = useSelectionContext();
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
-  
-  let gridCellSize = 12;
-  let gridCellColor_1 = 'rgba(0, 0, 0, 0.5)';
-  let gridCellColor_2 = 'rgba(255, 255, 255, 0.5)';
-  if(canvasZoom >= 0.5) {
-    gridCellSize = 10;
-  }
-  if(canvasZoom === 3) {
-    gridCellSize = 15;
-  }
-  if(canvasZoom >= 4) {
-    gridCellSize = canvasZoom;
-    gridCellColor_1 = 'rgb(192, 192, 192)';
-    gridCellColor_2 = 'rgb(128, 128, 128)';
-  }
+  const gridData = doGetGridData(canvasZoom);
 
   const { onPointerDownBrush } = useBrush();
 
@@ -191,18 +177,18 @@ function Canvas() {
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            <pattern id="smallGrid" width={gridCellSize} height={gridCellSize} patternUnits="userSpaceOnUse">
+            <pattern id="smallGrid" width={gridData.cellSize} height={gridData.cellSize} patternUnits="userSpaceOnUse">
               <path 
-                d={`M ${gridCellSize},0 L 0,0 0,${gridCellSize}`}
+                d={`M ${gridData.cellSize},0 L 0,0 0,${gridData.cellSize}`}
                 fill="none"
-                stroke={gridCellColor_1}
+                stroke={gridData.color_1}
                 strokeWidth="2"
                 strokeDasharray="1 1"
               />
               <path 
-                d={`M ${gridCellSize},0 L 0,0 0,${gridCellSize}`}
+                d={`M ${gridData.cellSize},0 L 0,0 0,${gridData.cellSize}`}
                 fill="none"
-                stroke={gridCellColor_2}
+                stroke={gridData.color_2}
                 strokeWidth="2"
                 strokeDasharray="1 1"
                 strokeDashoffset="1"
