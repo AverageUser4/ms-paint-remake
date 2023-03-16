@@ -17,11 +17,13 @@ import marker32 from './assets/marker-32.png';
 import oil32 from './assets/oil-32.png';
 import pencil32 from './assets/pencil-32.png';
 import water32 from './assets/water-32.png';
+import { useActionsContext } from "../../context/ActionsContext";
 
 const RibbonBrushes = memo(function RibbonBrushes() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
+  const { currentTool, latestTools } = useToolContext();
+  const { doSetCurrentTool } = useActionsContext();
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   let icon = brush32;

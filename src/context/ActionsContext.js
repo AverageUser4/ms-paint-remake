@@ -7,19 +7,23 @@ import { useHistoryContext } from './HistoryContext';
 import { useCanvasContext } from './CanvasContext';
 import { useSelectionContext } from './SelectionContext';
 import { useWindowsContext } from './WindowsContext';
+import { useToolContext } from './ToolContext';
 import { doGetCanvasCopy } from '../misc/utils';
+import { zoomData } from '../misc/data';
 
 const ActionsContext = createContext();
 
 function ActionsProvider({ children }) {
   const { doHistoryClear } = useHistoryContext();
   const { 
-    doCanvasFullReset, setCanvasSize, primaryRef,
-    lastPrimaryStateRef, fileData, isBlackAndWhite,
-    doGetEveryContext,
+    setCanvasSize, primaryRef, lastPrimaryStateRef,
+    fileData, isBlackAndWhite, doGetEveryContext,
+    canvasZoom, setCanvasZoom, doCanvasClearPrimary,
+    setFileData,
   } = useCanvasContext();
   const { doRequirePromptWindow } = useWindowsContext();
-  const { doSelectionEnd } = useSelectionContext();
+  const { doSelectionEnd, selectionPhase, doSelectionDrawToPrimary } = useSelectionContext();
+  const { currentTool, setCurrentTool, setLatestTools } = useToolContext();
   const inputFileRef = useRef();
   
   function onLoadImage(event) {
@@ -78,6 +82,46 @@ function ActionsProvider({ children }) {
     link.download = fileData?.name || 'untitled';
     link.click();
   }
+
+  function doCanvasSetZoom(newZoom) {
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary(canvasZoom);
+    }
+    doSelectionEnd();
+    setCanvasZoom(newZoom);
+  }
+  
+  function doCanvasChangeZoom(decrease) {
+    const currentIndex = zoomData.findIndex(data => data.multiplier === canvasZoom); 
+    const newIndex = currentIndex + (decrease ? -1 : 1);
+
+    if(newIndex < 0 || newIndex >= zoomData.length) {
+      return;
+    }
+
+    doCanvasSetZoom(zoomData[newIndex].multiplier);
+  }
+
+  function doCanvasFullReset() {
+    doCanvasClearPrimary();
+    setCanvasZoom(1);
+    setFileData(null);
+    lastPrimaryStateRef.current = null;
+  }
+
+  function doSetCurrentTool(tool) {
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary(canvasZoom);
+    }
+    doSelectionEnd();
+
+    if(currentTool.startsWith('brushes')) {
+      setLatestTools(prev => ({ ...prev, brushes: currentTool }));
+    } else if(currentTool.startsWith('selection')) {
+      setLatestTools(prev => ({ ...prev, selection: currentTool }));
+    }
+    setCurrentTool(tool);
+  }
   
   return (
     <ActionsContext.Provider
@@ -85,6 +129,10 @@ function ActionsProvider({ children }) {
         doStartNewProject,
         doOpenNewFile,
         doSaveFile,
+        doCanvasSetZoom,
+        doCanvasChangeZoom,
+        doCanvasFullReset,
+        doSetCurrentTool,
       }}
     >
       {children}

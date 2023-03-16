@@ -5,11 +5,9 @@ import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
-import { useToolContext } from '../../context/ToolContext';
 
 function useSelection() {
-  const { primaryRef, canvasZoom, lastCanvasZoomRef } = useCanvasContext();
-  const { currentTool, lastCurrentToolRef } = useToolContext();
+  const { primaryRef } = useCanvasContext();
   
   const {
     selectionRef,
@@ -21,8 +19,6 @@ function useSelection() {
     doSelectionSetSize,
     doSelectionResize,
     doSelectionSetPosition,
-    doSelectionDrawToPrimary,
-    doSelectionEnd,
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection();
@@ -44,27 +40,6 @@ function useSelection() {
     }
   }, [selectionSize, selectionPhase, selectionRef, lastSelectionStateRef]);
   
-  useEffect(() => {
-    // when zoom or tool changes put current selection where it currently is on primary canvas
-    if(
-        lastCurrentToolRef.current === currentTool &&
-        lastCanvasZoomRef.current === canvasZoom
-      ) {
-      return;
-    }
-
-    if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(lastCanvasZoomRef.current);
-    }
-    doSelectionEnd();
-
-    // it has to be down here (below doSelectionDrawToPrimary)
-    lastCurrentToolRef.current = currentTool;
-    lastCanvasZoomRef.current = canvasZoom;
-  }, [currentTool, canvasZoom, selectionPosition, selectionPhase, lastCanvasZoomRef, doSelectionEnd,
-      lastCurrentToolRef, primaryRef, selectionRef, doSelectionDrawToPrimary]
-  );
-
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
     setPosition: doSelectionSetPosition,

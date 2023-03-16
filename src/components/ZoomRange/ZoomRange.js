@@ -4,6 +4,7 @@ import css from './ZoomRange.module.css';
 import Tooltip from '../Tooltip/Tooltip';
 
 import { useCanvasContext } from '../../context/CanvasContext';
+import { useActionsContext } from '../../context/ActionsContext';
 import { zoomData } from '../../misc/data';
 
 function getOffsetForMultiplier(multiplier) {
@@ -23,7 +24,8 @@ function findClosestMultiplier(offset) {
 }
 
 const ZoomRange = memo(function ZoomRange() {
-  const { canvasZoom, setCanvasZoom, doCanvasChangeZoom } = useCanvasContext();
+  const { canvasZoom } = useCanvasContext();
+  const { doSetCanvasZoom, doCanvasChangeZoom } = useActionsContext();
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
   
@@ -37,7 +39,7 @@ const ZoomRange = memo(function ZoomRange() {
       const multiplier = findClosestMultiplier(difference);
 
       if(canvasZoom !== multiplier) {
-        setCanvasZoom(multiplier);
+        doSetCanvasZoom(multiplier);
       }
     }
 
@@ -50,7 +52,7 @@ const ZoomRange = memo(function ZoomRange() {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     };
-  }, [isControlFocused, canvasZoom, setCanvasZoom]);
+  }, [isControlFocused, canvasZoom, doSetCanvasZoom]);
 
   return (
     <>

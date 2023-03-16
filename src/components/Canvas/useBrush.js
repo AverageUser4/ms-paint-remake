@@ -3,17 +3,19 @@ import { useCanvasContext } from "../../context/CanvasContext";
 import { useToolContext } from "../../context/ToolContext";
 import { useColorContext } from "../../context/ColorContext";
 import { useHistoryContext } from "../../context/HistoryContext";
+import { useActionsContext } from "../../context/ActionsContext";
 import { RGBObjectToString, doGetCanvasCopy, getDrawData } from "../../misc/utils";
 
 function useBrush() {
   const { 
     primaryRef, secondaryRef, thumbnailPrimaryRef,
-    thumbnailSecondaryRef, canvasZoom, setCanvasZoom,
-    canvasSize, lastPointerPositionRef, doGetEveryContext
+    thumbnailSecondaryRef, canvasZoom, canvasSize,
+    lastPointerPositionRef, doGetEveryContext,
   } = useCanvasContext();
   const { currentTool, currentToolData } = useToolContext();
   const { colorData, setColorData } = useColorContext();
   const { doHistoryAdd } = useHistoryContext();
+  const { doCanvasChangeZoom } = useActionsContext();
   
   let usedMoveCallback = onPointerMoveCallback;
   let usedDownCallback = onPointerMoveCallback;
@@ -27,12 +29,11 @@ function useBrush() {
     usedDownCallback = (event) => currentToolData.onPointerDown({
       ...doGetEveryContext(),
       event,
-      currentZoom: canvasZoom,
       canvasSize: canvasSize,
       colorData,
       setColorData,
       canvasZoom,
-      setCanvasZoom
+      doCanvasChangeZoom,
     });
   }
   if(currentToolData.onPointerUp) {

@@ -5,7 +5,9 @@ import css from './RibbonTools.module.css';
 import RibbonItemExpanded from "../RibbonItemExpanded/RibbonItemExpanded";
 import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import Tooltip from "../Tooltip/Tooltip";
+
 import { useToolContext } from "../../context/ToolContext";
+import { useActionsContext } from "../../context/ActionsContext";
 
 import tools16 from './assets/tools-16.png';
 import pencil16 from './assets/pencil-16.png';
@@ -17,7 +19,8 @@ import magnifier16 from './assets/magnifier-16.png';
 
 const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
   const isOnlyContent = ribbonWidth >= 760;
-  const { currentTool, doSetCurrentTool } = useToolContext();
+  const { currentTool } = useToolContext();
+  const { doSetCurrentTool } = useActionsContext();
 
   return (
     <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={tools16} name="Tools">

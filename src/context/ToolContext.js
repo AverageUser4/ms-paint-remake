@@ -52,15 +52,6 @@ function ToolProvider({ children }) {
   const lastCurrentToolRef = useRef();
   const currentToolData = toolsData.get(currentTool);
 
-  function doSetCurrentTool(tool) {
-    if(currentTool.startsWith('brushes')) {
-      setLatestTools(prev => ({ ...prev, brushes: currentTool }));
-    } else if(currentTool.startsWith('selection')) {
-      setLatestTools(prev => ({ ...prev, selection: currentTool }));
-    }
-    setCurrentTool(tool);
-  }
-
   return (
     <ToolContext.Provider
       value={{
@@ -68,8 +59,8 @@ function ToolProvider({ children }) {
         setToolsData,
         currentTool,
         setCurrentTool,
-        doSetCurrentTool,
         latestTools,
+        setLatestTools,
         currentToolData,
         lastCurrentToolRef,
       }}

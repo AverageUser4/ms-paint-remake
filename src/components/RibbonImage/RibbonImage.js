@@ -13,6 +13,7 @@ import { toggleBoolState } from "../../misc/utils";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useToolContext } from "../../context/ToolContext";
 import { useWindowsContext } from "../../context/WindowsContext";
+import { useActionsContext } from "../../context/ActionsContext";
 
 import crop16 from '../../assets/global/crop-16.png';
 import selectAll16 from '../../assets/global/select-all-16.png';
@@ -35,7 +36,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
     doSelectionCrop, selectionPhase, doSelectionSelectAll,
     doSelectionInvertSelection, doSharedDelete
   } = useSelectionContext();
-  const { currentTool, doSetCurrentTool, latestTools } = useToolContext();
+  const { currentTool, latestTools } = useToolContext();
+  const { doSetCurrentTool } = useActionsContext();
   const { setIsResizeWindowOpen } = useWindowsContext();
   let icon = image32;
   

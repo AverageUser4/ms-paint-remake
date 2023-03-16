@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useRef, useEffect, useCallb
 import PropTypes from 'prop-types';
 
 import { useColorContext } from './ColorContext';
-import { initialCanvasSize, zoomData } from '../misc/data';
+import { initialCanvasSize } from '../misc/data';
 import { RGBObjectToString, doGetCanvasCopy } from '../misc/utils';
 
 const CanvasContext = createContext();
@@ -35,24 +35,6 @@ function CanvasProvider({ children }) {
     clear(primaryContext);
     thumbnailPrimaryContext && clear(thumbnailPrimaryContext);
   }, [canvasSize, colorData.secondary]);
-
-  function doCanvasChangeZoom(decrease) {
-    const currentIndex = zoomData.findIndex(data => data.multiplier === canvasZoom); 
-    const newIndex = currentIndex + (decrease ? -1 : 1);
-
-    if(newIndex < 0 || newIndex >= zoomData.length) {
-      return;
-    }
-
-    setCanvasZoom(zoomData[newIndex].multiplier);
-  }
-
-  function doCanvasFullReset() {
-    doCanvasClearPrimary();
-    setCanvasZoom(1);
-    setFileData(null);
-    lastPrimaryStateRef.current = null;
-  }
 
   function doGetEveryContext() {
     return {
@@ -109,8 +91,6 @@ function CanvasProvider({ children }) {
         thumbnailPrimaryRef,
         thumbnailSecondaryRef,
         doCanvasClearPrimary,
-        doCanvasChangeZoom,
-        doCanvasFullReset,
         fileData, setFileData,
         isFullScreenView, setIsFullScreenView,
         isBlackAndWhite, setIsBlackAndWhite,
