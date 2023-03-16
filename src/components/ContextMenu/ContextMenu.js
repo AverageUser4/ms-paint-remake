@@ -35,7 +35,8 @@ const ContextMenu = memo(function ContextMenu() {
   const { 
     selectionRef, doSelectionPasteFromClipboard, doSelectionCrop,
     lastSelectionStateRef, selectionSize, doSharedCut, doSharedCopy,
-    doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete
+    doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete,
+    doSelectionGetEveryContext,
   } = useSelectionContext();
   const { primaryRef, canvasSize, primaryThumbnailRef } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -228,7 +229,7 @@ const ContextMenu = memo(function ContextMenu() {
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 let usedImageData;
-                const selectionContext = selectionRef.current?.getContext('2d');
+                const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
                 if(data === 'selection') {
                   usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
@@ -249,6 +250,7 @@ const ContextMenu = memo(function ContextMenu() {
 
                 if(data === 'selection') {
                   selectionContext.putImageData(usedImageData, 0, 0);
+                  thumbnailSelectionContext?.putImageData(usedImageData, 0, 0);
                   lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
                 } else if(data === 'primary') {
                   primaryRef.current.getContext('2d').putImageData(usedImageData, 0, 0);

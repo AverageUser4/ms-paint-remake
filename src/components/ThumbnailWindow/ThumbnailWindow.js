@@ -8,6 +8,7 @@ import { useWindowsContext } from '../../context/WindowsContext';
 import { useMainWindowContext } from '../../context/MainWindowContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useColorContext } from '../../context/ColorContext';
+import { useSelectionContext } from '../../context/SelectionContext';
 
 import { innerWindowConfig } from '../../misc/data';
 import { getWindowCenteredPosition, RGBObjectToString } from '../../misc/utils';
@@ -17,7 +18,8 @@ const HEIGHT = 230;
 
 const ThumbnailWindow = memo(function ThumbnailWindow() {
   const { colorData } = useColorContext();
-  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef } = useCanvasContext();
+  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef, canvasZoom } = useCanvasContext();
+  const { thumbnailSelectionRef, selectionSize, selectionPosition, selectionPhase } = useSelectionContext();
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const { isThumbnailWindowOpen: isOpen, setIsThumbnailWindowOpen: setIsOpen } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
@@ -60,6 +62,19 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
                 width={canvasSize.width}
                 height={canvasSize.height}
               />
+              {
+                selectionPhase &&
+                  <canvas
+                    className={`${css['canvas']} ${css['canvas--selection']}`}
+                    ref={thumbnailSelectionRef}
+                    width={Math.round(selectionSize.width / canvasZoom)}
+                    height={Math.round(selectionSize.height / canvasZoom)}
+                    style={{
+                      top: Math.round(selectionPosition.y / canvasZoom),
+                      left: Math.round(selectionPosition.x / canvasZoom),
+                    }}
+                  />
+              }
             </div>
           </>
         );

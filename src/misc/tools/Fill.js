@@ -4,11 +4,11 @@ import { ImageDataUtils } from "../utils";
 export default {
   cursor: 'fill',
   sizes: null,
-  onPointerDown({ event, primaryContext, thumbnailPrimaryContext, canvasSize, currentZoom, colorData }) {
+  onPointerDown({ event, primaryContext, thumbnailPrimaryContext, canvasSize, canvasZoom, colorData }) {
     const { width, height } = canvasSize;
     let { offsetX, offsetY } = event.nativeEvent;
-    offsetX = Math.round(offsetX / currentZoom);
-    offsetY = Math.round(offsetY / currentZoom);
+    offsetX = Math.round(offsetX / canvasZoom);
+    offsetY = Math.round(offsetY / canvasZoom);
     const imageData = primaryContext.getImageData(0, 0, width, height);
     const color = event.button === 0 ? colorData.primary : colorData.secondary;
 

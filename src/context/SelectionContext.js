@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef, useCallback } from 'react';
+import React, { createContext, useContext, useState, useRef, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import ImageInput from '../components/ImageInput/ImageInput';
@@ -23,10 +23,18 @@ function SelectionProvider({ children }) {
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
   const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
   const selectionRef = useRef();
+  const thumbnailSelectionRef = useRef();
   const inputFileRef = useRef();
   const lastSelectionStateRef = useRef(null);
   const lastSelectionSizeRef = useRef(null);
   const lastSelectionPositionRef = useRef(null);
+
+  useEffect(() => {
+    // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
+    if(selectionPhase === 2 && lastSelectionStateRef.current) {
+      selectionRef.current.getContext('2d').drawImage(lastSelectionStateRef.current, 0, 0);
+    }
+  }, [selectionSize, selectionPhase]);
 
   function doSelectionEnd() {
     setSelectionSize(null);
@@ -58,14 +66,21 @@ function SelectionProvider({ children }) {
     doSelectionSetSize(newSize);
 
     setTimeout(() => {
-      const selectionContext = selectionRef.current.getContext('2d');
-      selectionContext.save();
-      selectionContext.imageSmoothingEnabled = false;
-      selectionContext.clearRect(0, 0, newSize.width, newSize.height);
-      selectionContext.scale(multiplier.x, multiplier.y);
-      selectionContext.drawImage(selectionCanvasCopy, 0, 0);
+      const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+
+      function drawToContext(context) {
+        context.save();
+        context.imageSmoothingEnabled = false;
+        context.clearRect(0, 0, newSize.width, newSize.height);
+        context.scale(multiplier.x, multiplier.y);
+        context.drawImage(selectionCanvasCopy, 0, 0);
+        context.restore();
+      }
+
+      drawToContext(selectionContext);
+      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
+      
       lastSelectionStateRef.current = selectionRef.current;
-      selectionContext.restore();
     }, 20);
   }
 
@@ -105,15 +120,23 @@ function SelectionProvider({ children }) {
     bufCanvas.imageSmoothingEnabled = false;
     bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
     
-    const selectionContext = selectionRef.current.getContext('2d');
-    selectionContext.save();
-    selectionContext.imageSmoothingEnabled = false;
-    selectionContext.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
-    // scale does not apply to putImageData, so have to use drawImage after copying data
-    selectionContext.scale(canvasZoom, canvasZoom);
-    selectionContext.drawImage(bufCanvas, 0, 0);
+    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+
+    function drawToContext(context, isThumbnail) {
+      context.save();
+      context.imageSmoothingEnabled = false;
+      context.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
+      if(!isThumbnail) {
+        context.scale(canvasZoom, canvasZoom);
+      }
+      context.drawImage(bufCanvas, 0, 0);
+      context.restore();
+    }
+
+    drawToContext(selectionContext);
+    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
+    
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-    selectionContext.restore();
   }
 
   function doSelectionCrop() {
@@ -154,13 +177,20 @@ function SelectionProvider({ children }) {
     setSelectionPhase(2);
 
     setTimeout(() => {
-      const selectionContext = selectionRef.current.getContext('2d');
-      selectionContext.save();
-      selectionContext.imageSmoothingEnabled = false;
-      selectionContext.scale(canvasZoom, canvasZoom);
-      selectionContext.drawImage(image, 0, 0);
+      const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+
+      function drawToContext(context) {
+        context.save();
+        context.imageSmoothingEnabled = false;
+        context.scale(canvasZoom, canvasZoom);
+        context.drawImage(image, 0, 0);
+        context.restore();
+      }
+
+      drawToContext(selectionContext);
+      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
+
       lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-      selectionContext.restore();
       URL.revokeObjectURL(image.src);
     }, 20);
   }, [canvasZoom, setCanvasSize]);
@@ -252,7 +282,7 @@ function SelectionProvider({ children }) {
       return;
     }
     
-    const selectionContext = selectionRef.current.getContext('2d');
+    const { selectionContext } = doSelectionGetEveryContext();
     const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
     let selectionImageData;
     if(canvasZoom === 1) {
@@ -308,6 +338,13 @@ function SelectionProvider({ children }) {
       doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
     }
   }
+
+  function doSelectionGetEveryContext() {
+    return {
+      selectionContext: selectionRef.current?.getContext('2d'),
+      thumbnailSelectionContext: thumbnailSelectionRef.current?.getContext('2d'),
+    };
+  }
   
   return (
     <SelectionContext.Provider
@@ -322,6 +359,7 @@ function SelectionProvider({ children }) {
         doSelectionSetSize,
         doSelectionSetPosition,
         selectionRef,
+        thumbnailSelectionRef,
         doSelectionBrowseFile,
         doSelectionPasteFromClipboard,
         doSelectionDrawToPrimary,
@@ -334,6 +372,7 @@ function SelectionProvider({ children }) {
         doSelectionInvertSelection,
         doSharedDelete,
         doSelectionEnd,
+        doSelectionGetEveryContext,
       }}
     >
       <ImageInput

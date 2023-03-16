@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
 import useRectangularSelection from './useRectangularSelection';
@@ -10,12 +9,9 @@ function useSelection() {
   const { primaryRef } = useCanvasContext();
   
   const {
-    selectionRef,
     selectionSize,
     selectionPosition,
     selectionOutlineSize, setSelectionOutlineSize,
-    selectionPhase,
-    lastSelectionStateRef,
     doSelectionSetSize,
     doSelectionResize,
     doSelectionSetPosition,
@@ -32,13 +28,6 @@ function useSelection() {
     doSelectionResize(selectionOutlineSize);
     setSelectionOutlineSize(null);
   }
-
-  useEffect(() => {
-    // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
-    if(selectionPhase === 2 && lastSelectionStateRef.current) {
-      selectionRef.current.getContext('2d').drawImage(lastSelectionStateRef.current, 0, 0);
-    }
-  }, [selectionSize, selectionPhase, selectionRef, lastSelectionStateRef]);
   
   const { resizeElements: selectionResizeElements } = useResize({ 
     position: selectionPosition,
