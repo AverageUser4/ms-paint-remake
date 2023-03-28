@@ -12,7 +12,7 @@ import { useColorContext } from "../../context/ColorContext";
 import { useContextMenuContext } from "../../context/ContextMenuContext";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useWindowsContext } from "../../context/WindowsContext";
-import { RGBObjectToString, doGetCanvasCopy, doGetGridData } from "../../misc/utils";
+import { RGBObjectToString, doGetGridData } from "../../misc/utils";
 import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function Canvas() {
@@ -79,7 +79,7 @@ function Canvas() {
 
     setCanvasSize({ width, height });
     setCanvasOutlineSize(null);
-    doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), width, height });
+    doHistoryAdd({ element: primaryRef.current, width, height });
   }
 
   return (

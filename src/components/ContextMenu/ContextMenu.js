@@ -38,7 +38,7 @@ const ContextMenu = memo(function ContextMenu() {
     doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete,
     doSelectionGetEveryContext,
   } = useSelectionContext();
-  const { primaryRef, canvasSize, primaryThumbnailRef } = useCanvasContext();
+  const { primaryRef, canvasSize, thumbnailPrimaryRef, canvasZoom } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
@@ -250,12 +250,17 @@ const ContextMenu = memo(function ContextMenu() {
 
                 if(data === 'selection') {
                   selectionContext.putImageData(usedImageData, 0, 0);
-                  thumbnailSelectionContext?.putImageData(usedImageData, 0, 0);
+                  if(thumbnailSelectionContext) {
+                    thumbnailSelectionContext.save();
+                    thumbnailSelectionContext.scale(1 / canvasZoom, 1 / canvasZoom);
+                    thumbnailSelectionContext.drawImage(selectionRef.current, 0, 0);
+                    thumbnailSelectionContext.restore();
+                  }
                   lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
                 } else if(data === 'primary') {
                   primaryRef.current.getContext('2d').putImageData(usedImageData, 0, 0);
-                  primaryThumbnailRef.current?.getContext('2d').putImageData(usedImageData, 0, 0);
-                  doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+                  thumbnailPrimaryRef.current?.getContext('2d').putImageData(usedImageData, 0, 0);
+                  doHistoryAdd({ element: primaryRef.current, ...canvasSize });
                 }
 
                 setIsOpen(false);

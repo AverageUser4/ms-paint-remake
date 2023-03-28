@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { ImageDataUtils, getDrawData, doGetCanvasCopy } from "../../misc/utils";
+import { ImageDataUtils, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useCanvasContext } from "../../context/CanvasContext";
@@ -9,7 +9,7 @@ import { useColorContext } from "../../context/ColorContext";
 
 function useFreeFormSelection() {
   const { 
-    primaryRef, secondaryRef, thumbnailSecondaryRef,
+    primaryRef, secondaryRef, doCanvasClearSecondary,
     canvasZoom, canvasSize, lastPointerPositionRef, doGetEveryContext,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -104,11 +104,10 @@ function useFreeFormSelection() {
     const zoomedWidth = Math.round(width * canvasZoom);
     const zoomedHeight = Math.round(height * canvasZoom);
     
-    const { primaryContext, thumbnailPrimaryContext, secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
+    const { primaryContext, thumbnailPrimaryContext, secondaryContext } = doGetEveryContext();
 
     const boundariesImageData = secondaryContext.getImageData(x, y, width, height);
-    secondaryContext.clearRect(0, 0, canvasSize.width, canvasSize.height);
-    thumbnailSecondaryContext?.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    doCanvasClearSecondary();
     lastSelectionStateRef.current = null;
 
     if(width < 6 || height < 6) {
@@ -161,7 +160,7 @@ function useFreeFormSelection() {
       primaryContext.putImageData(primaryImageData, x, y);
       thumbnailPrimaryContext?.putImageData(primaryImageData, x, y);
       doHistoryAdd({
-        element: doGetCanvasCopy(primaryRef.current),
+        element: primaryRef.current,
         ...canvasSize,
       });
     }, 20);
@@ -170,8 +169,7 @@ function useFreeFormSelection() {
   function onCancelCallback() {
     doSelectionEnd();
     lastPointerPositionRef.current = {};
-    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
-    thumbnailSecondaryRef.current?.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+    doCanvasClearSecondary();
   }
 
   const { onPointerDown, currentlyPressedRef, doCancel } = usePointerTrack({ 

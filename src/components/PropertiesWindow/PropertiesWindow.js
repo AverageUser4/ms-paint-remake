@@ -8,7 +8,7 @@ import { useWindowsContext } from '../../context/WindowsContext';
 import { useMainWindowContext } from '../../context/MainWindowContext';
 
 import { innerWindowConfig, MAX_CANVAS_SIZE } from '../../misc/data';
-import { getWindowCenteredPosition, doGetParsedFileSize, checkNumberValue, doGetCanvasCopy } from '../../misc/utils';
+import { getWindowCenteredPosition, doGetParsedFileSize, checkNumberValue } from '../../misc/utils';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 
@@ -54,7 +54,7 @@ const PropertiesWindow = memo(function PropertiesWindow() {
     if(newSize.width !== canvasSize.width || newSize.height !== canvasSize.height) {
       setCanvasSize(newSize);
       doHistoryAdd({
-        element: doGetCanvasCopy(primaryRef.current),
+        element: primaryRef.current,
         ...newSize,
       });
     }

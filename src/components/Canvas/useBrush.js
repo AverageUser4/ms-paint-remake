@@ -4,12 +4,12 @@ import { useToolContext } from "../../context/ToolContext";
 import { useColorContext } from "../../context/ColorContext";
 import { useHistoryContext } from "../../context/HistoryContext";
 import { useActionsContext } from "../../context/ActionsContext";
-import { RGBObjectToString, doGetCanvasCopy, getDrawData } from "../../misc/utils";
+import { RGBObjectToString, getDrawData } from "../../misc/utils";
 
 function useBrush() {
   const { 
-    primaryRef, secondaryRef, thumbnailPrimaryRef,
-    thumbnailSecondaryRef, canvasZoom, canvasSize,
+    primaryRef, secondaryRef, doCanvasDrawImageToPrimary,
+    doCanvasClearSecondary, canvasZoom, canvasSize,
     lastPointerPositionRef, doGetEveryContext,
   } = useCanvasContext();
   const { currentTool, currentToolData } = useToolContext();
@@ -83,12 +83,11 @@ function useBrush() {
   function onPointerUpCallback() {
     lastPointerPositionRef.current = {};
 
-    primaryRef.current.getContext('2d').drawImage(secondaryRef.current, 0, 0);
-    thumbnailPrimaryRef.current?.getContext('2d').drawImage(secondaryRef.current, 0, 0);
-    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+    doCanvasDrawImageToPrimary(secondaryRef.current);
+    doCanvasClearSecondary();
 
     doHistoryAdd({ 
-      element: doGetCanvasCopy(primaryRef.current),
+      element: primaryRef.current,
       width: canvasSize.width,
       height: canvasSize.height
     });
@@ -96,8 +95,7 @@ function useBrush() {
 
   function onCancelCallback() {
     lastPointerPositionRef.current = {};
-    secondaryRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
-    thumbnailSecondaryRef.current?.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+    doCanvasClearSecondary();
   }
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 

@@ -22,6 +22,6 @@
 
 .canvas--selection {
   border: 1px dashed rgb(0, 120, 215);
-  background-color: rgb(255, 0, 255);
+  /* background-color: rgb(255, 0, 255); */
   box-sizing: border-box;
 }

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import css from './ThumbnailWindow.module.css';
 
 import Window from '../Window/Window';
@@ -18,13 +18,19 @@ const HEIGHT = 230;
 
 const ThumbnailWindow = memo(function ThumbnailWindow() {
   const { colorData } = useColorContext();
-  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef, canvasZoom } = useCanvasContext();
+  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef, canvasZoom, primaryRef } = useCanvasContext();
   const { thumbnailSelectionRef, selectionSize, selectionPosition, selectionPhase } = useSelectionContext();
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const { isThumbnailWindowOpen: isOpen, setIsThumbnailWindowOpen: setIsOpen } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState(getWindowCenteredPosition(mainWindowPosition, mainWindowSize, size));
   
+  useEffect(() => {
+    if(isOpen) {
+      thumbnailPrimaryRef.current.getContext('2d').drawImage(primaryRef.current, 0, 0);
+    }
+  }, [isOpen, thumbnailPrimaryRef, primaryRef]);
+
   return (
     <Window
       {...innerWindowConfig}

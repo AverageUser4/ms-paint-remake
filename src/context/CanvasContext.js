@@ -24,6 +24,17 @@ function CanvasProvider({ children }) {
   const lastPointerPositionRef = useRef({});
   const lastCanvasZoomRef = useRef();
 
+  const doCanvasDrawImageToPrimary = useCallback((compatibleElement) => {
+    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+
+    function draw(context) {
+      context.drawImage(compatibleElement, 0, 0);
+    }
+
+    draw(primaryContext);
+    thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
+  }, []);
+
   const doCanvasClearPrimary = useCallback(({ x = 0, y = 0, width, height } = {}) => {
     const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
 
@@ -35,6 +46,17 @@ function CanvasProvider({ children }) {
     clear(primaryContext);
     thumbnailPrimaryContext && clear(thumbnailPrimaryContext);
   }, [canvasSize, colorData.secondary]);
+
+  function doCanvasClearSecondary() {
+    const { secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
+
+    function clear(context) {
+      context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+    }
+
+    clear(secondaryContext);
+    thumbnailSecondaryContext && clear(thumbnailSecondaryContext);
+  }
 
   function doGetEveryContext() {
     return {
@@ -66,17 +88,14 @@ function CanvasProvider({ children }) {
     }
     lastCanvasSizeRef.current = canvasSize;
     
-    const primaryContext = primaryRef.current.getContext('2d');
-    const thumbnailPrimaryContext = thumbnailPrimaryRef.current?.getContext('2d');
     doCanvasClearPrimary();
     
     if(lastPrimaryStateRef.current) {
-      primaryContext.drawImage(lastPrimaryStateRef.current, 0, 0);
-      thumbnailPrimaryContext?.drawImage(lastPrimaryStateRef.current, 0, 0);
+      doCanvasDrawImageToPrimary(lastPrimaryStateRef.current);
       // so the parts of image that end up outside the viewable are are cut off
       lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
     }
-  }, [canvasSize, doCanvasClearPrimary]);
+  }, [canvasSize, doCanvasClearPrimary, doCanvasDrawImageToPrimary]);
   
   return (
     <CanvasContext.Provider
@@ -90,11 +109,13 @@ function CanvasProvider({ children }) {
         lastCanvasZoomRef,
         thumbnailPrimaryRef,
         thumbnailSecondaryRef,
-        doCanvasClearPrimary,
         fileData, setFileData,
+        doCanvasClearPrimary,
+        doCanvasDrawImageToPrimary,
+        doCanvasClearSecondary,
+        doGetEveryContext,
         isFullScreenView, setIsFullScreenView,
         isBlackAndWhite, setIsBlackAndWhite,
-        doGetEveryContext,
       }}
     >
       {children}

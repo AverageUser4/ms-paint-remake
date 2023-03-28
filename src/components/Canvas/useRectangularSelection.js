@@ -4,7 +4,6 @@ import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
-import { doGetCanvasCopy } from '../../misc/utils';
 
 function useRectangularSelection() {
   const { 
@@ -142,7 +141,7 @@ function useRectangularSelection() {
       });
 
       doHistoryAdd({
-        element: doGetCanvasCopy(primaryRef.current),
+        element: primaryRef.current,
         ...canvasSize,
       });
     }, 20);

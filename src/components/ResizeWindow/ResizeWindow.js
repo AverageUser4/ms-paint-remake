@@ -31,7 +31,7 @@ const ResizeWindow = memo(function ResizeWindow() {
     selectionPhase, selectionSize, doSelectionResize,
     doSelectionSetSize, selectionRef, doSelectionGetEveryContext
   } = useSelectionContext();
-  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, doGetEveryContext } = useCanvasContext();
+  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, doGetEveryContext, canvasZoom } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -201,7 +201,7 @@ const ResizeWindow = memo(function ResizeWindow() {
 
         if(usedSkewHorizontal === 0 && usedSkewVertical === 0) {
           doHistoryAdd({
-            element: doGetCanvasCopy(primaryRef.current),
+            element: primaryRef.current,
             ...newSize,
           });
         }
@@ -230,9 +230,12 @@ const ResizeWindow = memo(function ResizeWindow() {
         usedSetSize(usedNewSize);
         
         setTimeout(() => {
-          function draw(context) {
+          function draw(context, isSelectionThumbnail) {
             context.save();
             context.clearRect(0, 0, usedNewSize.width, usedNewSize.height);
+            if(isSelectionThumbnail) {
+              context.scale(1 / canvasZoom, 1 / canvasZoom);
+            }
             context.translate(movedX, movedY);
             context.transform(1, setSkew(usedSkewVertical), setSkew(usedSkewHorizontal), 1, 0, 0);
             context.drawImage(usedCopy, 0, 0);
@@ -242,12 +245,12 @@ const ResizeWindow = memo(function ResizeWindow() {
           draw(usedContext);
 
           if(isSelectionActive) {
-            thumbnailSelectionContext && draw(thumbnailSelectionContext);
+            thumbnailSelectionContext && draw(thumbnailSelectionContext, true);
           } else {
             thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
             
             doHistoryAdd({
-              element: doGetCanvasCopy(primaryRef.current),
+              element: primaryRef.current,
               ...usedNewSize,
             });
           }

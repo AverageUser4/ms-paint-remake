@@ -68,17 +68,20 @@ function SelectionProvider({ children }) {
     setTimeout(() => {
       const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
-      function drawToContext(context) {
+      function drawToContext(context, isThumbnail) {
         context.save();
         context.imageSmoothingEnabled = false;
         context.clearRect(0, 0, newSize.width, newSize.height);
         context.scale(multiplier.x, multiplier.y);
+        if(isThumbnail) {
+          context.scale(1 / canvasZoom, 1 / canvasZoom);
+        }
         context.drawImage(selectionCanvasCopy, 0, 0);
         context.restore();
       }
 
       drawToContext(selectionContext);
-      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
+      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
       
       lastSelectionStateRef.current = selectionRef.current;
     }, 20);
@@ -106,7 +109,7 @@ function SelectionProvider({ children }) {
     thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
 
     doHistoryAdd({ 
-      element: doGetCanvasCopy(primaryRef.current),
+      element: primaryRef.current,
       width: canvasSize.width,
       height: canvasSize.height
     });
@@ -134,7 +137,7 @@ function SelectionProvider({ children }) {
     }
 
     drawToContext(selectionContext);
-    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
+    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
     
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
   }
@@ -179,16 +182,18 @@ function SelectionProvider({ children }) {
     setTimeout(() => {
       const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
-      function drawToContext(context) {
+      function drawToContext(context, isThumbnail) {
         context.save();
         context.imageSmoothingEnabled = false;
-        context.scale(canvasZoom, canvasZoom);
+        if(!isThumbnail) {
+          context.scale(canvasZoom, canvasZoom);
+        }
         context.drawImage(image, 0, 0);
         context.restore();
       }
 
       drawToContext(selectionContext);
-      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
+      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
 
       lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
       URL.revokeObjectURL(image.src);
@@ -248,7 +253,7 @@ function SelectionProvider({ children }) {
     } else {
       writeCanvasToClipboard(primaryRef.current);
       doCanvasClearPrimary();
-      doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+      doHistoryAdd({ element: primaryRef.current, ...canvasSize });
     }
   }
 
@@ -335,7 +340,7 @@ function SelectionProvider({ children }) {
       doSelectionEnd();
     } else {
       doCanvasClearPrimary();
-      doHistoryAdd({ element: doGetCanvasCopy(primaryRef.current), ...canvasSize });
+      doHistoryAdd({ element: primaryRef.current, ...canvasSize });
     }
   }
 

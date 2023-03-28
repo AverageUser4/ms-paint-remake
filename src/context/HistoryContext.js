@@ -9,7 +9,7 @@ const HistoryContext = createContext();
 
 function HistoryProvider({ children }) {
   const { 
-    doCanvasClearPrimary, lastPrimaryStateRef, setCanvasSize, doGetEveryContext,
+    doCanvasClearPrimary, lastPrimaryStateRef, setCanvasSize, doCanvasDrawImageToPrimary,
   } = useCanvasContext();  
   const [history, setHistory] = useState({
     dataArray: [{ ...initialCanvasSize, element: document.createElement('canvas') }],
@@ -20,7 +20,9 @@ function HistoryProvider({ children }) {
 
   function doHistoryAdd(data) {
     // { element: canvas, width: number, height: number }
+    data.element = doGetCanvasCopy(data.element);
     lastPrimaryStateRef.current = doGetCanvasCopy(data.element);
+    
     setHistory(prev => {
       const newIndex = prev.currentIndex + 1;
       const newDataArray = prev.dataArray.slice(0, newIndex);
@@ -40,10 +42,8 @@ function HistoryProvider({ children }) {
     bufCanvas.height = data.height;
     bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
   
-    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
     doCanvasClearPrimary({ ...data });
-    primaryContext.drawImage(bufCanvas, 0, 0);
-    thumbnailPrimaryContext?.drawImage(bufCanvas, 0, 0);
+    doCanvasDrawImageToPrimary(bufCanvas);
     lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
   
     setCanvasSize({ width: data.width, height: data.height });
