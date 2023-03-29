@@ -352,9 +352,9 @@ function SelectionProvider({ children }) {
     };
   }
 
-  function doSharedRotate(amount) {
-    if(amount !== 180 && amount !== 90 && amount !== -90) {
-      console.error(`de_Unexpected amount: "${amount}".`);
+  function doSharedRotate(degree) {
+    if(degree !== 180 && degree !== 90 && degree !== -90) {
+      console.error(`de_Unexpected degree: "${degree}".`);
     }
 
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
@@ -367,8 +367,7 @@ function SelectionProvider({ children }) {
     let usedSetSize = setCanvasSize;
     let usedLastStateRef = lastPrimaryStateRef;
     let usedCopy = doGetCanvasCopy(primaryRef.current);
-    let x = 0;
-    let y = 0;
+    let offset = 0;
 
     if(selectionPhase === 2) {
       usedRef = selectionRef;
@@ -380,19 +379,21 @@ function SelectionProvider({ children }) {
       usedCopy = doGetCanvasCopy(selectionRef.current);
     }
 
-    if(amount === 90 || amount === -90) {
+    if(degree === 90 || degree === -90) {
       usedSetSize({ width: usedSize.height, height: usedSize.width });
+      offset = (usedSize.width - usedSize.height) / 2;
+      if(degree < 0) {
+        offset *= -1;
+      }
     }
 
     setTimeout(() => {
-
-
       function rotateAndDraw(context) {
         context.save();
         context.translate(usedSize.width / 2, usedSize.height / 2);
-        context.rotate(degreesToRadians(amount));
+        context.rotate(degreesToRadians(degree));
         context.translate(-usedSize.width / 2, -usedSize.height / 2);
-        context.drawImage(usedCopy, x, y);
+        context.drawImage(usedCopy, offset, offset);
         context.restore();
       }
 
