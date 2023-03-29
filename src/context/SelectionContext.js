@@ -6,7 +6,7 @@ import ImageInput from '../components/ImageInput/ImageInput';
 import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
-import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils } from '../misc/utils';
+import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils, degreesToRadians } from '../misc/utils';
 
 const SelectionContext = createContext();
 
@@ -14,6 +14,7 @@ function SelectionProvider({ children }) {
   const { 
     setCanvasSize, canvasZoom, canvasSize,
     primaryRef, doCanvasClearPrimary, doGetEveryContext,
+    lastPrimaryStateRef,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { setCurrentTool } = useToolContext();
@@ -350,6 +351,56 @@ function SelectionProvider({ children }) {
       thumbnailSelectionContext: thumbnailSelectionRef.current?.getContext('2d'),
     };
   }
+
+  function doSharedRotate(amount) {
+    if(amount !== 180 && amount !== 90 && amount !== -90) {
+      console.error(`de_Unexpected amount: "${amount}".`);
+    }
+
+    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+
+    let usedRef = primaryRef;
+    let usedContext = primaryContext;
+    let usedThumbnailContext = thumbnailPrimaryContext;
+    let usedSize = canvasSize;
+    let usedSetSize = setCanvasSize;
+    let usedLastStateRef = lastPrimaryStateRef;
+    let usedCopy = doGetCanvasCopy(primaryRef.current);
+    let x = 0;
+    let y = 0;
+
+    if(selectionPhase === 2) {
+      usedRef = selectionRef;
+      usedContext = selectionContext;
+      usedThumbnailContext = thumbnailSelectionContext;
+      usedSize = selectionSize;
+      usedSetSize = doSelectionSetSize;
+      usedLastStateRef = lastSelectionStateRef;
+      usedCopy = doGetCanvasCopy(selectionRef.current);
+    }
+
+    if(amount === 90 || amount === -90) {
+      usedSetSize({ width: usedSize.height, height: usedSize.width });
+    }
+
+    setTimeout(() => {
+
+
+      function rotateAndDraw(context) {
+        context.save();
+        context.translate(usedSize.width / 2, usedSize.height / 2);
+        context.rotate(degreesToRadians(amount));
+        context.translate(-usedSize.width / 2, -usedSize.height / 2);
+        context.drawImage(usedCopy, x, y);
+        context.restore();
+      }
+
+      rotateAndDraw(usedContext);
+      usedThumbnailContext && rotateAndDraw(usedThumbnailContext);
+      usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+    }, 20);
+  }
   
   return (
     <SelectionContext.Provider
@@ -378,6 +429,7 @@ function SelectionProvider({ children }) {
         doSharedDelete,
         doSelectionEnd,
         doSelectionGetEveryContext,
+        doSharedRotate,
       }}
     >
       <ImageInput

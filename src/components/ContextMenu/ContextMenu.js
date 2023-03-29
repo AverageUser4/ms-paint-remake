@@ -36,7 +36,7 @@ const ContextMenu = memo(function ContextMenu() {
     selectionRef, doSelectionPasteFromClipboard, doSelectionCrop,
     lastSelectionStateRef, selectionSize, doSharedCut, doSharedCopy,
     doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete,
-    doSelectionGetEveryContext,
+    doSelectionGetEveryContext, doSharedRotate,
   } = useSelectionContext();
   const { primaryRef, canvasSize, thumbnailPrimaryRef, canvasZoom } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -186,27 +186,55 @@ const ContextMenu = memo(function ContextMenu() {
                 className="popup popup--inner"
               >
                 <div className="popup__part">
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      doSharedRotate(90);
+                      setIsOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={rotate16} alt=""/>
                     <span>Rotate <span className="text--underline">r</span>ight 90°</span>
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      doSharedRotate(-90);
+                      setIsOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={rotateLeft16} alt=""/>
                     <span>Rotate <span className="text--underline">l</span>eft 90°</span>
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      doSharedRotate(180);
+                      setIsOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={rotate18016} alt=""/>
                     <span>Ro<span className="text--underline">t</span>ate 180°</span>
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={filpVertical16} alt=""/>
                     <span>Flip <span className="text--underline">v</span>ertical</span>
                   </button>
 
-                  <button className="popup__button text text--4 text--nowrap">
+                  <button
+                    className="popup__button text text--4 text--nowrap"
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                  >
                     <img draggable="false" className="popup__image" src={filpHorizontal16} alt=""/>
                     <span>Flip <span className="text--underline">h</span>orizontal</span>
                   </button>
