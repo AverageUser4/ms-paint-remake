@@ -5,8 +5,6 @@ import useOutsideClick from '../../hooks/useOutsideClick';
 import { useContextMenuContext } from '../../context/ContextMenuContext';
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useSelectionContext } from '../../context/SelectionContext';
-import { useCanvasContext } from '../../context/CanvasContext';
-import { useHistoryContext } from '../../context/HistoryContext';
 
 import close from './assets/close.png';
 import minimize from './assets/minimize.png';
@@ -27,19 +25,15 @@ import filpHorizontal16 from '../../assets/global/flip-horizontal-16.png';
 import filpVertical16 from '../../assets/global/flip-vertical-16.png';
 import rotateLeft16 from '../../assets/global/rotate-left-16.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
-import { doGetCanvasCopy, ImageDataUtils } from '../../misc/utils';
 
 const ContextMenu = memo(function ContextMenu() {
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
   const { 
-    selectionRef, doSelectionPasteFromClipboard, doSelectionCrop,
-    lastSelectionStateRef, selectionSize, doSharedCut, doSharedCopy,
+    doSelectionPasteFromClipboard, doSelectionCrop, doSharedCut, doSharedCopy,
     doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete,
-    doSelectionGetEveryContext, doSharedRotate, doSharedFlip
+    doSharedRotate, doSharedFlip, doSharedInvertColor
   } = useSelectionContext();
-  const { primaryRef, canvasSize, thumbnailPrimaryRef, canvasZoom } = useCanvasContext();
-  const { doHistoryAdd } = useHistoryContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
   
@@ -257,42 +251,8 @@ const ContextMenu = memo(function ContextMenu() {
 
             <button 
               className="popup__button text text--4 text--nowrap"
-              onClick={() => {
-                let usedImageData;
-                const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
-
-                if(data === 'selection') {
-                  usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
-                } else if(data === 'primary') {
-                  usedImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
-                }
-
-                for(let y = 0; y < usedImageData.height; y++) {
-                  for(let x = 0; x < usedImageData.width; x++) {
-                    const color = ImageDataUtils.getColorFromCoords(usedImageData, x, y);
-                    if(color.a > 0) {
-                      ImageDataUtils.setColorAtCoords(usedImageData, x, y, { 
-                        r: 255 - color.r, g: 255 - color.g, b: 255 - color.b, a: color.a
-                      });
-                    }
-                  }
-                }
-
-                if(data === 'selection') {
-                  selectionContext.putImageData(usedImageData, 0, 0);
-                  if(thumbnailSelectionContext) {
-                    thumbnailSelectionContext.save();
-                    thumbnailSelectionContext.scale(1 / canvasZoom, 1 / canvasZoom);
-                    thumbnailSelectionContext.drawImage(selectionRef.current, 0, 0);
-                    thumbnailSelectionContext.restore();
-                  }
-                  lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-                } else if(data === 'primary') {
-                  primaryRef.current.getContext('2d').putImageData(usedImageData, 0, 0);
-                  thumbnailPrimaryRef.current?.getContext('2d').putImageData(usedImageData, 0, 0);
-                  doHistoryAdd({ element: primaryRef.current, ...canvasSize });
-                }
-
+              onClick={() => {                
+                doSharedInvertColor();
                 setIsOpen(false);
               }}
             >

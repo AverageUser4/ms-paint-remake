@@ -46,12 +46,12 @@ function SelectionProvider({ children }) {
   }, [selectionSize]);
 
   const doSelectionDrawToSelection = useCallback((data) => {
+    // using data?.width/height is important so picture does not get cut when canvasZoom < 1
     const element = document.createElement('canvas');
-    element.width = selectionRef.current.width;
-    element.height = selectionRef.current.height;
+    element.width = data?.width || selectionRef.current.width;
+    element.height = data?.height || selectionRef.current.height;
     const elementContext = element.getContext('2d');
     let imageData;
-
 
     if(data instanceof ImageData) {
       imageData = data;
@@ -61,7 +61,9 @@ function SelectionProvider({ children }) {
       imageData = elementContext.getImageData(0, 0, selectionRef.current.width, selectionRef.current.height);
     }
 
-    nonTransparentSelectionStateRef.current = doGetCanvasCopy(element);
+    const elementTransparent = doGetCanvasCopy(element);
+    const elementTransparentContext = elementTransparent.getContext('2d');
+    const elementCopy = doGetCanvasCopy(element);
 
     if(isSelectionTransparent) {
       const newImageData = new ImageData(
@@ -71,26 +73,31 @@ function SelectionProvider({ children }) {
       );
 
       ImageDataUtils.makeColorTransparent(newImageData, colorData.secondary);
-      elementContext.putImageData(newImageData, 0, 0);
+      elementTransparentContext.putImageData(newImageData, 0, 0);
     }
 
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
-    function drawToContext(context, isThumbnail) {
+    function drawToContext(context, isThumbnail, isNonTransparent) {
       context.save();
       context.imageSmoothingEnabled = false;
-      context.clearRect(0, 0, selectionRef.current.width, selectionRef.current.height);
+      context.clearRect(0, 0, element.width, element.height);
       if(!isThumbnail) {
         context.scale(canvasZoom, canvasZoom);
       }
-      context.drawImage(element, 0, 0);
+      if(!isNonTransparent) {
+        context.scale(1 / canvasZoom, 1 / canvasZoom);
+      }
+      context.drawImage(isNonTransparent ? elementCopy : elementTransparent, 0, 0);
       context.restore();
     }
 
     drawToContext(selectionContext);
     thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
-    
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+
+    drawToContext(elementContext, false, true);
+    nonTransparentSelectionStateRef.current = element;
   }, [canvasZoom, isSelectionTransparent, colorData.secondary]);
 
   useEffect(() => {
@@ -142,9 +149,13 @@ function SelectionProvider({ children }) {
     doSelectionSetSize(newSize);
 
     setTimeout(() => {
+      const nonTransparentCanvas = document.createElement('canvas');
+      const nonTransparentCanvasContext = nonTransparentCanvas.getContext('2d');
+      nonTransparentCanvas.width = newSize.width;
+      nonTransparentCanvas.height = newSize.height;
       const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
-      function drawToContext(context, isThumbnail) {
+      function drawToContext(context, isThumbnail, isNonTransparent) {
         context.save();
         context.imageSmoothingEnabled = false;
         context.clearRect(0, 0, newSize.width, newSize.height);
@@ -152,14 +163,16 @@ function SelectionProvider({ children }) {
         if(isThumbnail) {
           context.scale(1 / canvasZoom, 1 / canvasZoom);
         }
-        context.drawImage(selectionCanvasCopy, 0, 0);
+        context.drawImage(isNonTransparent ? nonTransparentSelectionStateRef.current : selectionCanvasCopy, 0, 0);
         context.restore();
       }
 
       drawToContext(selectionContext);
+      drawToContext(nonTransparentCanvasContext, false, true);
       thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
       
       lastSelectionStateRef.current = selectionRef.current;
+      nonTransparentSelectionStateRef.current = nonTransparentCanvas;
     }, 20);
   }
 
@@ -392,6 +405,8 @@ function SelectionProvider({ children }) {
 
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
     const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+    const nonTransparentCanvas = document.createElement('canvas');
+    const nonTransparentCanvasContext = nonTransparentCanvas.getContext('2d');
 
     let usedRef = primaryRef;
     let usedContext = primaryContext;
@@ -415,6 +430,9 @@ function SelectionProvider({ children }) {
     }
 
     if(degree === 90 || degree === -90) {
+      nonTransparentCanvas.width = usedSize.height;
+      nonTransparentCanvas.height = usedSize.width;
+      nonTransparentSelectionStateRef.current = null;
       usedSetSize({ width: usedSize.height, height: usedSize.width });
       offset = (usedSize.width - usedSize.height) / 2;
       if(degree < 0) {
@@ -441,6 +459,10 @@ function SelectionProvider({ children }) {
       rotateAndDraw(usedContext);
       usedThumbnailContext && rotateAndDraw(usedThumbnailContext, true);
       usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+      if(selectionPhase === 2) {
+        rotateAndDraw(nonTransparentCanvasContext);
+        nonTransparentSelectionStateRef.current = nonTransparentCanvas;
+      }
 
       if(selectionPhase !== 2) {
         doHistoryAdd({ 
@@ -459,6 +481,8 @@ function SelectionProvider({ children }) {
 
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
     const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+    const nonTransparentCanvas = document.createElement('canvas');
+    const nonTransparentCanvasContext = nonTransparentCanvas.getContext('2d');
 
     let usedRef = primaryRef;
     let usedContext = primaryContext;
@@ -497,6 +521,10 @@ function SelectionProvider({ children }) {
     flipAndDraw(usedContext);
     usedThumbnailContext && flipAndDraw(usedThumbnailContext, true);
     usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+    if(selectionPhase === 2) {
+      flipAndDraw(nonTransparentCanvasContext);
+      nonTransparentSelectionStateRef.current = nonTransparentCanvas;
+    }
 
     if(selectionPhase !== 2) {
       doHistoryAdd({ 
@@ -504,6 +532,49 @@ function SelectionProvider({ children }) {
         width: primaryRef.current.width,
         height: primaryRef.current.height,
       });
+    }
+  }
+
+  function doSharedInvertColor() {
+    let usedImageData;
+    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+    const nonTransparentCanvas = document.createElement('canvas');
+    const nonTransparentCanvasContext = nonTransparentCanvas.getContext('2d');
+
+    if(selectionPhase === 2) {
+      usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
+    } else {
+      usedImageData = primaryContext.getImageData(0, 0, canvasSize.width, canvasSize.height);
+    }
+
+    for(let y = 0; y < usedImageData.height; y++) {
+      for(let x = 0; x < usedImageData.width; x++) {
+        const color = ImageDataUtils.getColorFromCoords(usedImageData, x, y);
+        if(color.a > 0) {
+          ImageDataUtils.setColorAtCoords(usedImageData, x, y, { 
+            r: 255 - color.r, g: 255 - color.g, b: 255 - color.b, a: color.a
+          });
+        }
+      }
+    }
+
+    if(selectionPhase === 2) {
+      // this is different than doSelectionDrawToSelection
+      selectionContext.putImageData(usedImageData, 0, 0);
+      if(thumbnailSelectionContext) {
+        thumbnailSelectionContext.save();
+        thumbnailSelectionContext.scale(1 / canvasZoom, 1 / canvasZoom);
+        thumbnailSelectionContext.drawImage(selectionRef.current, 0, 0);
+        thumbnailSelectionContext.restore();
+      }
+      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+      nonTransparentCanvasContext.putImageData(usedImageData, 0, 0);
+      nonTransparentSelectionStateRef.current = nonTransparentCanvas;
+    } else {
+      primaryContext.putImageData(usedImageData, 0, 0);
+      thumbnailPrimaryContext?.putImageData(usedImageData, 0, 0);
+      doHistoryAdd({ element: primaryRef.current, ...canvasSize });
     }
   }
   
@@ -537,6 +608,7 @@ function SelectionProvider({ children }) {
         doSelectionGetEveryContext,
         doSharedRotate,
         doSharedFlip,
+        doSharedInvertColor,
       }}
     >
       <ImageInput

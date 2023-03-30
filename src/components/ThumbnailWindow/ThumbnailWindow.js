@@ -29,10 +29,14 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
     if(isOpen) {
       thumbnailPrimaryRef.current.getContext('2d').drawImage(primaryRef.current, 0, 0);
       if(selectionPhase === 2) {
-        thumbnailSelectionRef.current.getContext('2d').drawImage(selectionRef.current, 0, 0);
+        const context = thumbnailSelectionRef.current.getContext('2d');
+        context.save();
+        context.scale(1 / canvasZoom, 1 / canvasZoom);
+        context.drawImage(selectionRef.current, 0, 0);
+        context.restore();
       }
     }
-  }, [isOpen, thumbnailPrimaryRef, primaryRef, selectionPhase, thumbnailSelectionRef, selectionRef]);
+  }, [isOpen, thumbnailPrimaryRef, primaryRef, selectionPhase, thumbnailSelectionRef, selectionRef, canvasZoom]);
 
   return (
     <Window
