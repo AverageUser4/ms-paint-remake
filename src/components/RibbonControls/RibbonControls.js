@@ -97,6 +97,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
           target="_blank"
           href="https://github.com/AverageUser4/paint"
           aria-describedby="id-ribbon-controls-help"
+          id="pxp-help-link"
         >
           <img draggable="false" src={info} alt="Paint help."/>
           <Tooltip

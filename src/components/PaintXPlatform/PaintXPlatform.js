@@ -16,6 +16,7 @@ import PromptWindow from '../PromptWindow/PromptWindow';
 import AboutWindow from '../AboutWindow/AboutWindow';
 import PropertiesWindow from '../PropertiesWindow/PropertiesWindow';
 import ThumbnailWindow from '../ThumbnailWindow/ThumbnailWindow';
+import GlobalShortcuts from '../GlobalShortcuts/GlobalShortcuts';
 
 import { ContextMenuProvider } from '../../context/ContextMenuContext';
 import { ContainerProvider } from '../../context/ContainerContext';
@@ -127,6 +128,9 @@ function Logic({
       <PropertiesWindow/>
       <ThumbnailWindow/>
       <FullScreen/>
+      <GlobalShortcuts
+        ribbonData={ribbonData}
+      />
     </div>
   );
 }

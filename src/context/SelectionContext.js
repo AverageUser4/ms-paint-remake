@@ -287,6 +287,7 @@ function SelectionProvider({ children }) {
       doSelectionDrawToPrimary(canvasZoom);
     }
     
+    setCurrentTool('selection-rectangle');
     setSelectionPhase(2);
     doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
     doSelectionSetPosition({ x: 0, y: 0 });
