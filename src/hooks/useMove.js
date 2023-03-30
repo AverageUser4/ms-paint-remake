@@ -13,6 +13,7 @@ export default function useMove({
   setPosition,
   size,
   setSize,
+  onMoveCallback,
   isInnerWindow,
   isMaximized,
   isConstrained,
@@ -49,6 +50,8 @@ export default function useMove({
     if(!containerRect && !containerRef?.current) {
       return;
     }
+
+    onMoveCallback && onMoveCallback(event);
 
     if(!containerRect) {
       containerRect = containerRef.current.getBoundingClientRect();

@@ -6,7 +6,7 @@ import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 
 function useSelection() {
-  const { primaryRef } = useCanvasContext();
+  const { primaryRef, canvasZoom } = useCanvasContext();
   
   const {
     selectionSize,
@@ -15,6 +15,7 @@ function useSelection() {
     doSelectionSetSize,
     doSelectionResize,
     doSelectionSetPosition,
+    doSelectionDrawToPrimary,
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection();
@@ -55,6 +56,13 @@ function useSelection() {
     isConstrained: false,
     isReverseConstrained: true,
     containerRef: primaryRef,
+    onMoveCallback: (event) => {
+      if(!event.shiftKey) {
+        return;
+      }
+
+      doSelectionDrawToPrimary(canvasZoom);
+    }
   });
 
   return {

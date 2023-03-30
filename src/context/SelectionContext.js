@@ -25,7 +25,7 @@ function SelectionProvider({ children }) {
   const [selectionPosition, setSelectionPosition] = useState(null);
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
   const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
-  const [isSelectionTransparent, setIsSelectionTransparent] = useState(true);
+  const [isSelectionTransparent, setIsSelectionTransparent] = useState(false);
   const selectionRef = useRef();
   const thumbnailSelectionRef = useRef();
   const inputFileRef = useRef();
