@@ -6,6 +6,7 @@ import ImageInput from '../components/ImageInput/ImageInput';
 import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
+import { useColorContext } from './ColorContext';
 import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils, degreesToRadians } from '../misc/utils';
 
 const SelectionContext = createContext();
@@ -18,17 +19,20 @@ function SelectionProvider({ children }) {
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { setCurrentTool } = useToolContext();
+  const { colorData } = useColorContext();
   
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
   const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
+  const [isSelectionTransparent, setIsSelectionTransparent] = useState(true);
   const selectionRef = useRef();
   const thumbnailSelectionRef = useRef();
   const inputFileRef = useRef();
   const lastSelectionStateRef = useRef(null);
   const lastSelectionSizeRef = useRef(null);
   const lastSelectionPositionRef = useRef(null);
+  const transparentSelectionDataRef = useRef(null);
 
   useEffect(() => {
     // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
@@ -36,6 +40,17 @@ function SelectionProvider({ children }) {
       selectionRef.current.getContext('2d').drawImage(lastSelectionStateRef.current, 0, 0);
     }
   }, [selectionSize, selectionPhase]);
+
+  function doSelectionClear() {
+    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+
+    function clear(context) {
+      context.clearRect(0, 0, selectionSize.width, selectionSize.height);
+    }
+
+    clear(selectionContext);
+    thumbnailSelectionContext && clear(thumbnailSelectionContext);
+  }
 
   function doSelectionEnd() {
     setSelectionSize(null);
@@ -45,6 +60,7 @@ function SelectionProvider({ children }) {
     lastSelectionStateRef.current = null;
     lastSelectionSizeRef.current = null;
     lastSelectionPositionRef.current = null;
+    transparentSelectionDataRef.current = null;
   }
   
   function doSelectionSetSize(newSize) {
@@ -116,14 +132,35 @@ function SelectionProvider({ children }) {
     });
   }
 
-  function doSelectionDrawToSelection(imageData) {
-    // when canvasZoom < 1, part of the image would get cut if we didn't use bufCanvas
-    const bufCanvas = document.createElement('canvas');
-    bufCanvas.width = imageData.width;
-    bufCanvas.height = imageData.height;
-    bufCanvas.imageSmoothingEnabled = false;
-    bufCanvas.getContext('2d').putImageData(imageData, 0, 0);
-    
+  const doSelectionDrawToSelection = useCallback((data) => {
+    const element = document.createElement('canvas');
+    element.width = selectionRef.current.width;
+    element.height = selectionRef.current.height;
+    const elementContext = element.getContext('2d');
+    let imageData;
+
+
+    if(data instanceof ImageData) {
+      imageData = data;
+      elementContext.putImageData(imageData, 0, 0);
+    } else {
+      elementContext.drawImage(data, 0, 0);
+      imageData = elementContext.getImageData(0, 0, selectionRef.current.width, selectionRef.current.height);
+    }
+
+    transparentSelectionDataRef.current = { imageData, element };
+
+    if(isSelectionTransparent) {
+      const newImageData = new ImageData(
+        transparentSelectionDataRef.current.imageData.data,
+        transparentSelectionDataRef.current.imageData.width,
+        transparentSelectionDataRef.current.imageData.height
+      );
+
+      ImageDataUtils.makeColorTransparent(newImageData, colorData.secondary);
+      elementContext.putImageData(newImageData, 0, 0);
+    }
+
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
     function drawToContext(context, isThumbnail) {
@@ -133,7 +170,7 @@ function SelectionProvider({ children }) {
       if(!isThumbnail) {
         context.scale(canvasZoom, canvasZoom);
       }
-      context.drawImage(bufCanvas, 0, 0);
+      context.drawImage(element, 0, 0);
       context.restore();
     }
 
@@ -141,7 +178,7 @@ function SelectionProvider({ children }) {
     thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
     
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-  }
+  }, [canvasZoom, isSelectionTransparent]);
 
   function doSelectionCrop() {
     if(selectionPhase !== 2) {
@@ -181,25 +218,10 @@ function SelectionProvider({ children }) {
     setSelectionPhase(2);
 
     setTimeout(() => {
-      const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
-
-      function drawToContext(context, isThumbnail) {
-        context.save();
-        context.imageSmoothingEnabled = false;
-        if(!isThumbnail) {
-          context.scale(canvasZoom, canvasZoom);
-        }
-        context.drawImage(image, 0, 0);
-        context.restore();
-      }
-
-      drawToContext(selectionContext);
-      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
-
-      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+      doSelectionDrawToSelection(image);
       URL.revokeObjectURL(image.src);
     }, 20);
-  }, [canvasZoom, setCanvasSize]);
+  }, [canvasZoom, setCanvasSize, doSelectionDrawToSelection]);
   
   function doSelectionBrowseFile() {
     if(selectionPhase === 2) {
@@ -367,6 +389,7 @@ function SelectionProvider({ children }) {
     let usedSetSize = setCanvasSize;
     let usedLastStateRef = lastPrimaryStateRef;
     let usedCopy = doGetCanvasCopy(primaryRef.current);
+    let usedClear = doCanvasClearPrimary;
     let offset = 0;
 
     if(selectionPhase === 2) {
@@ -377,6 +400,7 @@ function SelectionProvider({ children }) {
       usedSetSize = doSelectionSetSize;
       usedLastStateRef = lastSelectionStateRef;
       usedCopy = doGetCanvasCopy(selectionRef.current);
+      usedClear = doSelectionClear;
     }
 
     if(degree === 90 || degree === -90) {
@@ -385,11 +409,17 @@ function SelectionProvider({ children }) {
       if(degree < 0) {
         offset *= -1;
       }
+      usedLastStateRef.current = null;
     }
 
+    usedClear();
+
     setTimeout(() => {
-      function rotateAndDraw(context) {
+      function rotateAndDraw(context, isThumbnail) {
         context.save();
+        if(selectionPhase === 2 && isThumbnail) {
+          context.scale(1 / canvasZoom, 1 / canvasZoom);
+        }
         context.translate(usedSize.width / 2, usedSize.height / 2);
         context.rotate(degreesToRadians(degree));
         context.translate(-usedSize.width / 2, -usedSize.height / 2);
@@ -398,9 +428,72 @@ function SelectionProvider({ children }) {
       }
 
       rotateAndDraw(usedContext);
-      usedThumbnailContext && rotateAndDraw(usedThumbnailContext);
+      usedThumbnailContext && rotateAndDraw(usedThumbnailContext, true);
       usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+
+      if(selectionPhase !== 2) {
+        doHistoryAdd({ 
+          element: primaryRef.current,
+          width: primaryRef.current.width,
+          height: primaryRef.current.height,
+        });
+      }
     }, 20);
+  }
+
+  function doSharedFlip(direction) {
+    if(direction !== 'horizontal' && direction !== 'vertical') {
+      console.error(`Unexpected direction: "${direction}".`);
+    }
+
+    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
+    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+
+    let usedRef = primaryRef;
+    let usedContext = primaryContext;
+    let usedThumbnailContext = thumbnailPrimaryContext;
+    let usedSize = canvasSize;
+    let usedLastStateRef = lastPrimaryStateRef;
+    let usedClear = doCanvasClearPrimary;
+    let usedCopy = doGetCanvasCopy(primaryRef.current);
+
+    if(selectionPhase === 2) {
+      usedRef = selectionRef;
+      usedContext = selectionContext;
+      usedThumbnailContext = thumbnailSelectionContext;
+      usedSize = selectionSize;
+      usedLastStateRef = lastSelectionStateRef;
+      usedClear = doSelectionClear;
+      usedCopy = doGetCanvasCopy(selectionRef.current);
+    }
+
+    usedClear();
+
+    function flipAndDraw(context, isThumbnail) {
+      context.save();
+      context.scale(direction === 'horizontal' ? -1 : 1, direction === 'vertical' ? -1 : 1);
+      if(selectionPhase === 2 && isThumbnail) {
+        context.scale(1 / canvasZoom, 1 / canvasZoom);
+      }
+      context.drawImage(
+        usedCopy, 
+        direction === 'horizontal' ? -usedSize.width : 0,
+        direction === 'vertical' ? -usedSize.height : 0
+      );
+      context.restore();
+    }
+
+    flipAndDraw(usedContext);
+    usedThumbnailContext && flipAndDraw(usedThumbnailContext, true);
+    usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+
+    if(selectionPhase !== 2) {
+      doHistoryAdd({ 
+        element: primaryRef.current,
+        width: primaryRef.current.width,
+        height: primaryRef.current.height,
+      });
+    }
   }
   
   return (
@@ -410,6 +503,7 @@ function SelectionProvider({ children }) {
         selectionPosition, setSelectionPosition,
         selectionOutlineSize, setSelectionOutlineSize,
         selectionPhase, setSelectionPhase,
+        isSelectionTransparent, setIsSelectionTransparent,
         lastSelectionStateRef,
         lastSelectionSizeRef,
         lastSelectionPositionRef,
@@ -431,6 +525,7 @@ function SelectionProvider({ children }) {
         doSelectionEnd,
         doSelectionGetEveryContext,
         doSharedRotate,
+        doSharedFlip,
       }}
     >
       <ImageInput

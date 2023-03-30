@@ -55,7 +55,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-newFile"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="newFile"
               checked={toolbarData.buttons.includes('newFile')}
@@ -75,7 +75,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-open"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="open"
               checked={toolbarData.buttons.includes('open')}
@@ -95,7 +95,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-save"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="save"
               checked={toolbarData.buttons.includes('save')}
@@ -115,7 +115,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-print"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="print"
               checked={toolbarData.buttons.includes('print')}
@@ -135,7 +135,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-printPreview"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="printPreview"
               checked={toolbarData.buttons.includes('printPreview')}
@@ -155,7 +155,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-email"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="email"
               checked={toolbarData.buttons.includes('email')}
@@ -175,7 +175,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-undo"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="undo"
               checked={toolbarData.buttons.includes('undo')}
@@ -195,7 +195,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
           <label className={`tooltip-container ${css['label']}`}>
             <input 
               data-cy="QuickAccessDropdown-toggle-element-redo"
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               name="redo"
               checked={toolbarData.buttons.includes('redo')}
@@ -219,7 +219,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
             onClick={() => setToolbarData(prev => ({ ...prev, reposition: !prev.reposition }))}
             data-cy="QuickAccessDropdown-toggle-position"
           >
-            <span className={css['checkbox']}></span>
+            <span className="form-checkbox"></span>
             <span>
               <span className="text--underline">S</span>how {toolbarData.reposition ? 'above' : 'below'} the Ribbon
             </span>
@@ -229,7 +229,7 @@ const QuickAccessDropdown = memo(function QuickAccessDropdown({
 
           <label className={css['label']}>
             <input 
-              className={css['checkbox']}
+              className="form-checkbox"
               type="checkbox"
               checked={ribbonData.minimize}
               onChange={() => ribbonData.toggleMinimize()}

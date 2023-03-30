@@ -59,25 +59,6 @@
   border-color: rgb(168, 210, 253);
 }
 
-.checkbox {
-  width: 19px;
-  height: 19px;
-  margin: 0;
-  
-  border: 1px solid transparent;
-  
-  box-sizing: border-box;
-  appearance: none;
-}
-.checkbox:checked {
-  background-color: rgb(206, 229, 252);
-  border-color: rgb(100, 165, 230);
-  background-image: url(../../assets/global/checkmark.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 12px;
-}
-
 .line {
   width: 164px;
   height: 1px;

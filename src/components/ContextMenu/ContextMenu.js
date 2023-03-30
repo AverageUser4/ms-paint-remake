@@ -36,7 +36,7 @@ const ContextMenu = memo(function ContextMenu() {
     selectionRef, doSelectionPasteFromClipboard, doSelectionCrop,
     lastSelectionStateRef, selectionSize, doSharedCut, doSharedCopy,
     doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete,
-    doSelectionGetEveryContext, doSharedRotate,
+    doSelectionGetEveryContext, doSharedRotate, doSharedFlip
   } = useSelectionContext();
   const { primaryRef, canvasSize, thumbnailPrimaryRef, canvasZoom } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -222,6 +222,7 @@ const ContextMenu = memo(function ContextMenu() {
                   <button
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
+                      doSharedFlip('vertical');
                       setIsOpen(false);
                     }}
                   >
@@ -232,6 +233,7 @@ const ContextMenu = memo(function ContextMenu() {
                   <button
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
+                      doSharedFlip('horizontal');
                       setIsOpen(false);
                     }}
                   >

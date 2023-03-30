@@ -238,38 +238,24 @@ export function getRandomPointWithinCircle(originX, originY, radius) {
 }
 
 export const ImageDataUtils = {
-  _validate(imageData, x, y) {
+  _validateImageData(imageData) {
     if(!(imageData instanceof ImageData)) {
-      console.error(`First argument has to be an instance of ImageData, provided "${imageData}".`);
+      console.error(`Expected argument to be an instance of ImageData, provided "${imageData}".`);
     }
+  },
+
+  _validateCoords(imageData, x, y) {
     if(!Number.isInteger(x) || x < 0 || x > imageData.width - 1) {
-      console.error(`Second argument (x) has to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided "${x}"`);
+      console.error(`Expected argument (x) to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided "${x}"`);
     }
     if(!Number.isInteger(y) || y < 0 || y > imageData.height - 1) {
-      console.error(`Third argument (y) has to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided "${y}"`);
+      console.error(`Expected argument (y) to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided "${y}"`);
     }
   },
-
-  getIndexFromCoords(imageData, x, y) {
-    this._validate(imageData, x, y);
-    return y * imageData.width * 4 + x * 4;
-  },
-
-  getColorFromCoords(imageData, x, y) {
-    this._validate(imageData, x, y);
-    const index = this.getIndexFromCoords(imageData, x, y);
-
-    return {
-      r: imageData.data[index],
-      g: imageData.data[index + 1],
-      b: imageData.data[index + 2],
-      a: imageData.data[index + 3],
-    };
-  },
-
-  setColorAtCoords(imageData, x, y, color) {
+  
+  _validateColor(color) {
     if(typeof color !== 'object') {
-      console.error(`Fourth argument has to be and object representing color in RGB format, provided "${color}".`)
+      console.error(`Expected argument to be and object representing color in RGB format, provided "${color}".`)
     }
     if(!Number.isInteger(color.r) || color.r < 0 || color.r > 255) {
       console.error(`"r" property of color object has to be an integer between 0 and 255, provided "${color.r}".`);
@@ -283,8 +269,31 @@ export const ImageDataUtils = {
     if(Number.isInteger(color.a) && (color.a < 0 || color.b > 255)) {
       console.error(`"a" property of color object has to be and integer between 0 and 255 or anything that is not an integer (in which case it will be set to 255), provided: "${color.a}".`);
     }
+  },
 
-    this._validate(imageData, x, y);
+  getIndexFromCoords(imageData, x, y) {
+    this._validateImageData(imageData);
+    this._validateCoords(imageData, x, y);
+    return y * imageData.width * 4 + x * 4;
+  },
+
+  getColorFromCoords(imageData, x, y) {
+    this._validateImageData(imageData);
+    this._validateCoords(imageData, x, y);
+    const index = this.getIndexFromCoords(imageData, x, y);
+
+    return {
+      r: imageData.data[index],
+      g: imageData.data[index + 1],
+      b: imageData.data[index + 2],
+      a: imageData.data[index + 3],
+    };
+  },
+
+  setColorAtCoords(imageData, x, y, color) {
+    this._validateImageData(imageData);
+    this._validateCoords(imageData, x, y);
+    this._validateColor(color);
     const index = this.getIndexFromCoords(imageData, x, y);
 
     imageData.data[index] = color.r;
@@ -292,6 +301,20 @@ export const ImageDataUtils = {
     imageData.data[index + 2] = color.b;
     imageData.data[index + 3] = Number.isInteger(color.a) ? color.a : 255;
   },
+
+  makeColorTransparent(imageData, color) {
+    this._validateImageData(imageData);
+    this._validateColor(color);
+
+    for(let y = 0; y < imageData.height; y++) {
+      for(let x = 0; x < imageData.width; x++) {
+        const currentColor = this.getColorFromCoords(imageData, x, y);
+        if(currentColor.r === color.r && currentColor.g === color.g && currentColor.b === color.b) {
+          this.setColorAtCoords(imageData, x, y, { r: 0, g: 0, b: 0, a: 0 });
+        }
+      }
+    }
+  }
 };
 
 export function getDrawData({

@@ -19,7 +19,7 @@ const HEIGHT = 230;
 const ThumbnailWindow = memo(function ThumbnailWindow() {
   const { colorData } = useColorContext();
   const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef, canvasZoom, primaryRef } = useCanvasContext();
-  const { thumbnailSelectionRef, selectionSize, selectionPosition, selectionPhase } = useSelectionContext();
+  const { thumbnailSelectionRef, selectionSize, selectionPosition, selectionPhase, selectionRef } = useSelectionContext();
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const { isThumbnailWindowOpen: isOpen, setIsThumbnailWindowOpen: setIsOpen } = useWindowsContext();
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
@@ -28,8 +28,11 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
   useEffect(() => {
     if(isOpen) {
       thumbnailPrimaryRef.current.getContext('2d').drawImage(primaryRef.current, 0, 0);
+      if(selectionPhase === 2) {
+        thumbnailSelectionRef.current.getContext('2d').drawImage(selectionRef.current, 0, 0);
+      }
     }
-  }, [isOpen, thumbnailPrimaryRef, primaryRef]);
+  }, [isOpen, thumbnailPrimaryRef, primaryRef, selectionPhase, thumbnailSelectionRef, selectionRef]);
 
   return (
     <Window

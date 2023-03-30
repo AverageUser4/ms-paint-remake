@@ -34,7 +34,8 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   const { 
     doSelectionCrop, selectionPhase, doSelectionSelectAll,
-    doSelectionInvertSelection, doSharedDelete
+    doSelectionInvertSelection, doSharedDelete, doSharedRotate,
+    doSharedFlip, isSelectionTransparent, setIsSelectionTransparent,
   } = useSelectionContext();
   const { currentTool, latestTools } = useToolContext();
   const { doSetCurrentTool } = useActionsContext();
@@ -196,17 +197,25 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     />
                   </button>
 
-                  <button
+                  <label
                     className="tooltip-container popup__button text text--4 text--nowrap"
-                    aria-describedby="id-image-transparent"
                   >
-                    <span className="popup__image"></span>
+                    <input 
+                      className="form-checkbox"
+                      type="checkbox"
+                      checked={isSelectionTransparent}
+                      onChange={() => { 
+                        setIsSelectionTransparent(prev => !prev); 
+                        setIsDropdownOpen(false);
+                      }}
+                      aria-describedby="id-image-transparent"
+                    />
                     <span><span className="text--underline">T</span>ransparent selection</span>
                     <Tooltip
                       ID="id-image-transparent"
                       text="Make the background color in the selection transparent or opaque."
                     />
-                  </button>
+                  </label>
                 </div>
               </div>
             </BigButtonDuo>
@@ -273,6 +282,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       <button
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-rotate-right-90"
+                        onClick={() => {
+                          doSharedRotate(90);
+                          setIsRotateDropdownOpen(false);
+                        }}
                       >
                         <img draggable="false" className="popup__image" src={rotate16} alt=""/>
                         <span>Rotate <span className="text--underline">r</span>ight 90°</span>
@@ -285,6 +298,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       <button
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-rotate-left-90"
+                        onClick={() => {
+                          doSharedRotate(-90);
+                          setIsRotateDropdownOpen(false);
+                        }}
                       >
                         <img draggable="false" className="popup__image" src={rotateLeft16} alt=""/>
                         <span>Rotate <span className="text--underline">l</span>eft 90°</span>
@@ -297,6 +314,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       <button
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-rotate-180"
+                        onClick={() => {
+                          doSharedRotate(180);
+                          setIsRotateDropdownOpen(false);
+                        }}
                       >
                         <img draggable="false" className="popup__image" src={rotate18016} alt=""/>
                         <span>Ro<span className="text--underline">t</span>ate 180°</span>
@@ -309,6 +330,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       <button
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-flip-vertical"
+                        onClick={() => {
+                          doSharedFlip('vertical');
+                          setIsRotateDropdownOpen(false);
+                        }}
                       >
                         <img draggable="false" className="popup__image" src={filpVertical16} alt=""/>
                         <span>Flip <span className="text--underline">v</span>ertical</span>
@@ -321,6 +346,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       <button
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-flip-horizontal"
+                        onClick={() => {
+                          doSharedFlip('horizontal');
+                          setIsRotateDropdownOpen(false);
+                        }}
                       >
                         <img draggable="false" className="popup__image" src={filpHorizontal16} alt=""/>
                         <span>Flip <span className="text--underline">h</span>orizontal</span>
