@@ -32,7 +32,7 @@ function useFreeFormSelection() {
   const initialPositionRef = useRef();
   const primaryImageDataRef = useRef();
 
-  function onPointerDownCallback(event) {
+  function onPressStartCallback(event) {
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary(canvasZoom);
       doCancel();
@@ -54,10 +54,10 @@ function useFreeFormSelection() {
     };
     initialPositionRef.current = { pageX, pageY, offsetX, offsetY };
 
-    onPointerMoveCallback(event);
+    onPressedMoveCallback(event);
   }
 
-  function onPointerMoveCallback(event) {
+  function onPressedMoveCallback(event) {
     const step = 1;
     const currentPixel = { ...lastPointerPositionRef.current };
 
@@ -90,8 +90,8 @@ function useFreeFormSelection() {
     doDraw(false);
     doDrawLoop(doDraw, step);
   }
-  function onPointerUpCallback() {
-    onPointerMoveCallback(initialPositionRef.current, true);
+  function onPressEndCallback() {
+    onPressedMoveCallback(initialPositionRef.current, true);
     lastPointerPositionRef.current = {};
 
     const x = Math.round(edgePositionRef.current.minX);
@@ -173,9 +173,9 @@ function useFreeFormSelection() {
   }
 
   const { onPointerDown, currentlyPressedRef, doCancel } = usePointerTrack({ 
-    onPointerMoveCallback,
-    onPointerDownCallback,
-    onPointerUpCallback,
+    onPressedMoveCallback,
+    onPressStartCallback,
+    onPressEndCallback,
     onCancelCallback,
     isCancelOnRightMouseDown: true,
     isTrackAlsoRight: true

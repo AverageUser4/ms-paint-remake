@@ -43,7 +43,7 @@ function useSelection() {
     isOnlyThreeDirections: false,
     isCancelOnRightMouseDown: true,
     isSmallPoints: true,
-    onPointerUpCallback: onPointerUpCallbackResize,
+    onPressEndCallback: onPointerUpCallbackResize,
     zoom: 1,
     containerRef: primaryRef
   });

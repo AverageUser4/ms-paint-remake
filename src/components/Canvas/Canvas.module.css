@@ -14,6 +14,11 @@
   box-shadow: 5px 5px 2px rgba(100, 100, 100, 0.2);
 }
 
+.canvas--brush {
+  pointer-events: none;
+  overflow: hidden;
+}
+
 .canvas--selection {
   border: 1px dashed rgb(0, 0, 0);
 
@@ -55,17 +60,6 @@
   cursor: none;
 }
 
-.eraser-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  
-  width: 100%;
-  height: 100%;
-
-  pointer-events: none;
-  overflow: hidden;
-}
 
 .eraser {
   position: absolute;

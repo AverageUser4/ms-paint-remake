@@ -13,8 +13,8 @@ const ColorPicker = memo(function ColorPicker() {
   
   const fieldRef = useRef();
   const barRef = useRef();
-  const { onPointerDown: onPointerDownField } = usePointerTrack({ onPointerMoveCallback: onPointerField });
-  const { onPointerDown: onPointerDownBar } = usePointerTrack({ onPointerMoveCallback: onPointerBar });
+  const { onPointerDown: onPointerDownField } = usePointerTrack({ onPressedMoveCallback: onPointerField });
+  const { onPointerDown: onPointerDownBar } = usePointerTrack({ onPressedMoveCallback: onPointerBar });
 
   const cursorPosition = {
     x: `calc(${Math.round(HSL.h / 359 * 100)}% - 10px)`,

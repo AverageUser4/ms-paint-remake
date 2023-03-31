@@ -30,14 +30,14 @@ function useRectangularSelection() {
   useResizeCursor(resizeData);
 
   const { onPointerDown, doCancel } = usePointerTrack({ 
-    onPointerMoveCallback,
-    onPointerDownCallback,
-    onPointerUpCallback,
+    onPressedMoveCallback,
+    onPressStartCallback,
+    onPressEndCallback,
     onCancelCallback,
     isCancelOnRightMouseDown: true,
   });
   
-  function onPointerDownCallback(event) {
+  function onPressStartCallback(event) {
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary(canvasZoom);
       doCancel();
@@ -63,7 +63,7 @@ function useRectangularSelection() {
     setSelectionPhase(1);
   }
   
-  function onPointerMoveCallback(event) {
+  function onPressedMoveCallback(event) {
     let { clientX, clientY } = event;
     const primaryRect = primaryRef.current.getBoundingClientRect();
     const offsetX = event.pageX - primaryRect.x;
@@ -107,7 +107,7 @@ function useRectangularSelection() {
     }
   }
 
-  function onPointerUpCallback(event) {
+  function onPressEndCallback(event) {
     if(
         resizeData.initialX === event.clientX &&
         resizeData.initialY === event.clientY

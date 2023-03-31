@@ -5,15 +5,40 @@ export default {
   cursor: 'none',
   sizes: [4, 6, 8, 10],
   chosenSizeIndex: 2,
+
+  _getData(currentPixel) {
+    const size = this.sizes[this.chosenSizeIndex];
+    const startX = Math.round(currentPixel.x - size / 2);
+    const startY = Math.round(currentPixel.y - size / 2);
+
+    return { size, startX, startY };
+  },
+
+  doDrawIcon({ currentPixel, color, brushContext, canvasZoom }) {
+    validateDrawArgs({ currentPixel, color, brushContext, canvasZoom,
+      toBeValidatedArray: ['currentPixel', 'color', 'brushContext', 'canvasZoom']
+    });
+
+    let { startX, startY, size } = this._getData(currentPixel, canvasZoom);
+    
+    size *= canvasZoom;
+    startX *= canvasZoom;
+    startY *= canvasZoom;
+    startX += 0.5;
+    startY += 0.5;
+
+    brushContext.fillStyle = RGBObjectToString(color.secondary);
+    brushContext.fillRect(startX, startY, size, size);
+    brushContext.strokeStyle = 'rgb(0, 0, 0)';
+    brushContext.strokeRect(startX, startY, size, size);
+  },
+
   draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, color }) {
     validateDrawArgs({ primaryContext, secondaryContext, currentPixel, currentlyPressedRef, color,
       toBeValidatedArray: ['primaryContext', 'secondaryContext', 'currentPixel', 'currentlyPressedRef', 'color']
     });
 
-    const size = this.sizes[this.chosenSizeIndex];
-    const startX = currentPixel.x - size / 2;
-    const startY = currentPixel.y - size / 2;
-
+    const { startX, startY, size } = this._getData(currentPixel);
     
     if(currentlyPressedRef.current === 0) {
       const drawToContext = (context) => {

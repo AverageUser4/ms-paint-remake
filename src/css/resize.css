@@ -176,7 +176,7 @@
     height: calc(var(--resizer-size) / 1.7);
   }
   
-  .point-bottom,
+  /* .point-bottom,
   .point-right,
   .point-top,
   .point-left,
@@ -191,7 +191,7 @@
   .point-bottom-right::before,
   .point-bottom-left::before {
     background-color: green;
-  }
+  } */
   
   .point-top::after,
   .point-top-right::after,

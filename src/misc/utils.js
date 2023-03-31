@@ -87,14 +87,14 @@ export function RGBtoHSL({ r, g, b }) {
 }
 
 export function getWindowCenteredPosition(mainWindowPosition, mainWindowSize, innerWindowSize) {
-  if(!Number.isInteger(mainWindowPosition?.x) || !Number.isInteger(mainWindowPosition?.y)) {
-    console.error(`First argument of this function should be an object containing properties: "x" (integer) and "y" (integer), provided:`, mainWindowPosition);
+  if(typeof mainWindowPosition?.x !== 'number' || typeof mainWindowPosition?.y !== 'number') {
+    console.error(`First argument of this function should be an object containing properties: "x" (number) and "y" (number), provided:`, mainWindowPosition);
   }
-  if(!Number.isInteger(mainWindowSize?.width) || !Number.isInteger(mainWindowSize?.height)) {
-    console.error(`Second argument of this function should be an object containing properties: "width" (integer) and "height" (integer), provided:`, mainWindowSize);
+  if(typeof mainWindowSize?.width !== 'number' || typeof mainWindowSize?.height !== 'number') {
+    console.error(`Second argument of this function should be an object containing properties: "width" (number) and "height" (number), provided:`, mainWindowSize);
   }
-  if(!Number.isInteger(innerWindowSize?.width) || !Number.isInteger(innerWindowSize?.height)) {
-    console.error(`Third argument of this function should be an object containing properties: "width" (integer) and "height" (integer), provided:`, innerWindowSize);
+  if(typeof innerWindowSize?.width !== 'number' || typeof innerWindowSize?.height !== 'number') {
+    console.error(`Third argument of this function should be an object containing properties: "width" (number) and "height" (number), provided:`, innerWindowSize);
   }
 
   const mainWindowCenterX = mainWindowPosition.x + mainWindowSize.width / 2;
@@ -340,8 +340,8 @@ export function getDrawData({
   const secondaryRect = secondaryRef.current.getBoundingClientRect();
   
   const destinationPixel = {
-    x: (pagePixel.x - secondaryRect.x) / canvasZoom,
-    y: (pagePixel.y - secondaryRect.y) / canvasZoom,
+    x: Math.round((pagePixel.x - secondaryRect.x) / canvasZoom),
+    y: Math.round((pagePixel.y - secondaryRect.y) / canvasZoom),
   };
 
   if(isConstrained) {

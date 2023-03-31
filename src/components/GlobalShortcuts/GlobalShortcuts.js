@@ -134,12 +134,21 @@ function GlobalShortcuts({ ribbonData }) {
       }
     }
 
+    function onWheel(event) {
+      if(event.ctrlKey) {
+        event.preventDefault();
+        doCanvasChangeZoom(event.deltaY > 0);
+      }
+    }
+
     if(isMainWindowFocused) {
       window.addEventListener('keydown', onKeyDown);
+      window.addEventListener('wheel', onWheel, { passive: false });
     }
 
     return () => {
       window.removeEventListener('keydown', onKeyDown);
+      window.removeEventListener('wheel', onWheel, { passive: false });
     };
   });
   

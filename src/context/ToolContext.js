@@ -49,7 +49,6 @@ function ToolProvider({ children }) {
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'
   });
-  const lastCurrentToolRef = useRef();
   const currentToolData = toolsData.get(currentTool);
 
   return (
@@ -62,7 +61,6 @@ function ToolProvider({ children }) {
         latestTools,
         setLatestTools,
         currentToolData,
-        lastCurrentToolRef,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useRef } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
@@ -21,23 +21,24 @@ function Canvas() {
     primaryRef, secondaryRef, isBlackAndWhite,
   } = useCanvasContext();
   const { 
-    canvasOutlineSize, setCanvasOutlineSize, canvasMousePosition,
+    canvasOutlineSize, setCanvasOutlineSize,
     setCanvasMousePosition 
   } = useCanvasMiscContext();
   const { currentTool, currentToolData } = useToolContext();
-  const { colorData } = useColorContext()
+  const { colorData } = useColorContext();
   const { doHistoryAdd } = useHistoryContext();
-  const canvasStyle = { 
+  const canvasStyle = useMemo(() => ({ 
     width: canvasSize.width * canvasZoom,
     height: canvasSize.height * canvasZoom,
     filter: isBlackAndWhite ? 'grayscale(100%)' : '',
-  };
+  }), [canvasSize, canvasZoom, isBlackAndWhite]);
   const { selectionRef, selectionSize, selectionPhase, selectionPosition } = useSelectionContext();
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
   const gridData = doGetGridData(canvasZoom);
+  const brushCanvasRef = useRef();
 
-  const { onPointerDownBrush } = useBrush();
+  const { onPointerDownBrush } = useBrush({ brushCanvasRef });
 
   const { 
     selectionResizeElements, onPointerDownSelectionMove,
@@ -59,7 +60,7 @@ function Canvas() {
     minimalSize: { width: 1, height: 1, },
     maximalSize: { width: MAX_CANVAS_SIZE * canvasZoom, height: MAX_CANVAS_SIZE * canvasZoom },
     zoom: canvasZoom,
-    onPointerUpCallback: onPointerUpCallbackResize,
+    onPressEndCallback: onPointerUpCallbackResize,
     isConstrained: false,
     isAllowToLeaveViewport: true,
     isResizable: true,
@@ -146,21 +147,13 @@ function Canvas() {
 
       {selectionPhase !== 2 && resizeElements}
 
-      {
-        currentTool === 'eraser' && canvasMousePosition &&
-          <div className={css['eraser-container']}>
-            <div
-              className={css['eraser']}
-              style={{ 
-                left: Math.round(canvasMousePosition.x - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
-                top: Math.round(canvasMousePosition.y - currentToolData.sizes[currentToolData.chosenSizeIndex] / 2 * canvasZoom),
-                backgroundColor: RGBObjectToString(colorData.secondary),
-                width: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
-                height: Math.round(currentToolData.sizes[currentToolData.chosenSizeIndex] * canvasZoom),
-              }}
-            ></div>
-          </div>
-      }
+      <canvas
+        className={`${css['canvas']} ${css['canvas--brush']}`}
+        ref={brushCanvasRef}
+        style={canvasStyle}
+        width={canvasStyle.width}
+        height={canvasStyle.height}
+      />
 
       {
         /* https://codereview.stackexchange.com/questions/114702/drawing-a-grid-on-canvas */

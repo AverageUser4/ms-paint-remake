@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 
 function usePointerTrack({ 
-  onPointerMoveCallback,
-  onPointerDownCallback,
-  onPointerUpCallback,
+  onPressedMoveCallback,
+  onPressStartCallback,
+  onPressEndCallback,
   onCancelCallback,
+  onEveryMoveCallback,
   isCancelOnRightMouseDown = false,
   isTrackAlsoRight = false
 }) {
@@ -15,7 +16,7 @@ function usePointerTrack({
     function onPointerUp(event) {
       setIsPressed(false);
       currentlyPressedRef.current = -1;
-      onPointerUpCallback && onPointerUpCallback(event);
+      onPressEndCallback && onPressEndCallback(event);
     }
 
     function onMouseDown(event) {
@@ -31,31 +32,36 @@ function usePointerTrack({
 
     if(isPressed) {
       window.addEventListener('pointerup', onPointerUp);
-      window.addEventListener('pointermove', onPointerMoveCallback);
+      window.addEventListener('pointermove', onPressedMoveCallback);
       if(isCancelOnRightMouseDown) {
         window.addEventListener('mousedown', onMouseDown);
       }
     }
 
+    if(onEveryMoveCallback) {
+      window.addEventListener('pointermove', onEveryMoveCallback);
+    }
+
     return () => {
       window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointermove', onPointerMoveCallback);
+      window.removeEventListener('pointermove', onPressedMoveCallback);
       window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('pointermove', onEveryMoveCallback);
     };
-  }, [isPressed, onPointerMoveCallback, onPointerUpCallback, isCancelOnRightMouseDown, onCancelCallback]);
+  }, [isPressed, onPressedMoveCallback, onPressEndCallback, isCancelOnRightMouseDown, onCancelCallback, onEveryMoveCallback]);
   
   function onPointerDown(event) {
     if(event.button === 0 || (isTrackAlsoRight && event.button === 2)) {
       setIsPressed(true);
       currentlyPressedRef.current = event.button;
-      onPointerDownCallback && onPointerDownCallback(event);
+      onPressStartCallback && onPressStartCallback(event);
     }
   }
 
-  function doCancel(isInvokeOnPointerUpCallback = false) {
+  function doCancel(isInvokeOnPressEndCallback = false) {
     setIsPressed(false);
     currentlyPressedRef.current = -1;
-    isInvokeOnPointerUpCallback && onPointerUpCallback();
+    isInvokeOnPressEndCallback && onPressEndCallback();
     onCancelCallback && onCancelCallback();
   }
 

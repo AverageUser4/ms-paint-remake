@@ -34,9 +34,9 @@ export default function useMove({
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 
     usePointerTrack({ 
-      onPointerMoveCallback: onPointerMoveMoveCallback,
-      onPointerDownCallback: onPointerDownMoveCallback,
-      onPointerUpCallback: onPointerUpMoveCallback 
+      onPressedMoveCallback: onPointerMoveMoveCallback,
+      onPressStartCallback: onPointerDownMoveCallback,
+      onPressEndCallback: onPointerUpMoveCallback 
     });
 
   function onPointerDownMoveCallback(event) {

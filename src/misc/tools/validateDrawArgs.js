@@ -1,12 +1,14 @@
 export default function validateDrawArgs({
   primaryContext,
   secondaryContext,
+  brushContext,
   currentPixel,
   currentlyPressedRef,
   toBeValidatedArray,
   color,
   isRepeated,
   primaryImageData,
+  canvasZoom,
 }) {
   if(!Array.isArray(toBeValidatedArray) || toBeValidatedArray.length === 0) {
     throw new Error(`"toBeValidatedArray" has to be a non-empty array, provided: "${toBeValidatedArray}".`);
@@ -20,11 +22,13 @@ export default function validateDrawArgs({
     if( 
       name !== 'primaryContext' &&
       name !== 'secondaryContext' &&
+      name !== 'brushContext' &&
       name !== 'currentPixel' &&
       name !== 'currentlyPressedRef' &&
       name !== 'color' &&
       name !== 'isRepeated' &&
-      name !== 'primaryImageData'
+      name !== 'primaryImageData' &&
+      name !== 'canvasZoom'
     ) {
       throw new Error(`"toBeValidatedArray" contains unexpected value: "${name}".`);
     }
@@ -35,6 +39,9 @@ export default function validateDrawArgs({
   }
   if(is('secondaryContext') && !(secondaryContext instanceof CanvasRenderingContext2D)) {
     console.error(`"secondaryContext" argument has to be an instance of CanvasRenderingContext2D, provided: "${secondaryContext}".`);
+  }
+  if(is('brushContext') && !(brushContext instanceof CanvasRenderingContext2D)) {
+    console.error(`"brushContext" argument has to be an instance of CanvasRenderingContext2D, provided: "${brushContext}".`);
   }
   if(is('currentPixel') && (typeof currentPixel !== 'object' || !Number.isInteger(currentPixel?.x) || !Number.isInteger(currentPixel?.y))) {
     console.error(`"currentPixel" argument has to be an object containing properties "x" (integer) and "y" (integer), provided: "${currentPixel}".`);
@@ -50,5 +57,8 @@ export default function validateDrawArgs({
   }
   if(is('primaryImageData') && (!(primaryImageData instanceof ImageData))) {
     console.error(`"primaryImageData" argument has to be an instance of ImageData, provided: "${primaryImageData}".`);
+  }
+  if(is('canvasZoom') && typeof canvasZoom !== 'number') {
+    console.error(`"canvasZoom" argument has to be a number, provided: "${canvasZoom}".`);
   }
 }

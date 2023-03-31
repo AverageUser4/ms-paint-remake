@@ -21,7 +21,7 @@ export default function useResize({
   isPointBased,
   isCancelOnRightMouseDown,
   isSmallPoints,
-  onPointerUpCallback,
+  onPressEndCallback,
 }) {
   checkArgs([
     { name: 'minimalSize', value: minimalSize, type: 'object' },
@@ -42,14 +42,14 @@ export default function useResize({
 
   const { onPointerDown: onPointerDownResize, isPressed } = 
     usePointerTrack({ 
-      onPointerMoveCallback: onPointerMoveCallback,
-      onPointerDownCallback: onPointerDownCallback,
-      onPointerUpCallback: (e) => { setResizeData(null); onPointerUpCallback && onPointerUpCallback(e) },
+      onPressedMoveCallback: onPressedMoveCallback,
+      onPressStartCallback: onPressStartCallback,
+      onPressEndCallback: (e) => { setResizeData(null); onPressEndCallback && onPressEndCallback(e) },
       onCancelCallback: () => setResizeData(null),
       isCancelOnRightMouseDown
     });
 
-  function onPointerMoveCallback(event) {
+  function onPressedMoveCallback(event) {
     if(!containerRect && !containerRef?.current && !isOnlyThreeDirections) {
       return;
     }
@@ -161,7 +161,7 @@ export default function useResize({
     }
   }
   
-  function onPointerDownCallback(event) {
+  function onPressStartCallback(event) {
     /* 
       - when we are resizing in directions that cause movements, there may be a few-pixel jump at the beginning
       of movement, depending on where exactly resize bar was clicked, this could be fixed by adjusting initialX/Y

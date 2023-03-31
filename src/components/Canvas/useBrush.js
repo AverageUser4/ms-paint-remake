@@ -6,7 +6,7 @@ import { useHistoryContext } from "../../context/HistoryContext";
 import { useActionsContext } from "../../context/ActionsContext";
 import { RGBObjectToString, getDrawData } from "../../misc/utils";
 
-function useBrush() {
+function useBrush({ brushCanvasRef }) {
   const { 
     primaryRef, secondaryRef, doCanvasDrawImageToPrimary,
     doCanvasClearSecondary, canvasZoom, canvasSize,
@@ -17,16 +17,16 @@ function useBrush() {
   const { doHistoryAdd } = useHistoryContext();
   const { doCanvasChangeZoom } = useActionsContext();
   
-  let usedMoveCallback = onPointerMoveCallback;
-  let usedDownCallback = onPointerMoveCallback;
-  let usedUpCallback = onPointerUpCallback;
+  let usedPressedMoveCallback = onPointerMoveCallback;
+  let usedPressStartCallback = onPointerMoveCallback;
+  let usedPressEndCallback = onPressEndCallback;
   let usedCancelCallback = onCancelCallback;
 
   if(currentToolData.onPointerMove) {
-    usedMoveCallback = (event) => currentToolData.onPointerMove({ event });
+    usedPressedMoveCallback = (event) => currentToolData.onPointerMove({ event });
   }
   if(currentToolData.onPointerDown) {
-    usedDownCallback = (event) => currentToolData.onPointerDown({
+    usedPressStartCallback = (event) => currentToolData.onPointerDown({
       ...doGetEveryContext(),
       event,
       canvasSize: canvasSize,
@@ -37,7 +37,7 @@ function useBrush() {
     });
   }
   if(currentToolData.onPointerUp) {
-    usedUpCallback = (event) => currentToolData.onPointerUp({ event });
+    usedPressEndCallback = (event) => currentToolData.onPointerUp({ event });
   }
   if(currentToolData.onCancel) {
     usedCancelCallback = (event) => currentToolData.onCancel({ event });
@@ -53,6 +53,22 @@ function useBrush() {
     });
 
     lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
+
+    if(currentToolData.doDrawIcon) {
+      const brushContext = brushCanvasRef.current.getContext('2d');
+      brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
+  
+      currentToolData.doDrawIcon({
+        currentPixel,
+        color: colorData,
+        brushContext,
+        canvasZoom,
+      });
+    }
+
+    if(currentlyPressedRef.current === -1) {
+      return;
+    }
 
     const { primaryContext, secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
 
@@ -80,7 +96,7 @@ function useBrush() {
     doDrawLoop(doDraw, step);
   }
 
-  function onPointerUpCallback() {
+  function onPressEndCallback() {
     lastPointerPositionRef.current = {};
 
     doCanvasDrawImageToPrimary(secondaryRef.current);
@@ -99,9 +115,10 @@ function useBrush() {
   }
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
-    onPointerMoveCallback: usedMoveCallback,
-    onPointerDownCallback: usedDownCallback,
-    onPointerUpCallback: usedUpCallback,
+    onPressedMoveCallback: usedPressedMoveCallback,
+    onEveryMoveCallback: usedPressedMoveCallback,
+    onPressStartCallback: usedPressStartCallback,
+    onPressEndCallback: usedPressEndCallback,
     onCancelCallback: usedCancelCallback,
     isCancelOnRightMouseDown: true,
     isTrackAlsoRight: true
