@@ -62,6 +62,8 @@
   --rulers-size: 17px;
   --canvas-container-padding: 5px;
   --resizer-size: 30px;
+  --resizer-short: 20px;
+  --resizer-long: 40px;
   
   --statusbar-height: 26px;
   --window-shadow: rgb(30, 40, 50);

@@ -102,31 +102,34 @@ function Window({
   }
   
   return (
-    <article
-      data-cy={ID}
-      onPointerDown={onPointerDownFocus}
-      ref={windowRef}
-      style={{ 
-        top: position.y,
-        left: position.x,
-        width: size.width,
-        height: size.height,
-        zIndex,
-      }} 
-      className={`
-        ${css['container']}
-        ${isFocused ? css['container--focused'] : ''}
-        ${isInnerWindow ? css['container--inner'] : ''}
-        ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
-        ${isAttentionAnimated ? css['container--attention'] : ''}
-        ${isIgnorePointerEvents ? css['container--locked'] : ''}
-        ${!isConstrained ? css['container--fixed'] : ''}
-      `}
-    >
-      {isResizable && resizeElements}
-      {render(isAttentionAnimated, onPointerDownMove)}
+    <>
+      <article
+        data-cy={ID}
+        onPointerDown={onPointerDownFocus}
+        ref={windowRef}
+        style={{ 
+          top: position.y,
+          left: position.x,
+          width: size.width,
+          height: size.height,
+          zIndex,
+        }} 
+        className={`
+          ${css['container']}
+          ${isFocused ? css['container--focused'] : ''}
+          ${isInnerWindow ? css['container--inner'] : ''}
+          ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
+          ${isAttentionAnimated ? css['container--attention'] : ''}
+          ${isIgnorePointerEvents ? css['container--locked'] : ''}
+          ${!isConstrained ? css['container--fixed'] : ''}
+        `}
+      >
+        {isResizable && resizeElements}
+        {render(isAttentionAnimated, onPointerDownMove)}
+      </article>
+
       {!isInnerWindow && tempElement}
-    </article>
+    </>
   );
 }
 

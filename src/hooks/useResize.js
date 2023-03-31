@@ -20,6 +20,7 @@ export default function useResize({
   isOnlyThreeDirections,
   isPointBased,
   isCancelOnRightMouseDown,
+  isSmallPoints,
   onPointerUpCallback,
 }) {
   checkArgs([
@@ -36,6 +37,8 @@ export default function useResize({
   const [resizeData, setResizeData] = useState(null);
   const [hasMoved, setHasMoved] = useState(false);
   useResizeCursor(resizeData);
+  const type = isPointBased ? 'point' : 'resize';
+  const sizeClass = isSmallPoints ? 'point-small' : '';
 
   const { onPointerDown: onPointerDownResize, isPressed } = 
     usePointerTrack({ 
@@ -212,17 +215,17 @@ export default function useResize({
           ></div>
       }
 
-      <div data-name="bottom" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom' : 'resize-bottom'}></div>
-      <div data-name="right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-right' : 'resize-right'}></div>
-      <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom-right' : 'resize-bottom-right'}></div>
+      <div data-name="bottom" onPointerDown={onPointerDownResize} className={`${type}-bottom ${sizeClass}`}></div>
+      <div data-name="right" onPointerDown={onPointerDownResize} className={`${type}-right ${sizeClass}`}></div>
+      <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={`${type}-bottom-right ${sizeClass}`}></div>
       {
         !isOnlyThreeDirections &&
           <>
-            <div data-name="top" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-top' : 'resize-top'}></div>
-            <div data-name="left" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-left' : 'resize-left'}></div>
-            <div data-name="top-left" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-top-left' : 'resize-top-left'}></div>
-            <div data-name="top-right" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-top-right' : 'resize-top-right'}></div>
-            <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={isPointBased ? 'point-bottom-left' : 'resize-bottom-left'}></div>
+            <div data-name="top" onPointerDown={onPointerDownResize} className={`${type}-top ${sizeClass}`}></div>
+            <div data-name="left" onPointerDown={onPointerDownResize} className={`${type}-left ${sizeClass}`}></div>
+            <div data-name="top-left" onPointerDown={onPointerDownResize} className={`${type}-top-left ${sizeClass}`}></div>
+            <div data-name="top-right" onPointerDown={onPointerDownResize} className={`${type}-top-right ${sizeClass}`}></div>
+            <div data-name="bottom-left" onPointerDown={onPointerDownResize} className={`${type}-bottom-left ${sizeClass}`}></div>
           </>
       }
     </>

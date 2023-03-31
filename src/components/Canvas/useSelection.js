@@ -42,6 +42,7 @@ function useSelection() {
     isPointBased: true,
     isOnlyThreeDirections: false,
     isCancelOnRightMouseDown: true,
+    isSmallPoints: true,
     onPointerUpCallback: onPointerUpCallbackResize,
     zoom: 1,
     containerRef: primaryRef

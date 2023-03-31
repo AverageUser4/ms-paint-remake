@@ -28,7 +28,6 @@ function GlobalShortcuts({ ribbonData }) {
 
   useEffect(() => {
     function onKeyDown(event) {
-      console.log(event, event.key);
       event.preventDefault();
       
       if(event.ctrlKey) {
@@ -91,6 +90,10 @@ function GlobalShortcuts({ ribbonData }) {
 
           case 'pagedown':
             doCanvasChangeZoom(false);
+            break;
+
+          case 'f1':
+            ribbonData.toggleMinimize();
             break;
         }
       } else if(event.altKey) {
