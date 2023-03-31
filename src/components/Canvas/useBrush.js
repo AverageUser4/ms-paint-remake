@@ -1,5 +1,6 @@
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useCanvasContext } from "../../context/CanvasContext";
+import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
 import { useToolContext } from "../../context/ToolContext";
 import { useColorContext } from "../../context/ColorContext";
 import { useHistoryContext } from "../../context/HistoryContext";
@@ -12,6 +13,7 @@ function useBrush({ brushCanvasRef }) {
     doCanvasClearSecondary, canvasZoom, canvasSize,
     lastPointerPositionRef, doGetEveryContext,
   } = useCanvasContext();
+  const { canvasMousePosition } = useCanvasMiscContext();
   const { currentTool, currentToolData } = useToolContext();
   const { colorData, setColorData } = useColorContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -44,7 +46,7 @@ function useBrush({ brushCanvasRef }) {
   }
 
   function onPointerMoveCallback(event) {
-    const step = currentTool === 'airbrush' ? 5 : 1;
+    const step = currentTool === 'brushes-airbrush' ? 15 : 1;
     const currentPixel = { ...lastPointerPositionRef.current };
 
     const { destinationPixel, doDrawLoop, } = getDrawData({
@@ -58,12 +60,15 @@ function useBrush({ brushCanvasRef }) {
       const brushContext = brushCanvasRef.current.getContext('2d');
       brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
   
-      currentToolData.doDrawIcon({
-        currentPixel,
-        color: colorData,
-        brushContext,
-        canvasZoom,
-      });
+      if(canvasMousePosition) {
+        currentToolData.doDrawIcon({
+          currentPixel,
+          color: colorData,
+          brushContext,
+          canvasZoom,
+          currentlyPressedRef,
+        });
+      }
     }
 
     if(currentlyPressedRef.current === -1) {

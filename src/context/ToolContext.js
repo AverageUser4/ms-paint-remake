@@ -51,6 +51,24 @@ function ToolProvider({ children }) {
   });
   const currentToolData = toolsData.get(currentTool);
 
+  function doCurrentToolSetSize(newSize) {
+    if(!Number.isInteger(newSize)) {
+      console.error(`de_Expected integer, received: "${newSize}".`);
+    }
+
+    if(newSize < 1 || newSize > 50 || !currentToolData.sizes) {
+      return;
+    }
+    
+    setToolsData(prev => {
+      const newToolsData = new Map(prev);
+      const newTool = { ...newToolsData.get(currentTool) };
+      newTool.chosenSize = newSize;
+      newToolsData.set(currentTool, newTool);
+      return newToolsData;
+    });
+  }
+
   return (
     <ToolContext.Provider
       value={{
@@ -61,6 +79,7 @@ function ToolProvider({ children }) {
         latestTools,
         setLatestTools,
         currentToolData,
+        doCurrentToolSetSize,
       }}
     >
       {children}

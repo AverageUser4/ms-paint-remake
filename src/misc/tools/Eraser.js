@@ -4,10 +4,10 @@ import validateDrawArgs from "./validateDrawArgs";
 export default {
   cursor: 'none',
   sizes: [4, 6, 8, 10],
-  chosenSizeIndex: 2,
+  chosenSize: 8,
 
   _getData(currentPixel) {
-    const size = this.sizes[this.chosenSizeIndex];
+    const size = this.chosenSize;
     const startX = Math.round(currentPixel.x - size / 2);
     const startY = Math.round(currentPixel.y - size / 2);
 

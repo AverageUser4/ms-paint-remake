@@ -3,13 +3,14 @@ import validateDrawArgs from "./validateDrawArgs";
 export default {
   cursor: 'pencil',
   sizes: [1, 2, 3, 4],
-  chosenSizeIndex: 0,
+  chosenSize: 1,
+
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
     validateDrawArgs({ secondaryContext, currentPixel,
       toBeValidatedArray: ['secondaryContext', 'currentPixel']
     });
-    
-    const size = this.sizes[this.chosenSizeIndex];
+
+    const size = this.chosenSize;
     
     function drawToContext(context) {
       if(size <= 2) {
@@ -20,6 +21,10 @@ export default {
       } else if(size === 4) {
         context.fillRect(currentPixel.x - 1, currentPixel.y, 4, 2);
         context.fillRect(currentPixel.x, currentPixel.y - 1, 2, 4);
+      } else {
+        context.beginPath();
+        context.arc(currentPixel.x, currentPixel.y, size, 0, Math.PI * 2);
+        context.fill();
       }
     }
 

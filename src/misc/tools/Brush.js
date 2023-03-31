@@ -1,15 +1,33 @@
+import { RGBObjectToString } from "../utils";
 import validateDrawArgs from "./validateDrawArgs";
 
 export default {
   cursor: 'draw',
   sizes: [1, 3, 5, 8],
-  chosenSizeIndex: 1,
+  chosenSize: 3,
+
+  doDrawIcon({ currentPixel, canvasZoom, brushContext, currentlyPressedRef, color }) {
+    validateDrawArgs({ canvasZoom, brushContext, currentlyPressedRef, color,
+      toBeValidatedArray: ['canvasZoom', 'brushContext', 'currentlyPressedRef', 'color']
+    });
+
+    if(currentlyPressedRef.current !== -1) {
+      return;
+    }
+
+    brushContext.fillStyle = RGBObjectToString(color.primary);
+    brushContext.save();
+    brushContext.scale(canvasZoom, canvasZoom);
+    this.draw({ currentPixel, secondaryContext: brushContext });
+    brushContext.restore();
+  },
+
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
-    validateDrawArgs({ secondaryContext, currentPixel,
+    validateDrawArgs({ secondaryContext, currentPixel, 
       toBeValidatedArray: ['secondaryContext', 'currentPixel']
     });
 
-    const size = this.sizes[this.chosenSizeIndex];
+    const size = this.chosenSize;
 
     function drawToContext(context) {
       context.beginPath();

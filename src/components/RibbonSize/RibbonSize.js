@@ -11,7 +11,7 @@ import { useToolContext } from "../../context/ToolContext";
 import size32 from './assets/size-32.png';
 
 const RibbonSize = memo(function RibbonSize() {
-  const { toolsData, setToolsData, currentTool } = useToolContext();
+  const { toolsData, doCurrentToolSetSize, currentTool } = useToolContext();
   const dropdownRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
@@ -44,18 +44,12 @@ const RibbonSize = memo(function RibbonSize() {
             data-cy="Size-Dropdown"
           >
             {
-              sizes.map((size, index) => 
+              sizes.map((size) => 
                 <button 
                   key={size}
-                  className={`tooltip-container ${css['button']} ${index === toolsData.get(currentTool).chosenSizeIndex ? css['button--active'] : ''}`}
+                  className={`tooltip-container ${css['button']} ${size === toolsData.get(currentTool).chosenSize ? css['button--active'] : ''}`}
                   onClick={() => {
-                    setToolsData(prev => {
-                      const newToolsData = new Map(prev);
-                      const newTool = { ...newToolsData.get(currentTool) };
-                      newTool.chosenSizeIndex = index;
-                      newToolsData.set(currentTool, newTool);
-                      return newToolsData;
-                    });
+                    doCurrentToolSetSize(size);
                     setIsDropdownOpen(false);
                   }}
                   aria-label={`${size} pixels`}

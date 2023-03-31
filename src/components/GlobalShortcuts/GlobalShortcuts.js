@@ -7,6 +7,7 @@ import { useHistoryContext } from '../../context/HistoryContext';
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useActionsContext } from '../../context/ActionsContext';
 import { useCanvasContext } from '../../context/CanvasContext';
+import { useToolContext } from '../../context/ToolContext';
 
 function GlobalShortcuts({ ribbonData }) {
   // https://www.guidingtech.com/15171/ms-microsoft-paint-keyboard-shortcuts/
@@ -25,6 +26,7 @@ function GlobalShortcuts({ ribbonData }) {
     doStartNewProject, doOpenNewFile, doSaveFile, doCanvasChangeZoom
   } = useActionsContext();
   const { setIsFullScreenView, canvasZoom } = useCanvasContext();
+  const { currentToolData, doCurrentToolSetSize } = useToolContext();
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -94,6 +96,14 @@ function GlobalShortcuts({ ribbonData }) {
 
           case 'f1':
             ribbonData.toggleMinimize();
+            break;
+
+          case '+':
+            doCurrentToolSetSize(currentToolData.chosenSize + 1);
+            break;
+
+          case '-':
+            doCurrentToolSetSize(currentToolData.chosenSize - 1);
             break;
         }
       } else if(event.altKey) {

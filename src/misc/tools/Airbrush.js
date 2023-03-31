@@ -4,20 +4,21 @@ import validateDrawArgs from './validateDrawArgs';
 export default {
   latestX: null,
   latestY: null,
-  cursor: 'draw',
+  cursor: 'airbrush',
   sizes: [4, 8, 16, 24],
-  chosenSizeIndex: 1,
+  chosenSize: 8,
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef }) {
     validateDrawArgs({ secondaryContext, currentPixel, currentlyPressedRef, 
       toBeValidatedArray: ['secondaryContext', 'currentPixel', 'currentlyPressedRef']
     });
      
-    const size = this.sizes[this.chosenSizeIndex];
     this.latestX = currentPixel.x;
     this.latestY = currentPixel.y;
 
+    const size = this.chosenSize;
+
     function drawRandomPoints() {
-      for(let i = 0; i < size; i++) {
+      for(let i = 0; i < size * 3; i++) {
         const { x: randX, y: randY } = getRandomPointWithinCircle(currentPixel.x, currentPixel.y, size);
         secondaryContext.fillRect(Math.round(randX), Math.round(randY), 1, 1);
         thumbnailSecondaryContext?.fillRect(Math.round(randX), Math.round(randY), 1, 1);
@@ -34,7 +35,7 @@ export default {
       }
 
       drawRandomPoints();
-      setTimeout(timeoutCallback.bind(this), 100);
+      setTimeout(timeoutCallback.bind(this), 50);
     }
     
     timeoutCallback.apply(this);

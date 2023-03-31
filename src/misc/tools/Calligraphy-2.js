@@ -1,47 +1,39 @@
 import validateDrawArgs from "./validateDrawArgs";
+import { RGBObjectToString } from "../utils";
 
 export default {
   cursor: 'draw',
   sizes: [3, 5, 8, 10],
-  chosenSizeIndex: 1,
+  chosenSize: 5,
+
+  doDrawIcon({ currentPixel, canvasZoom, brushContext, currentlyPressedRef, color }) {
+    validateDrawArgs({ canvasZoom, brushContext, currentlyPressedRef, color,
+      toBeValidatedArray: ['canvasZoom', 'brushContext', 'currentlyPressedRef', 'color']
+    });
+
+    if(currentlyPressedRef.current !== -1) {
+      return;
+    }
+
+    brushContext.fillStyle = RGBObjectToString(color.primary);
+    brushContext.save();
+    brushContext.scale(canvasZoom, canvasZoom);
+    this.draw({ currentPixel, secondaryContext: brushContext });
+    brushContext.restore();
+  },
+
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
     validateDrawArgs({ secondaryContext, currentPixel,
       toBeValidatedArray: ['secondaryContext', 'currentPixel']
     });
-    
-    const size = this.sizes[this.chosenSizeIndex];
 
+    const size = this.chosenSize;
+    let offset = Math.floor(size / 2);
+    
     function drawToContext(context) {
-      if(size === 3) {
-        context.fillRect(currentPixel.x - 1, currentPixel.y - 1, 2, 1);
-        context.fillRect(currentPixel.x, currentPixel.y, 2, 1);
-        context.fillRect(currentPixel.x + 1, currentPixel.y + 1, 2, 1);
-      } else if(size === 5) {
-        context.fillRect(currentPixel.x - 2, currentPixel.y - 2, 2, 1);
-        context.fillRect(currentPixel.x - 1, currentPixel.y - 1, 2, 1);
-        context.fillRect(currentPixel.x, currentPixel.y, 2, 1);
-        context.fillRect(currentPixel.x + 1, currentPixel.y + 1, 2, 1);
-        context.fillRect(currentPixel.x + 2, currentPixel.y + 2, 2, 1);
-      } else if(size === 8) {
-        context.fillRect(currentPixel.x - 4, currentPixel.y - 4, 2, 1);
-        context.fillRect(currentPixel.x - 3, currentPixel.y - 3, 2, 1);
-        context.fillRect(currentPixel.x - 2, currentPixel.y - 2, 2, 1);
-        context.fillRect(currentPixel.x - 1, currentPixel.y - 1, 2, 1);
-        context.fillRect(currentPixel.x, currentPixel.y, 2, 1);
-        context.fillRect(currentPixel.x + 1, currentPixel.y + 1, 2, 1);
-        context.fillRect(currentPixel.x + 2, currentPixel.y + 2, 2, 1);
-        context.fillRect(currentPixel.x + 3, currentPixel.y + 3, 2, 1);
-      } else if(size === 10) {
-        context.fillRect(currentPixel.x - 5, currentPixel.y - 5, 2, 1);
-        context.fillRect(currentPixel.x - 4, currentPixel.y - 4, 2, 1);
-        context.fillRect(currentPixel.x - 3, currentPixel.y - 3, 2, 1);
-        context.fillRect(currentPixel.x - 2, currentPixel.y - 2, 2, 1);
-        context.fillRect(currentPixel.x - 1, currentPixel.y - 1, 2, 1);
-        context.fillRect(currentPixel.x, currentPixel.y, 2, 1);
-        context.fillRect(currentPixel.x + 1, currentPixel.y + 1, 2, 1);
-        context.fillRect(currentPixel.x + 2, currentPixel.y + 2, 2, 1);
-        context.fillRect(currentPixel.x + 3, currentPixel.y + 3, 2, 1);
-        context.fillRect(currentPixel.x + 4, currentPixel.y + 4, 2, 1);
+      for(let i = 0; i < size; i++) {
+        context.fillRect(currentPixel.x - offset, currentPixel.y - offset, 2, 1);
+        offset--;
       }
     }
 
