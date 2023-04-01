@@ -10,7 +10,7 @@ import { useColorContext } from "../../context/ColorContext";
 function useFreeFormSelection() {
   const { 
     primaryRef, secondaryRef, doCanvasClearSecondary,
-    canvasZoom, canvasSize, lastPointerPositionRef, doGetEveryContext,
+    canvasZoom, canvasSize, doGetEveryContext,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { currentToolData } = useToolContext();
@@ -31,6 +31,7 @@ function useFreeFormSelection() {
   const edgePositionRef = useRef();
   const initialPositionRef = useRef();
   const primaryImageDataRef = useRef();
+  const lastPointerPositionLocalRef = useRef();
 
   function onPressStartCallback(event) {
     if(selectionPhase === 2) {
@@ -58,8 +59,7 @@ function useFreeFormSelection() {
   }
 
   function onPressedMoveCallback(event) {
-    const step = 1;
-    const currentPixel = { ...lastPointerPositionRef.current };
+    const currentPixel = { ...lastPointerPositionLocalRef.current };
 
     const { destinationPixel, doDrawLoop, } = getDrawData({
       secondaryRef, canvasZoom, currentPixel,
@@ -67,7 +67,7 @@ function useFreeFormSelection() {
       isConstrained: true,
     });
     
-    lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
+    lastPointerPositionLocalRef.current = { x: destinationPixel.x, y: destinationPixel.y };
 
     edgePositionRef.current = {
       minX: Math.min(edgePositionRef.current.minX, destinationPixel.x),
@@ -88,11 +88,12 @@ function useFreeFormSelection() {
     }
 
     doDraw(false);
-    doDrawLoop(doDraw, step);
+    doDrawLoop(doDraw, 1);
   }
+
   function onPressEndCallback() {
     onPressedMoveCallback(initialPositionRef.current, true);
-    lastPointerPositionRef.current = {};
+    lastPointerPositionLocalRef.current = {};
 
     const x = Math.round(edgePositionRef.current.minX);
     const y = Math.round(edgePositionRef.current.minY);
@@ -168,7 +169,7 @@ function useFreeFormSelection() {
 
   function onCancelCallback() {
     doSelectionEnd();
-    lastPointerPositionRef.current = {};
+    lastPointerPositionLocalRef.current = {};
     doCanvasClearSecondary();
   }
 

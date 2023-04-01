@@ -372,6 +372,7 @@ export function getDrawData({
     while(Math.abs(currentPixel.x - destinationPixel.x) > step || Math.abs(currentPixel.y - destinationPixel.y) > step) {
       currentPixel.x += step * multiplier.x;
       currentPixel.y += step * multiplier.y;
+
       doDraw(true);
     }
   }

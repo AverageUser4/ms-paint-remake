@@ -75,7 +75,7 @@ function useBrush() {
       return;
     }
 
-    const { primaryContext, secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
+    const { secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
 
     function setStyle(context) {
       context.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
@@ -87,9 +87,7 @@ function useBrush() {
 
     function doDraw(isRepeated) {
       currentToolData.draw({
-        primaryContext,
-        secondaryContext,
-        thumbnailSecondaryContext,
+        ...doGetEveryContext(),
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         color: { ...colorData },
