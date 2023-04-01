@@ -18,6 +18,7 @@ function CanvasProvider({ children }) {
   const secondaryRef = useRef();
   const thumbnailPrimaryRef = useRef();
   const thumbnailSecondaryRef = useRef();
+  const brushCanvasRef = useRef();
   const lastPrimaryStateRef = useRef();
   const isFirstRenderRef = useRef(true);
   const lastCanvasSizeRef = useRef(canvasSize);
@@ -104,6 +105,7 @@ function CanvasProvider({ children }) {
         canvasZoom, setCanvasZoom,
         primaryRef,
         secondaryRef,
+        brushCanvasRef,
         lastPrimaryStateRef,
         lastPointerPositionRef,
         lastCanvasZoomRef,

@@ -8,6 +8,9 @@ import { useWindowsContext } from '../../context/WindowsContext';
 import { useActionsContext } from '../../context/ActionsContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useToolContext } from '../../context/ToolContext';
+import { useColorContext } from '../../context/ColorContext';
+import { useCanvasMiscContext } from '../../context/CanvasMiscContext';
+import { getDrawData } from '../../misc/utils';
 
 function GlobalShortcuts({ ribbonData }) {
   // https://www.guidingtech.com/15171/ms-microsoft-paint-keyboard-shortcuts/
@@ -25,8 +28,33 @@ function GlobalShortcuts({ ribbonData }) {
   const {
     doStartNewProject, doOpenNewFile, doSaveFile, doCanvasChangeZoom
   } = useActionsContext();
-  const { setIsFullScreenView, canvasZoom } = useCanvasContext();
+  const { 
+    setIsFullScreenView, canvasZoom, secondaryRef,
+    canvasSize, lastPointerPositionRef, brushCanvasRef
+  } = useCanvasContext();
+  const { canvasMousePosition } = useCanvasMiscContext();
   const { currentToolData, doCurrentToolSetSize } = useToolContext();
+  const { colorData } = useColorContext();
+
+  function drawIndicator() {
+    const currentPixel = { ...lastPointerPositionRef.current };
+    getDrawData({ secondaryRef, canvasZoom, currentPixel, pagePixel: {} });
+
+    if(currentToolData.doDrawIcon) {
+      const brushContext = brushCanvasRef.current.getContext('2d');
+      brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
+  
+      if(canvasMousePosition) {
+        currentToolData.doDrawIcon({
+          currentPixel,
+          color: colorData,
+          brushContext,
+          canvasZoom,
+          currentlyPressedRef: { current: -1 },
+        });
+      }
+    }
+  }
 
   useEffect(() => {
     function onKeyDown(event) {
@@ -98,13 +126,17 @@ function GlobalShortcuts({ ribbonData }) {
             ribbonData.toggleMinimize();
             break;
 
-          case '+':
+          case '+': {
             doCurrentToolSetSize(currentToolData.chosenSize + 1);
+            drawIndicator();
             break;
+          }
 
-          case '-':
+          case '-': {
             doCurrentToolSetSize(currentToolData.chosenSize - 1);
+            drawIndicator();
             break;
+          }
         }
       } else if(event.altKey) {
         switch(event.key.toLowerCase()) {

@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from "react";
+import React, { useMemo } from "react";
 import css from './Canvas.module.css';
 
 import useResize from "../../hooks/useResize";
@@ -19,6 +19,7 @@ function Canvas() {
   const { 
     canvasSize, canvasZoom, setCanvasSize,
     primaryRef, secondaryRef, isBlackAndWhite,
+    brushCanvasRef
   } = useCanvasContext();
   const { 
     canvasOutlineSize, setCanvasOutlineSize,
@@ -36,9 +37,8 @@ function Canvas() {
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
   const gridData = doGetGridData(canvasZoom);
-  const brushCanvasRef = useRef();
 
-  const { onPointerDownBrush } = useBrush({ brushCanvasRef });
+  const { onPointerDownBrush } = useBrush();
 
   const { 
     selectionResizeElements, onPointerDownSelectionMove,

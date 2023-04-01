@@ -7,11 +7,11 @@ import { useHistoryContext } from "../../context/HistoryContext";
 import { useActionsContext } from "../../context/ActionsContext";
 import { RGBObjectToString, getDrawData } from "../../misc/utils";
 
-function useBrush({ brushCanvasRef }) {
+function useBrush() {
   const { 
     primaryRef, secondaryRef, doCanvasDrawImageToPrimary,
     doCanvasClearSecondary, canvasZoom, canvasSize,
-    lastPointerPositionRef, doGetEveryContext,
+    lastPointerPositionRef, doGetEveryContext, brushCanvasRef
   } = useCanvasContext();
   const { canvasMousePosition } = useCanvasMiscContext();
   const { currentTool, currentToolData } = useToolContext();
@@ -50,7 +50,7 @@ function useBrush({ brushCanvasRef }) {
     const currentPixel = { ...lastPointerPositionRef.current };
 
     const { destinationPixel, doDrawLoop, } = getDrawData({
-      event, secondaryRef, canvasZoom, currentPixel,
+      secondaryRef, canvasZoom, currentPixel,
       pagePixel: { x: event.pageX, y: event.pageY },
     });
 
@@ -102,7 +102,7 @@ function useBrush({ brushCanvasRef }) {
   }
 
   function onPressEndCallback() {
-    lastPointerPositionRef.current = {};
+    // lastPointerPositionRef.current = {};
 
     doCanvasDrawImageToPrimary(secondaryRef.current);
     doCanvasClearSecondary();
@@ -115,7 +115,7 @@ function useBrush({ brushCanvasRef }) {
   }
 
   function onCancelCallback() {
-    lastPointerPositionRef.current = {};
+    // lastPointerPositionRef.current = {};
     doCanvasClearSecondary();
   }
 

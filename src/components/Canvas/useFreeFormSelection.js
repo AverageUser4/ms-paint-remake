@@ -62,7 +62,7 @@ function useFreeFormSelection() {
     const currentPixel = { ...lastPointerPositionRef.current };
 
     const { destinationPixel, doDrawLoop, } = getDrawData({
-      event, secondaryRef, canvasZoom, currentPixel,
+      secondaryRef, canvasZoom, currentPixel,
       pagePixel: { x: event.pageX, y: event.pageY },
       isConstrained: true,
     });
