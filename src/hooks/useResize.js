@@ -202,19 +202,21 @@ export default function useResize({
     }
   }
 
-  const resizeElements = (
-    <>
-      {
-        isPointBased && isPressed &&
-          <div 
-            className="point-outline"
-            style={{ 
-              width: hasMoved ? size.width : resizeData.initialWidth,
-              height: hasMoved ? size.height : resizeData.initialHeight 
-            }}
-          ></div>
-      }
+  const resizeOutlineElement = (
+    isPointBased && isPressed &&
+      <div 
+        className="point-outline"
+        style={{ 
+          left: position?.x || 0,
+          top: position?.y || 0,
+          width: hasMoved ? size.width : resizeData.initialWidth,
+          height: hasMoved ? size.height : resizeData.initialHeight 
+        }}
+      ></div>
+  );
 
+  const resizeGrabElements = (
+    <>
       <div data-name="bottom" onPointerDown={onPointerDownResize} className={`${type}-bottom ${sizeClass}`}></div>
       <div data-name="right" onPointerDown={onPointerDownResize} className={`${type}-right ${sizeClass}`}></div>
       <div data-name="bottom-right" onPointerDown={onPointerDownResize} className={`${type}-bottom-right ${sizeClass}`}></div>
@@ -232,6 +234,7 @@ export default function useResize({
   );
 
   return {
-    resizeElements
+    resizeOutlineElement,
+    resizeGrabElements,
   };
 }

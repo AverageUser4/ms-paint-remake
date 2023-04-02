@@ -4,10 +4,15 @@ import css from './CanvasContainer.module.css';
 
 import Canvas from '../Canvas/Canvas';
 import Rulers from '../Rulers/Rulers';
+
 import { useWindowsContext } from '../../context/WindowsContext';
+import { useCanvasContext } from '../../context/CanvasContext';
+import { useSelectionContext } from '../../context/SelectionContext';
 
 const CanvasContainer = memo(function CanvasContainer({ toolbarData, ribbonData }) {
   const { isStatusBarVisible, isRulersVisible } = useWindowsContext();
+  const { canvasZoom } = useCanvasContext();
+  const { selectionPhase, doSelectionDrawToPrimary, doSelectionEnd } = useSelectionContext();
   const containerRef = useRef();
   
   const containerStyle = {
@@ -29,6 +34,12 @@ const CanvasContainer = memo(function CanvasContainer({ toolbarData, ribbonData 
       `}
       ref={containerRef}
       style={containerStyle}
+      onPointerDown={(event) => {
+        if(event.target === containerRef.current && selectionPhase === 2) {
+          doSelectionDrawToPrimary(canvasZoom);
+          doSelectionEnd();
+        }
+      }}
     >
       {isRulersVisible && <Rulers containerRef={containerRef}/>}
       <Canvas/>

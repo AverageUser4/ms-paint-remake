@@ -2,7 +2,6 @@ GOING TO:
   - investigate z-index
   - investigate font-family
   - when going into full screen window mode, rulers dont adjust size until render is caused by eg. moving mouse over canvas
-  - resizing selection in left / top directions looks weird
-  - useResizeCursor seems to be completly broken
+  - brushCanvas is just another canvas that is unnecessarily big, causing lag when canvasSize is big, probably small canvas that moves would be a better solution
 
 DONE:

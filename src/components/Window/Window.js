@@ -33,7 +33,7 @@ function Window({
   zIndex = isInnerWindow ? '4' : zIndex;
   zIndex = isBlockingMainWindow ? '5' : zIndex;
   
-  const { resizeElements } = useResize({ 
+  const { resizeGrabElements } = useResize({ 
     containerRect,
     position, setPosition,
     size, setSize,
@@ -124,7 +124,7 @@ function Window({
           ${!isConstrained ? css['container--fixed'] : ''}
         `}
       >
-        {isResizable && resizeElements}
+        {isResizable && resizeGrabElements}
         {render(isAttentionAnimated, onPointerDownMove)}
       </article>
 

@@ -25,7 +25,7 @@ function findClosestMultiplier(offset) {
 
 const ZoomRange = memo(function ZoomRange() {
   const { canvasZoom } = useCanvasContext();
-  const { doSetCanvasZoom, doCanvasChangeZoom } = useActionsContext();
+  const { doCanvasSetZoom, doCanvasChangeZoom } = useActionsContext();
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
   
@@ -39,7 +39,7 @@ const ZoomRange = memo(function ZoomRange() {
       const multiplier = findClosestMultiplier(difference);
 
       if(canvasZoom !== multiplier) {
-        doSetCanvasZoom(multiplier);
+        doCanvasSetZoom(multiplier);
       }
     }
 
@@ -52,7 +52,7 @@ const ZoomRange = memo(function ZoomRange() {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     };
-  }, [isControlFocused, canvasZoom, doSetCanvasZoom]);
+  }, [isControlFocused, canvasZoom, doCanvasSetZoom]);
 
   return (
     <>

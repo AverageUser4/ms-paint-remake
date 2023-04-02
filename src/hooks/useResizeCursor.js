@@ -69,7 +69,7 @@ function useResizeCursor(resizeData) {
       }
     }
 
-    if(resizeData) {
+    if(!resizeData) {
       window.addEventListener('mousemove', onMouseMove);
     }
 

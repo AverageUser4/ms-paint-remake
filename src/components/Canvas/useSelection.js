@@ -12,6 +12,7 @@ function useSelection() {
     selectionSize,
     selectionPosition,
     selectionOutlineSize, setSelectionOutlineSize,
+    selectionOutlinePosition, setSelectionOutlinePosition,
     doSelectionSetSize,
     doSelectionResize,
     doSelectionSetPosition,
@@ -21,18 +22,24 @@ function useSelection() {
   const { onPointerDownRectangularSelection } = useRectangularSelection();
   const { onPointerDownFreeFormSelection } = useFreeFormSelection();
   
-  function onPointerUpCallbackResize() {
-    if(!selectionOutlineSize) {
-      return;
+  function onPressEndCallbackResize() {
+    if(selectionOutlineSize) {
+      doSelectionResize(selectionOutlineSize);
+      setSelectionOutlineSize(null);
     }
 
-    doSelectionResize(selectionOutlineSize);
-    setSelectionOutlineSize(null);
+    if(selectionOutlinePosition) {
+      doSelectionSetPosition(selectionOutlinePosition);
+      setSelectionOutlinePosition(null);
+    }
   }
   
-  const { resizeElements: selectionResizeElements } = useResize({ 
-    position: selectionPosition,
-    setPosition: doSelectionSetPosition,
+  const { 
+    resizeGrabElements: selectionResizeGrabElements,
+    resizeOutlineElement: selectionResizeOutlineElement
+  } = useResize({ 
+    position: selectionOutlinePosition || selectionPosition,
+    setPosition: setSelectionOutlinePosition,
     isAllowToLeaveViewport: true,
     size: selectionOutlineSize || selectionSize,
     setSize: setSelectionOutlineSize,
@@ -43,7 +50,7 @@ function useSelection() {
     isOnlyThreeDirections: false,
     isCancelOnRightMouseDown: true,
     isSmallPoints: true,
-    onPressEndCallback: onPointerUpCallbackResize,
+    onPressEndCallback: onPressEndCallbackResize,
     zoom: 1,
     containerRef: primaryRef
   });
@@ -67,7 +74,8 @@ function useSelection() {
   });
 
   return {
-    selectionResizeElements,
+    selectionResizeGrabElements,
+    selectionResizeOutlineElement,
     onPointerDownSelectionMove,
     onPointerDownRectangularSelection,
     onPointerDownFreeFormSelection,

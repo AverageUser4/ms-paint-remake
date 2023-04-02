@@ -11,9 +11,9 @@ function useBrush() {
   const { 
     primaryRef, secondaryRef, doCanvasDrawImageToPrimary,
     doCanvasClearSecondary, canvasZoom, canvasSize,
-    lastPointerPositionRef, doGetEveryContext, brushCanvasRef
+    lastPointerPositionRef, doGetEveryContext, brushCanvasRef,
   } = useCanvasContext();
-  const { canvasMousePosition } = useCanvasMiscContext();
+  const { canvasMousePosition, canvasOutlineSize } = useCanvasMiscContext();
   const { currentTool, currentToolData } = useToolContext();
   const { colorData, setColorData } = useColorContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -60,7 +60,7 @@ function useBrush() {
       const brushContext = brushCanvasRef.current.getContext('2d');
       brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
   
-      if(canvasMousePosition) {
+      if(canvasMousePosition && !canvasOutlineSize) {
         currentToolData.doDrawIcon({
           currentPixel,
           color: colorData,

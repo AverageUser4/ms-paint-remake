@@ -6,7 +6,6 @@ import BigButton from '../BigButton/BigButton';
 import RibbonItemExpanded from '../RibbonItemExpanded/RibbonItemExpanded';
 import Tooltip from '../Tooltip/Tooltip';
 
-import { useCanvasContext } from '../../context/CanvasContext';
 import { useActionsContext } from '../../context/ActionsContext';
 
 import zoomIn16 from './assets/zoom-in-16.png';
@@ -17,8 +16,7 @@ import percent16 from './assets/100-percent-16.png';
 import percent32 from './assets/100-percent-32.png';
 
 const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
-  const { doSetCanvasZoom } = useCanvasContext();
-  const { doCanvasChangeZoom } = useActionsContext();
+  const { doCanvasChangeZoom, doCanvasSetZoom } = useActionsContext();
   
   const zoomInTooltip = (
     <Tooltip
@@ -67,7 +65,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
 
         <button 
           className="tooltip-container button"
-          onClick={() => doSetCanvasZoom(1)}
+          onClick={() => doCanvasSetZoom(1)}
           aria-describedby="id-zoom-zoom-100"
         >
           <img src={percent16} alt=""/>
@@ -101,7 +99,7 @@ const RibbonZoom = memo(function RibbonZoom({ ribbonWidth }) {
           iconSrc={percent32}
           name={<div>100 <div className="line-break"></div> %</div>}
           strName="100%"
-          onClick={() => doSetCanvasZoom(1)}
+          onClick={() => doCanvasSetZoom(1)}
           ariaDescribedBy="id-zoom-zoom-100"
           tooltipElement={zoom100Tooltip}
         />

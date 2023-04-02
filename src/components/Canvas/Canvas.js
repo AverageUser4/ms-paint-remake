@@ -33,7 +33,10 @@ function Canvas() {
     height: canvasSize.height * canvasZoom,
     filter: isBlackAndWhite ? 'grayscale(100%)' : '',
   }), [canvasSize, canvasZoom, isBlackAndWhite]);
-  const { selectionRef, selectionSize, selectionPhase, selectionPosition } = useSelectionContext();
+  const { 
+    selectionRef, selectionSize, selectionPhase, selectionPosition,
+    doSelectionDrawToPrimary, doSelectionEnd,
+  } = useSelectionContext();
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
   const gridData = doGetGridData(canvasZoom);
@@ -41,7 +44,7 @@ function Canvas() {
   const { onPointerDownBrush } = useBrush();
 
   const { 
-    selectionResizeElements, onPointerDownSelectionMove,
+    selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection();
 
@@ -52,7 +55,10 @@ function Canvas() {
     onPointerDownSecondary = onPointerDownFreeFormSelection;
   }
 
-  const { resizeElements } = useResize({ 
+  const { 
+    resizeGrabElements: canvasResizeGrabElements,
+    resizeOutlineElement: canvasResizeOutlineElement 
+  } = useResize({ 
     position: { x: 0, y: 0 },
     setPosition: ()=>0,
     size: canvasOutlineSize || canvasSize,
@@ -109,7 +115,18 @@ function Canvas() {
         }}
         onPointerLeave={() => setCanvasMousePosition(null)}
         onPointerDown={(e) => onPointerDownSecondary(e)}
-        onContextMenu={(e) => currentTool === 'selection-rectangle' && openContextMenu(e, 'canvas', 'primary')}
+        onContextMenu={(e) => { 
+          if(currentTool !== 'selection-rectangle') {
+            return;
+          }
+
+          if(selectionPhase === 2) {
+            doSelectionDrawToPrimary(canvasZoom);
+            doSelectionEnd();
+          }
+
+          openContextMenu(e, 'canvas', 'primary') 
+        }}
         ref={secondaryRef}
       ></canvas>
 
@@ -121,7 +138,8 @@ function Canvas() {
               left: selectionPosition.x,
               top: selectionPosition.y,
               width: selectionSize.width,
-              height: selectionSize.height
+              height: selectionSize.height,
+              display: (selectionPhase === 2 || selectionSize.width > 1 || selectionSize.height > 1) ? 'block' : 'none'
             }}
           >
             <canvas
@@ -144,11 +162,19 @@ function Canvas() {
               ref={selectionRef}
             ></canvas>
 
-            {selectionPhase === 2 && selectionResizeElements}
+            {selectionPhase === 2 && selectionResizeGrabElements}
           </div>
       }
 
-      {selectionPhase !== 2 && resizeElements}
+      {selectionPhase === 2 && selectionResizeOutlineElement}
+
+      {
+        selectionPhase !== 2 && 
+          <>
+            {canvasResizeOutlineElement}
+            {canvasResizeGrabElements}
+          </>
+      }
 
       <canvas
         className={`${css['canvas']} ${css['canvas--brush']}`}

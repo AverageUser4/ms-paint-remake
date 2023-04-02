@@ -24,6 +24,7 @@ function SelectionProvider({ children }) {
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
+  const [selectionOutlinePosition, setSelectionOutlinePosition] = useState(null);
   const [selectionPhase, setSelectionPhase] = useState(0); // 0, 1 or 2
   const [isSelectionTransparent, setIsSelectionTransparent] = useState(false);
   const selectionRef = useRef();
@@ -100,6 +101,7 @@ function SelectionProvider({ children }) {
     setSelectionSize(null);
     setSelectionPosition(null);
     setSelectionOutlineSize(null);
+    setSelectionOutlinePosition(null);
     setSelectionPhase(0);
     lastSelectionStateRef.current = null;
     lastSelectionSizeRef.current = null;
@@ -536,6 +538,7 @@ function SelectionProvider({ children }) {
         selectionSize, setSelectionSize,
         selectionPosition, setSelectionPosition,
         selectionOutlineSize, setSelectionOutlineSize,
+        selectionOutlinePosition, setSelectionOutlinePosition,
         selectionPhase, setSelectionPhase,
         isSelectionTransparent, setIsSelectionTransparent,
         lastSelectionStateRef,
