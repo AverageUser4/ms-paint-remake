@@ -2,9 +2,9 @@ export default {
   cursor: 'selection',
   sizes: null,
   onPointerDown({ event }) {
-    console.log('hi')
+    // console.log('hi')
   },
   onPointerMove({ event }) {
-    console.log('hello')
+    // console.log('hello')
   }
 };

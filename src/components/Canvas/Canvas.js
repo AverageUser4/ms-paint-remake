@@ -13,7 +13,7 @@ import { useContextMenuContext } from "../../context/ContextMenuContext";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useWindowsContext } from "../../context/WindowsContext";
 import { RGBObjectToString, doGetGridData } from "../../misc/utils";
-import { MAX_CANVAS_SIZE } from "../../misc/data";
+import { MAX_CANVAS_SIZE, cursorData } from "../../misc/data";
 
 function Canvas() {
   const { 
@@ -96,8 +96,11 @@ function Canvas() {
       ></canvas>
 
       <canvas
-        style={canvasStyle}
-        className={`${css['canvas']} ${css[`canvas--cursor-${currentToolData.cursor}`]}`}
+        style={{ 
+          ...canvasStyle,
+          cursor: cursorData?.[currentToolData?.cursor]?.[canvasZoom] || cursorData?.[currentToolData?.cursor]?.default
+        }}
+        className={`${css['canvas']}`}
         width={canvasSize.width}
         height={canvasSize.height}
         onPointerMove={(event) => {
