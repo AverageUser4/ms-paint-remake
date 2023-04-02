@@ -20,15 +20,23 @@ import cut16 from '../../assets/global/cut-16.png';
 const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
   const { doSelectionBrowseFile, doSelectionPasteFromClipboard, doSharedCut, doSharedCopy } = useSelectionContext();
   
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
+
+  const [isPasteDropdownOpen, setIsPasteDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick(dropdownRef, () => isPasteDropdownOpen && setIsPasteDropdownOpen(false));
 
   const isOnlyContent = ribbonWidth >= 855;
   const isShowText = ribbonWidth < 855 || ribbonWidth >= 1025; 
 
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={clipboard16} name="Clipboard">
+    <RibbonItemContainer 
+      isOnlyContent={isOnlyContent}
+      iconSrc={clipboard16}
+      name="Clipboard"
+      isDropdownOpen={isContainerDropdownOpen}
+      setIsDropdownOpen={setIsContainerDropdownOpen}
+    >
       <RibbonItemExpanded name="Clipboard">
 
           <div 
@@ -38,10 +46,13 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
             <BigButtonDuo 
               iconSrc={clipboard32} 
               name="Paste"
-              isShowChildren={isDropdownOpen}
-              setIsShowChildren={setIsDropdownOpen}
-              onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-              onClickTop={() => doSelectionPasteFromClipboard()}
+              isShowChildren={isPasteDropdownOpen}
+              setIsShowChildren={setIsPasteDropdownOpen}
+              onClickBottom={(e) => e.button === 0 && toggleBoolState(isPasteDropdownOpen, setIsPasteDropdownOpen)}
+              onClickTop={() => {
+                doSelectionPasteFromClipboard();
+                setIsContainerDropdownOpen(false);
+              }}
               ariaDescribedByTop="id-clipboard-bbd-top"
               tooltipElementTop={
                 <Tooltip
@@ -69,7 +80,8 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionPasteFromClipboard();
-                      setIsDropdownOpen(false);
+                      setIsPasteDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-clipboard-paste"
                   >
@@ -86,7 +98,8 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionBrowseFile();
-                      setIsDropdownOpen(false);
+                      setIsPasteDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-clipboard-paste-from"
                   >
@@ -106,7 +119,8 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                 className="tooltip-container button"
                 onClick={() => {
                   doSharedCut();
-                  setIsDropdownOpen(false);
+                  setIsPasteDropdownOpen(false);
+                  setIsContainerDropdownOpen(false);
                 }}
                 aria-describedby="id-clipboard-cut"
               >
@@ -123,7 +137,8 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
                 className="tooltip-container button"
                 onClick={() => {
                   doSharedCopy();
-                  setIsDropdownOpen(false);
+                  setIsPasteDropdownOpen(false);
+                  setIsContainerDropdownOpen(false);
                 }}
                 aria-describedby="id-clipboard-copy"
               >

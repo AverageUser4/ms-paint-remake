@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonTools.module.css';
 
@@ -18,12 +18,20 @@ import colorPicker16 from './assets/color-picker-16.png';
 import magnifier16 from './assets/magnifier-16.png';
 
 const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
+  const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
+
   const isOnlyContent = ribbonWidth >= 760;
   const { currentTool } = useToolContext();
   const { doSetCurrentTool } = useActionsContext();
 
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={tools16} name="Tools">
+    <RibbonItemContainer 
+      isOnlyContent={isOnlyContent}
+      iconSrc={tools16}
+      name="Tools"
+      isDropdownOpen={isContainerDropdownOpen}
+      setIsDropdownOpen={setIsContainerDropdownOpen}
+    >
       <RibbonItemExpanded name="Tools">
 
         <div 
@@ -34,6 +42,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
             className={`tooltip-container button ${currentTool === 'pencil' && 'button--active'}`}
             onClick={() => {
               doSetCurrentTool('pencil');
+              setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-pencil"
           >
@@ -49,6 +58,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
             className={`tooltip-container button ${currentTool === 'fill' && 'button--active'}`}
             onClick={() => {
               doSetCurrentTool('fill');
+              setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-fill"
           >
@@ -64,6 +74,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
             className={`tooltip-container button ${currentTool === 'text' && 'button--active'}`}
             onClick={() => {
               doSetCurrentTool('text');
+              setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-text"
           >
@@ -79,6 +90,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
             className={`tooltip-container button ${currentTool === 'eraser' && 'button--active'}`}
             onClick={() => {
               doSetCurrentTool('eraser');
+              setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-eraser"
           >
@@ -94,6 +106,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
             className={`tooltip-container button ${currentTool === 'color-picker' && 'button--active'}`}
             onClick={() => {
               doSetCurrentTool('color-picker');
+              setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-color-picker"
           >
@@ -109,6 +122,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
             className={`tooltip-container button ${currentTool === 'magnifier' && 'button--active'}`}
             onClick={() => {
               doSetCurrentTool('magnifier');
+              setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-magnifier"
           >

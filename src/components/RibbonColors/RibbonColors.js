@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonColors.module.css';
 
@@ -19,6 +19,7 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
   const { setIsColorsWindowOpen } = useWindowsContext();
   const { colorData, setColorData, ribbonColorsArray } = useColorContext();
   const { isBlackAndWhite } = useCanvasContext();
+  const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
   const isOnlyContent = ribbonWidth >= 725;
   
   const colorButtonsArray = [];
@@ -34,13 +35,24 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
           ${data && css['color--has-color']}
           ${isBlackAndWhite && css['color--black-and-white']}
         `}
-        onClick={() => data && setColorData(prev => ({ ...prev, [prev.selected]: data }))}
+        onClick={() => {
+          if(data) {
+            setColorData(prev => ({ ...prev, [prev.selected]: data }));
+            setIsContainerDropdownOpen(false);
+          }
+        }}
       ></button>
     );
   }
   
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={colors16} name="Colors">
+    <RibbonItemContainer 
+      isOnlyContent={isOnlyContent}
+      iconSrc={colors16}
+      name="Colors"
+      isDropdownOpen={isContainerDropdownOpen}
+      setIsDropdownOpen={setIsContainerDropdownOpen}
+    >
       <RibbonItemExpanded name="Colors">
 
           <div 
@@ -52,7 +64,12 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               name={<div>Color <div className="line-break"></div> 1</div>}
               strName="Color-1"
               isActive={colorData.selected === 'primary'}
-              onClick={() => colorData.selected !== 'primary' && setColorData(prev => ({ ...prev, selected: 'primary' }))}
+              onClick={() => {
+                if(colorData.selected !== 'primary') {
+                  setColorData(prev => ({ ...prev, selected: 'primary' }));
+                }
+                setIsContainerDropdownOpen(false);
+              }}
               ariaDescribedBy="id-colors-color-1"
               tooltipElement={
                 <Tooltip
@@ -69,7 +86,12 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               iconSize="small"
               strName="Color-2"
               isActive={colorData.selected === 'secondary'}
-              onClick={() => colorData.selected !== 'secondary' && setColorData(prev => ({ ...prev, selected: 'secondary' }))}
+              onClick={() => { 
+                if(colorData.selected !== 'secondary') {
+                  setColorData(prev => ({ ...prev, selected: 'secondary' }));
+                }
+                setIsContainerDropdownOpen(false);
+              }}
               ariaDescribedBy="id-colors-color-2"
               tooltipElement={
                 <Tooltip
@@ -92,7 +114,10 @@ const RibbonColors = memo(function RibbonColors({ ribbonWidth }) {
               iconSrc={colors32}
               name={<div>Edit <div className="line-break"></div> colors</div>}
               strName="Edit-colors"
-              onClick={() => setIsColorsWindowOpen(true)}
+              onClick={() => { 
+                setIsColorsWindowOpen(true);
+                setIsContainerDropdownOpen(false);
+              }}
               ariaDescribedBy="id-colors-edit-color"
               tooltipElement={
                 <Tooltip

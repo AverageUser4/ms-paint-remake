@@ -4,11 +4,14 @@ import css from './Rulers.module.css';
 
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
+import { useMainWindowContext } from "../../context/MainWindowContext";
 
 const Rulers = memo(function Rulers({ containerRef }) {
   const [forceRender, setForceRender] = useState(true);
   const { canvasZoom, canvasSize } = useCanvasContext();
   const { canvasMousePosition } = useCanvasMiscContext();
+  // called to cause rerender
+  useMainWindowContext();
   
   let fullStep = 125;
   if(canvasZoom >= 0.5) { fullStep = 100; }

@@ -48,10 +48,12 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
       break;
   }
     
+  const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
+
   const dropdownContainerRef = useRef();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isSelectionDropdownOpen, setIsSelectionDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick(dropdownRef, () => isSelectionDropdownOpen && setIsSelectionDropdownOpen(false));
 
   const [isRotateDropdownOpen, setIsRotateDropdownOpen] = useState(false);
   const rotateDropdownRef = useRef();
@@ -61,7 +63,13 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   const isShowText = ribbonWidth < 840 || ribbonWidth >= 1000;
   
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={image16} name="Image">
+    <RibbonItemContainer 
+      isOnlyContent={isOnlyContent}
+      iconSrc={image16}
+      name="Image"
+      isDropdownOpen={isContainerDropdownOpen}
+      setIsDropdownOpen={setIsContainerDropdownOpen}
+    >
       <RibbonItemExpanded name="Image">
 
           <div 
@@ -71,10 +79,15 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
             <BigButtonDuo 
               iconSrc={icon} 
               name="Select"
-              isShowChildren={isDropdownOpen}
-              setIsShowChildren={setIsDropdownOpen}
-              onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
-              onClickTop={() => !currentTool.startsWith('selection-') && doSetCurrentTool(latestTools.selection)}
+              isShowChildren={isSelectionDropdownOpen}
+              setIsShowChildren={setIsSelectionDropdownOpen}
+              onClickBottom={(e) => e.button === 0 && toggleBoolState(isSelectionDropdownOpen, setIsSelectionDropdownOpen)}
+              onClickTop={() => { 
+                if(!currentTool.startsWith('selection-')) {
+                  doSetCurrentTool(latestTools.selection);
+                }
+                setIsContainerDropdownOpen(false);
+              }}
               isActive={currentTool.startsWith('selection-')}
               ariaDescribedByTop="id-image-bbd-top"
               tooltipElementTop={
@@ -109,7 +122,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     `}
                     onClick={() => {
                       doSetCurrentTool('selection-rectangle');
-                      setIsDropdownOpen(false);
+                      setIsSelectionDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-image-rectangular-selection"
                   >
@@ -129,7 +143,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     `}
                     onClick={() => {
                       doSetCurrentTool('selection-free-form');
-                      setIsDropdownOpen(false);
+                      setIsSelectionDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-image-free-form-selection"
                   >
@@ -150,7 +165,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionSelectAll();
-                      setIsDropdownOpen(false);
+                      setIsSelectionDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-image-select-all"
                   >
@@ -168,7 +184,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionInvertSelection();
-                      setIsDropdownOpen(false);
+                      setIsSelectionDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-image-invert"
                   >
@@ -184,7 +201,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedDelete();
-                      setIsDropdownOpen(false);
+                      setIsSelectionDropdownOpen(false);
+                      setIsContainerDropdownOpen(false);
                     }}
                     aria-describedby="id-image-delete"
                   >
@@ -206,7 +224,8 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       checked={isSelectionTransparent}
                       onChange={() => { 
                         setIsSelectionTransparent(prev => !prev); 
-                        setIsDropdownOpen(false);
+                        setIsSelectionDropdownOpen(false);
+                        setIsContainerDropdownOpen(false);
                       }}
                       aria-describedby="id-image-transparent"
                     />
@@ -223,7 +242,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
             <div data-cy="Image-buttons">
               <button 
                 className="tooltip-container button"
-                onClick={() => doSelectionCrop()}
+                onClick={() => { 
+                  doSelectionCrop(); 
+                  setIsContainerDropdownOpen(false);
+                }}
                 disabled={selectionPhase !== 2}
                 aria-describedby="id-image-crop"
               >
@@ -238,7 +260,10 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
 
               <button 
                 className="tooltip-container button"
-                onClick={() => setIsResizeWindowOpen(true)}
+                onClick={() => { 
+                  setIsResizeWindowOpen(true);
+                  setIsContainerDropdownOpen(false);
+                }}
                 data-cy="Image-open-ResizeWindow"
                 aria-describedby="id-image-resize"
               >
@@ -285,6 +310,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                         onClick={() => {
                           doSharedRotate(90);
                           setIsRotateDropdownOpen(false);
+                          setIsContainerDropdownOpen(false);
                         }}
                       >
                         <img draggable="false" className="popup__image" src={rotate16} alt=""/>
@@ -301,6 +327,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                         onClick={() => {
                           doSharedRotate(-90);
                           setIsRotateDropdownOpen(false);
+                          setIsContainerDropdownOpen(false);
                         }}
                       >
                         <img draggable="false" className="popup__image" src={rotateLeft16} alt=""/>
@@ -317,6 +344,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                         onClick={() => {
                           doSharedRotate(180);
                           setIsRotateDropdownOpen(false);
+                          setIsContainerDropdownOpen(false);
                         }}
                       >
                         <img draggable="false" className="popup__image" src={rotate18016} alt=""/>
@@ -333,6 +361,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                         onClick={() => {
                           doSharedFlip('vertical');
                           setIsRotateDropdownOpen(false);
+                          setIsContainerDropdownOpen(false);
                         }}
                       >
                         <img draggable="false" className="popup__image" src={filpVertical16} alt=""/>
@@ -349,6 +378,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                         onClick={() => {
                           doSharedFlip('horizontal');
                           setIsRotateDropdownOpen(false);
+                          setIsContainerDropdownOpen(false);
                         }}
                       >
                         <img draggable="false" className="popup__image" src={filpHorizontal16} alt=""/>

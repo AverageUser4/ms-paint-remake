@@ -1,7 +1,8 @@
 GOING TO:
   - investigate z-index
   - investigate font-family
-  - when going into full screen window mode, rulers dont adjust size until render is caused by eg. moving mouse over canvas
+  - changes to code can cause primaryCanvas to lose it's background color and become transparent, it does not seem that there is user action
+    that can cause that but it may need to be investigated
   - brushCanvas is just another canvas that is unnecessarily big, causing lag when canvasSize is big, probably small canvas that moves would be a better solution
 
 DONE:

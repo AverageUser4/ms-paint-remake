@@ -58,9 +58,14 @@ export const cursorData = {
     '8': `url(${cursorPencil}) 0 10, default`,
   },
   fill: {
-    default: `url(${cursorFill}) 4 12, default`,
-    '7': `url(${cursorFill}) 4 11, default`,
-    '8': `url(${cursorFill}) 1 11, default`,
+    default: `url(${cursorFill}) 5 12, default`,
+    '2': `url(${cursorFill}) 4 11, default`,
+    '3': `url(${cursorFill}) 4 11, default`,
+    '4': `url(${cursorFill}) 3 10, default`,
+    '5': `url(${cursorFill}) 3 10, default`,
+    '6': `url(${cursorFill}) 2 9, default`,
+    '7': `url(${cursorFill}) 2 9, default`,
+    '8': `url(${cursorFill}) 1 8, default`,
   },
   'color-picker': {
     default: `url(${cursorColorPicker}) 4 14, default`,

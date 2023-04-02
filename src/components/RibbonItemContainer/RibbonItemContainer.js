@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from 'prop-types';
 import css from './RibbonItemContainer.module.css';
 
@@ -10,24 +10,24 @@ import { useMainWindowContext } from "../../context/MainWindowContext";
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 import Tooltip from "../Tooltip/Tooltip";
 
-function RibbonItemContainer({ iconSrc, name, children, isOnlyContent }) {
+function RibbonItemContainer({ isDropdownOpen, setIsDropdownOpen, iconSrc, name, children, isOnlyContent }) {
   const { isMainWindowFocused } = useMainWindowContext();
   const containerRef = useRef();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   useOutsideClick(containerRef, () => isDropdownOpen && setIsDropdownOpen(false));
 
   useEffect(() => {
     if(isDropdownOpen && isOnlyContent)
       setIsDropdownOpen(false);
-  }, [isDropdownOpen, isOnlyContent]);
+  }, [isDropdownOpen, isOnlyContent, setIsDropdownOpen]);
 
   useEffect(() => {
     if(isDropdownOpen && !isMainWindowFocused)
       setIsDropdownOpen(false);
-  }, [isDropdownOpen, isMainWindowFocused]);
+  }, [isDropdownOpen, isMainWindowFocused, setIsDropdownOpen]);
 
-  if(isOnlyContent)
+  if(isOnlyContent) {
     return children;
+  }
   
   return (
     <div 
@@ -73,6 +73,8 @@ RibbonItemContainer.propTypes = {
   iconSrc: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   isOnlyContent: PropTypes.bool.isRequired,
+  isDropdownOpen: PropTypes.bool.isRequired,
+  setIsDropdownOpen: PropTypes.func.isRequired,
 };
 
 export default RibbonItemContainer;

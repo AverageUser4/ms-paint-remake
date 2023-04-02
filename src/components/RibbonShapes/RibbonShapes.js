@@ -26,6 +26,8 @@ import solidColor16 from './assets/solid-color-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
+  const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
+
   const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);
   const fillDropdownRef = useRef();
   const fillDropdownContainerRef = useRef();
@@ -46,7 +48,13 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
   const isBigButtonHidden = ribbonWidth < 800 || ribbonWidth >= 950;
 
   return (
-    <RibbonItemContainer isOnlyContent={isOnlyContent} iconSrc={shapes16} name="Shapes">
+    <RibbonItemContainer 
+      isOnlyContent={isOnlyContent}
+      iconSrc={shapes16}
+      name="Shapes"
+      isDropdownOpen={isContainerDropdownOpen}
+      setIsDropdownOpen={setIsContainerDropdownOpen}
+    >
       <RibbonItemExpanded name="Shapes">
 
         <div 

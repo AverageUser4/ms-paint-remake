@@ -113,6 +113,7 @@ function useRectangularSelection() {
         resizeData.initialY === event.clientY
       ) {
       doSelectionEnd();
+      setResizeData(null);
       return;
     }
     
