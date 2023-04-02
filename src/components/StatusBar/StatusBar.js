@@ -44,7 +44,7 @@ const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }
           <img draggable="false" src={cursor16} alt="Canvas position."/>
           {
             canvasMousePosition && !canvasOutlineSize &&
-              <span className="text">{Math.round(canvasMousePosition.x / canvasZoom)}, {Math.round(canvasMousePosition.y)}px</span>
+              <span className="text">{Math.round(canvasMousePosition.x / canvasZoom)}, {Math.round(canvasMousePosition.y / canvasZoom)}px</span>
           }
         </div>
         

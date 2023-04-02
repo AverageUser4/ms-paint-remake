@@ -160,20 +160,20 @@
   .point-right,
   .point-top,
   .point-left {
+    --used-size: var(--resizer-size);
+
     display: flex;
   
     position: absolute;
   
-    width: var(--resizer-size);
-    height: var(--resizer-size);
+    width: var(--used-size);
+    height: var(--used-size);
   }
 
   .point-small {
+    --used-size: calc(var(--resizer-size) / 1.7);
     --resizer-short: calc(20px / 1.7);
     --resizer-long: calc(40px / 1.7);
-
-    width: calc(var(--resizer-size) / 1.7);
-    height: calc(var(--resizer-size) / 1.7);
   }
   
   /* .point-bottom,
@@ -218,7 +218,7 @@
     justify-content: center;
   
     bottom: 100%;
-    left: calc(50% - var(--resizer-size) / 2);
+    left: calc(50% - var(--used-size) / 2);
   }
   .point-top:hover {
     cursor: ns-resize;
@@ -232,7 +232,7 @@
     justify-content: center;
     
     top: 100%;
-    left: calc(50% - var(--resizer-size) / 2);
+    left: calc(50% - var(--used-size) / 2);
   }
   .point-bottom:hover {
     cursor: ns-resize;
@@ -245,7 +245,7 @@
     align-items: center;
     justify-content: flex-start;
     
-    top: calc(50% - var(--resizer-size) / 2);
+    top: calc(50% - var(--used-size) / 2);
     left: 100%;
   }
   .point-right:hover {
@@ -259,7 +259,7 @@
     align-items: center;
     justify-content: flex-end;
     
-    top: calc(50% - var(--resizer-size) / 2);
+    top: calc(50% - var(--used-size) / 2);
     right: 100%;
   }
   .point-left:hover {
@@ -313,7 +313,7 @@
   }
   .point-top-right::after {
     position: absolute;
-    top: 15px;
+    top: 7px;
     left: var(--resizer-short);
   }
   .point-top-right::before {

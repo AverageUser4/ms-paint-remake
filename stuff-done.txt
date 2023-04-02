@@ -3,10 +3,6 @@ GOING TO:
   - investigate font-family
   - when going into full screen window mode, rulers dont adjust size until render is caused by eg. moving mouse over canvas
   - resizing selection in left / top directions looks weird
-  - top right corner of selection shows resize indicator in wrong place
-  - adjust cursor centers (used in variables.css), as theses should be slightly different depending on canvasZoom
   - useResizeCursor seems to be completly broken
-  - inappropriate mouse position is shown when canvas is zoomed
 
 DONE:
-

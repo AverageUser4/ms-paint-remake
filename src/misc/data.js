@@ -41,6 +41,9 @@ export const zoomData = [
 ];
 
 export const cursorData = {
+  none: {
+    default: 'none'
+  },
   draw: {
     default: `url(${cursorDraw}) 9 9, default`,
   },
@@ -60,26 +63,26 @@ export const cursorData = {
     '8': `url(${cursorFill}) 1 11, default`,
   },
   'color-picker': {
-    '0.125': `url(${cursorColorPicker}) 0 14, default`,
-    '0.25': `url(${cursorColorPicker}) 0 14, default`,
-    '0.5': `url(${cursorColorPicker}) 0 14, default`,
-    '1': `url(${cursorColorPicker}) 0 14, default`,
-    '2': `url(${cursorColorPicker}) 0 14, default`,
-    '3': `url(${cursorColorPicker}) 0 14, default`,
-    '4': `url(${cursorColorPicker}) 0 14, default`,
-    '5': `url(${cursorColorPicker}) 0 14, default`,
-    '6': `url(${cursorColorPicker}) 0 14, default`,
-    '7': `url(${cursorColorPicker}) 0 14, default`,
-    '8': `url(${cursorColorPicker}) 0 14, default`,
+    default: `url(${cursorColorPicker}) 4 14, default`,
+    '1': `url(${cursorColorPicker}) 3 14, default`,
+    '2': `url(${cursorColorPicker}) 2 13, default`,
+    '3': `url(${cursorColorPicker}) 2 13, default`,
+    '4': `url(${cursorColorPicker}) 1 12, default`,
+    '5': `url(${cursorColorPicker}) 1 12, default`,
+    '6': `url(${cursorColorPicker}) 0 10, default`,
+    '7': `url(${cursorColorPicker}) 0 10, default`,
+    '8': `url(${cursorColorPicker}) 0 10, default`,
+  },
+  'selection': {
+    default: `url(${cursorSelection}) 10 10, default`,
+  },
+  'airbrush': {
+    default: `url(${cursorAirbrush}) 0 12, default`,
+  },
+  'text': {
+    default: `url(${cursorText}) 3 9, default`,
+  },
+  'magnifier': {
+    default: `url(${cursorMagnifier}) 5 5, default`,
   },
 };
-
-// cursor: none for eraser
-// --cursor-draw: url(../assets/cursors/draw.png) 9 9, default;
-// --cursor-pencil: url(../assets/cursors/pencil.png) 1 14, default;
-// --cursor-fill: url(../assets/cursors/fill.png) 1 12, default;
-// --cursor-color-picker: url(../assets/cursors/picker.png) 0 14, default;
-// --cursor-selection: url(../assets/cursors/select.png) 10 10, default;
-// --cursor-airbrush: url(../assets/cursors/spray.png) 0 12, default;
-// --cursor-text: url(../assets/cursors/text.png) 3 9, default;
-// --cursor-magnifier: url(../assets/cursors/zoom.png) 5 5, default;
