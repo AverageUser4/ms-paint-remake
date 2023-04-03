@@ -18,6 +18,7 @@ import Oilbrush from '../misc/tools/Oilbrush';
 import Watercolor from '../misc/tools/Watercolor';
 import RectangularSelection from '../misc/tools/RectangularSelection';
 import FreeFormSelection from '../misc/tools/FreeFormSelection';
+import ShapeSelection from '../misc/tools/ShapeSelection';
 
 const ToolContext = createContext();
 
@@ -42,9 +43,10 @@ function ToolProvider({ children }) {
     ['brushes-watercolor', Watercolor],
     /* selection */
     ['selection-rectangle', RectangularSelection],
-    ['selection-free-form', FreeFormSelection]
+    ['selection-free-form', FreeFormSelection],
+    ['selection-shape', ShapeSelection],
   ]));
-  const [currentTool, setCurrentTool] = useState('pencil');
+  const [currentTool, setCurrentTool] = useState('selection-shape');
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'

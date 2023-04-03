@@ -16,8 +16,7 @@ function GlobalShortcuts({ ribbonData }) {
   // https://www.guidingtech.com/15171/ms-microsoft-paint-keyboard-shortcuts/
   const { isMainWindowFocused } = useMainWindowContext();
   const { 
-    doSelectionSelectAll, doSharedCopy, doSharedCut,
-    doSelectionPasteFromClipboard, doSharedDelete,
+    doSelectionSelectAll, doSelectionPasteFromClipboard,
     doSelectionDrawToPrimary, doSelectionEnd, selectionPhase,
   } = useSelectionContext();
   const { doHistoryGoBack, doHistoryGoForward } = useHistoryContext();
@@ -26,7 +25,8 @@ function GlobalShortcuts({ ribbonData }) {
     setIsResizeWindowOpen,
   } = useWindowsContext();
   const {
-    doStartNewProject, doOpenNewFile, doSaveFile, doCanvasChangeZoom
+    doStartNewProject, doOpenNewFile, doSaveFile, doCanvasChangeZoom,
+    doSharedCopy, doSharedCut, doSharedDelete
   } = useActionsContext();
   const { 
     setIsFullScreenView, canvasZoom, secondaryRef,

@@ -9,6 +9,7 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSelectionContext } from "../../context/SelectionContext";
+import { useActionsContext } from "../../context/ActionsContext";
 import { toggleBoolState } from "../../misc/utils";
 
 import clipboard32 from './assets/clipboard-32.png';
@@ -18,7 +19,8 @@ import copy16 from '../../assets/global/copy-16.png';
 import cut16 from '../../assets/global/cut-16.png';
 
 const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
-  const { doSelectionBrowseFile, doSelectionPasteFromClipboard, doSharedCut, doSharedCopy } = useSelectionContext();
+  const { doSelectionBrowseFile, doSelectionPasteFromClipboard } = useSelectionContext();
+  const { doSharedCut, doSharedCopy } = useActionsContext();
   
   const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
 

@@ -7,7 +7,7 @@ import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
 import { useColorContext } from './ColorContext';
-import { doGetCanvasCopy, writeCanvasToClipboard, ImageDataUtils, degreesToRadians } from '../misc/utils';
+import { doGetCanvasCopy, ImageDataUtils } from '../misc/utils';
 
 const SelectionContext = createContext();
 
@@ -15,7 +15,6 @@ function SelectionProvider({ children }) {
   const { 
     setCanvasSize, canvasZoom, canvasSize,
     primaryRef, doCanvasClearPrimary, doGetEveryContext,
-    lastPrimaryStateRef,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
   const { setCurrentTool } = useToolContext();
@@ -264,25 +263,6 @@ function SelectionProvider({ children }) {
       })
       .catch(error => console.error(error));
   }
-
-  function doSharedCut() {
-    if(selectionPhase === 2) {
-      writeCanvasToClipboard(selectionRef.current);
-      doSelectionEnd();
-    } else {
-      writeCanvasToClipboard(primaryRef.current);
-      doCanvasClearPrimary();
-      doHistoryAdd({ element: primaryRef.current, ...canvasSize });
-    }
-  }
-
-  function doSharedCopy() {
-    if(selectionPhase === 2) {
-      writeCanvasToClipboard(selectionRef.current);
-    } else {
-      writeCanvasToClipboard(primaryRef.current);
-    }
-  }
   
   function doSelectionSelectAll() {
     if(selectionPhase === 2) {
@@ -355,181 +335,11 @@ function SelectionProvider({ children }) {
     }, 20);
   }
 
-  function doSharedDelete() {
-    if(selectionPhase === 2) {
-      doSelectionEnd();
-    } else {
-      doCanvasClearPrimary();
-      doHistoryAdd({ element: primaryRef.current, ...canvasSize });
-    }
-  }
-
   function doSelectionGetEveryContext() {
     return {
       selectionContext: selectionRef.current?.getContext('2d'),
       thumbnailSelectionContext: thumbnailSelectionRef.current?.getContext('2d'),
     };
-  }
-
-  function doSharedRotate(degree) {
-    if(degree !== 180 && degree !== 90 && degree !== -90) {
-      console.error(`de_Unexpected degree: "${degree}".`);
-    }
-
-    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
-    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
-
-    let usedRef = primaryRef;
-    let usedContext = primaryContext;
-    let usedThumbnailContext = thumbnailPrimaryContext;
-    let usedSize = canvasSize;
-    let usedSetSize = setCanvasSize;
-    let usedLastStateRef = lastPrimaryStateRef;
-    let usedCopy = doGetCanvasCopy(primaryRef.current);
-    let usedClear = doCanvasClearPrimary;
-    let offset = 0;
-
-    if(selectionPhase === 2) {
-      usedRef = selectionRef;
-      usedContext = selectionContext;
-      usedThumbnailContext = thumbnailSelectionContext;
-      usedSize = selectionSize;
-      usedSetSize = doSelectionSetSize;
-      usedLastStateRef = lastSelectionStateRef;
-      usedCopy = doGetCanvasCopy(selectionRef.current);
-      usedClear = doSelectionClear;
-    }
-
-    if(degree === 90 || degree === -90) {
-      usedSetSize({ width: usedSize.height, height: usedSize.width });
-      offset = (usedSize.width - usedSize.height) / 2;
-      if(degree < 0) {
-        offset *= -1;
-      }
-      usedLastStateRef.current = null;
-    }
-
-    usedClear();
-
-    setTimeout(() => {
-      function rotateAndDraw(context, isThumbnail) {
-        context.save();
-        if(selectionPhase === 2 && isThumbnail) {
-          context.scale(1 / canvasZoom, 1 / canvasZoom);
-        }
-        context.translate(usedSize.width / 2, usedSize.height / 2);
-        context.rotate(degreesToRadians(degree));
-        context.translate(-usedSize.width / 2, -usedSize.height / 2);
-        context.drawImage(usedCopy, offset, offset);
-        context.restore();
-      }
-
-      rotateAndDraw(usedContext);
-      usedThumbnailContext && rotateAndDraw(usedThumbnailContext, true);
-      usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
-
-      if(selectionPhase !== 2) {
-        doHistoryAdd({ 
-          element: primaryRef.current,
-          width: primaryRef.current.width,
-          height: primaryRef.current.height,
-        });
-      }
-    }, 20);
-  }
-
-  function doSharedFlip(direction) {
-    if(direction !== 'horizontal' && direction !== 'vertical') {
-      console.error(`Unexpected direction: "${direction}".`);
-    }
-
-    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
-    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
-
-    let usedRef = primaryRef;
-    let usedContext = primaryContext;
-    let usedThumbnailContext = thumbnailPrimaryContext;
-    let usedSize = canvasSize;
-    let usedLastStateRef = lastPrimaryStateRef;
-    let usedClear = doCanvasClearPrimary;
-    let usedCopy = doGetCanvasCopy(primaryRef.current);
-
-    if(selectionPhase === 2) {
-      usedRef = selectionRef;
-      usedContext = selectionContext;
-      usedThumbnailContext = thumbnailSelectionContext;
-      usedSize = selectionSize;
-      usedLastStateRef = lastSelectionStateRef;
-      usedClear = doSelectionClear;
-      usedCopy = doGetCanvasCopy(selectionRef.current);
-    }
-
-    usedClear();
-
-    function flipAndDraw(context, isThumbnail) {
-      context.save();
-      context.scale(direction === 'horizontal' ? -1 : 1, direction === 'vertical' ? -1 : 1);
-      if(selectionPhase === 2 && isThumbnail) {
-        context.scale(1 / canvasZoom, 1 / canvasZoom);
-      }
-      context.drawImage(
-        usedCopy, 
-        direction === 'horizontal' ? -usedSize.width : 0,
-        direction === 'vertical' ? -usedSize.height : 0
-      );
-      context.restore();
-    }
-
-    flipAndDraw(usedContext);
-    usedThumbnailContext && flipAndDraw(usedThumbnailContext, true);
-    usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
-
-    if(selectionPhase !== 2) {
-      doHistoryAdd({ 
-        element: primaryRef.current,
-        width: primaryRef.current.width,
-        height: primaryRef.current.height,
-      });
-    }
-  }
-
-  function doSharedInvertColor() {
-    let usedImageData;
-    const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
-    const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
-
-    if(selectionPhase === 2) {
-      usedImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
-    } else {
-      usedImageData = primaryContext.getImageData(0, 0, canvasSize.width, canvasSize.height);
-    }
-
-    for(let y = 0; y < usedImageData.height; y++) {
-      for(let x = 0; x < usedImageData.width; x++) {
-        const color = ImageDataUtils.getColorFromCoords(usedImageData, x, y);
-        if(color.a > 0) {
-          ImageDataUtils.setColorAtCoords(usedImageData, x, y, { 
-            r: 255 - color.r, g: 255 - color.g, b: 255 - color.b, a: color.a
-          });
-        }
-      }
-    }
-
-    if(selectionPhase === 2) {
-      // this is different than doSelectionDrawToSelection
-      selectionContext.putImageData(usedImageData, 0, 0);
-      if(thumbnailSelectionContext) {
-        thumbnailSelectionContext.save();
-        thumbnailSelectionContext.scale(1 / canvasZoom, 1 / canvasZoom);
-        thumbnailSelectionContext.drawImage(selectionRef.current, 0, 0);
-        thumbnailSelectionContext.restore();
-      }
-      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-    } else {
-      primaryContext.putImageData(usedImageData, 0, 0);
-      thumbnailPrimaryContext?.putImageData(usedImageData, 0, 0);
-      doHistoryAdd({ element: primaryRef.current, ...canvasSize });
-    }
   }
   
   return (
@@ -554,16 +364,11 @@ function SelectionProvider({ children }) {
         doSelectionDrawToSelection,
         doSelectionCrop,
         doSelectionResize,
-        doSharedCut,
-        doSharedCopy,
         doSelectionSelectAll,
         doSelectionInvertSelection,
-        doSharedDelete,
         doSelectionEnd,
         doSelectionGetEveryContext,
-        doSharedRotate,
-        doSharedFlip,
-        doSharedInvertColor,
+        doSelectionClear,
       }}
     >
       <ImageInput

@@ -34,11 +34,13 @@ import { ReactComponent as TriangleDown } from '../../assets/global/triangle-dow
 const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   const { 
     doSelectionCrop, selectionPhase, doSelectionSelectAll,
-    doSelectionInvertSelection, doSharedDelete, doSharedRotate,
-    doSharedFlip, isSelectionTransparent, setIsSelectionTransparent,
+    doSelectionInvertSelection, isSelectionTransparent, setIsSelectionTransparent,
   } = useSelectionContext();
   const { currentTool, latestTools } = useToolContext();
-  const { doSetCurrentTool } = useActionsContext();
+  const { 
+    doSetCurrentTool, doSharedDelete, doSharedRotate,
+    doSharedFlip
+  } = useActionsContext();
   const { setIsResizeWindowOpen } = useWindowsContext();
   let icon = image32;
   

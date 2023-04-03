@@ -2,6 +2,7 @@ import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
+import useShapeSelection from './useShapeSelection';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 
@@ -21,6 +22,7 @@ function useSelection() {
 
   const { onPointerDownRectangularSelection } = useRectangularSelection();
   const { onPointerDownFreeFormSelection } = useFreeFormSelection();
+  const { onPointerDownShapeSelection } = useShapeSelection();
   
   function onPressEndCallbackResize() {
     if(selectionOutlineSize) {
@@ -79,6 +81,7 @@ function useSelection() {
     onPointerDownSelectionMove,
     onPointerDownRectangularSelection,
     onPointerDownFreeFormSelection,
+    onPointerDownShapeSelection,
   }
 }
 

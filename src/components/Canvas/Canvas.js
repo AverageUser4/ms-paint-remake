@@ -45,7 +45,7 @@ function Canvas() {
 
   const { 
     selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
-    onPointerDownRectangularSelection, onPointerDownFreeFormSelection
+    onPointerDownRectangularSelection, onPointerDownFreeFormSelection, onPointerDownShapeSelection
   } = useSelection();
 
   let onPointerDownSecondary = onPointerDownBrush;
@@ -53,6 +53,8 @@ function Canvas() {
     onPointerDownSecondary = onPointerDownRectangularSelection;
   } else if(currentTool === 'selection-free-form') {
     onPointerDownSecondary = onPointerDownFreeFormSelection;
+  } else if(currentTool === 'selection-shape') {
+    onPointerDownSecondary = onPointerDownShapeSelection;
   }
 
   const { 
@@ -143,6 +145,7 @@ function Canvas() {
             }}
           >
             <canvas
+              id="pxp-selection-canvas"
               width={selectionSize.width}
               height={selectionSize.height}
               style={{ 

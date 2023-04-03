@@ -5,3 +5,4 @@ GOING TO:
     that can cause that but it may need to be investigated
 
 DONE:
+  - moved doShared* functions from SelectionContext to ActionsContext

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-
 import useResizeCursor from './useResizeCursor';
 import usePointerTrack from './usePointerTrack';
 import { checkArgs } from "../misc/utils";

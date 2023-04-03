@@ -5,6 +5,7 @@ import useOutsideClick from '../../hooks/useOutsideClick';
 import { useContextMenuContext } from '../../context/ContextMenuContext';
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useSelectionContext } from '../../context/SelectionContext';
+import { useActionsContext } from '../../context/ActionsContext';
 
 import close from './assets/close.png';
 import minimize from './assets/minimize.png';
@@ -30,10 +31,13 @@ const ContextMenu = memo(function ContextMenu() {
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
   const { 
-    doSelectionPasteFromClipboard, doSelectionCrop, doSharedCut, doSharedCopy,
-    doSelectionSelectAll, doSelectionInvertSelection, doSharedDelete,
-    doSharedRotate, doSharedFlip, doSharedInvertColor
+    doSelectionPasteFromClipboard, doSelectionCrop,
+    doSelectionSelectAll, doSelectionInvertSelection,
   } = useSelectionContext();
+  const {
+    doSharedCut, doSharedCopy, doSharedDelete,
+    doSharedRotate, doSharedFlip, doSharedInvertColor
+  } = useActionsContext();
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
   
