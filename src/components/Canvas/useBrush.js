@@ -11,7 +11,7 @@ function useBrush() {
   const { 
     primaryRef, secondaryRef, doCanvasDrawImageToPrimary,
     doCanvasClearSecondary, canvasZoom, canvasSize,
-    lastPointerPositionRef, doGetEveryContext, brushCanvasRef,
+    lastPointerPositionRef, doGetEveryContext,
   } = useCanvasContext();
   const { canvasMousePosition, canvasOutlineSize } = useCanvasMiscContext();
   const { currentTool, currentToolData } = useToolContext();
@@ -57,7 +57,7 @@ function useBrush() {
     lastPointerPositionRef.current = { x: destinationPixel.x, y: destinationPixel.y };
 
     if(currentToolData.doDrawIcon) {
-      const brushContext = brushCanvasRef.current.getContext('2d');
+      const { brushContext } = doGetEveryContext();
       brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
   
       if(canvasMousePosition && !canvasOutlineSize) {

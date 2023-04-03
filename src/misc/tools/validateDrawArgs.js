@@ -35,30 +35,30 @@ export default function validateDrawArgs({
   }
   
   if(is('primaryContext') && !(primaryContext instanceof CanvasRenderingContext2D)) {
-    console.error(`"primaryContext" argument has to be an instance of CanvasRenderingContext2D, provided: "${secondaryContext}".`);
+    console.error(`"primaryContext" argument has to be an instance of CanvasRenderingContext2D, provided:`, secondaryContext);
   }
   if(is('secondaryContext') && !(secondaryContext instanceof CanvasRenderingContext2D)) {
-    console.error(`"secondaryContext" argument has to be an instance of CanvasRenderingContext2D, provided: "${secondaryContext}".`);
+    console.error(`"secondaryContext" argument has to be an instance of CanvasRenderingContext2D, provided:`, secondaryContext);
   }
   if(is('brushContext') && !(brushContext instanceof CanvasRenderingContext2D)) {
-    console.error(`"brushContext" argument has to be an instance of CanvasRenderingContext2D, provided: "${brushContext}".`);
+    console.error(`"brushContext" argument has to be an instance of CanvasRenderingContext2D, provided:`, brushContext);
   }
   if(is('currentPixel') && (typeof currentPixel !== 'object' || !Number.isInteger(currentPixel?.x) || !Number.isInteger(currentPixel?.y))) {
-    console.error(`"currentPixel" argument has to be an object containing properties "x" (integer) and "y" (integer), provided: "${currentPixel}".`);
+    console.error(`"currentPixel" argument has to be an object containing properties "x" (integer) and "y" (integer), provided:`, currentPixel);
   }
   if(is('currentlyPressedRef') && (typeof currentlyPressedRef !== 'object' || !Number.isInteger(currentlyPressedRef.current))) {
-    console.error(`"currentlyPressedRef" argument has to be an object with "current" property (integer), provided: "${currentlyPressedRef}".`);
+    console.error(`"currentlyPressedRef" argument has to be an object with "current" property (integer), provided:`, currentlyPressedRef);
   }
   if(is('color') && (typeof color !== 'object')) {
-    console.error(`"color" argument has to be an object, provided: "${color}".`);
+    console.error(`"color" argument has to be an object, provided:`, color);
   }
   if(is('isRepeated') && (typeof isRepeated !== 'boolean')) {
-    console.error(`"isRepeated" argument has to be a boolean value, provided: "${isRepeated}".`);
+    console.error(`"isRepeated" argument has to be a boolean value, provided:`, isRepeated);
   }
   if(is('primaryImageData') && (!(primaryImageData instanceof ImageData))) {
-    console.error(`"primaryImageData" argument has to be an instance of ImageData, provided: "${primaryImageData}".`);
+    console.error(`"primaryImageData" argument has to be an instance of ImageData, provided:`, primaryImageData);
   }
   if(is('canvasZoom') && typeof canvasZoom !== 'number') {
-    console.error(`"canvasZoom" argument has to be a number, provided: "${canvasZoom}".`);
+    console.error(`"canvasZoom" argument has to be a number, provided:`, canvasZoom);
   }
 }

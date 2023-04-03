@@ -1,9 +1,9 @@
 export function toggleBoolState(isOn, setIsOn) {
   if(typeof isOn !== 'boolean') {
-    console.error(`First argument of this function should be a boolean value, provided: "${isOn}".`);
+    console.error(`First argument of this function should be a boolean value, provided:`, isOn);
   }
   if(typeof setIsOn !== 'function') {
-    console.error(`Second argument of this function should be a function, provided: "${setIsOn}".`);
+    console.error(`Second argument of this function should be a function, provided:`, setIsOn);
   }
 
   if(isOn) {
@@ -16,11 +16,11 @@ export function toggleBoolState(isOn, setIsOn) {
 
 export function HSLtoRGB({ h, s, l }) {
   if(typeof h !== 'number' || h < 0 || h > 359)
-    console.error(`Incorrect "h" provided, expected number between 0 and 359, received: "${h}".`);
+    console.error(`Incorrect "h" provided, expected number between 0 and 359, received:`, h);
   if(!Number.isInteger(s) || s < 0 || s > 100)      
-    console.error(`Incorrect "s" provided, expected integer between 0 and 100, received: "${s}".`);
+    console.error(`Incorrect "s" provided, expected integer between 0 and 100, received:`, s);
   if(!Number.isInteger(l) || l < 0 || l > 100)
-    console.error(`Incorrect "l" provided, expected integer between 0 and 100, received: "${l}".`);
+    console.error(`Incorrect "l" provided, expected integer between 0 and 100, received:`, l);
      
   /* https://www.30secondsofcode.org/js/s/hsl-to-rgb */
   s /= 100;
@@ -39,13 +39,13 @@ export function HSLtoRGB({ h, s, l }) {
 
 export function RGBtoHSL({ r, g, b }) {
   if(!Number.isInteger(r) || r < 0 || r > 255) {
-    console.error(`Incorrect "r" provided, expected integer between 0 and 255, received: "${r}".`);
+    console.error(`Incorrect "r" provided, expected integer between 0 and 255, received:`, r);
   }
   if(!Number.isInteger(g) || g < 0 || g > 255) {
-    console.error(`Incorrect "g" provided, expected integer between 0 and 255, received: "${g}".`);
+    console.error(`Incorrect "g" provided, expected integer between 0 and 255, received:`, g);
   }
   if(!Number.isInteger(b) || b < 0 || b > 255) {
-    console.error(`Incorrect "b" provided, expected integer between 0 and 255, received: "${b}".`);
+    console.error(`Incorrect "b" provided, expected integer between 0 and 255, received:`, b);
   }
 
   const $r = r / 255;
@@ -107,7 +107,7 @@ export function getWindowCenteredPosition(mainWindowPosition, mainWindowSize, in
 
 export function checkArgs(args) {
   if(!Array.isArray(args)) {
-    throw new Error(`This function takes array of object as it's only argument, received: "${args}".`);
+    throw new Error(`This function takes array of object as it's only argument, received:`, args);
   }
 
   for(let i = 0; i < args.length; i++) {
@@ -121,7 +121,7 @@ export function checkArgs(args) {
 export function hexToDec(hex) {
   hex = hex.toLowerCase();
   if(hex.match(/[^0-9a-f]/)) {
-    console.error(`This function expects hexadeciamal number (consisting only of 0-9 and a-f), received: "${hex}".`);
+    console.error(`This function expects hexadeciamal number (consisting only of 0-9 and a-f), received:`, hex);
   }
 
   const values = { a: 10, b: 11, c: 12, d: 13, e: 14, f: 15 };
@@ -149,7 +149,7 @@ export function hexToRGB(hex) {
       hex.lastIndexOf('#') !== 0 ||
       hex.match(/[^#0-9a-f]/)
     ) {
-      console.error(`This function expects hexadecimal representation of color in this format "#xxxxxx", received "${hex}".`);
+      console.error(`This function expects hexadecimal representation of color in this format "#xxxxxx", received:`, hex);
     }
 
   const r = hexToDec(hex.slice(1, 3));
@@ -161,13 +161,13 @@ export function hexToRGB(hex) {
 
 export function RGBObjectToString(obj) {
   if(typeof obj !== 'object') {
-    console.error(`Expected object representing color in rgb format, received "${obj}" of type "${typeof obj}" instead.`);
+    console.error(`Expected object representing color in rgb format, received:`, obj);
   } else if(!Number.isInteger(obj.r) || obj.r < 0 || obj.r > 255) {
-    console.error(`Expected "r" property of received object to be an integer between 0 and 255, received "${obj.r}" of type "${typeof obj.r}" instead.`);
+    console.error(`Expected "r" property of received object to be an integer between 0 and 255, received:`, obj.r);
   } else if(!Number.isInteger(obj.g) || obj.g < 0 || obj.g > 255) {
-    console.error(`Expected "g" property of received object to be an integer between 0 and 255, received "${obj.g}" of type "${typeof obj.g}" instead.`);
+    console.error(`Expected "g" property of received object to be an integer between 0 and 255, received:`, obj.g);
   } else if(!Number.isInteger(obj.b) || obj.b < 0 || obj.b > 255) {
-    console.error(`Expected "b" property of received object to be an integer between 0 and 255, received "${obj.b}" of type "${typeof obj.b}" instead.`);
+    console.error(`Expected "b" property of received object to be an integer between 0 and 255, received:`, obj.b);
   }
 
   return `rgb(${obj.r}, ${obj.g}, ${obj.b})`;
@@ -175,13 +175,13 @@ export function RGBObjectToString(obj) {
 
 export function objectEquals(obj1, obj2, ignoredProperties = []) {
   if(!(obj1 instanceof Object)) {
-    console.error(`First argument has to be an object, provided "${obj1}".`);
+    console.error(`First argument has to be an object, provided:`, obj1);
   }
   if(!(obj2 instanceof Object)) {
-    console.error(`Second argument has to be an object, provided "${obj2}".`);
+    console.error(`Second argument has to be an object, provided:`, obj2);
   }
   if(!Array.isArray(ignoredProperties)) {
-    console.error(`Third argument has to be an array (or not provided / undefined), provided "${ignoredProperties}".`);
+    console.error(`Third argument has to be an array (or not provided / undefined), provided:`, ignoredProperties);
   }
 
   /* not good for comparing objects containing complex data types, only primitives */
@@ -208,7 +208,7 @@ export function objectEquals(obj1, obj2, ignoredProperties = []) {
 
 export function doGetCanvasCopy(canvasElement) {
   if(canvasElement.tagName !== 'CANVAS') {
-    console.error(`First argument has to be a reference to a canvas element, provided "${canvasElement}".`)
+    console.error(`First argument has to be a reference to a canvas element, provided:`, canvasElement);
   }
   
   const newCanvas = document.createElement('canvas');
@@ -220,13 +220,13 @@ export function doGetCanvasCopy(canvasElement) {
 
 export function getRandomPointWithinCircle(originX, originY, radius) {
   if(!Number.isInteger(originX)) {
-    console.error(`First argument has to be an integer, provided: "${originX}".`);
+    console.error(`First argument has to be an integer, provided:`, originX);
   }
   if(!Number.isInteger(originY)) {
-    console.error(`Second argument has to be an integer, provided: "${originY}".`);
+    console.error(`Second argument has to be an integer, provided:`, originY);
   }
   if(!Number.isInteger(radius)) {
-    console.error(`Third argument has to be an integer, provided: "${radius}".`);
+    console.error(`Third argument has to be an integer, provided:`, radius);
   }
 
   /* http://jsfiddle.net/d9VRu/ */
@@ -240,34 +240,34 @@ export function getRandomPointWithinCircle(originX, originY, radius) {
 export const ImageDataUtils = {
   _validateImageData(imageData) {
     if(!(imageData instanceof ImageData)) {
-      console.error(`Expected argument to be an instance of ImageData, provided "${imageData}".`);
+      console.error(`Expected argument to be an instance of ImageData, provided:`, imageData);
     }
   },
 
   _validateCoords(imageData, x, y) {
     if(!Number.isInteger(x) || x < 0 || x > imageData.width - 1) {
-      console.error(`Expected argument (x) to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided "${x}"`);
+      console.error(`Expected argument (x) to be and integer between 0 and ${imageData.width - 1} (imageData.width - 1), provided:`, x);
     }
     if(!Number.isInteger(y) || y < 0 || y > imageData.height - 1) {
-      console.error(`Expected argument (y) to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided "${y}"`);
+      console.error(`Expected argument (y) to be and integer between 0 and ${imageData.height - 1} (imageData.height - 1), provided:`, y);
     }
   },
   
   _validateColor(color) {
     if(typeof color !== 'object') {
-      console.error(`Expected argument to be and object representing color in RGB format, provided "${color}".`)
+      console.error(`Expected argument to be and object representing color in RGB format, provided:`, color)
     }
     if(!Number.isInteger(color.r) || color.r < 0 || color.r > 255) {
-      console.error(`"r" property of color object has to be an integer between 0 and 255, provided "${color.r}".`);
+      console.error(`"r" property of color object has to be an integer between 0 and 255, provided:`, color.r);
     }
     if(!Number.isInteger(color.g) || color.g < 0 || color.g > 255) {
-      console.error(`"g" property of color object has to be an integer between 0 and 255, provided "${color.g}".`);
+      console.error(`"g" property of color object has to be an integer between 0 and 255, provided:`, color.g);
     }
     if(!Number.isInteger(color.b) || color.b < 0 || color.b > 255) {
-      console.error(`"b" property of color object has to be an integer between 0 and 255, provided "${color.b}".`);
+      console.error(`"b" property of color object has to be an integer between 0 and 255, provided:`, color.b);
     }
     if(Number.isInteger(color.a) && (color.a < 0 || color.b > 255)) {
-      console.error(`"a" property of color object has to be and integer between 0 and 255 or anything that is not an integer (in which case it will be set to 255), provided: "${color.a}".`);
+      console.error(`"a" property of color object has to be and integer between 0 and 255 or anything that is not an integer (in which case it will be set to 255), provided:`, color.a);
     }
   },
 
@@ -325,16 +325,16 @@ export function getDrawData({
   isConstrained = false,
 }) {
   if(typeof pagePixel !== 'object') {
-    console.error(`"pagePixel" argument has to be an object, provided: "${pagePixel}".`);
+    console.error(`"pagePixel" argument has to be an object, provided:`, pagePixel);
   }
   if(typeof secondaryRef !== 'object' || !(secondaryRef.current instanceof Element)) {
-    console.error(`"secondaryRef" argument has to be a React ref object pointing to an element, provided: "${secondaryRef}"`);
+    console.error(`"secondaryRef" argument has to be a React ref object pointing to an element, provided:`), secondaryRef;
   }
   if(typeof canvasZoom !== 'number') {
-    console.error(`"canvasZoom" argument has to be a number, provided: "${canvasZoom}".`);
+    console.error(`"canvasZoom" argument has to be a number, provided:`, canvasZoom);
   }
   if(typeof currentPixel !== 'object') {
-    console.error(`"currentPixel" argument has to be an object, provided: "${currentPixel}".`);
+    console.error(`"currentPixel" argument has to be an object, provided:`, currentPixel);
   }
   
   const secondaryRect = secondaryRef.current.getBoundingClientRect();
@@ -455,7 +455,7 @@ export function writeCanvasToClipboard(canvas) {
 
 export function doGetParsedFileSize(bytes) {
   if(!Number.isInteger(bytes)) {
-    console.error(`This function takes integer as its first argument, provided: "${bytes}".`);
+    console.error(`This function takes integer as its first argument, provided:`, bytes);
   }
   
   let parsedSize;

@@ -5,6 +5,7 @@ import { useCanvasContext } from './CanvasContext';
 import { initialCanvasSize } from '../misc/data';
 import { doGetCanvasCopy } from '../misc/utils';
 
+const MAX_HISTORY_ENTRIES = 50;
 const HistoryContext = createContext();
 
 function HistoryProvider({ children }) {
@@ -24,9 +25,15 @@ function HistoryProvider({ children }) {
     lastPrimaryStateRef.current = doGetCanvasCopy(data.element);
     
     setHistory(prev => {
-      const newIndex = prev.currentIndex + 1;
+      let newIndex = prev.currentIndex + 1;
       const newDataArray = prev.dataArray.slice(0, newIndex);
       newDataArray.push(data);
+
+      if(newIndex >= MAX_HISTORY_ENTRIES) {
+        newDataArray.shift();
+        newIndex--;
+      }
+
       return {
         ...prev,
         dataArray: newDataArray,

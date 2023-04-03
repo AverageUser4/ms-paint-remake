@@ -65,6 +65,7 @@ function CanvasProvider({ children }) {
       secondaryContext: secondaryRef.current.getContext('2d'),
       thumbnailPrimaryContext: thumbnailPrimaryRef.current?.getContext('2d'),
       thumbnailSecondaryContext: thumbnailSecondaryRef.current?.getContext('2d'),
+      brushContext: brushCanvasRef.current.getContext('2d'),
     };
   }
 

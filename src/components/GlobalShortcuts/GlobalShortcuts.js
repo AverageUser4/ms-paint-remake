@@ -30,7 +30,7 @@ function GlobalShortcuts({ ribbonData }) {
   } = useActionsContext();
   const { 
     setIsFullScreenView, canvasZoom, secondaryRef,
-    canvasSize, lastPointerPositionRef, brushCanvasRef
+    canvasSize, lastPointerPositionRef, doGetEveryContext
   } = useCanvasContext();
   const { canvasMousePosition } = useCanvasMiscContext();
   const { currentToolData, doCurrentToolSetSize } = useToolContext();
@@ -41,7 +41,7 @@ function GlobalShortcuts({ ribbonData }) {
     getDrawData({ secondaryRef, canvasZoom, currentPixel, pagePixel: {} });
 
     if(currentToolData.doDrawIcon) {
-      const brushContext = brushCanvasRef.current.getContext('2d');
+      const { brushContext } = doGetEveryContext();
       brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
   
       if(canvasMousePosition) {
