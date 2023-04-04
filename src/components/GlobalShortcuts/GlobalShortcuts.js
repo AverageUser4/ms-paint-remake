@@ -47,7 +47,7 @@ function GlobalShortcuts({ ribbonData }) {
       if(canvasMousePosition) {
         currentToolData.doDrawIcon({
           currentPixel,
-          color: colorData,
+          colorData,
           brushContext,
           canvasZoom,
           currentlyPressedRef: { current: -1 },

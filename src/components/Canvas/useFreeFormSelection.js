@@ -81,7 +81,7 @@ function useFreeFormSelection() {
         ...doGetEveryContext(),
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
-        color: { ...colorData },
+        colorData,
         primaryImageData: primaryImageDataRef.current,
         isRepeated,
       });

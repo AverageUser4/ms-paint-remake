@@ -1,5 +1,6 @@
 import { ImageDataUtils, RGBObjectToString } from "../utils";
 import BrushBase from "./BrushBase";
+import validateToolArgs from "./validateToolArgs";
 
 class FreeFormSelection extends BrushBase {
   cursor = 'selection';
@@ -9,7 +10,7 @@ class FreeFormSelection extends BrushBase {
   doDrawIcon() {}
 
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, primaryImageData }) {
-    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'primaryImageData']);
+    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'primaryImageData']);
   
     const drawAtCoords = (x, y) => {
       if(x > primaryImageData.width - 1 || y > primaryImageData.height - 1) {

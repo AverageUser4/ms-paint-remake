@@ -1,10 +1,14 @@
 import { objectEquals } from "../utils";
 import { ImageDataUtils } from "../utils";
+import validateToolArgs from "./validateToolArgs";
 
 export default {
   cursor: 'fill',
   sizes: null,
+
   onPointerDown({ event, primaryContext, thumbnailPrimaryContext, canvasSize, canvasZoom, colorData }) {
+    validateToolArgs(arguments, ['event', 'primaryContext', 'thumbnailPrimaryContext', 'canvasSize', 'canvasZoom', 'colorData']);
+    
     const { width, height } = canvasSize;
     let { offsetX, offsetY } = event.nativeEvent;
     offsetX = Math.round(offsetX / canvasZoom);
@@ -46,7 +50,9 @@ export default {
     primaryContext.putImageData(imageData, 0, 0);
     thumbnailPrimaryContext && thumbnailPrimaryContext.putImageData(imageData, 0, 0);
   },
+
   onPointerMove() {
     return;
   }
+  
 };

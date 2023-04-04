@@ -1,4 +1,4 @@
-import validateDrawArgs from "./validateDrawArgs";
+import validateToolArgs from "./validateToolArgs";
 import { RGBObjectToString } from "../utils";
 
 class BrushBase {
@@ -6,22 +6,14 @@ class BrushBase {
   sizes = [1, 3, 5, 8];
   chosenSize = 3;
 
-  validate(args, toBeValidatedArray) {
-    if(typeof args !== 'object') {
-      console.error(`Expected to receive "arguments" object, received:`, args);
-    }
-
-    validateDrawArgs({ ...args[0], toBeValidatedArray });
-  }
-
-  doDrawIcon({ currentPixel, canvasZoom, brushContext, currentlyPressedRef, color }) {
-    this.validate(arguments, ['currentPixel', 'canvasZoom', 'brushContext', 'currentlyPressedRef', 'color']);
+  doDrawIcon({ currentPixel, canvasZoom, brushContext, currentlyPressedRef, colorData }) {
+    validateToolArgs(arguments, ['currentPixel', 'canvasZoom', 'brushContext', 'currentlyPressedRef', 'colorData']);
 
     if(currentlyPressedRef.current !== -1) {
       return;
     }
 
-    brushContext.fillStyle = RGBObjectToString(color.primary);
+    brushContext.fillStyle = RGBObjectToString(colorData.primary);
     brushContext.save();
     brushContext.scale(canvasZoom, canvasZoom);
     this.draw({ currentPixel, secondaryContext: brushContext });
@@ -29,7 +21,7 @@ class BrushBase {
   }
 
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
-    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel']);
+    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel']);
 
     const size = this.chosenSize;
 

@@ -1,23 +1,14 @@
-import validateDrawArgs from "./validateDrawArgs";
+import ShapeBase from "./ShapeBase";
+import validateToolArgs from "./validateToolArgs";
 
-export default {
-  cursor: 'selection',
-  sizes: [1, 3, 5, 8],
-  chosenSize: 5,
+class ShapeRightTriangle extends ShapeBase {
 
-  drawShape({ selectionContext, color, selectionSize }) {
-    validateDrawArgs({ selectionContext, color, selectionSize,
-      toBeValidatedArray: ['selectionContext', 'color', 'selectionSize']
+  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef }) {
+    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef']);
+
+    const { start, endX, endY } = this.getCanvasData({ 
+      selectionSize, currentlyPressedRef, colorData, selectionContext 
     });
-
-    const { width, height } = selectionSize;
-    const start = this.chosenSize / 2;
-    const endX = width - this.chosenSize / 2;
-    const endY = height - this.chosenSize / 2;
-    
-    selectionContext.save();
-    selectionContext.strokeStyle = color.primary;
-    selectionContext.lineWidth = this.chosenSize;
     
     selectionContext.beginPath();
     selectionContext.moveTo(start, start);
@@ -25,15 +16,8 @@ export default {
     selectionContext.lineTo(endX, endY);
     selectionContext.closePath();
     selectionContext.stroke();
-
-    selectionContext.restore();
-  },
-
-  onPointerDown({ event }) {
-    // console.log('hi')
-  },
-
-  onPointerMove({ event }) {
-    // console.log('hello')
   }
-};
+
+}
+
+export default new ShapeRightTriangle();

@@ -26,12 +26,13 @@ function useShape() {
   const [resizeData, setResizeData] = useState(null);
   useResizeCursor(resizeData);
 
-  const { onPointerDown, doCancel } = usePointerTrack({ 
+  const { onPointerDown, doCancel, currentlyPressedRef } = usePointerTrack({ 
     onPressedMoveCallback,
     onPressStartCallback,
     onPressEndCallback,
     onCancelCallback,
     isCancelOnRightMouseDown: true,
+    isTrackAlsoRight: true,
   });
   
   function onPressStartCallback(event) {
@@ -124,8 +125,9 @@ function useShape() {
       
       currentToolData.drawShape({ 
         selectionContext,
-        color: colorData,
+        colorData,
         selectionSize,
+        currentlyPressedRef,
       });
     }, 20);
   }
@@ -150,11 +152,12 @@ function useShape() {
         
       currentToolData.drawShape({ 
         selectionContext,
-        color: colorData,
+        colorData,
         selectionSize: { 
           width: selectionCanvas.width,
           height: selectionCanvas.height
-        }
+        },
+        currentlyPressedRef,
       });
     }
     

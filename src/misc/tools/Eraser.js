@@ -1,5 +1,6 @@
 import { RGBObjectToString } from "../utils";
 import BrushBase from "./BrushBase";
+import validateToolArgs from "./validateToolArgs";
 
 class Eraser extends BrushBase {
   cursor = 'none';
@@ -14,8 +15,8 @@ class Eraser extends BrushBase {
     return { size, startX, startY };
   }
 
-  doDrawIcon({ currentPixel, color, brushContext, canvasZoom }) {
-    this.validate(arguments, ['currentPixel', 'color', 'brushContext', 'canvasZoom']);
+  doDrawIcon({ currentPixel, colorData, brushContext, canvasZoom }) {
+    validateToolArgs(arguments, ['currentPixel', 'colorData', 'brushContext', 'canvasZoom']);
 
     let { startX, startY, size } = this._getData(currentPixel, canvasZoom);
     
@@ -25,20 +26,20 @@ class Eraser extends BrushBase {
     startX += 0.5;
     startY += 0.5;
 
-    brushContext.fillStyle = RGBObjectToString(color.secondary);
+    brushContext.fillStyle = RGBObjectToString(colorData.secondary);
     brushContext.fillRect(startX, startY, size, size);
     brushContext.strokeStyle = 'rgb(0, 0, 0)';
     brushContext.strokeRect(startX, startY, size, size);
   }
 
-  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, color }) {
-    this.validate(arguments, ['primaryContext', 'secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'color']);
+  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, colorData }) {
+    validateToolArgs(arguments, ['primaryContext', 'secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'colorData']);
 
     const { startX, startY, size } = this._getData(currentPixel);
     
     if(currentlyPressedRef.current === 0) {
       const drawToContext = (context) => {
-        context.fillStyle = RGBObjectToString(color.secondary);
+        context.fillStyle = RGBObjectToString(colorData.secondary);
         context.fillRect(startX, startY, size, size);
       };
 
@@ -51,10 +52,10 @@ class Eraser extends BrushBase {
         const sG = square.data[i + 1];
         const sB = square.data[i + 2];
         const sA = square.data[i + 3];
-        const { r, g, b } = color.primary;
+        const { r, g, b } = colorData.primary;
 
         if(sR === r && sG === g && sB === b && sA === 255) {
-          const { r, g, b } = color.secondary;
+          const { r, g, b } = colorData.secondary;
           square.data[i] = r;
           square.data[i + 1] = g;
           square.data[i + 2] = b;

@@ -1,4 +1,5 @@
 import BrushBase from "./BrushBase";
+import validateToolArgs from "./validateToolArgs";
 
 class Pencil extends BrushBase {
   cursor = 'pencil';
@@ -8,7 +9,7 @@ class Pencil extends BrushBase {
   doDrawIcon() {}
 
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
-    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel'])
+    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel'])
 
     const size = this.chosenSize;
     

@@ -1,5 +1,6 @@
 import { getRandomPointWithinCircle } from '../../misc/utils';
 import BrushBase from './BrushBase';
+import validateToolArgs from './validateToolArgs';
 
 class Airbrush extends BrushBase {
   latestX = null;
@@ -11,7 +12,7 @@ class Airbrush extends BrushBase {
   doDrawIcon() {}
 
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef }) {
-    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef']);
+    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef']);
      
     this.latestX = currentPixel.x;
     this.latestY = currentPixel.y;

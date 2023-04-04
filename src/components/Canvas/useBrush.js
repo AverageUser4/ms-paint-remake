@@ -63,7 +63,7 @@ function useBrush() {
       if(canvasMousePosition && !canvasOutlineSize) {
         currentToolData.doDrawIcon({
           currentPixel,
-          color: colorData,
+          colorData,
           brushContext,
           canvasZoom,
           currentlyPressedRef,
@@ -90,7 +90,7 @@ function useBrush() {
         ...doGetEveryContext(),
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
-        color: { ...colorData },
+        colorData,
         isRepeated,
       });
     }
