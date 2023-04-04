@@ -2,27 +2,21 @@ import { useState, useEffect } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../context/CanvasContext';
-import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useToolContext } from '../../context/ToolContext';
+import { useColorContext } from '../../context/ColorContext';
 
-function useShapeSelection() {
-  const { 
-    primaryRef, doCanvasClearPrimary, canvasSize,
-    canvasZoom, doGetEveryContext 
-  } = useCanvasContext();
-  const { doHistoryAdd } = useHistoryContext();
-  const { currentTool } = useToolContext();
+function useShape() {
+  const { primaryRef, canvasZoom } = useCanvasContext();
+  const { currentTool, currentToolData } = useToolContext();
+  const { colorData } = useColorContext();
 
   const {
     selectionSize,
     selectionPosition,
     selectionPhase,
     setSelectionPhase,
-    lastSelectionSizeRef,
-    lastSelectionPositionRef,
     doSelectionDrawToPrimary,
-    doSelectionDrawToSelection,
     doSelectionSetSize,
     doSelectionSetPosition,
     doSelectionEnd,
@@ -126,27 +120,12 @@ function useShapeSelection() {
 
       setSelectionPhase(2);
       setResizeData(null);
-
-      const { primaryContext } = doGetEveryContext();
-  
-      const imageData = primaryContext.getImageData(
-        Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-        Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-        Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-        Math.round(lastSelectionSizeRef.current.height / canvasZoom),
-      );
-  
-      doSelectionDrawToSelection(imageData);
-      doCanvasClearPrimary({
-        x: Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-        y: Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-        width: Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-        height: Math.round(lastSelectionSizeRef.current.height / canvasZoom),
-      });
-
-      doHistoryAdd({
-        element: primaryRef.current,
-        ...canvasSize,
+      const { selectionContext } = doSelectionGetEveryContext();
+      
+      currentToolData.drawShape({ 
+        selectionContext,
+        color: colorData,
+        selectionSize,
       });
     }, 20);
   }
@@ -157,7 +136,7 @@ function useShapeSelection() {
   }
 
   useEffect(() => {
-    if(!currentTool.startsWith('selection-shape')) {
+    if(!currentTool.startsWith('shape')) {
       return;
     }
     
@@ -165,18 +144,22 @@ function useShapeSelection() {
     if(!selectionCanvas) {
       return;
     }
-    
-    const observer = new MutationObserver(() => {
-      const { selectionContext } = doSelectionGetEveryContext();
-  
-      if(!selectionContext) {
-        return;
-      }
-  
-      selectionContext.fillStyle = 'cyan';
-      selectionContext.fillRect(0, 0, 30, 30);
-    });
 
+    function drawCallback() {
+      const { selectionContext } = doSelectionGetEveryContext();
+        
+      currentToolData.drawShape({ 
+        selectionContext,
+        color: colorData,
+        selectionSize: { 
+          width: selectionCanvas.width,
+          height: selectionCanvas.height
+        }
+      });
+    }
+    
+    drawCallback();
+    const observer = new MutationObserver(drawCallback);
     observer.observe(selectionCanvas, { attributes: true, attributeFilter: ['width', 'height'] });
 
     return () => {
@@ -185,8 +168,8 @@ function useShapeSelection() {
   });
 
   return {
-    onPointerDownShapeSelection: onPointerDown,
+    onPointerDownShape: onPointerDown,
   }
 }
 
-export default useShapeSelection;
+export default useShape;

@@ -45,7 +45,7 @@ function Canvas() {
 
   const { 
     selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
-    onPointerDownRectangularSelection, onPointerDownFreeFormSelection, onPointerDownShapeSelection
+    onPointerDownRectangularSelection, onPointerDownFreeFormSelection, onPointerDownShape
   } = useSelection();
 
   let onPointerDownSecondary = onPointerDownBrush;
@@ -53,8 +53,8 @@ function Canvas() {
     onPointerDownSecondary = onPointerDownRectangularSelection;
   } else if(currentTool === 'selection-free-form') {
     onPointerDownSecondary = onPointerDownFreeFormSelection;
-  } else if(currentTool === 'selection-shape') {
-    onPointerDownSecondary = onPointerDownShapeSelection;
+  } else if(currentTool.startsWith('shape')) {
+    onPointerDownSecondary = onPointerDownShape;
   }
 
   const { 

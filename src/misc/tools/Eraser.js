@@ -1,10 +1,10 @@
 import { RGBObjectToString } from "../utils";
-import validateDrawArgs from "./validateDrawArgs";
+import BrushBase from "./BrushBase";
 
-export default {
-  cursor: 'none',
-  sizes: [4, 6, 8, 10],
-  chosenSize: 8,
+class Eraser extends BrushBase {
+  cursor = 'none';
+  sizes = [4, 6, 8, 10];
+  chosenSize = 8;
 
   _getData(currentPixel) {
     const size = this.chosenSize;
@@ -12,12 +12,10 @@ export default {
     const startY = Math.round(currentPixel.y - size / 2);
 
     return { size, startX, startY };
-  },
+  }
 
   doDrawIcon({ currentPixel, color, brushContext, canvasZoom }) {
-    validateDrawArgs({ currentPixel, color, brushContext, canvasZoom,
-      toBeValidatedArray: ['currentPixel', 'color', 'brushContext', 'canvasZoom']
-    });
+    this.validate(arguments, ['currentPixel', 'color', 'brushContext', 'canvasZoom']);
 
     let { startX, startY, size } = this._getData(currentPixel, canvasZoom);
     
@@ -31,12 +29,10 @@ export default {
     brushContext.fillRect(startX, startY, size, size);
     brushContext.strokeStyle = 'rgb(0, 0, 0)';
     brushContext.strokeRect(startX, startY, size, size);
-  },
+  }
 
   draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, color }) {
-    validateDrawArgs({ primaryContext, secondaryContext, currentPixel, currentlyPressedRef, color,
-      toBeValidatedArray: ['primaryContext', 'secondaryContext', 'currentPixel', 'currentlyPressedRef', 'color']
-    });
+    this.validate(arguments, ['primaryContext', 'secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'color']);
 
     const { startX, startY, size } = this._getData(currentPixel);
     
@@ -67,5 +63,7 @@ export default {
       secondaryContext.putImageData(square, startX, startY);
       thumbnailSecondaryContext?.putImageData(square, startX, startY);
     }
-  },
-};
+  }
+}
+
+export default new Eraser();

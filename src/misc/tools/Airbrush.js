@@ -1,22 +1,23 @@
 import { getRandomPointWithinCircle } from '../../misc/utils';
-import validateDrawArgs from './validateDrawArgs';
+import BrushBase from './BrushBase';
 
-export default {
-  latestX: null,
-  latestY: null,
-  cursor: 'airbrush',
-  sizes: [4, 8, 16, 24],
-  chosenSize: 8,
+class Airbrush extends BrushBase {
+  latestX = null;
+  latestY = null;
+  cursor = 'airbrush';
+  sizes = [4, 8, 16, 24];
+  chosenSize = 8;
+
+  doDrawIcon() {}
+
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef }) {
-    validateDrawArgs({ secondaryContext, currentPixel, currentlyPressedRef, 
-      toBeValidatedArray: ['secondaryContext', 'currentPixel', 'currentlyPressedRef']
-    });
+    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef']);
      
     this.latestX = currentPixel.x;
     this.latestY = currentPixel.y;
-
+  
     const size = this.chosenSize;
-
+  
     function drawRandomPoints() {
       for(let i = 0; i < size * 3; i++) {
         const { x: randX, y: randY } = getRandomPointWithinCircle(currentPixel.x, currentPixel.y, size);
@@ -24,7 +25,7 @@ export default {
         thumbnailSecondaryContext?.fillRect(Math.round(randX), Math.round(randY), 1, 1);
       }
     }
-
+  
     function timeoutCallback() {
       if(
           currentlyPressedRef.current === -1 ||
@@ -33,11 +34,13 @@ export default {
         ) {
         return;
       }
-
+  
       drawRandomPoints();
       setTimeout(timeoutCallback.bind(this), 50);
     }
     
     timeoutCallback.apply(this);
-  },
-};
+  }
+}
+
+export default new Airbrush();

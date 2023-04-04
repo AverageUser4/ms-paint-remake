@@ -1,31 +1,11 @@
-import validateDrawArgs from "./validateDrawArgs";
-import { RGBObjectToString } from "../utils";
+import BrushBase from "./BrushBase";
 
-export default {
-  cursor: 'draw',
-  sizes: [3, 5, 8, 10],
-  chosenSize: 5,
-
-  doDrawIcon({ currentPixel, canvasZoom, brushContext, currentlyPressedRef, color }) {
-    validateDrawArgs({ canvasZoom, brushContext, currentlyPressedRef, color,
-      toBeValidatedArray: ['canvasZoom', 'brushContext', 'currentlyPressedRef', 'color']
-    });
-
-    if(currentlyPressedRef.current !== -1) {
-      return;
-    }
-
-    brushContext.fillStyle = RGBObjectToString(color.primary);
-    brushContext.save();
-    brushContext.scale(canvasZoom, canvasZoom);
-    this.draw({ currentPixel, secondaryContext: brushContext });
-    brushContext.restore();
-  },
+class Calligraphy_2 extends BrushBase {
+  sizes = [3, 5, 8, 10];
+  chosenSize = 5;
 
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
-    validateDrawArgs({ secondaryContext, currentPixel,
-      toBeValidatedArray: ['secondaryContext', 'currentPixel']
-    });
+    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel']);
 
     const size = this.chosenSize;
     let offset = Math.floor(size / 2);
@@ -39,5 +19,7 @@ export default {
 
     drawToContext(secondaryContext);
     thumbnailSecondaryContext && drawToContext(thumbnailSecondaryContext);
-  },
-};
+  }
+}
+
+export default new Calligraphy_2();

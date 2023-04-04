@@ -18,7 +18,7 @@ import Oilbrush from '../misc/tools/Oilbrush';
 import Watercolor from '../misc/tools/Watercolor';
 import RectangularSelection from '../misc/tools/RectangularSelection';
 import FreeFormSelection from '../misc/tools/FreeFormSelection';
-import ShapeSelection from '../misc/tools/ShapeSelection';
+import ShapeRightTriangle from '../misc/tools/ShapeRightTriangle';
 
 const ToolContext = createContext();
 
@@ -44,9 +44,10 @@ function ToolProvider({ children }) {
     /* selection */
     ['selection-rectangle', RectangularSelection],
     ['selection-free-form', FreeFormSelection],
-    ['selection-shape', ShapeSelection],
+    /* shape */
+    ['shape-right-triangle', ShapeRightTriangle],
   ]));
-  const [currentTool, setCurrentTool] = useState('selection-shape');
+  const [currentTool, setCurrentTool] = useState('shape-right-triangle');
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'
@@ -64,7 +65,9 @@ function ToolProvider({ children }) {
     
     setToolsData(prev => {
       const newToolsData = new Map(prev);
-      const newTool = { ...newToolsData.get(currentTool) };
+      const oldTool = newToolsData.get(currentTool);
+      let newTool = Object.create(Object.getPrototypeOf(oldTool));
+      newTool = Object.assign(newTool, oldTool);
       newTool.chosenSize = newSize;
       newToolsData.set(currentTool, newTool);
       return newToolsData;

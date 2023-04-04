@@ -1,14 +1,16 @@
-import validateDrawArgs from "./validateDrawArgs";
 import { ImageDataUtils, RGBObjectToString } from "../utils";
+import BrushBase from "./BrushBase";
 
-export default {
-  cursor: 'selection',
-  sizes: null,
-  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, primaryImageData }) {
-    validateDrawArgs({ primaryContext, secondaryContext, currentPixel, primaryImageData,
-      toBeValidatedArray: ['primaryContext', 'secondaryContext', 'currentPixel', 'primaryImageData']
-    });
+class FreeFormSelection extends BrushBase {
+  cursor = 'selection';
+  sizes = null;
+  chosenSize = null;
 
+  doDrawIcon() {}
+
+  draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, primaryImageData }) {
+    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'primaryImageData']);
+  
     const drawAtCoords = (x, y) => {
       if(x > primaryImageData.width - 1 || y > primaryImageData.height - 1) {
         return;
@@ -23,19 +25,21 @@ export default {
         ) {
           invertedColor = { r: 255, g: 255, b: 255 };
       }
-
+  
       function drawToContext(context) {
         context.fillStyle = RGBObjectToString(invertedColor);
         context.fillRect(x, y, 1, 1);
       }
-
+  
       drawToContext(secondaryContext);
       thumbnailSecondaryContext && drawToContext(thumbnailSecondaryContext);
     }
-
+  
     drawAtCoords(currentPixel.x, currentPixel.y);
     drawAtCoords(currentPixel.x + 1, currentPixel.y);
     drawAtCoords(currentPixel.x, currentPixel.y + 1);
     drawAtCoords(currentPixel.x + 1, currentPixel.y + 1);
-  },
-};
+  }
+}
+
+export default new FreeFormSelection();

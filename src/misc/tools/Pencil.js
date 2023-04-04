@@ -1,14 +1,14 @@
-import validateDrawArgs from "./validateDrawArgs";
+import BrushBase from "./BrushBase";
 
-export default {
-  cursor: 'pencil',
-  sizes: [1, 2, 3, 4],
-  chosenSize: 1,
+class Pencil extends BrushBase {
+  cursor = 'pencil';
+  sizes = [1, 2, 3, 4];
+  chosenSize = 1;
+
+  doDrawIcon() {}
 
   draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
-    validateDrawArgs({ secondaryContext, currentPixel,
-      toBeValidatedArray: ['secondaryContext', 'currentPixel']
-    });
+    this.validate(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel'])
 
     const size = this.chosenSize;
     
@@ -30,5 +30,7 @@ export default {
 
     drawToContext(secondaryContext);
     thumbnailSecondaryContext && drawToContext(thumbnailSecondaryContext);
-  },
-};
+  }
+}
+
+export default new Pencil();
