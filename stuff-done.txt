@@ -3,6 +3,5 @@ GOING TO:
   - investigate font-family
   - changes to code can cause primaryCanvas to lose it's background color and become transparent, it does not seem that there is user action
     that can cause that but it may need to be investigated
-  - added support for textures in shapes
 
 DONE:

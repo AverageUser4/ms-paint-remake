@@ -83,6 +83,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
             >
               <ShapesGrid
                 ribbonWidth={ribbonWidth}
+                setIsGridDropdownOpen={setIsGridDropdownOpen}
               />
             </BigButton>
 
@@ -94,6 +95,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
               <div className="popup" ref={gridDropdownRef}>
                 <ShapesGrid
                   ribbonWidth={ribbonWidth}
+                  setIsGridDropdownOpen={setIsGridDropdownOpen}
                   isOnlyDropdown={true}
                 />
               </div>

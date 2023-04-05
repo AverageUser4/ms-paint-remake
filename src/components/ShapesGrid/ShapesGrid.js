@@ -7,6 +7,7 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
+import { useToolContext } from "../../context/ToolContext";
 
 import callout16 from './assets/callout-16.png';
 import cloudCallout16 from './assets/cloud-callout-16.png';
@@ -56,11 +57,13 @@ const shapesDataArray = [
   { src: callout16, name: 'Rounded rectangular callout' },
   { src: ovalCallout16, name: 'Oval callout' },
   { src: cloudCallout16, name: 'Cloud callout' },
-  { src: heart16, name: 'Hear' },
+  { src: heart16, name: 'Heart' },
   { src: lightning16, name: 'Lightning' },
 ];
 
-const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
+const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIsGridDropdownOpen }) {
+  const { currentTool, setCurrentTool } = useToolContext();
+  
   const [currentRow, setCurrentRow] = useState(0);
   const gridRef = useRef();
   const lastColumnCountRef = useRef(4);
@@ -77,16 +80,24 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
   const maxRow = rows - 3;
 
   function mapToButtons(isOut, shape) {
+    const id = shape.name.toLowerCase().replace(/ /g, '-');
+    
     return (
       <button 
-        key={shape.src}
+        key={id}
         className={`
           button
+          ${currentTool === `shape-${id}` ? 'button--active' : ''}
           tooltip-container 
           ${isOut && 'tooltip-container--out'}
         `}
         aria-label={shape.name}
-        >
+        onClick={() => { 
+          setCurrentTool(`shape-${id}`); 
+          setIsGridDropdownOpen(false);
+          setIsDropdownOpen(false);
+        }}
+      >
         <img draggable="false" src={shape.src} alt=""/>
         <Tooltip
           text={shape.name}
@@ -202,6 +213,7 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown }) {
 
 ShapesGrid.propTypes = {
   ribbonWidth: PropTypes.number.isRequired,
+  setIsGridDropdownOpen: PropTypes.func.isRequired,
   isOnlyDropdown: PropTypes.bool,
 };
 

@@ -20,7 +20,29 @@ import Oilbrush from '../misc/tools/brushes/Oilbrush';
 import Watercolor from '../misc/tools/brushes/Watercolor';
 import FreeFormSelection from '../misc/tools/brushes/FreeFormSelection.js';
 
+import ShapeLine from '../misc/tools/shapes/ShapeLine';
+import ShapeCurve from '../misc/tools/shapes/ShapeCurve';
+import ShapeOval from '../misc/tools/shapes/ShapeOval';
+import ShapeRectangle from '../misc/tools/shapes/ShapeRectangle';
+import ShapeRoundedRectangle from '../misc/tools/shapes/ShapeRoundedRectangle';
+import ShapePolygon from '../misc/tools/shapes/ShapePolygon';
+import ShapeTriangle from '../misc/tools/shapes/ShapeTriangle';
 import ShapeRightTriangle from '../misc/tools/shapes/ShapeRightTriangle';
+import ShapeDiamond from '../misc/tools/shapes/ShapeDiamond';
+import ShapePentagon from '../misc/tools/shapes/ShapePentagon';
+import ShapeHexagon from '../misc/tools/shapes/ShapeHexagon';
+import ShapeRightArrow from '../misc/tools/shapes/ShapeRightArrow';
+import ShapeLeftArrow from '../misc/tools/shapes/ShapeLeftArrow';
+import ShapeUpArrow from '../misc/tools/shapes/ShapeUpArrow';
+import ShapeDownArrow from '../misc/tools/shapes/ShapeDownArrow';
+import ShapeFourPointStar from '../misc/tools/shapes/ShapeFourPointStar';
+import ShapeFivePointStar from '../misc/tools/shapes/ShapeFivePointStar';
+import ShapeSixPointStar from '../misc/tools/shapes/ShapeSixPointStar';
+import ShapeRoundedRectangularCallout from '../misc/tools/shapes/ShapeRoundedRectangularCallout';
+import ShapeOvalCallout from '../misc/tools/shapes/ShapeOvalCallout';
+import ShapeCloudCallout from '../misc/tools/shapes/ShapeCloudCallout';
+import ShapeHeart from '../misc/tools/shapes/ShapeHeart';
+import ShapeLightning from '../misc/tools/shapes/ShapeLightning';
 
 const ToolContext = createContext();
 
@@ -47,18 +69,46 @@ function ToolProvider({ children }) {
     ['selection-rectangle', RectangularSelection],
     ['selection-free-form', FreeFormSelection],
     /* shape */
+    ['shape-line', ShapeLine],
+    ['shape-curve', ShapeCurve],
+    ['shape-oval', ShapeOval],
+    ['shape-rectangle', ShapeRectangle],
+    ['shape-rounded-rectangle', ShapeRoundedRectangle],
+    ['shape-polygon', ShapePolygon],
+    ['shape-triangle', ShapeTriangle],
     ['shape-right-triangle', ShapeRightTriangle],
+    ['shape-diamond', ShapeDiamond],
+    ['shape-pentagon', ShapePentagon],
+    ['shape-hexagon', ShapeHexagon],
+    ['shape-right-arrow', ShapeRightArrow],
+    ['shape-left-arrow', ShapeLeftArrow],
+    ['shape-up-arrow', ShapeUpArrow],
+    ['shape-down-arrow', ShapeDownArrow],
+    ['shape-four-point-star', ShapeFourPointStar],
+    ['shape-five-point-star', ShapeFivePointStar],
+    ['shape-six-point-star', ShapeSixPointStar],
+    ['shape-rounded-rectangular-callout', ShapeRoundedRectangularCallout],
+    ['shape-oval-callout', ShapeOvalCallout],
+    ['shape-cloud-callout', ShapeCloudCallout],
+    ['shape-heart', ShapeHeart],
+    ['shape-lightning', ShapeLightning],
   ]));
   const [currentTool, setCurrentTool] = useState('shape-right-triangle');
+  console.log(currentTool)
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'
   });
+  const currentToolData = toolsData.get(currentTool);
+
+  if(!currentToolData) {
+    console.error('de_currentTool set to unrecognized value:', currentTool);
+  }
+
   const [shapeData, setShapeData] = useState({
     outline: 'solid',
     fill: '',
   });
-  const currentToolData = toolsData.get(currentTool);
 
   function doCurrentToolSetSize(newSize) {
     if(!Number.isInteger(newSize)) {

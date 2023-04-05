@@ -492,3 +492,20 @@ export function doGetGridData(zoom) {
 
   return gridData;
 }
+
+export function getAverage(...nums) {
+  if(!nums.length) {
+    console.error('Function expects at least one argument');
+  }
+  
+  let sum = 0;
+
+  for(let num of nums) {
+    if(typeof num !== 'number') {
+      console.error('One of arguments provided to this function is not a number.');
+    }
+    sum += num;
+  }
+  
+  return Math.round(sum / nums.length);
+}
