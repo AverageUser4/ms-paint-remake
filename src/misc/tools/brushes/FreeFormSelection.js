@@ -1,6 +1,6 @@
-import { ImageDataUtils, RGBObjectToString } from "../utils";
+import { ImageDataUtils, RGBObjectToString } from "../../utils";
 import BrushBase from "./BrushBase";
-import validateToolArgs from "./validateToolArgs";
+import validateToolArgs from "../validateToolArgs";
 
 class FreeFormSelection extends BrushBase {
   cursor = 'selection';

@@ -1,4 +1,4 @@
-import validateToolArgs from "./validateToolArgs";
+import validateToolArgs from "../validateToolArgs";
 
 export default {
   cursor: 'color-picker',

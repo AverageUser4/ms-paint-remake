@@ -3,7 +3,8 @@ export default function validateToolArgs(args, toBeValidatedArray) {
     'primaryContext', 'secondaryContext', 'brushContext', 'selectionContext',
     'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'isRepeated',
     'primaryImageData', 'canvasZoom', 'selectionSize', 'colorData', 'setColorData',
-    'event', 'canvasSize', 'thumbnailPrimaryContext', 'doCanvasChangeZoom'
+    'event', 'canvasSize', 'thumbnailPrimaryContext', 'doCanvasChangeZoom', 'drawCallback',
+    'shapeData'
   ];
   
   try {
@@ -76,5 +77,11 @@ export default function validateToolArgs(args, toBeValidatedArray) {
   }
   if(is('doCanvasChangeZoom') && (typeof obj.doCanvasChangeZoom !== 'function')) {
     console.error(`"doCanvasChangeZoom" argument has to be a function, provided:`, obj.doCanvasChangeZoom);
+  }
+  if(is('drawCallback') && (typeof obj.drawCallback !== 'function')) {
+    console.error(`"drawCallback" argument has to be a function, provided:`, obj.drawCallback);
+  }
+  if(is('shapeData') && (typeof obj.shapeData !== 'object')) {
+    console.error(`"shapeData" argument has to be an object, provided:`, obj.shapeData);
   }
 }

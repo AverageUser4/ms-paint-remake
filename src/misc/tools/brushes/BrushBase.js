@@ -1,5 +1,5 @@
-import validateToolArgs from "./validateToolArgs";
-import { RGBObjectToString } from "../utils";
+import validateToolArgs from "../validateToolArgs";
+import { RGBObjectToString } from "../../utils";
 
 class BrushBase {
   cursor = 'draw';

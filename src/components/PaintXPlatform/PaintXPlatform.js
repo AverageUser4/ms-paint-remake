@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import Window from '../Window/Window';
@@ -17,6 +17,7 @@ import AboutWindow from '../AboutWindow/AboutWindow';
 import PropertiesWindow from '../PropertiesWindow/PropertiesWindow';
 import ThumbnailWindow from '../ThumbnailWindow/ThumbnailWindow';
 import GlobalShortcuts from '../GlobalShortcuts/GlobalShortcuts';
+import ShapeTextures from '../ShapeTextures/ShapeTextures';
 
 import { ContextMenuProvider } from '../../context/ContextMenuContext';
 import { ContainerProvider } from '../../context/ContainerContext';
@@ -131,6 +132,7 @@ function Logic({
       <GlobalShortcuts
         ribbonData={ribbonData}
       />
+      <ShapeTextures/>
     </div>
   );
 }

@@ -161,7 +161,16 @@ function Canvas() {
                 ${selectionPhase === 2 && css['canvas--selection--ready']}
               `}
               onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
-              onContextMenu={(e) => openContextMenu(e, 'canvas', 'selection')}
+              onContextMenu={(e) => {
+                const { offsetX, offsetY } = e.nativeEvent;
+                if(
+                    (Math.abs(offsetX - selectionSize.width) < 5 || offsetX < 5) &&
+                    (Math.abs(offsetY - selectionSize.height) < 5 || offsetY < 5)
+                  ) {
+                  return;
+                }
+                openContextMenu(e, 'canvas', 'selection');
+              }}
               ref={selectionRef}
             ></canvas>
 

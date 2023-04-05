@@ -1,6 +1,6 @@
-import { getRandomPointWithinCircle } from '../../misc/utils';
+import { getRandomPointWithinCircle } from '../../utils';
 import BrushBase from './BrushBase';
-import validateToolArgs from './validateToolArgs';
+import validateToolArgs from '../validateToolArgs';
 
 class Airbrush extends BrushBase {
   latestX = null;

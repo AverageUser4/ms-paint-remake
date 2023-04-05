@@ -1,24 +1,26 @@
 import React, { createContext, useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Pencil from '../misc/tools/Pencil.js';
-import Fill from '../misc/tools/Fill.js';
-import Text from '../misc/tools/Text.js';
-import Eraser from '../misc/tools/Eraser.js';
-import ColorPicker from '../misc/tools/ColorPicker.js';
-import Magnifier from '../misc/tools/Magnifier.js';
-import Brush from '../misc/tools/Brush.js';
-import Calligraphy1 from '../misc/tools/Calligraphy-1.js';
-import Calligraphy2 from '../misc/tools/Calligraphy-2.js';
-import Airbrush from '../misc/tools/Airbrush';
-import Crayon from '../misc/tools/Crayon';
-import Marker from '../misc/tools/Marker';
-import NaturalPencil from '../misc/tools/NaturalPencil';
-import Oilbrush from '../misc/tools/Oilbrush';
-import Watercolor from '../misc/tools/Watercolor';
-import RectangularSelection from '../misc/tools/RectangularSelection';
-import FreeFormSelection from '../misc/tools/FreeFormSelection';
-import ShapeRightTriangle from '../misc/tools/ShapeRightTriangle';
+import Fill from '../misc/tools/misc/Fill.js';
+import Text from '../misc/tools/misc/Text.js';
+import ColorPicker from '../misc/tools/misc/ColorPicker.js';
+import Magnifier from '../misc/tools/misc/Magnifier.js';
+import RectangularSelection from '../misc/tools/misc/RectangularSelection';
+
+import Pencil from '../misc/tools/brushes/Pencil.js';
+import Eraser from '../misc/tools/brushes/Eraser.js';
+import Brush from '../misc/tools/brushes/Brush.js';
+import Calligraphy1 from '../misc/tools/brushes/Calligraphy-1.js';
+import Calligraphy2 from '../misc/tools/brushes/Calligraphy-2.js';
+import Airbrush from '../misc/tools/brushes/Airbrush.js';
+import Crayon from '../misc/tools/brushes/Crayon';
+import Marker from '../misc/tools/brushes/Marker';
+import NaturalPencil from '../misc/tools/brushes/NaturalPencil';
+import Oilbrush from '../misc/tools/brushes/Oilbrush';
+import Watercolor from '../misc/tools/brushes/Watercolor';
+import FreeFormSelection from '../misc/tools/brushes/FreeFormSelection.js';
+
+import ShapeRightTriangle from '../misc/tools/shapes/ShapeRightTriangle';
 
 const ToolContext = createContext();
 
@@ -51,6 +53,10 @@ function ToolProvider({ children }) {
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'
+  });
+  const [shapeData, setShapeData] = useState({
+    outline: 'solid',
+    fill: '',
   });
   const currentToolData = toolsData.get(currentTool);
 
@@ -85,6 +91,8 @@ function ToolProvider({ children }) {
         setLatestTools,
         currentToolData,
         doCurrentToolSetSize,
+        shapeData,
+        setShapeData,
       }}
     >
       {children}

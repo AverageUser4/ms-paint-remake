@@ -8,7 +8,7 @@ import { useColorContext } from '../../context/ColorContext';
 
 function useShape() {
   const { primaryRef, canvasZoom } = useCanvasContext();
-  const { currentTool, currentToolData } = useToolContext();
+  const { currentTool, currentToolData, shapeData } = useToolContext();
   const { colorData } = useColorContext();
 
   const {
@@ -128,6 +128,8 @@ function useShape() {
         colorData,
         selectionSize,
         currentlyPressedRef,
+        canvasZoom,
+        shapeData,
       });
     }, 20);
   }
@@ -158,6 +160,8 @@ function useShape() {
           height: selectionCanvas.height
         },
         currentlyPressedRef,
+        canvasZoom,
+        shapeData,
       });
     }
     

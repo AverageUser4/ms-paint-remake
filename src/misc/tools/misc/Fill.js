@@ -1,6 +1,6 @@
-import { objectEquals } from "../utils";
-import { ImageDataUtils } from "../utils";
-import validateToolArgs from "./validateToolArgs";
+import { objectEquals } from "../../utils";
+import { ImageDataUtils } from "../../utils";
+import validateToolArgs from "../validateToolArgs";
 
 export default {
   cursor: 'fill',

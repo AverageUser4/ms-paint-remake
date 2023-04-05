@@ -1,5 +1,5 @@
 import BrushBase from "./BrushBase";
-import validateToolArgs from "./validateToolArgs";
+import validateToolArgs from "../validateToolArgs";
 
 class Pencil extends BrushBase {
   cursor = 'pencil';

@@ -1,6 +1,6 @@
-import { RGBObjectToString } from "../utils";
+import { RGBObjectToString } from "../../utils";
 import BrushBase from "./BrushBase";
-import validateToolArgs from "./validateToolArgs";
+import validateToolArgs from "../validateToolArgs";
 
 class Eraser extends BrushBase {
   cursor = 'none';

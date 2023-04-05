@@ -54,7 +54,7 @@ const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }
               <img draggable="false" src={selection16} alt="Selection size."/>
               {
                 selectionPhase > 0 &&
-                  <span className="text">{usedSelectionSize.width} <Cross/> {usedSelectionSize.height}px</span>
+                  <span className="text">{Math.round(usedSelectionSize.width / canvasZoom)} <Cross/> {Math.round(usedSelectionSize.height / canvasZoom)}px</span>
               }
             </div>
         }

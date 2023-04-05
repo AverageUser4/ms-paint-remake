@@ -1,5 +1,5 @@
 import BrushBase from "./BrushBase";
-import validateToolArgs from "./validateToolArgs";
+import validateToolArgs from "../validateToolArgs";
 
 class Calligraphy_2 extends BrushBase {
   sizes = [3, 5, 8, 10];

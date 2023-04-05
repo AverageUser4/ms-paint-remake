@@ -11,6 +11,7 @@ import Tooltip from "../Tooltip/Tooltip";
 import Dropdown from "../Dropdown/Dropdown";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { toggleBoolState } from "../../misc/utils";
+import { useToolContext } from "../../context/ToolContext";
 
 import shapes16 from './assets/shapes-16.png';
 import shapes32 from './assets/shapes-32.png';
@@ -26,6 +27,8 @@ import solidColor16 from './assets/solid-color-16.png';
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
 
 const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
+  const { shapeData, setShapeData } = useToolContext();
+  
   const [isContainerDropdownOpen, setIsContainerDropdownOpen] = useState(false);
 
   const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);
@@ -126,37 +129,107 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
                   data-cy="Shapes-Outline-Dropdown"
                 >
                   <div className="popup__part">
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === '' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: '' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={none16} alt=""/>
                       <span>No outline</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === 'solid' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: 'solid' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={solidColor16} alt=""/>
                       <span>Solid color</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === 'crayon' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: 'crayon' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={crayon16} alt=""/>
                       <span>Crayon</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === 'marker' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: 'marker' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={marker16} alt=""/>
                       <span>Marker</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === 'oil' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: 'oil' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={oil16} alt=""/>
                       <span>Oil</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === 'pencil' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: 'pencil' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={pencil16} alt=""/>
                       <span>Natural pencil</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.outline === 'watercolor' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, outline: 'watercolor' }));
+                        setIsOutlineDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={waterColor16} alt=""/>
                       <span>Watercolor</span>
                     </button>
@@ -193,37 +266,107 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
                   data-cy="Shapes-Fill-Dropdown"
                 >
                   <div className="popup__part">
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === '' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: '' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={none16} alt=""/>
                       <span>No fill</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === 'solid' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: 'solid' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={solidColor16} alt=""/>
                       <span>Solid color</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === 'crayon' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: 'crayon' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={crayon16} alt=""/>
                       <span>Crayon</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === 'marker' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: 'marker' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={marker16} alt=""/>
                       <span>Marker</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === 'oil' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: 'oil' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={oil16} alt=""/>
                       <span>Oil</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === 'pencil' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: 'pencil' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={pencil16} alt=""/>
                       <span>Natural pencil</span>
                     </button>
 
-                    <button className="popup__button text text--4 text--nowrap">
+                    <button 
+                      className={`
+                        popup__button
+                        ${shapeData.fill === 'watercolor' ? 'popup__button--active' : ''}
+                        text text--4 text--nowrap
+                      `}
+                      onClick={() => {
+                        setShapeData(prev => ({ ...prev, fill: 'watercolor' }));
+                        setIsFillDropdownOpen(false);
+                      }}
+                    >
                       <img className="popup__image" src={waterColor16} alt=""/>
                       <span>Watercolor</span>
                     </button>
