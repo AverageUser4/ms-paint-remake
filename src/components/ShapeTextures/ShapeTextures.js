@@ -8,7 +8,7 @@ import pencil from './assets/pencil.png';
 import watercolor from './assets/watercolor.png';
 
 function ShapeTextures() {
-  const { shapeData, currentTool } = useToolContext();
+  const { currentTool } = useToolContext();
 
   if(!currentTool.startsWith('shape')) {
     return null;
@@ -16,22 +16,10 @@ function ShapeTextures() {
 
   return (
     <div style={{ display: 'none' }}>
-      {
-        (shapeData.outline === 'crayon' || shapeData.fill === 'crayon') &&
-          <img id="pxp-texture-crayon" src={crayon}/>
-      }
-      {
-        (shapeData.outline === 'oil' || shapeData.fill === 'oil') &&
-          <img id="pxp-texture-oil" src={oil}/>
-      }
-      {
-        (shapeData.outline === 'pencil' || shapeData.fill === 'pencil') &&
-          <img id="pxp-texture-pencil" src={pencil}/>
-      }
-      {
-        (shapeData.outline === 'watercolor' || shapeData.fill === 'watercolor') &&
-          <img id="pxp-texture-watercolor" src={watercolor}/>
-      }
+      <img id="pxp-texture-crayon" src={crayon}/>
+      <img id="pxp-texture-oil" src={oil}/>
+      <img id="pxp-texture-pencil" src={pencil}/>
+      <img id="pxp-texture-watercolor" src={watercolor}/>
     </div>
   );
 }

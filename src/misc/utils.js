@@ -170,7 +170,7 @@ export function RGBObjectToString(obj) {
     console.error(`Expected "b" property of received object to be an integer between 0 and 255, received:`, obj.b);
   }
 
-  return `rgb(${obj.r}, ${obj.g}, ${obj.b})`;
+  return `rgba(${obj.r}, ${obj.g}, ${obj.b}, ${obj.a || 1})`;
 }
 
 export function objectEquals(obj1, obj2, ignoredProperties = []) {
