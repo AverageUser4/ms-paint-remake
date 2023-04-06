@@ -59,9 +59,10 @@ function useFreeFormSelection() {
   }
 
   function onPressedMoveCallback(event) {
+    const step = 1;
     const currentPixel = { ...lastPointerPositionLocalRef.current };
 
-    const { destinationPixel, doDrawLoop, } = getDrawData({
+    const { destinationPixel, doDrawLoop } = getDrawData({
       secondaryRef, canvasZoom, currentPixel,
       pagePixel: { x: event.pageX, y: event.pageY },
       isConstrained: true,
@@ -76,7 +77,7 @@ function useFreeFormSelection() {
       maxY: Math.max(edgePositionRef.current.maxY, destinationPixel.y),
     };
 
-    function doDraw(isRepeated) {
+    function doDraw(isRepeated, isLast) {
       currentToolData.draw({
         ...doGetEveryContext(),
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
@@ -84,11 +85,11 @@ function useFreeFormSelection() {
         colorData,
         primaryImageData: primaryImageDataRef.current,
         isRepeated,
+        isLast,
       });
     }
 
-    doDraw(false);
-    doDrawLoop(doDraw, 1);
+    doDrawLoop(doDraw, step);
   }
 
   function onPressEndCallback() {

@@ -4,7 +4,7 @@ export default function validateToolArgs(args, toBeValidatedArray) {
     'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'isRepeated',
     'primaryImageData', 'canvasZoom', 'selectionSize', 'colorData', 'setColorData',
     'event', 'canvasSize', 'thumbnailPrimaryContext', 'doCanvasChangeZoom', 'drawCallback',
-    'shapeData'
+    'shapeData', 'isLast',
   ];
   
   try {
@@ -59,6 +59,9 @@ export default function validateToolArgs(args, toBeValidatedArray) {
   }
   if(is('isRepeated') && (typeof obj.isRepeated !== 'boolean')) {
     console.error(`"isRepeated" argument has to be a boolean value, provided:`, obj.isRepeated);
+  }
+  if(is('isLast') && (typeof obj.isLast !== 'boolean')) {
+    console.error(`"isLast" argument has to be a boolean value, provided:`, obj.isLast);
   }
   if(is('primaryImageData') && (!(obj.primaryImageData instanceof ImageData))) {
     console.error(`"primaryImageData" argument has to be an instance of ImageData, provided:`, obj.primaryImageData);

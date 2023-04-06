@@ -49,7 +49,7 @@ function useBrush() {
     const step = currentTool === 'brushes-airbrush' ? 15 : 1;
     const currentPixel = { ...lastPointerPositionRef.current };
 
-    const { destinationPixel, doDrawLoop, } = getDrawData({
+    const { destinationPixel, doDrawLoop } = getDrawData({
       secondaryRef, canvasZoom, currentPixel,
       pagePixel: { x: event.pageX, y: event.pageY },
     });
@@ -85,17 +85,17 @@ function useBrush() {
     setStyle(secondaryContext);
     thumbnailSecondaryContext && setStyle(thumbnailSecondaryContext);
 
-    function doDraw(isRepeated) {
+    function doDraw(isRepeated, isLast) {
       currentToolData.draw({
         ...doGetEveryContext(),
         currentPixel: { x: Math.round(currentPixel.x), y: Math.round(currentPixel.y) },
         currentlyPressedRef,
         colorData,
         isRepeated,
+        isLast,
       });
     }
 
-    doDraw(false);
     doDrawLoop(doDraw, step);
   }
 

@@ -32,8 +32,10 @@ class Eraser extends BrushBase {
     brushContext.strokeRect(startX, startY, size, size);
   }
 
-  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, colorData }) {
-    validateToolArgs(arguments, ['primaryContext', 'secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'colorData']);
+  draw({ primaryContext, secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef, colorData, isLast }) {
+    validateToolArgs(arguments, ['primaryContext', 'secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'colorData', 'isLast']);
+
+    console.log(isLast)
 
     const { startX, startY, size } = this._getData(currentPixel);
     

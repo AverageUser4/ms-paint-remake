@@ -367,13 +367,24 @@ export function getDrawData({
   } else {
     multiplier.y = multiplier.y * Math.abs(diffY / diffX);
   }
-
+  
   function doDrawLoop(doDraw, step) {
-    while(Math.abs(currentPixel.x - destinationPixel.x) > step || Math.abs(currentPixel.y - destinationPixel.y) > step) {
+    function doCheckShouldDraw({ x, y }) {
+      return Math.abs(x - destinationPixel.x) > step || Math.abs(y - destinationPixel.y) > step;
+    }
+
+    doDraw(false, !doCheckShouldDraw(currentPixel));
+
+    while(doCheckShouldDraw(currentPixel)) {
       currentPixel.x += step * multiplier.x;
       currentPixel.y += step * multiplier.y;
 
-      doDraw(true);
+      const next = {
+        x: currentPixel.x + step * multiplier.x,
+        y: currentPixel.y + step * multiplier.y,
+      }
+
+      doDraw(true, !doCheckShouldDraw(next));
     }
   }
 
