@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useCanvasContext } from "../../context/CanvasContext";
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
@@ -18,9 +19,10 @@ function useBrush() {
   const { colorData, setColorData } = useColorContext();
   const { doHistoryAdd } = useHistoryContext();
   const { doCanvasChangeZoom } = useActionsContext();
+  const primaryImageDataRef = useRef();
   
   let usedPressedMoveCallback = onPointerMoveCallback;
-  let usedPressStartCallback = onPointerMoveCallback;
+  let usedPressStartCallback = onPressStartCallback;
   let usedPressEndCallback = onPressEndCallback;
   let usedCancelCallback = onCancelCallback;
 
@@ -45,6 +47,13 @@ function useBrush() {
     usedCancelCallback = (event) => currentToolData.onCancel({ event });
   }
 
+  function onPressStartCallback(event) {
+    if(currentTool === 'eraser') {
+      primaryImageDataRef.current = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
+    }
+    onPointerMoveCallback(event);
+  }
+
   function onPointerMoveCallback(event) {
     const step = currentTool === 'brushes-airbrush' ? 15 : 1;
     const currentPixel = { ...lastPointerPositionRef.current };
@@ -67,6 +76,7 @@ function useBrush() {
           brushContext,
           canvasZoom,
           currentlyPressedRef,
+
         });
       }
     }
@@ -93,6 +103,7 @@ function useBrush() {
         colorData,
         isRepeated,
         isLast,
+        primaryImageData: primaryImageDataRef.current,
       });
     }
 

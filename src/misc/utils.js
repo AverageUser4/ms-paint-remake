@@ -271,6 +271,11 @@ export const ImageDataUtils = {
     }
   },
 
+  getIsCoordsValid(imageData, x, y) {
+    this._validateImageData(imageData);
+    return x >= 0 && x < imageData.width - 1 && y >= 0 && y < imageData.height - 1;
+  },
+
   getIndexFromCoords(imageData, x, y) {
     this._validateImageData(imageData);
     this._validateCoords(imageData, x, y);
