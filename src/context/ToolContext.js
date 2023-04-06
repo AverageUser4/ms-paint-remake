@@ -94,7 +94,6 @@ function ToolProvider({ children }) {
     ['shape-lightning', ShapeLightning],
   ]));
   const [currentTool, setCurrentTool] = useState('shape-right-triangle');
-  console.log(currentTool)
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'

@@ -13,14 +13,14 @@ class ShapeOvalCallout extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ start, endX, endY }) => {
-        selectionContext.beginPath();
-        selectionContext.moveTo(start, start);
-        selectionContext.lineTo(start, endY);
-        selectionContext.lineTo(endX, endY);
-        selectionContext.closePath();
-        shapeData.fill && selectionContext.fill();
-        shapeData.outline && selectionContext.stroke();
+      drawCallback: ({ context, start, endX, endY }) => {
+        context.beginPath();
+        context.moveTo(start, start);
+        context.lineTo(start, endY);
+        context.lineTo(endX, endY);
+        context.closePath();
+        shapeData.fill && context.fill();
+        shapeData.outline && context.stroke();
       }
     });
   }

@@ -5,9 +5,11 @@ import useFreeFormSelection from './useFreeFormSelection';
 import useShape from './useShape';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
+import { useToolContext } from "../../context/ToolContext";
 
 function useSelection() {
   const { primaryRef, canvasZoom } = useCanvasContext();
+  const { currentTool } = useToolContext();
   
   const {
     selectionSize,
@@ -23,6 +25,18 @@ function useSelection() {
   const { onPointerDownRectangularSelection } = useRectangularSelection();
   const { onPointerDownFreeFormSelection } = useFreeFormSelection();
   const { onPointerDownShape } = useShape();
+
+  let usedPosition = selectionOutlinePosition || selectionPosition;
+  let usedSetPosition = setSelectionOutlinePosition;
+  let usedSize = selectionOutlineSize || selectionSize;
+  let usedSetSize = setSelectionOutlineSize;
+
+  if(currentTool.startsWith('shape')) {
+    usedPosition = selectionPosition;
+    usedSetPosition = doSelectionSetPosition;
+    usedSize = selectionSize;
+    usedSetSize = doSelectionSetSize;
+  }
   
   function onPressEndCallbackResize() {
     if(selectionOutlineSize) {
@@ -40,11 +54,11 @@ function useSelection() {
     resizeGrabElements: selectionResizeGrabElements,
     resizeOutlineElement: selectionResizeOutlineElement
   } = useResize({ 
-    position: selectionOutlinePosition || selectionPosition,
-    setPosition: setSelectionOutlinePosition,
+    position: usedPosition,
+    setPosition: usedSetPosition,
     isAllowToLeaveViewport: true,
-    size: selectionOutlineSize || selectionSize,
-    setSize: setSelectionOutlineSize,
+    size: usedSize,
+    setSize: usedSetSize,
     isConstrained: false,
     minimalSize: { width: 1, height: 1, },
     isResizable: true,

@@ -1,4 +1,4 @@
-import { RGBObjectToString, ImageDataUtils, getAverage } from "../../utils";
+import { RGBObjectToString, ImageDataUtils, getAverage, doGetCanvasCopy } from "../../utils";
 import validateToolArgs from "../validateToolArgs";
 
 class ShapeBase {
@@ -40,16 +40,12 @@ class ShapeBase {
       ShapeBase.lastFillColor = colorData.primary;
     }
 
-    selectionContext.save();
-    selectionContext.clearRect(0, 0, selectionSize.width, selectionSize.height);
-
     const usedOutlineColor = { ...ShapeBase.lastOutlineColor };
     const usedFillColor = { ...ShapeBase.lastFillColor };
     let outlineTexture = document.querySelector(`#pxp-texture-${shapeData.outline}`);
     let fillTexture = document.querySelector(`#pxp-texture-${shapeData.fill}`);
 
     function prepareTexture(targetCanvas) {
-      console.log(targetCanvas)
       let color = ShapeBase.lastFillColor;
       let texture = fillTexture;
 
@@ -128,13 +124,27 @@ class ShapeBase {
       }
     }
 
-    selectionContext.strokeStyle = usedOutlineStyle;
-    selectionContext.fillStyle = usedFillStyle;
-    selectionContext.lineWidth = this.chosenSize;
-    selectionContext.imageSmoothingEnabled = false;
+    selectionContext.save();
+    selectionContext.clearRect(0, 0, selectionSize.width, selectionSize.height);
 
+    const copy = document.createElement('canvas');
+    copy.width = Math.max(1, Math.round(selectionSize.width / canvasZoom));
+    copy.height = Math.max(1, Math.round(selectionSize.height / canvasZoom));
+
+    const context = copy.getContext('2d');
+    context.strokeStyle = usedOutlineStyle;
+    context.fillStyle = usedFillStyle;
+    context.lineWidth = this.chosenSize;
+    context.imageSmoothingEnabled = false;
+    context.lineJoin = 'round';
+
+    drawCallback({ context, start, endX, endY });
+
+    selectionContext.imageSmoothingEnabled = false;
+    selectionContext.clearRect(0, 0, selectionSize.width, selectionSize.height);
     selectionContext.scale(canvasZoom, canvasZoom);
-    drawCallback({ start, endX, endY });
+    selectionContext.drawImage(copy, 0, 0);
+
     selectionContext.restore();
 
     return { start, endX, endY };
