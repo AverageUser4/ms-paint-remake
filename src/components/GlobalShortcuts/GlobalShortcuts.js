@@ -127,14 +127,18 @@ function GlobalShortcuts({ ribbonData }) {
             break;
 
           case '+': {
-            doCurrentToolSetSize(currentToolData.chosenSize + 1);
-            drawIndicator();
+            if(currentToolData.sizes) {
+              doCurrentToolSetSize(currentToolData.chosenSize + 1);
+              drawIndicator();
+            }
             break;
           }
 
           case '-': {
-            doCurrentToolSetSize(currentToolData.chosenSize - 1);
-            drawIndicator();
+            if(currentToolData.sizes) {
+              doCurrentToolSetSize(currentToolData.chosenSize - 1);
+              drawIndicator();
+            }
             break;
           }
         }

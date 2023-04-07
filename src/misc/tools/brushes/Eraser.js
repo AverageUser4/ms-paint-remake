@@ -9,6 +9,10 @@ class Eraser extends BrushBase {
   positionData = [];
 
   _getData(currentPixel) {
+    if(!currentPixel) {
+      return {};
+    }
+    
     const size = this.chosenSize;
     const startX = Math.round(currentPixel.x - size / 2);
     const startY = Math.round(currentPixel.y - size / 2);
@@ -40,6 +44,15 @@ class Eraser extends BrushBase {
       'secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'colorData', 'isLast', 'primaryImageData'
     ]);
 
+    function setIfNeeded(x, y) {
+      if(ImageDataUtils.getIsCoordsValid(primaryImageData, x, y)) {
+        const currentColor = ImageDataUtils.getColorFromCoords(primaryImageData, x, y);
+        if(objectEquals(currentColor, colorData.primary, ['a'])) {
+          ImageDataUtils.setColorAtCoords(primaryImageData, x, y, colorData.secondary);
+        }
+      }
+    }
+
     const { startX, startY, size } = this._getData(currentPixel);
     
     if(currentlyPressedRef.current === 0) {
@@ -57,19 +70,40 @@ class Eraser extends BrushBase {
       this.positionData.push(currentPixel);
 
       if(isLast) {
+        let current = this._getData(this.positionData[0]);
+        const direction = {};
+        let isDirection = false;
+        
         for(let i = 0; i < this.positionData.length; i++) {
-          const { startX, startY, endX, endY } = this._getData(this.positionData[i]);
+          const next = this._getData(this.positionData[i + 1]);
 
-          for(let x = startX; x < endX; x++) {
-            for(let y = startY; y < endY; y++) {
-              if(ImageDataUtils.getIsCoordsValid(primaryImageData, x, y)) {
-                const currentColor = ImageDataUtils.getColorFromCoords(primaryImageData, x, y);
-                if(objectEquals(currentColor, colorData.primary, ['a'])) {
-                  ImageDataUtils.setColorAtCoords(primaryImageData, x, y, colorData.secondary);
-                }
+          if(isDirection) {
+            let loopX = direction.x < 0 ? current.startX : current.endX - 1;
+            let loopY = direction.y < 0 ? current.startY : current.endY - 1;
+
+            if(direction.x) {
+              for(let y = current.startY; y < current.endY; y++) {
+                setIfNeeded(loopX, y);
+              }
+            }
+            if(direction.y) {
+              for(let x = current.startX; x < current.endX; x++) {
+                setIfNeeded(x, loopY);
+              }
+            }
+          } else {
+            for(let x = current.startX; x < current.endX; x++) {
+              for(let y = current.startY; y < current.endY; y++) {
+                setIfNeeded(x, y);
               }
             }
           }
+
+          direction.x = next.startX - current.startX;
+          direction.y = next.startY - current.startY;
+
+          current = next;
+          isDirection = true;
         }
 
         secondaryContext.putImageData(primaryImageData, 0, 0);
