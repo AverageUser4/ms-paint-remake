@@ -206,8 +206,8 @@ export default function useResize({
       <div 
         className="point-outline"
         style={{ 
-          left: position?.x || 0,
-          top: position?.y || 0,
+          left: position?.x * zoom || 0,
+          top: position?.y * zoom || 0,
           width: hasMoved ? size.width : resizeData.initialWidth,
           height: hasMoved ? size.height : resizeData.initialHeight 
         }}

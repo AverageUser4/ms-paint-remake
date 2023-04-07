@@ -40,7 +40,10 @@ function useSelection() {
   
   function onPressEndCallbackResize() {
     if(selectionOutlineSize) {
-      doSelectionResize(selectionOutlineSize);
+      doSelectionResize({ 
+        width: selectionOutlineSize.width / canvasZoom,
+        height: selectionOutlineSize.height / canvasZoom
+      });
       setSelectionOutlineSize(null);
     }
 
@@ -67,7 +70,7 @@ function useSelection() {
     isCancelOnRightMouseDown: true,
     isSmallPoints: true,
     onPressEndCallback: onPressEndCallbackResize,
-    zoom: 1,
+    zoom: canvasZoom,
     containerRef: primaryRef
   });
   const { onPointerDownMove: onPointerDownSelectionMove } = useMove({

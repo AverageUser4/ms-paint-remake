@@ -8,4 +8,4 @@ canvasStyle:
   - sets width and height attribute of brushCanvas
 
 selectionSize:
-  - sets both style and normal width and height attributes of selectionCanvas
+  - sets both style and normal width and height attributes of selectionCanvas (is being changed)

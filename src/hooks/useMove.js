@@ -33,21 +33,18 @@ export default function useMove({
   const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize } = useMainWindowContext();
   const [positionDifference, setPositionDifference] = useState(null);
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
-  const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = 
-    usePointerTrack({ 
-      onPressedMoveCallback: onPointerMoveMoveCallback,
-      onPressStartCallback: onPointerDownMoveCallback,
-      onPressEndCallback: onPointerUpMoveCallback 
-    });
+  const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = usePointerTrack({ 
+    onPressedMoveCallback, onPressStartCallback, onPressEndCallback,
+  });
 
-  function onPointerDownMoveCallback(event) {
-    const x = event.clientX - position.x;
-    const y = event.clientY - position.y;
+  function onPressStartCallback(event) {
+    const x = event.clientX - (position.x * canvasZoom);
+    const y = event.clientY - (position.y * canvasZoom);
     
     setPositionDifference({ x, y });
   }
 
-  function onPointerMoveMoveCallback(event) {
+  function onPressedMoveCallback(event) {
     if(!containerRect && !containerRef?.current) {
       return;
     }
@@ -65,8 +62,8 @@ export default function useMove({
       x = Math.max(Math.min(x, containerRect.width - size.width), 0);
       y = Math.max(Math.min(y, containerRect.height - size.height), 0);
     } else if(isReverseConstrained) {
-      x = Math.max(Math.min(x, containerRect.width), -size.width);
-      y = Math.max(Math.min(y, containerRect.height), -size.height);
+      x = Math.max(Math.min(x, containerRect.width), -size.width * canvasZoom);
+      y = Math.max(Math.min(y, containerRect.height), -size.height * canvasZoom);
     }
 
     if(!isInnerWindow && isMaximized) {
@@ -83,7 +80,7 @@ export default function useMove({
     }
   }
 
-  function onPointerUpMoveCallback() {
+  function onPressEndCallback() {
     if(indicatorData.strPosition) {
       if(indicatorData.strPosition === 'full') {
         doMainWindowMaximize();

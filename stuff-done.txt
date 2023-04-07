@@ -8,5 +8,7 @@ GOING TO:
   - make brush indicators drawn by doDrawIcon pixelated
   - make code repeated between useShape and useRectangularSelection shared
   - fix scaling issues with selectionCanvas
+  - rework useMove / useResize, remove window specific code and put it in callbacks
+  - changes to useMove could potentially make selectionCanvas perfectly aligned with primaryCanvas (would move pixel by pixel)
 
 DONE:

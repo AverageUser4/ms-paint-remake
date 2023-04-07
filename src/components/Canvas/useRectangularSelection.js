@@ -46,8 +46,8 @@ function useRectangularSelection() {
     
     const { clientX, clientY } = event;
     const primaryRect = primaryRef.current.getBoundingClientRect();
-    const offsetX = (event.pageX - primaryRect.x) / canvasZoom;
-    const offsetY = (event.pageY - primaryRect.y) / canvasZoom;
+    const offsetX = event.pageX - primaryRect.x;
+    const offsetY = event.pageY - primaryRect.y;
     
     setResizeData({
       type: 'selection',
@@ -59,7 +59,7 @@ function useRectangularSelection() {
       initialHeight: 1,
     })
     doSelectionSetSize({ width: 1, height: 1 });
-    doSelectionSetPosition({ x: offsetX, y: offsetY });
+    doSelectionSetPosition({ x: offsetX / canvasZoom, y: offsetY / canvasZoom });
     setSelectionPhase(1);
   }
   
