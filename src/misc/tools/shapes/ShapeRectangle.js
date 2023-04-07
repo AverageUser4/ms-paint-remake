@@ -15,11 +15,7 @@ class ShapeRectangle extends ShapeBase {
       shapeData,
       drawCallback: ({ context, startXY, end }) => {
         context.beginPath();
-        context.moveTo(startXY, startXY);
-        context.lineTo(end.x, startXY);
-        context.lineTo(end.x, end.y);
-        context.lineTo(startXY, end.y);
-        context.closePath();
+        context.rect(startXY, startXY, end.x - startXY, end.y - startXY);
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();
       }

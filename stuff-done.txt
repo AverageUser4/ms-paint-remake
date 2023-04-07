@@ -7,3 +7,11 @@ GOING TO:
   - added new shapes
 
 DONE:
+
+
+
+/* 
+  arcTo: 
+    - first point: where corner would be
+    - second point: where next line starts 
+*/

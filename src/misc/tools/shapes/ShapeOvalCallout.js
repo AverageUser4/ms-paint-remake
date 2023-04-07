@@ -13,12 +13,17 @@ class ShapeOvalCallout extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, startXY, end }) => {
+      drawCallback: ({ context, startXY, middle, end, getCoordFromPercent }) => {
         context.beginPath();
-        context.moveTo(startXY, startXY);
-        context.lineTo(startXY, end.y);
-        context.lineTo(end.x, end.y);
-        context.closePath();
+        context.moveTo(getCoordFromPercent('x', 20), getCoordFromPercent('y', 80));
+        context.lineTo(getCoordFromPercent('x', 22), end.y);
+        context.lineTo(getCoordFromPercent('x', 40), getCoordFromPercent('y', 86));
+        context.ellipse(
+          getCoordFromPercent('x', 55), getCoordFromPercent('y', 45),
+          Math.max(getCoordFromPercent('x', 40), 0),
+          Math.max(getCoordFromPercent('y', 40), 0),
+          0, 0, 2 * Math.PI
+        );
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();
       }

@@ -13,12 +13,13 @@ class ShapeHeart extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, startXY, end }) => {
+      drawCallback: ({ context, startXY, middle, end, getCoordFromPercent }) => {
         context.beginPath();
-        context.moveTo(startXY, startXY);
-        context.lineTo(startXY, end.y);
-        context.lineTo(end.x, end.y);
-        context.closePath();
+        context.moveTo(middle.x, end.y);
+        context.quadraticCurveTo(end.x, getCoordFromPercent('y', 65), end.x, getCoordFromPercent('y', 30));
+        context.quadraticCurveTo(getCoordFromPercent('x', 85), startXY - getCoordFromPercent('y', 20), middle.x, getCoordFromPercent('y', 15));
+        context.quadraticCurveTo(getCoordFromPercent('x', 15), startXY - getCoordFromPercent('y', 20), startXY, getCoordFromPercent('y', 30));
+        context.quadraticCurveTo(startXY, getCoordFromPercent('y', 65), middle.x, end.y);
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();
       }

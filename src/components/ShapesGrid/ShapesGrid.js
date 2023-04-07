@@ -55,8 +55,8 @@ const shapesDataArray = [
   { src: fivePointStar16, name: 'Five-point star' },
   { src: sixPointStar16, name: 'Six-point star' },
   { src: callout16, name: 'Rounded rectangular callout' },
-  { src: ovalCallout16, name: 'Oval callout' },
-  { src: cloudCallout16, name: 'Cloud callout' },
+  { src: ovalCallout16, name: 'Oval callout', isDisabled: true },
+  { src: cloudCallout16, name: 'Cloud callout', isDisabled: true },
   { src: heart16, name: 'Heart' },
   { src: lightning16, name: 'Lightning' },
 ];
@@ -83,7 +83,8 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
     const id = shape.name.toLowerCase().replace(/ /g, '-');
     
     return (
-      <button 
+      <button
+        disabled={shape.isDisabled}
         key={id}
         className={`
           button
