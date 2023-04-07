@@ -46,8 +46,8 @@ function useRectangularSelection() {
     
     const { clientX, clientY } = event;
     const primaryRect = primaryRef.current.getBoundingClientRect();
-    const offsetX = event.pageX - primaryRect.x;
-    const offsetY = event.pageY - primaryRect.y;
+    const offsetX = (event.pageX - primaryRect.x) / canvasZoom;
+    const offsetY = (event.pageY - primaryRect.y) / canvasZoom;
     
     setResizeData({
       type: 'selection',
@@ -100,10 +100,10 @@ function useRectangularSelection() {
     newWidth = Math.max(newWidth, 1);
     newHeight = Math.max(newHeight, 1);
 
-    doSelectionSetSize({ width: newWidth, height: newHeight });
+    doSelectionSetSize({ width: newWidth / canvasZoom, height: newHeight / canvasZoom });
 
     if(newX !== selectionPosition.x || newY !== selectionPosition.y) {
-      doSelectionSetPosition({ x: newX, y: newY })
+      doSelectionSetPosition({ x: newX / canvasZoom, y: newY / canvasZoom })
     }
   }
 
@@ -127,18 +127,18 @@ function useRectangularSelection() {
       const { primaryContext } = doGetEveryContext();
   
       const imageData = primaryContext.getImageData(
-        Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-        Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-        Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-        Math.round(lastSelectionSizeRef.current.height / canvasZoom),
+        lastSelectionPositionRef.current.x,
+        lastSelectionPositionRef.current.y,
+        lastSelectionSizeRef.current.width,
+        lastSelectionSizeRef.current.height,
       );
   
       doSelectionDrawToSelection(imageData);
       doCanvasClearPrimary({
-        x: Math.round(lastSelectionPositionRef.current.x / canvasZoom),
-        y: Math.round(lastSelectionPositionRef.current.y / canvasZoom),
-        width: Math.round(lastSelectionSizeRef.current.width / canvasZoom),
-        height: Math.round(lastSelectionSizeRef.current.height / canvasZoom),
+        x: lastSelectionPositionRef.current.x,
+        y: lastSelectionPositionRef.current.y,
+        width: lastSelectionSizeRef.current.width,
+        height: lastSelectionSizeRef.current.height,
       });
 
       doHistoryAdd({

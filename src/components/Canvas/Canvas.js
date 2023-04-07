@@ -28,11 +28,6 @@ function Canvas() {
   const { currentTool, currentToolData } = useToolContext();
   const { colorData } = useColorContext();
   const { doHistoryAdd } = useHistoryContext();
-  const canvasStyle = useMemo(() => ({ 
-    width: canvasSize.width * canvasZoom,
-    height: canvasSize.height * canvasZoom,
-    filter: isBlackAndWhite ? 'grayscale(100%)' : '',
-  }), [canvasSize, canvasZoom, isBlackAndWhite]);
   const { 
     selectionRef, selectionSize, selectionPhase, selectionPosition,
     doSelectionDrawToPrimary, doSelectionEnd,
@@ -40,8 +35,19 @@ function Canvas() {
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
   const gridData = doGetGridData(canvasZoom);
-
   const { onPointerDownBrush } = useBrush();
+
+  const canvasStyle = useMemo(() => ({ 
+    width: canvasSize.width * canvasZoom,
+    height: canvasSize.height * canvasZoom,
+    filter: isBlackAndWhite ? 'grayscale(100%)' : '',
+  }), [canvasSize, canvasZoom, isBlackAndWhite]);
+  const selectionStyle = {
+    width: selectionSize?.width * canvasZoom,
+    height: selectionSize?.height * canvasZoom,
+    top: selectionPosition?.y * canvasZoom,
+    left: selectionPosition?.x * canvasZoom,
+  }
 
   const { 
     selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
@@ -137,10 +143,11 @@ function Canvas() {
           <div 
             className="point-container point-container--inner point-container--repositioned"
             style={{
-              left: selectionPosition.x,
-              top: selectionPosition.y,
-              width: selectionSize.width,
-              height: selectionSize.height,
+              ...selectionStyle,
+              // left: selectionPosition.x,
+              // top: selectionPosition.y,
+              // width: selectionSize.width,
+              // height: selectionSize.height,
               display: (selectionPhase === 2 || selectionSize.width > 1 || selectionSize.height > 1) ? 'block' : 'none'
             }}
           >
@@ -150,10 +157,11 @@ function Canvas() {
               height={selectionSize.height}
               style={{ 
                 ...canvasStyle,
+                ...selectionStyle,
                 left: 0,
                 top: 0,
-                width: selectionSize.width,
-                height: selectionSize.height
+                // width: selectionSize.width,
+                // height: selectionSize.height
               }}
               className={`
                 ${css['canvas']}

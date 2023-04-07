@@ -80,6 +80,7 @@ function useSelection() {
     isConstrained: false,
     isReverseConstrained: true,
     containerRef: primaryRef,
+    canvasZoom,
     onMoveCallback: (event) => {
       if(!event.shiftKey) {
         return;

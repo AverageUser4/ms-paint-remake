@@ -13,6 +13,7 @@ export default function useMove({
   setPosition,
   size,
   setSize,
+  canvasZoom = 1,
   onMoveCallback,
   isInnerWindow,
   isMaximized,
@@ -78,7 +79,7 @@ export default function useMove({
       setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
       setPosition({ x: adjustedX, y: 0 })
     } else {
-      setPosition({ x, y });
+      setPosition({ x: x / canvasZoom, y: y / canvasZoom });
     }
   }
 
