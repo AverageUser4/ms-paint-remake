@@ -3,8 +3,8 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeRoundedRectangularCallout extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData']);
+  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData, thumbnailSelectionContext }) {
+    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
     
     this.prepareAndDraw({ 
       selectionSize,
@@ -13,6 +13,7 @@ class ShapeRoundedRectangularCallout extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
+      thumbnailSelectionContext,
       drawCallback: ({ context, startXY, end, getCoordFromPercent }) => {
         let radius = Math.round(Math.min(end.x, end.y) / 10);
 

@@ -14,8 +14,8 @@ class ShapeBase {
   sizes = [1, 3, 5, 8];
   chosenSize = 5;
 
-  prepareAndDraw({ selectionSize, currentlyPressedRef, selectionContext, colorData, canvasZoom, drawCallback, shapeData }) {
-    validateToolArgs(arguments, ['selectionSize', 'currentlyPressedRef', 'selectionContext', 'colorData', 'canvasZoom', 'drawCallback', 'shapeData']);
+  prepareAndDraw({ selectionSize, currentlyPressedRef, selectionContext, colorData, canvasZoom, drawCallback, shapeData, thumbnailSelectionContext }) {
+    validateToolArgs(arguments, ['selectionSize', 'currentlyPressedRef', 'selectionContext', 'colorData', 'canvasZoom', 'drawCallback', 'shapeData', 'thumbnailSelectionContext']);
 
     const startXY = this.chosenSize;
     const end = {
@@ -147,9 +147,6 @@ class ShapeBase {
       }
     }
 
-    selectionContext.save();
-    selectionContext.clearRect(0, 0, selectionSize.width, selectionSize.height);
-
     const copy = document.createElement('canvas');
     copy.width = Math.max(1, Math.round(selectionSize.width / canvasZoom));
     copy.height = Math.max(1, Math.round(selectionSize.height / canvasZoom));
@@ -162,12 +159,20 @@ class ShapeBase {
 
     drawCallback({ context, startXY, end, middle, getCoordFromPercent });
 
-    selectionContext.imageSmoothingEnabled = false;
-    selectionContext.clearRect(0, 0, selectionSize.width, selectionSize.height);
-    selectionContext.scale(canvasZoom, canvasZoom);
-    selectionContext.drawImage(copy, 0, 0);
+    function drawToContext(context, isThumbnail) {
+      context.save();
+      context.clearRect(0, 0, selectionSize.width, selectionSize.height);
+      context.imageSmoothingEnabled = false;
+      context.clearRect(0, 0, selectionSize.width, selectionSize.height);
+      if(!isThumbnail) {
+        context.scale(canvasZoom, canvasZoom);
+      }
+      context.drawImage(copy, 0, 0);
+      context.restore();
+    }
 
-    selectionContext.restore();
+    drawToContext(selectionContext);
+    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
   }
 
   drawShape() {

@@ -3,8 +3,8 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeCloudCallout extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData']);
+  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData, thumbnailSelectionContext }) {
+    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
     
     this.prepareAndDraw({ 
       selectionSize,
@@ -13,6 +13,7 @@ class ShapeCloudCallout extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
+      thumbnailSelectionContext,
       drawCallback: ({ context, startXY, end }) => {
         context.beginPath();
         context.moveTo(startXY, startXY);

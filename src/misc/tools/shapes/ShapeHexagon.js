@@ -3,8 +3,8 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeHexagon extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData']);
+  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData, thumbnailSelectionContext }) {
+    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
     
     this.prepareAndDraw({ 
       selectionSize,
@@ -13,6 +13,7 @@ class ShapeHexagon extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
+      thumbnailSelectionContext,
       drawCallback: ({ context, startXY, middle, end, getCoordFromPercent }) => {
         context.beginPath();
         context.moveTo(middle.x, startXY);

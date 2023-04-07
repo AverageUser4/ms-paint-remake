@@ -3,8 +3,8 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeLightning extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData']);
+  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData, thumbnailSelectionContext }) {
+    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
     
     this.prepareAndDraw({ 
       selectionSize,
@@ -13,6 +13,7 @@ class ShapeLightning extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
+      thumbnailSelectionContext,
       drawCallback: ({ context, startXY, end, getCoordFromPercent }) => {
         context.beginPath();
         context.moveTo(startXY, getCoordFromPercent('y', 20));

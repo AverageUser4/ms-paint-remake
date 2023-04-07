@@ -4,14 +4,8 @@ GOING TO:
   - changes to code can cause primaryCanvas to lose it's background color and become transparent, it does not seem that there is user action
     that can cause that but it may need to be investigated
   - certain selection operations are now disabled on shapes as they dont work properly with them
-  - added new shapes
+  - fix FreeFormSelection selecting shapes that are not exactly like expected
+  - make brush indicators drawn by doDrawIcon pixelated
+  - make code repeated between useShape and useRectangularSelection shared
 
 DONE:
-
-
-
-/* 
-  arcTo: 
-    - first point: where corner would be
-    - second point: where next line starts 
-*/

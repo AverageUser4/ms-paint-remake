@@ -4,7 +4,7 @@ export default function validateToolArgs(args, toBeValidatedArray) {
     'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'isRepeated',
     'primaryImageData', 'canvasZoom', 'selectionSize', 'colorData', 'setColorData',
     'event', 'canvasSize', 'thumbnailPrimaryContext', 'doCanvasChangeZoom', 'drawCallback',
-    'shapeData', 'isLast',
+    'shapeData', 'isLast', 'thumbnailSelectionContext'
   ];
   
   try {
@@ -44,6 +44,9 @@ export default function validateToolArgs(args, toBeValidatedArray) {
   }
   if(is('thumbnailSecondaryContext') && !(obj.thumbnailSecondaryContext instanceof CanvasRenderingContext2D) && typeof obj.thumbnailSecondaryContext !== 'undefined') {
     console.error(`"thumbnailSecondaryContext" argument has to be an instance of CanvasRenderingContext2D or undefined, provided:`, obj.thumbnailSecondaryContext);
+  }
+  if(is('thumbnailSelectionContext') && !(obj.thumbnailSelectionContext instanceof CanvasRenderingContext2D) && typeof obj.thumbnailSelectionContext !== 'undefined') {
+    console.error(`"thumbnailSelectionContext" argument has to be an instance of CanvasRenderingContext2D or undefined, provided:`, obj.thumbnailSelectionContext);
   }
   if(is('currentPixel') && (typeof obj.currentPixel !== 'object' || !Number.isInteger(obj.currentPixel?.x) || !Number.isInteger(obj.currentPixel?.y))) {
     console.error(`"currentPixel" argument has to be an object containing properties "x" (integer) and "y" (integer), provided:`, obj.currentPixel);

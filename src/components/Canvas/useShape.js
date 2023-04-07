@@ -121,10 +121,9 @@ function useShape() {
 
       setSelectionPhase(2);
       setResizeData(null);
-      const { selectionContext } = doSelectionGetEveryContext();
       
       currentToolData.drawShape({ 
-        selectionContext,
+        ...doSelectionGetEveryContext(),
         colorData,
         selectionSize,
         currentlyPressedRef,
@@ -150,10 +149,8 @@ function useShape() {
     }
 
     function drawCallback() {
-      const { selectionContext } = doSelectionGetEveryContext();
-        
       currentToolData.drawShape({ 
-        selectionContext,
+        ...doSelectionGetEveryContext(),
         colorData,
         selectionSize: { 
           width: selectionCanvas.width,

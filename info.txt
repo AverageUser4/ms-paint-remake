@@ -1,0 +1,11 @@
+canvasSize:
+  - is unaffected by canvasZoom
+  - sets width and height attributes of both primaryCanva and secondaryCanvas
+
+canvasStyle:
+  - contains width and height from canvasSize multiplied by canvasZoom
+  - sets width and height STYLE attribute of primaryCanvas and secondaryCanvas
+  - sets width and height attribute of brushCanvas
+
+selectionSize:
+  - sets both style and normal width and height attributes of selectionCanvas
