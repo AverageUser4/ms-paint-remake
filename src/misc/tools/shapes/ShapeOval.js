@@ -13,12 +13,14 @@ class ShapeOval extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, start, endX, endY }) => {
+      drawCallback: ({ context, startXY, middle }) => {
         context.beginPath();
-        context.moveTo(start, start);
-        context.lineTo(start, endY);
-        context.lineTo(endX, endY);
-        context.closePath();
+        context.ellipse(
+          middle.x, middle.y,
+          Math.max(middle.x - startXY, 0),
+          Math.max(middle.y - startXY, 0),
+          0, 0, 2 * Math.PI
+        );
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();
       }

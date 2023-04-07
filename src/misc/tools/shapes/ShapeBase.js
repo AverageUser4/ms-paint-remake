@@ -1,4 +1,4 @@
-import { RGBObjectToString, ImageDataUtils, getAverage, doGetCanvasCopy } from "../../utils";
+import { RGBObjectToString, ImageDataUtils, getAverage } from "../../utils";
 import validateToolArgs from "../validateToolArgs";
 
 class ShapeBase {
@@ -17,9 +17,32 @@ class ShapeBase {
   prepareAndDraw({ selectionSize, currentlyPressedRef, selectionContext, colorData, canvasZoom, drawCallback, shapeData }) {
     validateToolArgs(arguments, ['selectionSize', 'currentlyPressedRef', 'selectionContext', 'colorData', 'canvasZoom', 'drawCallback', 'shapeData']);
 
-    const start = this.chosenSize;
-    const endX = selectionSize.width / canvasZoom - this.chosenSize;
-    const endY = selectionSize.height / canvasZoom - this.chosenSize;
+    const startXY = this.chosenSize;
+    const end = {
+      x: selectionSize.width / canvasZoom - this.chosenSize,
+      y: selectionSize.height / canvasZoom - this.chosenSize,
+    };
+    const middle = {
+      x: selectionSize.width / canvasZoom / 2,
+      y: selectionSize.height / canvasZoom / 2,
+    };
+
+    function getCoordFromPercent(axis, percent) {
+      if(axis !== 'x' && axis !== 'y') {
+        console.error('"axis" have to be "x" or "y", provided:', axis);
+      }
+      if(typeof percent !== 'number') {
+        console.error('"percent" has to be a number, provided:', percent);
+      }
+
+      if(axis === 'x') {
+        const width = end.x - startXY;
+        return Math.round(startXY + width * (percent / 100));
+      } else {
+        const height = end.y - startXY;
+        return Math.round(startXY + height * (percent / 100));
+      }
+    }
 
     const previousFillColor = ShapeBase.lastFillColor;
     const previousOutlineColor = ShapeBase.lastOutlineColor;
@@ -136,9 +159,8 @@ class ShapeBase {
     context.fillStyle = usedFillStyle;
     context.lineWidth = this.chosenSize;
     context.imageSmoothingEnabled = false;
-    context.lineJoin = 'round';
 
-    drawCallback({ context, start, endX, endY });
+    drawCallback({ context, startXY, end, middle, getCoordFromPercent });
 
     selectionContext.imageSmoothingEnabled = false;
     selectionContext.clearRect(0, 0, selectionSize.width, selectionSize.height);
@@ -146,8 +168,6 @@ class ShapeBase {
     selectionContext.drawImage(copy, 0, 0);
 
     selectionContext.restore();
-
-    return { start, endX, endY };
   }
 
   drawShape() {

@@ -93,7 +93,7 @@ function ToolProvider({ children }) {
     ['shape-heart', ShapeHeart],
     ['shape-lightning', ShapeLightning],
   ]));
-  const [currentTool, setCurrentTool] = useState('eraser');
+  const [currentTool, setCurrentTool] = useState('shape-oval');
   const [latestTools, setLatestTools] = useState({ 
     brushes: 'brushes-brush',
     selection: 'selection-rectangle'

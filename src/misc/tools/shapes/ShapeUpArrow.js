@@ -13,11 +13,15 @@ class ShapeUpArrow extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, start, endX, endY }) => {
+      drawCallback: ({ context, startXY, end, middle, getCoordFromPercent }) => {
         context.beginPath();
-        context.moveTo(start, start);
-        context.lineTo(start, endY);
-        context.lineTo(endX, endY);
+        context.moveTo(getCoordFromPercent('x', 20), end.y);
+        context.lineTo(getCoordFromPercent('x', 20), middle.y);
+        context.lineTo(startXY, middle.y);
+        context.lineTo(middle.x, startXY);
+        context.lineTo(end.x, middle.y);
+        context.lineTo(getCoordFromPercent('x', 80), middle.y);
+        context.lineTo(getCoordFromPercent('x', 80), end.y);
         context.closePath();
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();

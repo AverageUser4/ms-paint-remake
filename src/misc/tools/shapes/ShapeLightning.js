@@ -13,11 +13,11 @@ class ShapeLightning extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, start, endX, endY }) => {
+      drawCallback: ({ context, startXY, end }) => {
         context.beginPath();
-        context.moveTo(start, start);
-        context.lineTo(start, endY);
-        context.lineTo(endX, endY);
+        context.moveTo(startXY, startXY);
+        context.lineTo(startXY, end.y);
+        context.lineTo(end.x, end.y);
         context.closePath();
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();

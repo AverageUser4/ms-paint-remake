@@ -13,11 +13,15 @@ class ShapeRightArrow extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, start, endX, endY }) => {
+      drawCallback: ({ context, startXY, end, middle, getCoordFromPercent }) => {
         context.beginPath();
-        context.moveTo(start, start);
-        context.lineTo(start, endY);
-        context.lineTo(endX, endY);
+        context.moveTo(startXY, getCoordFromPercent('y', 20));
+        context.lineTo(middle.x, getCoordFromPercent('y', 20));
+        context.lineTo(middle.x, startXY);
+        context.lineTo(end.x, middle.y);
+        context.lineTo(middle.x, end.y);
+        context.lineTo(middle.x, getCoordFromPercent('y', 80));
+        context.lineTo(startXY, getCoordFromPercent('y', 80));
         context.closePath();
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();

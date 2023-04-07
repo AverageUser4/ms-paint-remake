@@ -13,11 +13,18 @@ class ShapeFivePointStar extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, start, endX, endY }) => {
+      drawCallback: ({ context, startXY, end, middle, getCoordFromPercent }) => {
         context.beginPath();
-        context.moveTo(start, start);
-        context.lineTo(start, endY);
-        context.lineTo(endX, endY);
+        context.moveTo(middle.x, startXY);
+        context.lineTo(getCoordFromPercent('x', 60), getCoordFromPercent('y', 37));
+        context.lineTo(end.x, getCoordFromPercent('y', 42));
+        context.lineTo(getCoordFromPercent('x', 70), getCoordFromPercent('y', 60));
+        context.lineTo(getCoordFromPercent('x', 80), end.y);
+        context.lineTo(middle.x, getCoordFromPercent('y', 75));
+        context.lineTo(getCoordFromPercent('x', 20), end.y);
+        context.lineTo(getCoordFromPercent('x', 30), getCoordFromPercent('y', 60));
+        context.lineTo(startXY, getCoordFromPercent('y', 42));
+        context.lineTo(getCoordFromPercent('x', 40), getCoordFromPercent('y', 37));
         context.closePath();
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();

@@ -13,11 +13,12 @@ class ShapeDiamond extends ShapeBase {
       selectionContext,
       canvasZoom,
       shapeData,
-      drawCallback: ({ context, start, endX, endY }) => {
+      drawCallback: ({ context, startXY, middle, end }) => {
         context.beginPath();
-        context.moveTo(start, start);
-        context.lineTo(start, endY);
-        context.lineTo(endX, endY);
+        context.moveTo(middle.x, startXY);
+        context.lineTo(end.x, middle.y);
+        context.lineTo(middle.x, end.y);
+        context.lineTo(startXY, middle.y);
         context.closePath();
         shapeData.fill && context.fill();
         shapeData.outline && context.stroke();
