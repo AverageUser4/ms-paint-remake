@@ -48,7 +48,10 @@ function useSelection() {
     }
 
     if(selectionOutlinePosition) {
-      doSelectionSetPosition(selectionOutlinePosition);
+      doSelectionSetPosition({
+        x: selectionOutlinePosition.x / canvasZoom,
+        y: selectionOutlinePosition.y / canvasZoom,
+      });
       setSelectionOutlinePosition(null);
     }
   }
@@ -59,29 +62,26 @@ function useSelection() {
   } = useResize({ 
     position: usedPosition,
     setPosition: usedSetPosition,
-    isAllowToLeaveViewport: true,
     size: usedSize,
     setSize: usedSetSize,
-    isConstrained: false,
     minimalSize: { width: 1, height: 1, },
+    canvasZoom,
+    containerRef: primaryRef,
+    onPressEndCallback: onPressEndCallbackResize,
+    isConstrained: false,
     isResizable: true,
     isPointBased: true,
     isOnlyThreeDirections: false,
     isCancelOnRightMouseDown: true,
     isSmallPoints: true,
-    onPressEndCallback: onPressEndCallbackResize,
-    zoom: canvasZoom,
-    containerRef: primaryRef
+    isAllowToLeaveViewport: true,
   });
+  
   const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
     position: selectionPosition,
     setPosition: doSelectionSetPosition,
     size: selectionSize,
     setSize: doSelectionSetSize,
-    isInnerWindow: true,
-    isMaximized: false,
-    isConstrained: false,
-    isReverseConstrained: true,
     containerRef: primaryRef,
     canvasZoom,
     onMoveCallback: (event) => {
@@ -90,7 +90,11 @@ function useSelection() {
       }
 
       doSelectionDrawToPrimary(canvasZoom);
-    }
+    },
+    isInnerWindow: true,
+    isMaximized: false,
+    isConstrained: false,
+    isReverseConstrained: true,
   });
 
   return {

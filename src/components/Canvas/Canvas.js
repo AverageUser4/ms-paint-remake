@@ -73,7 +73,7 @@ function Canvas() {
     setSize: setCanvasOutlineSize,
     minimalSize: { width: 1, height: 1, },
     maximalSize: { width: MAX_CANVAS_SIZE * canvasZoom, height: MAX_CANVAS_SIZE * canvasZoom },
-    zoom: canvasZoom,
+    canvasZoom,
     onPressEndCallback: onPointerUpCallbackResize,
     isConstrained: false,
     isAllowToLeaveViewport: true,

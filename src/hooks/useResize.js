@@ -12,7 +12,7 @@ export default function useResize({
   setPosition, 
   size, 
   setSize,
-  zoom = 1,
+  canvasZoom = 1,
   isConstrained,
   isResizable,
   isAllowToLeaveViewport,
@@ -38,6 +38,12 @@ export default function useResize({
   useResizeCursor(resizeData);
   const type = isPointBased ? 'point' : 'resize';
   const sizeClass = isSmallPoints ? 'point-small' : '';
+
+  if(!isOnlyThreeDirections && isPointBased && isSmallPoints) {
+    // console.log('size', size?.width, resizeData?.initialWidth)
+    // console.log('position', position?.x, resizeData?.initialPositionX);
+    console.log(resizeData)
+  }
 
   const { onPointerDown: onPointerDownResize, isPressed } = 
     usePointerTrack({ 
@@ -77,8 +83,8 @@ export default function useResize({
       containerOffsetY = Math.max(Math.min(0, -resizeData.resizerDiffY), containerOffsetY);
     }
 
-    let diffX = clientX - resizeData.initialX;
-    let diffY = clientY - resizeData.initialY;
+    let diffX = clientX - resizeData.initialClientX;
+    let diffY = clientY - resizeData.initialClientY;
 
     let newWidth = size.width;
     let newHeight = size.height;
@@ -87,9 +93,11 @@ export default function useResize({
 
     if(!resizeData.type.includes('right')) {
       newWidth = resizeData.initialWidth;
+      newX = resizeData.initialPositionX;
     }
     if(!resizeData.type.includes('bottom')) {
       newHeight = resizeData.initialHeight;
+      newY = resizeData.initialPositionY;
     }
 
     if(resizeData.type.includes('left')) {
@@ -163,7 +171,7 @@ export default function useResize({
   function onPressStartCallback(event) {
     /* 
       - when we are resizing in directions that cause movements, there may be a few-pixel jump at the beginning
-      of movement, depending on where exactly resize bar was clicked, this could be fixed by adjusting initialX/Y
+      of movement, depending on where exactly resize bar was clicked, this could be fixed by adjusting initialClientX/Y
       to constant position, but it will be different for 'pointBased' and normal resize type
     */
     
@@ -188,12 +196,12 @@ export default function useResize({
     if(isResizable) {
       setResizeData({
         type,
-        initialX: event.clientX,
-        initialY: event.clientY,
-        initialPositionX: position.x,
-        initialPositionY: position.y,
-        initialWidth: Math.round(size.width * zoom),
-        initialHeight: Math.round(size.height * zoom),
+        initialClientX: event.clientX,
+        initialClientY: event.clientY,
+        initialPositionX: Math.round(position.x * canvasZoom),
+        initialPositionY: Math.round(position.y * canvasZoom),
+        initialWidth: Math.round(size.width * canvasZoom),
+        initialHeight: Math.round(size.height * canvasZoom),
         resizerDiffX,
         resizerDiffY
       });
@@ -206,8 +214,8 @@ export default function useResize({
       <div 
         className="point-outline"
         style={{ 
-          left: position?.x * zoom || 0,
-          top: position?.y * zoom || 0,
+          left: hasMoved ? position.x : resizeData.initialPositionX,
+          top: hasMoved ? position.y : resizeData.initialPositionY,
           width: hasMoved ? size.width : resizeData.initialWidth,
           height: hasMoved ? size.height : resizeData.initialHeight 
         }}
