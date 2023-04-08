@@ -172,7 +172,7 @@ function GlobalShortcuts({ ribbonData }) {
 
           case 'escape':
             if(selectionPhase === 2) {
-              doSelectionDrawToPrimary(canvasZoom);
+              doSelectionDrawToPrimary();
               doSelectionEnd();
             }
             break;

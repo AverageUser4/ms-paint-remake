@@ -73,21 +73,18 @@ function SelectionProvider({ children }) {
 
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
-    function drawToContext(context, isThumbnail) {
+    function drawToContext(context) {
       context.save();
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, element.width, element.height);
-      if(!isThumbnail) {
-        context.scale(canvasZoom, canvasZoom);
-      }
       context.drawImage(element, 0, 0);
       context.restore();
     }
 
     drawToContext(selectionContext);
-    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
+    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-  }, [canvasZoom, isSelectionTransparent, colorData.secondary]);
+  }, [isSelectionTransparent, colorData.secondary]);
 
   useEffect(() => {
     // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
@@ -147,21 +144,17 @@ function SelectionProvider({ children }) {
     }, 20);
   }
 
-  function doSelectionDrawToPrimary(zoom, adjustedPosition) {
-    if(typeof zoom !== 'number') {
-      console.error(`This function requires first argument (zoom) to be of type "number", provided: "${zoom}".`);
-    }
-    // using zoom argument is important as it isn't always canvasZoom
+  function doSelectionDrawToPrimary(adjustedPosition) {
     const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
 
     function draw(context) {
       context.imageSmoothingEnabled = false;
       context.drawImage(
         doGetCanvasCopy(selectionRef.current),
-        Math.round((adjustedPosition ? adjustedPosition.x : selectionPosition.x) / zoom),
-        Math.round((adjustedPosition ? adjustedPosition.y : selectionPosition.y) / zoom),
-        Math.round(selectionSize.width / zoom),
-        Math.round(selectionSize.height / zoom),
+        (adjustedPosition ? adjustedPosition.x : selectionPosition.x),
+        (adjustedPosition ? adjustedPosition.y : selectionPosition.y),
+        selectionSize.width,
+        selectionSize.height,
       );
     }
 
@@ -181,18 +174,14 @@ function SelectionProvider({ children }) {
     }
 
     const newPosition = { x: 0, y: 0 };
-    const newSize = {
-      width: Math.round(selectionSize.width / canvasZoom),
-      height: Math.round(selectionSize.height / canvasZoom),
-    };
 
     doSelectionSetPosition(newPosition);
-    setCanvasSize(newSize);
+    setCanvasSize(selectionSize);
 
     setTimeout(() => {
       doSelectionEnd();
       doCanvasClearPrimary();
-      doSelectionDrawToPrimary(canvasZoom, newPosition);
+      doSelectionDrawToPrimary(newPosition);
     }, 20);
   }
 
@@ -205,10 +194,7 @@ function SelectionProvider({ children }) {
       width: prev.width > width ? prev.width : width,
       height: prev.height > height ? prev.height : height,
     }));
-    doSelectionSetSize({ 
-      width: Math.round(width * canvasZoom),
-      height: Math.round(height * canvasZoom),
-    });
+    doSelectionSetSize({ width, height });
     doSelectionSetPosition({ x: 0, y: 0 });
     setSelectionPhase(2);
 
@@ -216,11 +202,11 @@ function SelectionProvider({ children }) {
       doSelectionDrawToSelection(image);
       URL.revokeObjectURL(image.src);
     }, 20);
-  }, [canvasZoom, setCanvasSize, doSelectionDrawToSelection]);
+  }, [setCanvasSize, doSelectionDrawToSelection]);
   
   function doSelectionBrowseFile() {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
       doSelectionEnd();
     }
 
@@ -230,7 +216,7 @@ function SelectionProvider({ children }) {
 
   function doSelectionPasteFromClipboard() {   
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
       doSelectionEnd();
     }
 
@@ -266,12 +252,12 @@ function SelectionProvider({ children }) {
   
   function doSelectionSelectAll() {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
     }
     
     setCurrentTool('selection-rectangle');
     setSelectionPhase(2);
-    doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
+    doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
     doSelectionSetPosition({ x: 0, y: 0 });
     lastSelectionStateRef.current = null;
     
@@ -289,36 +275,26 @@ function SelectionProvider({ children }) {
     
     const { selectionContext } = doSelectionGetEveryContext();
     const primaryImageData = primaryRef.current.getContext('2d').getImageData(0, 0, canvasSize.width, canvasSize.height);
-    let selectionImageData;
-    if(canvasZoom === 1) {
-      selectionImageData = selectionContext.getImageData(0, 0, selectionSize.width, selectionSize.height);
-    } else {
-      const copy = document.createElement('canvas');
-      const copyContext = copy.getContext('2d');
-      copy.width = Math.round(selectionSize.width / canvasZoom);
-      copy.height = Math.round(selectionSize.height / canvasZoom);
-      copyContext.imageSmoothingEnabled = false;
-      copyContext.scale(1 / canvasZoom, 1 / canvasZoom);
-      copyContext.drawImage(selectionRef.current, 0, 0);
-      selectionImageData = copyContext.getImageData(0, 0, copy.width, copy.height);
-    }
+    const selectionImageData = selectionContext.getImageData(0, 0, Math.ceil(selectionSize.width), Math.ceil(selectionSize.height));
     
     doCanvasClearPrimary();
-    doSelectionDrawToPrimary(canvasZoom);
+    doSelectionDrawToPrimary();
+
+    console.log(selectionSize, selectionPosition)
 
     const usedPosition = {
-      x: Math.max(Math.round(selectionPosition.x / canvasZoom), 0),
-      y: Math.max(Math.round(selectionPosition.y / canvasZoom), 0),
+      x: Math.max(Math.floor(selectionPosition.x), 0),
+      y: Math.max(Math.floor(selectionPosition.y), 0),
     };
     
     for(
       let y = usedPosition.y;
-      y < canvasSize.height && y < Math.round((selectionPosition.y + selectionSize.height) / canvasZoom);
+      y < canvasSize.height && y < Math.floor(selectionPosition.y + selectionSize.height);
       y++
     ) {
       for(
         let x = usedPosition.x;
-        x < canvasSize.width && x < Math.round((selectionPosition.x + selectionSize.width) / canvasZoom);
+        x < canvasSize.width && x < Math.floor(selectionPosition.x + selectionSize.width);
         x++
       ) {
         if(ImageDataUtils.getColorFromCoords(selectionImageData, x - usedPosition.x, y - usedPosition.y).a > 0) {
@@ -328,7 +304,7 @@ function SelectionProvider({ children }) {
     }
 
     doSelectionSetPosition({ x: 0, y: 0 });
-    doSelectionSetSize({ width: Math.round(canvasSize.width * canvasZoom), height: Math.round(canvasSize.height * canvasZoom) });
+    doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
 
     setTimeout(() => {
       doSelectionDrawToSelection(primaryImageData);

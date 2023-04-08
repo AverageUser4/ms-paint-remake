@@ -41,8 +41,8 @@ function useSelection() {
   function onPressEndCallbackResize() {
     if(selectionOutlineSize) {
       doSelectionResize({ 
-        width: selectionOutlineSize.width / canvasZoom,
-        height: selectionOutlineSize.height / canvasZoom
+        width: Math.max(selectionOutlineSize.width / canvasZoom, 1),
+        height: Math.max(selectionOutlineSize.height / canvasZoom, 1)
       });
       setSelectionOutlineSize(null);
     }
@@ -89,7 +89,7 @@ function useSelection() {
         return;
       }
 
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
     },
     isInnerWindow: true,
     isMaximized: false,

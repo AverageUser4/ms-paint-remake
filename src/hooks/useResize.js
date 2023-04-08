@@ -39,11 +39,11 @@ export default function useResize({
   const type = isPointBased ? 'point' : 'resize';
   const sizeClass = isSmallPoints ? 'point-small' : '';
 
-  if(!isOnlyThreeDirections && isPointBased && isSmallPoints) {
-    // console.log('size', size?.width, resizeData?.initialWidth)
-    // console.log('position', position?.x, resizeData?.initialPositionX);
-    console.log(resizeData)
-  }
+  // if(!isOnlyThreeDirections && isPointBased && isSmallPoints) {
+  //   console.log('size', size?.width, resizeData?.initialWidth)
+  //   console.log('position', position?.x, resizeData?.initialPositionX);
+  //   console.log(resizeData)
+  // }
 
   const { onPointerDown: onPointerDownResize, isPressed } = 
     usePointerTrack({ 
@@ -88,16 +88,14 @@ export default function useResize({
 
     let newWidth = size.width;
     let newHeight = size.height;
-    let newX = position.x;
-    let newY = position.y;
+    let newX = resizeData.initialPositionX;
+    let newY = resizeData.initialPositionY;
 
     if(!resizeData.type.includes('right')) {
       newWidth = resizeData.initialWidth;
-      newX = resizeData.initialPositionX;
     }
     if(!resizeData.type.includes('bottom')) {
       newHeight = resizeData.initialHeight;
-      newY = resizeData.initialPositionY;
     }
 
     if(resizeData.type.includes('left')) {
@@ -185,8 +183,8 @@ export default function useResize({
         containerRect = containerRef?.current.getBoundingClientRect();
       }
       resizerRect = event.target.getBoundingClientRect();
-      elementPageX = containerRect.x + position.x;
-      elementPageY = containerRect.y + position.y;
+      elementPageX = containerRect.x + (position.x * canvasZoom);
+      elementPageY = containerRect.y + (position.y * canvasZoom);
       resizerDiffX = elementPageX - resizerRect.x - offsetX;
       resizerDiffY = elementPageY - resizerRect.y - offsetY;
     }

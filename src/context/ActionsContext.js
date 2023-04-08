@@ -89,7 +89,7 @@ function ActionsProvider({ children }) {
 
   function doCanvasSetZoom(newZoom) {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
     }
     doSelectionEnd();
     setCanvasZoom(newZoom);
@@ -115,7 +115,7 @@ function ActionsProvider({ children }) {
 
   function doSetCurrentTool(tool) {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
     }
     doSelectionEnd();
 

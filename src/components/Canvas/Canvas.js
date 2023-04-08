@@ -129,7 +129,7 @@ function Canvas() {
           }
 
           if(selectionPhase === 2) {
-            doSelectionDrawToPrimary(canvasZoom);
+            doSelectionDrawToPrimary();
             doSelectionEnd();
           }
 

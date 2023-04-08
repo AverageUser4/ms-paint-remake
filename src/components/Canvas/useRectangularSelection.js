@@ -39,7 +39,7 @@ function useRectangularSelection() {
   
   function onPressStartCallback(event) {
     if(selectionPhase === 2) {
-      doSelectionDrawToPrimary(canvasZoom);
+      doSelectionDrawToPrimary();
       doCancel();
       return;
     }
