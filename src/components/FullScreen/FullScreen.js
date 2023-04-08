@@ -44,8 +44,6 @@ const FullScreen = memo(function FullScreen() {
       width = width * scale.y;
     }
     
-    console.log(width, height)
-    
     const showcaseContext = showcaseRef.current.getContext('2d');
     showcaseRef.current.width = width;
     showcaseRef.current.height = height;

@@ -59,7 +59,10 @@ function useRectangularSelection() {
       initialHeight: 1,
     })
     doSelectionSetSize({ width: 1, height: 1 });
-    doSelectionSetPosition({ x: offsetX / canvasZoom, y: offsetY / canvasZoom });
+    doSelectionSetPosition({ 
+      x: Math.round(offsetX / canvasZoom),
+      y: Math.round(offsetY / canvasZoom) 
+    });
     setSelectionPhase(1);
   }
   
@@ -100,10 +103,16 @@ function useRectangularSelection() {
     newWidth = Math.max(newWidth, 1);
     newHeight = Math.max(newHeight, 1);
 
-    doSelectionSetSize({ width: newWidth / canvasZoom, height: newHeight / canvasZoom });
+    doSelectionSetSize({ 
+      width: Math.round(newWidth / canvasZoom),
+      height: Math.round(newHeight / canvasZoom) 
+    });
 
     if(newX !== selectionPosition.x || newY !== selectionPosition.y) {
-      doSelectionSetPosition({ x: newX / canvasZoom, y: newY / canvasZoom })
+      doSelectionSetPosition({ 
+        x: Math.round(newX / canvasZoom),
+        y: Math.round(newY / canvasZoom) 
+      });
     }
   }
 

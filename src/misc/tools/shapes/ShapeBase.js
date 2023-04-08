@@ -14,17 +14,17 @@ class ShapeBase {
   sizes = [1, 3, 5, 8];
   chosenSize = 5;
 
-  prepareAndDraw({ selectionSize, currentlyPressedRef, selectionContext, colorData, canvasZoom, drawCallback, shapeData, thumbnailSelectionContext }) {
-    validateToolArgs(arguments, ['selectionSize', 'currentlyPressedRef', 'selectionContext', 'colorData', 'canvasZoom', 'drawCallback', 'shapeData', 'thumbnailSelectionContext']);
+  prepareAndDraw({ selectionSize, currentlyPressedRef, selectionContext, colorData, drawCallback, shapeData, thumbnailSelectionContext }) {
+    validateToolArgs(arguments, ['selectionSize', 'currentlyPressedRef', 'selectionContext', 'colorData', 'drawCallback', 'shapeData', 'thumbnailSelectionContext']);
 
     const startXY = this.chosenSize;
     const end = {
-      x: selectionSize.width / canvasZoom - this.chosenSize,
-      y: selectionSize.height / canvasZoom - this.chosenSize,
+      x: selectionSize.width - this.chosenSize,
+      y: selectionSize.height - this.chosenSize,
     };
     const middle = {
-      x: selectionSize.width / canvasZoom / 2,
-      y: selectionSize.height / canvasZoom / 2,
+      x: selectionSize.width / 2,
+      y: selectionSize.height / 2,
     };
 
     function getCoordFromPercent(axis, percent) {
@@ -148,8 +148,8 @@ class ShapeBase {
     }
 
     const copy = document.createElement('canvas');
-    copy.width = Math.max(1, Math.round(selectionSize.width / canvasZoom));
-    copy.height = Math.max(1, Math.round(selectionSize.height / canvasZoom));
+    copy.width = Math.max(1, selectionSize.width);
+    copy.height = Math.max(1, selectionSize.height);
 
     const context = copy.getContext('2d');
     context.strokeStyle = usedOutlineStyle;
@@ -159,20 +159,17 @@ class ShapeBase {
 
     drawCallback({ context, startXY, end, middle, getCoordFromPercent });
 
-    function drawToContext(context, isThumbnail) {
+    function drawToContext(context) {
       context.save();
       context.clearRect(0, 0, selectionSize.width, selectionSize.height);
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, selectionSize.width, selectionSize.height);
-      if(!isThumbnail) {
-        context.scale(canvasZoom, canvasZoom);
-      }
       context.drawImage(copy, 0, 0);
       context.restore();
     }
 
     drawToContext(selectionContext);
-    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
+    thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
   }
 
   drawShape() {

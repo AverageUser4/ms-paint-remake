@@ -101,11 +101,6 @@ function useFreeFormSelection() {
     const width = Math.round(edgePositionRef.current.maxX - edgePositionRef.current.minX + 1);
     const height = Math.round(edgePositionRef.current.maxY - edgePositionRef.current.minY + 1);
 
-    // const zoomedX = Math.round(x * canvasZoom);
-    // const zoomedY = Math.round(y * canvasZoom);
-    // const zoomedWidth = Math.round(width * canvasZoom);
-    // const zoomedHeight = Math.round(height * canvasZoom);
-    
     const { primaryContext, thumbnailPrimaryContext, secondaryContext } = doGetEveryContext();
 
     const boundariesImageData = secondaryContext.getImageData(x, y, width, height);

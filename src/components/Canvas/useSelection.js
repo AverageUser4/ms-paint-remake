@@ -33,24 +33,34 @@ function useSelection() {
 
   if(currentTool.startsWith('shape')) {
     usedPosition = selectionPosition;
-    usedSetPosition = doSelectionSetPosition;
+    usedSetPosition = (position) => {
+      position = { ...position };
+      position.x = Math.round(position.x / canvasZoom);
+      position.y = Math.round(position.y / canvasZoom);
+      doSelectionSetPosition(position);
+    };
     usedSize = selectionSize;
-    usedSetSize = doSelectionSetSize;
+    usedSetSize = (size) => {
+      size = { ...size };
+      size.width = Math.round(size.width / canvasZoom);
+      size.height = Math.round(size.height / canvasZoom);
+      doSelectionSetSize(size);
+    };
   }
   
   function onPressEndCallbackResize() {
     if(selectionOutlineSize) {
       doSelectionResize({ 
-        width: Math.max(selectionOutlineSize.width / canvasZoom, 1),
-        height: Math.max(selectionOutlineSize.height / canvasZoom, 1)
+        width: Math.round(Math.max(selectionOutlineSize.width / canvasZoom, 1)),
+        height: Math.round(Math.max(selectionOutlineSize.height / canvasZoom, 1))
       });
       setSelectionOutlineSize(null);
     }
 
     if(selectionOutlinePosition) {
       doSelectionSetPosition({
-        x: selectionOutlinePosition.x / canvasZoom,
-        y: selectionOutlinePosition.y / canvasZoom,
+        x: Math.round(selectionOutlinePosition.x / canvasZoom),
+        y: Math.round(selectionOutlinePosition.y / canvasZoom),
       });
       setSelectionOutlinePosition(null);
     }

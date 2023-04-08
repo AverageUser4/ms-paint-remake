@@ -196,11 +196,8 @@ function ActionsProvider({ children }) {
     usedClear();
 
     setTimeout(() => {
-      function rotateAndDraw(context, isThumbnail) {
+      function rotateAndDraw(context) {
         context.save();
-        if(selectionPhase === 2 && isThumbnail) {
-          context.scale(1 / canvasZoom, 1 / canvasZoom);
-        }
         context.translate(usedSize.width / 2, usedSize.height / 2);
         context.rotate(degreesToRadians(degree));
         context.translate(-usedSize.width / 2, -usedSize.height / 2);
@@ -209,7 +206,7 @@ function ActionsProvider({ children }) {
       }
 
       rotateAndDraw(usedContext);
-      usedThumbnailContext && rotateAndDraw(usedThumbnailContext, true);
+      usedThumbnailContext && rotateAndDraw(usedThumbnailContext);
       usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
 
       if(selectionPhase !== 2) {
@@ -250,12 +247,9 @@ function ActionsProvider({ children }) {
 
     usedClear();
 
-    function flipAndDraw(context, isThumbnail) {
+    function flipAndDraw(context) {
       context.save();
       context.scale(direction === 'horizontal' ? -1 : 1, direction === 'vertical' ? -1 : 1);
-      if(selectionPhase === 2 && isThumbnail) {
-        context.scale(1 / canvasZoom, 1 / canvasZoom);
-      }
       context.drawImage(
         usedCopy, 
         direction === 'horizontal' ? -usedSize.width : 0,
@@ -303,10 +297,7 @@ function ActionsProvider({ children }) {
       // this is different than doSelectionDrawToSelection
       selectionContext.putImageData(usedImageData, 0, 0);
       if(thumbnailSelectionContext) {
-        thumbnailSelectionContext.save();
-        thumbnailSelectionContext.scale(1 / canvasZoom, 1 / canvasZoom);
         thumbnailSelectionContext.drawImage(selectionRef.current, 0, 0);
-        thumbnailSelectionContext.restore();
       }
       lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
     } else {

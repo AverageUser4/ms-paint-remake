@@ -20,7 +20,14 @@ const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }
   const { canvasSize, canvasZoom, fileData } = useCanvasContext();
   const { canvasOutlineSize, canvasMousePosition } = useCanvasMiscContext();
   const { selectionPhase, selectionSize, selectionOutlineSize } = useSelectionContext();
-  const usedSelectionSize = selectionOutlineSize ? selectionOutlineSize : selectionSize;
+  let usedSelectionSize = selectionSize;
+  if(selectionOutlineSize) {
+    usedSelectionSize = {
+      width: Math.round(selectionOutlineSize.width / canvasZoom),
+      height: Math.round(selectionOutlineSize.height / canvasZoom),
+    };
+  }
+  
   let parsedFileSize;
 
   if(!isStatusBarVisible) {
@@ -54,7 +61,7 @@ const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }
               <img draggable="false" src={selection16} alt="Selection size."/>
               {
                 selectionPhase > 0 &&
-                  <span className="text">{Math.round(usedSelectionSize.width / canvasZoom)} <Cross/> {Math.round(usedSelectionSize.height / canvasZoom)}px</span>
+                  <span className="text">{usedSelectionSize.width} <Cross/> {usedSelectionSize.height}px</span>
               }
             </div>
         }

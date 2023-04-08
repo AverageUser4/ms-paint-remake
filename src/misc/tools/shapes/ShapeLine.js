@@ -3,7 +3,7 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeLine extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, canvasZoom, shapeData, thumbnailSelectionContext }) {
+  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, shapeData, thumbnailSelectionContext }) {
     validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
     
     this.prepareAndDraw({ 
@@ -11,7 +11,6 @@ class ShapeLine extends ShapeBase {
       currentlyPressedRef,
       colorData,
       selectionContext,
-      canvasZoom,
       shapeData,
       thumbnailSelectionContext,
       drawCallback: ({ context, startXY, end }) => {

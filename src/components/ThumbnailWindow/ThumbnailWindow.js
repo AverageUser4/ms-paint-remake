@@ -18,7 +18,7 @@ const HEIGHT = 230;
 
 const ThumbnailWindow = memo(function ThumbnailWindow() {
   const { colorData } = useColorContext();
-  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef, canvasZoom, primaryRef } = useCanvasContext();
+  const { canvasSize, thumbnailPrimaryRef, thumbnailSecondaryRef, primaryRef } = useCanvasContext();
   const { thumbnailSelectionRef, selectionSize, selectionPosition, selectionPhase, selectionRef } = useSelectionContext();
   const { mainWindowPosition, mainWindowSize } = useMainWindowContext();
   const { isThumbnailWindowOpen: isOpen, setIsThumbnailWindowOpen: setIsOpen } = useWindowsContext();
@@ -29,14 +29,10 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
     if(isOpen) {
       thumbnailPrimaryRef.current.getContext('2d').drawImage(primaryRef.current, 0, 0);
       if(selectionPhase === 2) {
-        const context = thumbnailSelectionRef.current.getContext('2d');
-        context.save();
-        context.scale(1 / canvasZoom, 1 / canvasZoom);
-        context.drawImage(selectionRef.current, 0, 0);
-        context.restore();
+        thumbnailSelectionRef.current.getContext('2d').drawImage(selectionRef.current, 0, 0);
       }
     }
-  }, [isOpen, thumbnailPrimaryRef, primaryRef, selectionPhase, thumbnailSelectionRef, selectionRef, canvasZoom]);
+  }, [isOpen, thumbnailPrimaryRef, primaryRef, selectionPhase, thumbnailSelectionRef, selectionRef]);
 
   return (
     <Window
@@ -80,11 +76,11 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
                   <canvas
                     className={`${css['canvas']} ${css['canvas--selection']}`}
                     ref={thumbnailSelectionRef}
-                    width={Math.round(selectionSize.width / canvasZoom)}
-                    height={Math.round(selectionSize.height / canvasZoom)}
+                    width={selectionSize.width}
+                    height={selectionSize.height}
                     style={{
-                      top: Math.round(selectionPosition.y / canvasZoom),
-                      left: Math.round(selectionPosition.x / canvasZoom),
+                      top: selectionPosition.y,
+                      left: selectionPosition.x,
                     }}
                   />
               }

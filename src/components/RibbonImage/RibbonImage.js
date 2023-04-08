@@ -182,7 +182,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                   </button>
 
                   <button 
-                    disabled={selectionPhase !== 2}
+                    disabled={selectionPhase !== 2 || currentTool.startsWith('shape')}
                     className="tooltip-container popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSelectionInvertSelection();
@@ -307,6 +307,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                   >
                     <div className="popup__part">
                       <button
+                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-rotate-right-90"
                         onClick={() => {
@@ -324,6 +325,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-rotate-left-90"
                         onClick={() => {
@@ -341,6 +343,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-rotate-180"
                         onClick={() => {
@@ -358,6 +361,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-flip-vertical"
                         onClick={() => {
@@ -375,6 +379,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
                         className="tooltip-container popup__button text text--4 text--nowrap"
                         aria-describedby="id-image-flip-horizontal"
                         onClick={() => {

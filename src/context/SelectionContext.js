@@ -13,7 +13,7 @@ const SelectionContext = createContext();
 
 function SelectionProvider({ children }) {
   const { 
-    setCanvasSize, canvasZoom, canvasSize,
+    setCanvasSize, canvasSize,
     primaryRef, doCanvasClearPrimary, doGetEveryContext,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
@@ -126,20 +126,17 @@ function SelectionProvider({ children }) {
     setTimeout(() => {
       const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
-      function drawToContext(context, isThumbnail) {
+      function drawToContext(context) {
         context.save();
         context.imageSmoothingEnabled = false;
         context.clearRect(0, 0, newSize.width, newSize.height);
         context.scale(multiplier.x, multiplier.y);
-        if(isThumbnail) {
-          context.scale(1 / canvasZoom, 1 / canvasZoom);
-        }
         context.drawImage(selectionCanvasCopy, 0, 0);
         context.restore();
       }
 
       drawToContext(selectionContext);
-      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext, true);
+      thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
       lastSelectionStateRef.current = selectionRef.current;
     }, 20);
   }

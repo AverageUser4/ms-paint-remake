@@ -6,6 +6,7 @@ import { useContextMenuContext } from '../../context/ContextMenuContext';
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useActionsContext } from '../../context/ActionsContext';
+import { useToolContext } from '../../context/ToolContext';
 
 import close from './assets/close.png';
 import minimize from './assets/minimize.png';
@@ -38,6 +39,8 @@ const ContextMenu = memo(function ContextMenu() {
     doSharedCut, doSharedCopy, doSharedDelete,
     doSharedRotate, doSharedFlip, doSharedInvertColor
   } = useActionsContext();
+  const { currentTool } = useToolContext();
+  console.log(currentTool)
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
   
@@ -151,7 +154,7 @@ const ContextMenu = memo(function ContextMenu() {
             </button>
 
             <button 
-              disabled={data === 'primary'}
+              disabled={data === 'primary' || currentTool.startsWith('shape')}
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 doSelectionInvertSelection();
@@ -185,6 +188,7 @@ const ContextMenu = memo(function ContextMenu() {
               >
                 <div className="popup__part">
                   <button
+                    disabled={currentTool.startsWith('shape')}
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedRotate(90);
@@ -196,6 +200,7 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
+                    disabled={currentTool.startsWith('shape')}
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedRotate(-90);
@@ -207,6 +212,7 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
+                    disabled={currentTool.startsWith('shape')}
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedRotate(180);
@@ -218,6 +224,7 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
+                    disabled={currentTool.startsWith('shape')}
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedFlip('vertical');
@@ -229,6 +236,7 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
+                    disabled={currentTool.startsWith('shape')}
                     className="popup__button text text--4 text--nowrap"
                     onClick={() => {
                       doSharedFlip('horizontal');
@@ -242,7 +250,8 @@ const ContextMenu = memo(function ContextMenu() {
               </div>
             </div>
 
-            <button 
+            <button
+              disabled={currentTool.startsWith('shape')}
               className="popup__button text text--4 text--nowrap"
               onClick={() => {
                 setIsResizeWindowOpen(true);
@@ -254,6 +263,7 @@ const ContextMenu = memo(function ContextMenu() {
             </button>
 
             <button 
+              disabled={currentTool.startsWith('shape')}
               className="popup__button text text--4 text--nowrap"
               onClick={() => {                
                 doSharedInvertColor();

@@ -57,7 +57,10 @@ function useShape() {
       initialHeight: 1,
     })
     doSelectionSetSize({ width: 1, height: 1 });
-    doSelectionSetPosition({ x: offsetX, y: offsetY });
+    doSelectionSetPosition({ 
+      x: Math.round(offsetX / canvasZoom),
+      y: Math.round(offsetY / canvasZoom) 
+    });
     setSelectionPhase(1);
   }
   
@@ -98,10 +101,16 @@ function useShape() {
     newWidth = Math.max(newWidth, 1);
     newHeight = Math.max(newHeight, 1);
 
-    doSelectionSetSize({ width: newWidth, height: newHeight });
+    doSelectionSetSize({ 
+      width: Math.round(newWidth / canvasZoom),
+      height: Math.round(newHeight / canvasZoom) 
+    });
 
     if(newX !== selectionPosition.x || newY !== selectionPosition.y) {
-      doSelectionSetPosition({ x: newX, y: newY })
+      doSelectionSetPosition({ 
+        x: Math.round(newX / canvasZoom),
+        y: Math.round(newY / canvasZoom) 
+      });
     }
   }
 
@@ -127,7 +136,6 @@ function useShape() {
         colorData,
         selectionSize,
         currentlyPressedRef,
-        canvasZoom,
         shapeData,
       });
     }, 20);
@@ -157,7 +165,6 @@ function useShape() {
           height: selectionCanvas.height
         },
         currentlyPressedRef,
-        canvasZoom,
         shapeData,
       });
     }

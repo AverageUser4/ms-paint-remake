@@ -13,6 +13,7 @@ export default function useResize({
   size, 
   setSize,
   canvasZoom = 1,
+  onPressEndCallback,
   isConstrained,
   isResizable,
   isAllowToLeaveViewport,
@@ -20,7 +21,6 @@ export default function useResize({
   isPointBased,
   isCancelOnRightMouseDown,
   isSmallPoints,
-  onPressEndCallback,
 }) {
   checkArgs([
     { name: 'minimalSize', value: minimalSize, type: 'object' },
@@ -38,12 +38,6 @@ export default function useResize({
   useResizeCursor(resizeData);
   const type = isPointBased ? 'point' : 'resize';
   const sizeClass = isSmallPoints ? 'point-small' : '';
-
-  // if(!isOnlyThreeDirections && isPointBased && isSmallPoints) {
-  //   console.log('size', size?.width, resizeData?.initialWidth)
-  //   console.log('position', position?.x, resizeData?.initialPositionX);
-  //   console.log(resizeData)
-  // }
 
   const { onPointerDown: onPointerDownResize, isPressed } = 
     usePointerTrack({ 

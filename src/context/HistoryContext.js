@@ -20,7 +20,7 @@ function HistoryProvider({ children }) {
   const isHistoryOnLast = history.currentIndex === history.dataArray.length - 1;
 
   function doHistoryAdd(data) {
-    // { element: canvas, width: number, height: number }
+    // data = { element: canvas, width: number, height: number }
     data.element = doGetCanvasCopy(data.element);
     lastPrimaryStateRef.current = doGetCanvasCopy(data.element);
     

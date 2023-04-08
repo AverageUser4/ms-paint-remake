@@ -8,6 +8,7 @@ import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 import { useMainWindowContext } from '../../context/MainWindowContext';
+import { useToolContext } from '../../context/ToolContext';
 import { innerWindowConfig, MAX_CANVAS_SIZE } from '../../misc/data';
 
 import resizeHorizontal from './assets/resize-horizontal.ico';
@@ -31,10 +32,11 @@ const ResizeWindow = memo(function ResizeWindow() {
     selectionPhase, selectionSize, doSelectionResize,
     doSelectionSetSize, selectionRef, doSelectionGetEveryContext
   } = useSelectionContext();
-  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, doGetEveryContext, canvasZoom } = useCanvasContext();
+  const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, doGetEveryContext } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
   const { mainWindowPosition } = useMainWindowContext();
   const { doHistoryAdd } = useHistoryContext();
+  const { currentTool } = useToolContext();
 
   const [size, setSize] = useState({ width: WIDTH, height: HEIGHT });
   const [position, setPosition] = useState({ x: mainWindowPosition.x + 40, y: mainWindowPosition.y + 80 });
@@ -43,7 +45,7 @@ const ResizeWindow = memo(function ResizeWindow() {
   const [data, setData] = useState(initialData);
   const lastResizeTypeRef = useRef(resizeType);
   const lastIsMaintainRatioRef = useRef(isMaintainRatio);
-  const isSelectionActive = selectionPhase === 2;
+  const isSelectionActive = selectionPhase === 2 && !currentTool.startsWith('shape');
   const usedSize = isSelectionActive ? selectionSize : canvasSize;
 
   useEffect(() => {
@@ -230,12 +232,9 @@ const ResizeWindow = memo(function ResizeWindow() {
         usedSetSize(usedNewSize);
         
         setTimeout(() => {
-          function draw(context, isSelectionThumbnail) {
+          function draw(context) {
             context.save();
             context.clearRect(0, 0, usedNewSize.width, usedNewSize.height);
-            if(isSelectionThumbnail) {
-              context.scale(1 / canvasZoom, 1 / canvasZoom);
-            }
             context.translate(movedX, movedY);
             context.transform(1, setSkew(usedSkewVertical), setSkew(usedSkewHorizontal), 1, 0, 0);
             context.drawImage(usedCopy, 0, 0);
@@ -245,7 +244,7 @@ const ResizeWindow = memo(function ResizeWindow() {
           draw(usedContext);
 
           if(isSelectionActive) {
-            thumbnailSelectionContext && draw(thumbnailSelectionContext, true);
+            thumbnailSelectionContext && draw(thumbnailSelectionContext);
           } else {
             thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
             

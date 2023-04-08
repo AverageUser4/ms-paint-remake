@@ -144,10 +144,6 @@ function Canvas() {
             className="point-container point-container--inner point-container--repositioned"
             style={{
               ...selectionStyle,
-              // left: selectionPosition.x,
-              // top: selectionPosition.y,
-              // width: selectionSize.width,
-              // height: selectionSize.height,
               display: (selectionPhase === 2 || selectionSize.width > 1 || selectionSize.height > 1) ? 'block' : 'none'
             }}
           >
@@ -160,8 +156,6 @@ function Canvas() {
                 ...selectionStyle,
                 left: 0,
                 top: 0,
-                // width: selectionSize.width,
-                // height: selectionSize.height
               }}
               className={`
                 ${css['canvas']}
@@ -186,7 +180,7 @@ function Canvas() {
           </div>
       }
 
-      {selectionPhase === 2 && selectionResizeOutlineElement}
+      {selectionPhase === 2 && !currentTool.startsWith('shape') && selectionResizeOutlineElement}
 
       {
         selectionPhase !== 2 && 
