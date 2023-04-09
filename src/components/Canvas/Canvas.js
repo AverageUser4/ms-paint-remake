@@ -193,9 +193,9 @@ function Canvas() {
       <canvas
         className={`${css['canvas']} ${css['canvas--brush']}`}
         ref={brushCanvasRef}
+        width={canvasSize.width}
+        height={canvasSize.height}
         style={canvasStyle}
-        width={canvasStyle.width}
-        height={canvasStyle.height}
       />
 
       {

@@ -40,7 +40,6 @@ const ContextMenu = memo(function ContextMenu() {
     doSharedRotate, doSharedFlip, doSharedInvertColor
   } = useActionsContext();
   const { currentTool } = useToolContext();
-  console.log(currentTool)
   const containerRef = useRef();
   useOutsideClick(containerRef, () => isOpen && setIsOpen(false));
   

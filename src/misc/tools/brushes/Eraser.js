@@ -27,15 +27,13 @@ class Eraser extends BrushBase {
 
     let { startX, startY, size } = this._getData(currentPixel);
     
-    size *= canvasZoom;
-    startX *= canvasZoom;
-    startY *= canvasZoom;
     startX += 0.5;
     startY += 0.5;
 
     brushContext.fillStyle = RGBObjectToString(colorData.secondary);
     brushContext.fillRect(startX, startY, size, size);
     brushContext.strokeStyle = 'rgb(0, 0, 0)';
+    brushContext.lineWidth = Math.max(1 / canvasZoom, 1);
     brushContext.strokeRect(startX, startY, size, size);
   }
 

@@ -147,24 +147,16 @@ class ShapeBase {
       }
     }
 
-    const copy = document.createElement('canvas');
-    copy.width = Math.max(1, selectionSize.width);
-    copy.height = Math.max(1, selectionSize.height);
-
-    const context = copy.getContext('2d');
-    context.strokeStyle = usedOutlineStyle;
-    context.fillStyle = usedFillStyle;
-    context.lineWidth = this.chosenSize;
-    context.imageSmoothingEnabled = false;
-
-    drawCallback({ context, startXY, end, middle, getCoordFromPercent });
+    const size = this.chosenSize;
 
     function drawToContext(context) {
       context.save();
-      context.clearRect(0, 0, selectionSize.width, selectionSize.height);
+      context.strokeStyle = usedOutlineStyle;
+      context.fillStyle = usedFillStyle;
+      context.lineWidth = size;
       context.imageSmoothingEnabled = false;
       context.clearRect(0, 0, selectionSize.width, selectionSize.height);
-      context.drawImage(copy, 0, 0);
+      drawCallback({ context, startXY, end, middle, getCoordFromPercent });
       context.restore();
     }
 
@@ -173,7 +165,7 @@ class ShapeBase {
   }
 
   drawShape() {
-    console.error('Class inheriting from ShapeBase should have it\'s own drawShape method implemented.');
+    console.error('Class extending ShapeBase should have it\'s own drawShape method implemented.');
   }
 
   onPointerDown() {}

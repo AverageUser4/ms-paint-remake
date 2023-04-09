@@ -42,7 +42,7 @@ function GlobalShortcuts({ ribbonData }) {
 
     if(currentToolData.doDrawIcon) {
       const { brushContext } = doGetEveryContext();
-      brushContext.clearRect(0, 0, canvasSize.width * canvasZoom, canvasSize.height * canvasZoom);
+      brushContext.clearRect(0, 0, canvasSize.width, canvasSize.height);
   
       if(canvasMousePosition) {
         currentToolData.doDrawIcon({

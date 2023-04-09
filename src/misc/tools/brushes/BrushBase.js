@@ -6,16 +6,16 @@ class BrushBase {
   sizes = [1, 3, 5, 8];
   chosenSize = 3;
 
-  doDrawIcon({ currentPixel, canvasZoom, brushContext, currentlyPressedRef, colorData }) {
-    validateToolArgs(arguments, ['currentPixel', 'canvasZoom', 'brushContext', 'currentlyPressedRef', 'colorData']);
+  doDrawIcon({ currentPixel, brushContext, currentlyPressedRef, colorData }) {
+    validateToolArgs(arguments, ['currentPixel', 'brushContext', 'currentlyPressedRef', 'colorData']);
 
     if(currentlyPressedRef.current !== -1) {
       return;
     }
 
-    brushContext.fillStyle = RGBObjectToString(colorData.primary);
     brushContext.save();
-    brushContext.scale(canvasZoom, canvasZoom);
+    brushContext.fillStyle = RGBObjectToString(colorData.primary);
+    brushContext.imageSmoothingEnabled = false;    
     this.draw({ currentPixel, secondaryContext: brushContext });
     brushContext.restore();
   }
