@@ -8,8 +8,9 @@ class Pencil extends BrushBase {
 
   doDrawIcon() {}
 
-  draw({ secondaryContext, thumbnailSecondaryContext, currentPixel }) {
-    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel'])
+  draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, colorData, currentlyPressedRef }) {
+    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'colorData', 'currentlyPressedRef']);
+    this._setStyle({ currentlyPressedRef, colorData, secondaryContext, thumbnailSecondaryContext });
 
     const size = this.chosenSize;
     

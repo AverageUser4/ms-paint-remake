@@ -141,6 +141,8 @@ export default function useResize({
     if(maximalSize) {
       newWidth = Math.min(newWidth, maximalSize.width);
       newHeight = Math.min(newHeight, maximalSize.height);
+      newX = Math.max(newX, resizeData.initialPositionX - maximalSize.width + resizeData.initialWidth);
+      newY = Math.max(newY, resizeData.initialPositionY - maximalSize.height + resizeData.initialHeight);
     }
 
     if(isConstrained) {

@@ -84,16 +84,6 @@ function useBrush() {
       return;
     }
 
-    const { secondaryContext, thumbnailSecondaryContext } = doGetEveryContext();
-
-    function setStyle(context) {
-      context.fillStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-      context.strokeStyle = currentlyPressedRef.current === 0 ? RGBObjectToString(colorData.primary) : RGBObjectToString(colorData.secondary);
-    }
-
-    setStyle(secondaryContext);
-    thumbnailSecondaryContext && setStyle(thumbnailSecondaryContext);
-
     function doDraw(isRepeated, isLast) {
       currentToolData.draw({
         ...doGetEveryContext(),

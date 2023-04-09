@@ -7,7 +7,9 @@ GOING TO:
   - make code repeated between useShape and useRectangularSelection shared
   - rework useMove / useResize, remove window specific code and put it in callbacks, the way outline is used is kinda weird
   - changes to useMove could potentially make selectionCanvas perfectly aligned with primaryCanvas (would move pixel by pixel)
-  - make brush indicators drawn by doDrawIcon pixelated
+  - remove unnecessary clearRect calls on brush canvas
+  - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
+  that could improve performance greatly
 
 DONE:
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../context/CanvasContext';
@@ -34,6 +34,16 @@ function useShape() {
     isCancelOnRightMouseDown: true,
     isTrackAlsoRight: true,
   });
+
+  const drawCallback = useCallback(() => {
+    currentToolData.drawShape({ 
+      ...doSelectionGetEveryContext(),
+      colorData,
+      selectionSize,
+      currentlyPressedRef,
+      shapeData,
+    });
+  }, [colorData, selectionSize, currentlyPressedRef, shapeData, currentToolData, doSelectionGetEveryContext]);
   
   function onPressStartCallback(event) {
     if(selectionPhase === 2) {
@@ -131,13 +141,7 @@ function useShape() {
       setSelectionPhase(2);
       setResizeData(null);
       
-      currentToolData.drawShape({ 
-        ...doSelectionGetEveryContext(),
-        colorData,
-        selectionSize,
-        currentlyPressedRef,
-        shapeData,
-      });
+      drawCallback();
     }, 20);
   }
 
@@ -147,29 +151,19 @@ function useShape() {
   }
 
   useEffect(() => {
-    if(!currentTool.startsWith('shape')) {
+    if(!currentTool.startsWith('shape') || selectionPhase !== 2) {
+      return;
+    }
+
+    drawCallback();
+  }, [currentTool, drawCallback, selectionPhase]);
+
+  useEffect(() => {
+    if(!currentTool.startsWith('shape') || !selectionPhase) {
       return;
     }
     
     const selectionCanvas = document.querySelector('#pxp-selection-canvas');
-    if(!selectionCanvas) {
-      return;
-    }
-
-    function drawCallback() {
-      currentToolData.drawShape({ 
-        ...doSelectionGetEveryContext(),
-        colorData,
-        selectionSize: { 
-          width: selectionCanvas.width,
-          height: selectionCanvas.height
-        },
-        currentlyPressedRef,
-        shapeData,
-      });
-    }
-    
-    drawCallback();
     const observer = new MutationObserver(drawCallback);
     observer.observe(selectionCanvas, { attributes: true, attributeFilter: ['width', 'height'] });
 

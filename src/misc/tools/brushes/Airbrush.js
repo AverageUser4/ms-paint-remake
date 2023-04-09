@@ -11,8 +11,9 @@ class Airbrush extends BrushBase {
 
   doDrawIcon() {}
 
-  draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, currentlyPressedRef }) {
-    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef']);
+  draw({ secondaryContext, thumbnailSecondaryContext, currentPixel, colorData, currentlyPressedRef }) {
+    validateToolArgs(arguments, ['secondaryContext', 'thumbnailSecondaryContext', 'currentPixel', 'colorData', 'currentlyPressedRef']);
+    this._setStyle({ currentlyPressedRef, colorData, secondaryContext, thumbnailSecondaryContext });
      
     this.latestX = currentPixel.x;
     this.latestY = currentPixel.y;

@@ -6,6 +6,7 @@ import useShape from './useShape';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useToolContext } from "../../context/ToolContext";
+import { MAX_CANVAS_SIZE } from "../../misc/data";
 
 function useSelection() {
   const { primaryRef, canvasZoom } = useCanvasContext();
@@ -75,6 +76,10 @@ function useSelection() {
     size: usedSize,
     setSize: usedSetSize,
     minimalSize: { width: 1, height: 1, },
+    maximalSize: { 
+      width: MAX_CANVAS_SIZE * canvasZoom,
+      height: MAX_CANVAS_SIZE * canvasZoom 
+    },
     canvasZoom,
     containerRef: primaryRef,
     onPressEndCallback: onPressEndCallbackResize,

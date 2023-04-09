@@ -33,6 +33,13 @@ function SelectionProvider({ children }) {
   const lastSelectionSizeRef = useRef(null);
   const lastSelectionPositionRef = useRef(null);
 
+  const doSelectionGetEveryContext = useCallback(() => {
+    return {
+      selectionContext: selectionRef.current?.getContext('2d'),
+      thumbnailSelectionContext: thumbnailSelectionRef.current?.getContext('2d'),
+    };
+  }, [selectionRef, thumbnailSelectionRef]);
+
   const doSelectionClear = useCallback(() => {
     const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
@@ -42,7 +49,7 @@ function SelectionProvider({ children }) {
 
     clear(selectionContext);
     thumbnailSelectionContext && clear(thumbnailSelectionContext);
-  }, [selectionSize]);
+  }, [selectionSize, doSelectionGetEveryContext]);
 
   const doSelectionDrawToSelection = useCallback((data) => {
     // using data?.width/height is important so picture does not get cut when canvasZoom < 1
@@ -84,7 +91,7 @@ function SelectionProvider({ children }) {
     drawToContext(selectionContext);
     thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
     lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
-  }, [isSelectionTransparent, colorData.secondary]);
+  }, [isSelectionTransparent, colorData.secondary, doSelectionGetEveryContext]);
 
   useEffect(() => {
     // redraw always when size changes (as the canvas gets cleared when width or height attribute changes)
@@ -306,13 +313,6 @@ function SelectionProvider({ children }) {
     setTimeout(() => {
       doSelectionDrawToSelection(primaryImageData);
     }, 20);
-  }
-
-  function doSelectionGetEveryContext() {
-    return {
-      selectionContext: selectionRef.current?.getContext('2d'),
-      thumbnailSelectionContext: thumbnailSelectionRef.current?.getContext('2d'),
-    };
   }
   
   return (
