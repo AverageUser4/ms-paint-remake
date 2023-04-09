@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import css from './Window.module.css';
 
+import WindowPlacementIndicator from '../WindowPlacementIndicator/WindowPlacementIndicator';
 import useOutsideClick from '../../hooks/useOutsideClick';
 import useResize from '../../hooks/useResize';
 import useMove from '../../hooks/useMove';
 import useAutoFit from '../../hooks/useAutoFit';
 import useAutoShrink from '../../hooks/useAutoShrink';
 import { useContainerContext } from '../../context/ContainerContext';
+import { useMainWindowContext } from '../../context/MainWindowContext';
 
 function Window({ 
   ID,
@@ -18,19 +20,21 @@ function Window({
   isFocused, setIsFocused,
   isResizable,
   isAutoShrink,
-  isInnerWindow,
+  isMainWindow,
   isOpen,
   isIgnorePointerEvents,
   isMaximized,
   isBlockingMainWindow,
 }) {
   isResizable = isResizable && !isMaximized;
+  const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
+  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize, isMainWindowMaximized } = useMainWindowContext();
   const { containerRect, isConstrained, isAutoFit, isAllowToLeaveViewport } = useContainerContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
   const windowRef = useRef();
   let zIndex = 'auto';
-  zIndex = isInnerWindow ? '4' : zIndex;
+  zIndex = isMainWindow ? zIndex : '4';
   zIndex = isBlockingMainWindow ? '5' : zIndex;
   
   const { resizeGrabElements } = useResize({ 
@@ -42,12 +46,34 @@ function Window({
     isConstrained,
     isAllowToLeaveViewport,
   });
-  const { onPointerDownMove, tempElement } = useMove({ 
+  const { onPointerDownMove, isMovePressed } = useMove({ 
     containerRect,
     position, setPosition,
     size, setSize,
-    isMaximized,
-    isInnerWindow,
+    onMoveCallback: (event, data) => {
+      if(isMainWindow && isMainWindowMaximized) {
+        /* handles situation when user tries to move maximized main window */
+        const pointerContainerX = event.clientX - containerRect.x;
+        const pointerRatioX = pointerContainerX / containerRect.width;
+        const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
+        const adjustedX = pointerContainerX - widthBeforeCursor;
+  
+        doMainWindowRestoreSize();
+        data.setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
+        setPosition({ x: Math.round(adjustedX), y: 0 })
+      }
+    },
+    onEndCallback: () => {
+      if(indicatorData.strPosition) {
+        if(indicatorData.strPosition === 'full') {
+          doMainWindowMaximize();
+        } else {
+          setPosition(indicatorData.position);
+          setSize(indicatorData.size);
+        }
+      }
+    },
+    isMainWindow,
     isConstrained,
   });
   useAutoFit({ 
@@ -67,10 +93,9 @@ function Window({
   });
 
   useOutsideClick(windowRef, () => { 
-    if(!isInnerWindow && isFocused) {
+    if(isMainWindow && isFocused) {
       setIsFocused(false);
-    }
-    else if(isBlockingMainWindow && isInnerWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
+    } else if(isBlockingMainWindow && !isMainWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
       setIsAttentionAnimated(true);
       setTimeout(() => setIsAttentionAnimated(false), 1000);
     }
@@ -93,7 +118,7 @@ function Window({
   }, [isOpen, isActuallyOpen]);
 
   function onPointerDownFocus() {
-    if(!isInnerWindow && !isFocused)
+    if(isMainWindow && !isFocused)
       setIsFocused(true);
   }
   
@@ -117,7 +142,7 @@ function Window({
         className={`
           ${css['container']}
           ${isFocused ? css['container--focused'] : ''}
-          ${isInnerWindow ? css['container--inner'] : ''}
+          ${!isMainWindow ? css['container--inner'] : ''}
           ${((isOpen && !isActuallyOpen) || (!isOpen && isActuallyOpen)) ? css['container--hidden'] : ''}
           ${isAttentionAnimated ? css['container--attention'] : ''}
           ${isIgnorePointerEvents ? css['container--locked'] : ''}
@@ -128,7 +153,17 @@ function Window({
         {render(isAttentionAnimated, onPointerDownMove)}
       </article>
 
-      {!isInnerWindow && tempElement}
+      {
+        isMainWindow &&
+          <WindowPlacementIndicator
+            position={position}
+            isConstrained={isConstrained}
+            isMaximized={isMainWindowMaximized}
+            isBeingMoved={isMovePressed}
+            indicatorData={indicatorData}
+            setIndicatorData={setIndicatorData}
+          />
+      }
     </>
   );
 }
@@ -150,7 +185,7 @@ Window.propTypes = {
     y: PropTypes.number.isRequired,
   }).isRequired,
   setPosition: PropTypes.func.isRequired,
-  isInnerWindow: PropTypes.bool.isRequired,
+  isMainWindow: PropTypes.bool.isRequired,
   isOpen: PropTypes.bool.isRequired,
   isFocused: PropTypes.bool.isRequired,
   setIsFocused: PropTypes.func.isRequired,

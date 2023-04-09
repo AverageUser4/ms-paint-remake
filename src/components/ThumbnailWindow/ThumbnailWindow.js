@@ -44,7 +44,6 @@ const ThumbnailWindow = memo(function ThumbnailWindow() {
       setPosition={setPosition}
       minimalSize={{ width: 120, height: 100 }}
       isOpen={isOpen}
-      isInnerWindow={true}
       isResizable={true}
       isBlockingMainWindow={false}
       render={(isAttentionAnimated, onPointerDownMove) => {

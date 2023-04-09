@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import useResizeCursor from "../../hooks/useResizeCursor";
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
+import { useColorContext } from '../../context/ColorContext';
+import { useToolContext } from '../../context/ToolContext';
 
 function useRectangularSelection() {
   const { 
@@ -11,6 +13,8 @@ function useRectangularSelection() {
     canvasZoom, doGetEveryContext 
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
+  const { currentTool, currentToolData, shapeData } = useToolContext();
+  const { colorData } = useColorContext();
 
   const {
     selectionSize,
@@ -24,18 +28,30 @@ function useRectangularSelection() {
     doSelectionSetSize,
     doSelectionSetPosition,
     doSelectionEnd,
+    doSelectionGetEveryContext,
   } = useSelectionContext();
 
   const [resizeData, setResizeData] = useState(null);
   useResizeCursor(resizeData);
 
-  const { onPointerDown, doCancel } = usePointerTrack({ 
+  const { onPointerDown, doCancel, currentlyPressedRef } = usePointerTrack({ 
     onPressedMoveCallback,
     onPressStartCallback,
     onPressEndCallback,
     onCancelCallback,
     isCancelOnRightMouseDown: true,
+    isTrackAlsoRight: true,
   });
+
+  const drawCallback = useCallback(() => {
+    currentToolData.drawShape({ 
+      ...doSelectionGetEveryContext(),
+      colorData,
+      selectionSize,
+      currentlyPressedRef,
+      shapeData,
+    });
+  }, [colorData, selectionSize, currentlyPressedRef, shapeData, currentToolData, doSelectionGetEveryContext]);
   
   function onPressStartCallback(event) {
     if(selectionPhase === 2) {
@@ -133,27 +149,34 @@ function useRectangularSelection() {
       setSelectionPhase(2);
       setResizeData(null);
 
-      const { primaryContext } = doGetEveryContext();
+      if(currentTool.startsWith('selection')) {
+        const { primaryContext } = doGetEveryContext();
+    
+        const imageData = primaryContext.getImageData(
+          lastSelectionPositionRef.current.x,
+          lastSelectionPositionRef.current.y,
+          lastSelectionSizeRef.current.width,
+          lastSelectionSizeRef.current.height,
+        );
+    
+        doSelectionDrawToSelection(imageData);
+        doCanvasClearPrimary({
+          x: lastSelectionPositionRef.current.x,
+          y: lastSelectionPositionRef.current.y,
+          width: lastSelectionSizeRef.current.width,
+          height: lastSelectionSizeRef.current.height,
+        });
   
-      const imageData = primaryContext.getImageData(
-        lastSelectionPositionRef.current.x,
-        lastSelectionPositionRef.current.y,
-        lastSelectionSizeRef.current.width,
-        lastSelectionSizeRef.current.height,
-      );
-  
-      doSelectionDrawToSelection(imageData);
-      doCanvasClearPrimary({
-        x: lastSelectionPositionRef.current.x,
-        y: lastSelectionPositionRef.current.y,
-        width: lastSelectionSizeRef.current.width,
-        height: lastSelectionSizeRef.current.height,
-      });
-
-      doHistoryAdd({
-        element: primaryRef.current,
-        ...canvasSize,
-      });
+        doHistoryAdd({
+          element: primaryRef.current,
+          ...canvasSize,
+        });
+      } else if(currentTool.startsWith('shape')) {
+        setSelectionPhase(2);
+        setResizeData(null);
+        
+        drawCallback();
+      }
     }, 20);
   }
 
@@ -161,6 +184,28 @@ function useRectangularSelection() {
     doSelectionEnd();
     setResizeData(null);
   }
+
+  useEffect(() => {
+    if(!currentTool.startsWith('shape') || selectionPhase !== 2) {
+      return;
+    }
+
+    drawCallback();
+  }, [currentTool, drawCallback, selectionPhase]);
+
+  useEffect(() => {
+    if(!currentTool.startsWith('shape') || !selectionPhase) {
+      return;
+    }
+    
+    const selectionCanvas = document.querySelector('#pxp-selection-canvas');
+    const observer = new MutationObserver(drawCallback);
+    observer.observe(selectionCanvas, { attributes: true, attributeFilter: ['width', 'height'] });
+
+    return () => {
+      observer.disconnect();
+    };
+  });
 
   return {
     onPointerDownRectangularSelection: onPointerDown,

@@ -4,12 +4,14 @@ GOING TO:
   - changes to code can cause primaryCanvas to lose it's background color and become transparent, it does not seem that there is user action
     that can cause that but it may need to be investigated
   - fix FreeFormSelection selecting shapes that are not exactly like expected
-  - make code repeated between useShape and useRectangularSelection shared
-  - rework useMove / useResize, remove window specific code and put it in callbacks, the way outline is used is kinda weird
+  - rework outline in useResize
   - changes to useMove could potentially make selectionCanvas perfectly aligned with primaryCanvas (would move pixel by pixel)
   - remove unnecessary clearRect calls on brush canvas
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
+  - changing history should cancel selection
+  - add unit tests to funcions in utils
 
 DONE:
+  
 

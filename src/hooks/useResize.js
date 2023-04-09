@@ -23,14 +23,13 @@ export default function useResize({
   isSmallPoints,
 }) {
   checkArgs([
-    { name: 'minimalSize', value: minimalSize, type: 'object' },
-    { name: 'position', value: position, type: 'object' },
-    { name: 'setPosition', value: setPosition, type: 'function' },
-    { name: 'size', value: size, type: 'object' },
-    { name: 'setSize', value: setSize, type: 'function' },
-    { name: 'isConstrained', value: isConstrained, type: 'boolean' },
-    { name: 'isResizable', value: isResizable, type: 'boolean' },
-    { name: 'isAllowToLeaveViewport', value: isAllowToLeaveViewport, type: 'boolean' },
+    { minimalSize, type: 'object' },
+    { position, type: 'object' },
+    { setPosition, type: 'function' },
+    { size, type: 'object' },
+    { setSize, type: 'function' },
+    { canvasZoom, type: 'number' },
+    { isResizable, type: 'boolean' },
   ]);
 
   const [resizeData, setResizeData] = useState(null);
@@ -164,9 +163,10 @@ export default function useResize({
   
   function onPressStartCallback(event) {
     /* 
-      - when we are resizing in directions that cause movements, there may be a few-pixel jump at the beginning
-      of movement, depending on where exactly resize bar was clicked, this could be fixed by adjusting initialClientX/Y
-      to constant position, but it will be different for 'pointBased' and normal resize type
+      cannot reproduce: 
+        - when we are resizing in directions that cause movements, there may be a few-pixel jump at the beginning
+        of movement, depending on where exactly resize bar was clicked, this could be fixed by adjusting initialClientX/Y
+        to constant position, but it will be different for 'pointBased' and normal resize type
     */
     
     const { offsetX, offsetY } = event.nativeEvent;

@@ -16,13 +16,13 @@ export default function useAutoFit({
       return;
     }
     checkArgs([
-      { name: 'minimalSize', value: minimalSize, type: 'object' },
-      { name: 'position', value: position, type: 'object' },
-      { name: 'size', value: size, type: 'object' },
-      { name: 'setSize', value: setSize, type: 'function' },
-      { name: 'isAutoShrink', value: isAutoShrink, type: 'boolean' },
-      { name: 'isAutoFit', value: isAutoFit, type: 'boolean' },
-      { name: 'isResizable', value: isResizable, type: 'boolean' },
+      { minimalSize, type: 'object' },
+      { position, type: 'object' },
+      { size, type: 'object' },
+      { setSize, type: 'function' },
+      { isAutoShrink, type: 'boolean' },
+      { isAutoFit, type: 'boolean' },
+      { isResizable, type: 'boolean' },
     ]);
 
     let newWidth = size.width;

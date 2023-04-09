@@ -5,7 +5,7 @@ const ContainerContext = createContext();
 
 function ContainerProvider({ children, containerRef, isConstrained, isAutoFit, isAllowToLeaveViewport }) {
   /* only dimensions can be read from this state reliably, changes to position only will not cause the state to change */
-  const [containerRect, setContainerRect] = useState();
+  const [containerRect, setContainerRect] = useState(null);
 
   useEffect(() => {
     if(!containerRect) {

@@ -51,16 +51,14 @@ function Canvas() {
 
   const { 
     selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
-    onPointerDownRectangularSelection, onPointerDownFreeFormSelection, onPointerDownShape
+    onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection();
 
   let onPointerDownSecondary = onPointerDownBrush;
-  if(currentTool === 'selection-rectangle') {
+  if(currentTool === 'selection-rectangle' || currentTool.startsWith('shape')) {
     onPointerDownSecondary = onPointerDownRectangularSelection;
   } else if(currentTool === 'selection-free-form') {
     onPointerDownSecondary = onPointerDownFreeFormSelection;
-  } else if(currentTool.startsWith('shape')) {
-    onPointerDownSecondary = onPointerDownShape;
   }
 
   const { 
@@ -78,7 +76,6 @@ function Canvas() {
     },
     canvasZoom,
     onPressEndCallback: onPointerUpCallbackResize,
-    isConstrained: false,
     isAllowToLeaveViewport: true,
     isResizable: true,
     isPointBased: true,
@@ -126,8 +123,8 @@ function Canvas() {
         }}
         onPointerLeave={() => setCanvasMousePosition(null)}
         onPointerDown={(e) => onPointerDownSecondary(e)}
-        onContextMenu={(e) => { 
-          if(currentTool !== 'selection-rectangle') {
+        onContextMenu={(e) => {
+          if(currentTool !== 'selection-rectangle' || selectionPhase === 1) {
             return;
           }
 
@@ -167,11 +164,7 @@ function Canvas() {
               `}
               onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
               onContextMenu={(e) => {
-                const { offsetX, offsetY } = e.nativeEvent;
-                if(
-                    (Math.abs(offsetX - selectionSize.width) < 5 || offsetX < 5) &&
-                    (Math.abs(offsetY - selectionSize.height) < 5 || offsetY < 5)
-                  ) {
+                if(selectionPhase === 1) {
                   return;
                 }
                 openContextMenu(e, 'canvas', 'selection');

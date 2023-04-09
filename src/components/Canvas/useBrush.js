@@ -71,7 +71,7 @@ function useBrush() {
   
       if(canvasMousePosition && !canvasOutlineSize) {
         currentToolData.doDrawIcon({
-          currentPixel,
+          currentPixel: destinationPixel,
           colorData,
           brushContext,
           canvasZoom,

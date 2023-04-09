@@ -16,11 +16,11 @@ export function toggleBoolState(isOn, setIsOn) {
 
 export function HSLtoRGB({ h, s, l }) {
   if(typeof h !== 'number' || h < 0 || h > 359)
-    console.error(`Incorrect "h" provided, expected number between 0 and 359, received:`, h);
+    console.error(`Expected "h" property to be number between 0 and 359, provided:`, h);
   if(!Number.isInteger(s) || s < 0 || s > 100)      
-    console.error(`Incorrect "s" provided, expected integer between 0 and 100, received:`, s);
+    console.error(`Expected "s" property to be integer between 0 and 100, provided:`, s);
   if(!Number.isInteger(l) || l < 0 || l > 100)
-    console.error(`Incorrect "l" provided, expected integer between 0 and 100, received:`, l);
+    console.error(`Expected "l" property to be integer between 0 and 100, provided:`, l);
      
   /* https://www.30secondsofcode.org/js/s/hsl-to-rgb */
   s /= 100;
@@ -39,13 +39,13 @@ export function HSLtoRGB({ h, s, l }) {
 
 export function RGBtoHSL({ r, g, b }) {
   if(!Number.isInteger(r) || r < 0 || r > 255) {
-    console.error(`Incorrect "r" provided, expected integer between 0 and 255, received:`, r);
+    console.error(`Expected "r" property to be integer between 0 and 255, provided:`, r);
   }
   if(!Number.isInteger(g) || g < 0 || g > 255) {
-    console.error(`Incorrect "g" provided, expected integer between 0 and 255, received:`, g);
+    console.error(`Expected "g" property to be integer between 0 and 255, provided:`, g);
   }
   if(!Number.isInteger(b) || b < 0 || b > 255) {
-    console.error(`Incorrect "b" provided, expected integer between 0 and 255, received:`, b);
+    console.error(`Expected "b" property to be integer between 0 and 255, provided:`, b);
   }
 
   const $r = r / 255;
@@ -107,21 +107,50 @@ export function getWindowCenteredPosition(mainWindowPosition, mainWindowSize, in
 
 export function checkArgs(args) {
   if(!Array.isArray(args)) {
-    throw new Error(`This function takes array of object as it's only argument, received:`, args);
+    console.error(`This function takes array of object as it's only argument, provided:`, args);
   }
 
   for(let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if(typeof arg.value !== arg.type) {
-      console.error(`Argument ${arg.name} has value ${arg.value} of type ${typeof arg.value}, while expected type is ${arg.type}`);
+    const { anyOf } = arg;
+
+    if(anyOf) {
+      let isOk = false;
+      const receivedArray = [];
+      let message = 'Expected';
+
+      for(let j = 0; j < anyOf.length; j++) {
+        const arg = anyOf[j];
+        const argName = Object.keys(arg).find(x => x !== 'type');
+
+        if(typeof anyOf[j][argName] === anyOf[j].type) {
+          isOk = true;
+        }
+
+        receivedArray.push({ name: argName, value: anyOf[j][argName] });
+        message += ` "${argName}" to be of type "${anyOf[j].type}" or `;
+      }
+
+      if(!isOk) {
+        message = message.slice(0, message.lastIndexOf(' or '));
+        message += ', received:';
+        console.error(message, receivedArray);
+      }
+    } else {
+      const argName = Object.keys(arg).find(x => x !== 'type');
+  
+      if(typeof arg[argName] !== arg.type) {
+        console.error(`Expected argument "${argName}" to be of type "${arg.type}", received:`, arg[argName]);
+      }
     }
+
   }
 }
 
 export function hexToDec(hex) {
   hex = hex.toLowerCase();
   if(hex.match(/[^0-9a-f]/)) {
-    console.error(`This function expects hexadeciamal number (consisting only of 0-9 and a-f), received:`, hex);
+    console.error(`This function expects hexadeciamal number (consisting only of 0-9 and a-f), provided:`, hex);
   }
 
   const values = { a: 10, b: 11, c: 12, d: 13, e: 14, f: 15 };
@@ -149,7 +178,7 @@ export function hexToRGB(hex) {
       hex.lastIndexOf('#') !== 0 ||
       hex.match(/[^#0-9a-f]/)
     ) {
-      console.error(`This function expects hexadecimal representation of color in this format "#xxxxxx", received:`, hex);
+      console.error(`This function expects hexadecimal representation of color in this format "#xxxxxx", provided:`, hex);
     }
 
   const r = hexToDec(hex.slice(1, 3));
@@ -161,13 +190,13 @@ export function hexToRGB(hex) {
 
 export function RGBObjectToString(obj) {
   if(typeof obj !== 'object') {
-    console.error(`Expected object representing color in rgb format, received:`, obj);
+    console.error(`Expected object representing color in rgb format, provided:`, obj);
   } else if(!Number.isInteger(obj.r) || obj.r < 0 || obj.r > 255) {
-    console.error(`Expected "r" property of received object to be an integer between 0 and 255, received:`, obj.r);
+    console.error(`Expected "r" property to be an integer between 0 and 255, provided:`, obj.r);
   } else if(!Number.isInteger(obj.g) || obj.g < 0 || obj.g > 255) {
-    console.error(`Expected "g" property of received object to be an integer between 0 and 255, received:`, obj.g);
+    console.error(`Expected "g" property to be an integer between 0 and 255, provided:`, obj.g);
   } else if(!Number.isInteger(obj.b) || obj.b < 0 || obj.b > 255) {
-    console.error(`Expected "b" property of received object to be an integer between 0 and 255, received:`, obj.b);
+    console.error(`Expected "b" property to be an integer between 0 and 255, provided:`, obj.b);
   }
 
   return `rgba(${obj.r}, ${obj.g}, ${obj.b}, ${obj.a || 1})`;

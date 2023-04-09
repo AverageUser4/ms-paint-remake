@@ -9,10 +9,10 @@ export default function useAutoFit({
   isAutoFit,
 }) {
   checkArgs([
-    { name: 'position', value: position, type: 'object' },
-    { name: 'setPosition', value: setPosition, type: 'function' },
-    { name: 'size', value: size, type: 'object' },
-    { name: 'isAutoFit', value: isAutoFit, type: 'boolean' },
+    { position, type: 'object' },
+    { setPosition, type: 'function' },
+    { size, type: 'object' },
+    { isAutoFit, type: 'boolean' },
   ]);
   
   useEffect(() => {

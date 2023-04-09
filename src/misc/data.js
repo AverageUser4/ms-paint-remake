@@ -9,7 +9,7 @@ import cursorMagnifier from '../assets/cursors/zoom.png';
 
 export const innerWindowConfig = {
   minimalSize: { width: 1, height: 1 },
-  isInnerWindow: true,
+  isMainWindow: false,
   isFocused: false,
   isResizable: false,
   isAutoShrink: false,

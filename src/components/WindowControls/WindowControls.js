@@ -10,14 +10,14 @@ import { ReactComponent as Minimize } from './assets/minimize.svg';
 import { ReactComponent as RestoreDown } from './assets/restore-down.svg';
 import Tooltip from "../Tooltip/Tooltip";
 
-function WindowControls({ isAttentionAnimated, isInnerWindow = false, closeCallback }) {
+function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallback }) {
   const { 
     isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize,
     setMainWindowSize, mainWindowMinimalSize, setIsMainWindowMaximized,
   } = useMainWindowContext();
   
   // inner window
-  if(isInnerWindow) {
+  if(!isMainWindow) {
     return (
       <button 
         className={`
@@ -104,7 +104,7 @@ function WindowControls({ isAttentionAnimated, isInnerWindow = false, closeCallb
 }
 
 WindowControls.propTypes = {
-  isInnerWindow: PropTypes.bool,
+  isMainWindow: PropTypes.bool,
   closeCallback: PropTypes.func.isRequired,
   isAttentionAnimated: PropTypes.bool,
 };

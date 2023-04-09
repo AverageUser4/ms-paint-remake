@@ -81,7 +81,7 @@ function Logic({
         isIgnorePointerEvents={isAnyBlockingWindowOpen}
         isMaximized={isMainWindowMaximized}
         isOpen={isOpen}
-        isInnerWindow={false}
+        isMainWindow={true}
         isBlockingMainWindow={false}
         render={(isAttentionAnimated, onPointerDownMove) => {
           return (

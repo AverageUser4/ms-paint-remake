@@ -2,7 +2,6 @@ import useMove from "../../hooks/useMove";
 import useResize from "../../hooks/useResize";
 import useRectangularSelection from './useRectangularSelection';
 import useFreeFormSelection from './useFreeFormSelection';
-import useShape from './useShape';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useToolContext } from "../../context/ToolContext";
@@ -25,7 +24,6 @@ function useSelection() {
 
   const { onPointerDownRectangularSelection } = useRectangularSelection();
   const { onPointerDownFreeFormSelection } = useFreeFormSelection();
-  const { onPointerDownShape } = useShape();
 
   let usedPosition = selectionOutlinePosition || selectionPosition;
   let usedSetPosition = setSelectionOutlinePosition;
@@ -83,10 +81,8 @@ function useSelection() {
     canvasZoom,
     containerRef: primaryRef,
     onPressEndCallback: onPressEndCallbackResize,
-    isConstrained: false,
     isResizable: true,
     isPointBased: true,
-    isOnlyThreeDirections: false,
     isCancelOnRightMouseDown: true,
     isSmallPoints: true,
     isAllowToLeaveViewport: true,
@@ -106,9 +102,6 @@ function useSelection() {
 
       doSelectionDrawToPrimary();
     },
-    isInnerWindow: true,
-    isMaximized: false,
-    isConstrained: false,
     isReverseConstrained: true,
   });
 
@@ -118,7 +111,6 @@ function useSelection() {
     onPointerDownSelectionMove,
     onPointerDownRectangularSelection,
     onPointerDownFreeFormSelection,
-    onPointerDownShape,
   }
 }
 

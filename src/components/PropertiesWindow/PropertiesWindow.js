@@ -90,7 +90,6 @@ const PropertiesWindow = memo(function PropertiesWindow() {
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      isInnerWindow={true}
       render={(isAttentionAnimated, onPointerDownMove) => {
         return (
           <>

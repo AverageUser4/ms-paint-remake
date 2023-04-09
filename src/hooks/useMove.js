@@ -1,8 +1,6 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-import WindowPlacementIndicator from "../components/WindowPlacementIndicator/WindowPlacementIndicator";
 
-import { useMainWindowContext } from '../context/MainWindowContext';
 import usePointerTrack from "./usePointerTrack";
 import { checkArgs } from "../misc/utils";
 
@@ -15,24 +13,19 @@ export default function useMove({
   setSize,
   canvasZoom = 1,
   onMoveCallback,
-  isInnerWindow,
-  isMaximized,
+  onEndCallback,
   isConstrained,
   isReverseConstrained,
 }) {
   checkArgs([
-    { name: 'position', value: position, type: 'object' },
-    { name: 'setPosition', value: setPosition, type: 'function' },
-    { name: 'size', value: size, type: 'object' },
-    { name: 'setSize', value: setSize, type: 'function' },
-    { name: 'isInnerWindow', value: isInnerWindow, type: 'boolean' },
-    { name: 'isMaximized', value: isMaximized, type: 'boolean' },
-    { name: 'isConstrained', value: isConstrained, type: 'boolean' },
+    { position, type: 'object' },
+    { setPosition, type: 'function' },
+    { size, type: 'object' },
+    { setSize, type: 'function' },
+    { canvasZoom, type: 'number' },
   ]);
 
-  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize } = useMainWindowContext();
   const [positionDifference, setPositionDifference] = useState(null);
-  const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
   const { onPointerDown: onPointerDownMove, isPressed: isMovePressed } = usePointerTrack({ 
     onPressedMoveCallback, onPressStartCallback, onPressEndCallback,
   });
@@ -49,8 +42,6 @@ export default function useMove({
       return;
     }
 
-    onMoveCallback && onMoveCallback(event);
-
     if(!containerRect) {
       containerRect = containerRef.current.getBoundingClientRect();
     }
@@ -66,45 +57,21 @@ export default function useMove({
       y = Math.max(Math.min(y, containerRect.height), -size.height * canvasZoom);
     }
 
-    if(!isInnerWindow && isMaximized) {
-      const pointerContainerX = event.clientX - containerRect.x;
-      const pointerRatioX = pointerContainerX / containerRect.width;
-      const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
-      const adjustedX = pointerContainerX - widthBeforeCursor;
+    setPosition({ 
+      x: Math.round(x / canvasZoom),
+      y: Math.round(y / canvasZoom) 
+    });
 
-      doMainWindowRestoreSize();
-      setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
-      setPosition({ x: adjustedX, y: 0 })
-    } else {
-      setPosition({ x: x / canvasZoom, y: y / canvasZoom });
-    }
+    onMoveCallback && onMoveCallback(event, { setPositionDifference });
   }
 
-  function onPressEndCallback() {
-    if(indicatorData.strPosition) {
-      if(indicatorData.strPosition === 'full') {
-        doMainWindowMaximize();
-      } else {
-        setPosition(indicatorData.position);
-        setSize(indicatorData.size);
-      }
-    }
+  function onPressEndCallback(event) {
+    onEndCallback && onEndCallback(event);
     setPositionDifference(null);
   }
 
-  const tempElement = !isInnerWindow && (
-    <WindowPlacementIndicator
-      position={position}
-      isConstrained={isConstrained}
-      isMaximized={isMaximized}
-      isBeingMoved={isMovePressed}
-      indicatorData={indicatorData}
-      setIndicatorData={setIndicatorData}
-    />
-  );
-
   return {
     onPointerDownMove,
-    tempElement
+    isMovePressed,
   };
 }

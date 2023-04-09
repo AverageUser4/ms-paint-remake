@@ -43,7 +43,6 @@ const PromptWindow = memo(function PromptWindow() {
       setSize={setSize}
       position={position}
       setPosition={setPosition}
-      isInnerWindow={true}
       render={(isAttentionAnimated, onPointerDownMove) => {
         return (
           <>
