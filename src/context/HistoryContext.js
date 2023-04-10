@@ -9,9 +9,7 @@ const MAX_HISTORY_ENTRIES = 50;
 const HistoryContext = createContext();
 
 function HistoryProvider({ children }) {
-  const { 
-    doCanvasClearPrimary, lastPrimaryStateRef, setCanvasSize, doCanvasDrawImageToPrimary,
-  } = useCanvasContext();  
+  const { lastPrimaryStateRef } = useCanvasContext();  
   const [history, setHistory] = useState({
     dataArray: [{ ...initialCanvasSize, element: document.createElement('canvas') }],
     currentIndex: 0
@@ -42,33 +40,6 @@ function HistoryProvider({ children }) {
     });
   }
 
-  function doHistorySetToState(index) {
-    const data = history.dataArray[index];
-    const bufCanvas = document.createElement('canvas');
-    bufCanvas.width = data.width;
-    bufCanvas.height = data.height;
-    bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
-  
-    doCanvasClearPrimary({ ...data });
-    doCanvasDrawImageToPrimary(bufCanvas);
-    lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
-  
-    setCanvasSize({ width: data.width, height: data.height });
-    setHistory(prev => ({ ...prev, currentIndex: index }));
-  }
-  
-  function doHistoryGoBack() {
-    if(!isHistoryOnFirst) {
-      doHistorySetToState(history.currentIndex - 1);
-    }
-  }
-
-  function doHistoryGoForward() {
-    if(!isHistoryOnLast) {
-      doHistorySetToState(history.currentIndex + 1);
-    }
-  }
-
   function doHistoryClear() {
     const data = history.dataArray[history.currentIndex];
     const canvas = document.createElement('canvas');
@@ -87,8 +58,6 @@ function HistoryProvider({ children }) {
         history,
         setHistory,
         doHistoryAdd,
-        doHistoryGoBack,
-        doHistoryGoForward,
         doHistoryClear,
         isHistoryOnFirst,
         isHistoryOnLast,

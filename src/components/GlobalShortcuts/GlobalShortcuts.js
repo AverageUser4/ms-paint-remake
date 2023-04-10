@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { useMainWindowContext } from '../../context/MainWindowContext';
 import { useSelectionContext } from '../../context/SelectionContext';
-import { useHistoryContext } from '../../context/HistoryContext';
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useActionsContext } from '../../context/ActionsContext';
 import { useCanvasContext } from '../../context/CanvasContext';
@@ -19,14 +18,13 @@ function GlobalShortcuts({ ribbonData }) {
     doSelectionSelectAll, doSelectionPasteFromClipboard,
     doSelectionDrawToPrimary, doSelectionEnd, selectionPhase,
   } = useSelectionContext();
-  const { doHistoryGoBack, doHistoryGoForward } = useHistoryContext();
   const { 
     setIsPropertiesWindowOpen, setIsGridLinesVisible, setIsRulersVisible,
     setIsResizeWindowOpen,
   } = useWindowsContext();
   const {
     doStartNewProject, doOpenNewFile, doSaveFile, doCanvasChangeZoom,
-    doSharedCopy, doSharedCut, doSharedDelete
+    doSharedCopy, doSharedCut, doSharedDelete, doHistoryGoBack, doHistoryGoForward
   } = useActionsContext();
   const { 
     setIsFullScreenView, canvasZoom, secondaryRef,

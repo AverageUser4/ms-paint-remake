@@ -9,9 +9,10 @@ GOING TO:
   - remove unnecessary clearRect calls on brush canvas
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
-  - changing history should cancel selection
   - add unit tests to funcions in utils
+  - changing history when selectionPhase === 1 or selection is moved or selection is resized causes error messages and even crash,
+  because useMove, useResize and selection phase handling cannot handle situation when selection is cancelled in the middle of operation
+  - clicking disabled buttons (in firefox) causes native context menu to be open
 
 DONE:
-  
 

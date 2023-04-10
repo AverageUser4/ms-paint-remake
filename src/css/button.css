@@ -41,6 +41,9 @@
   .button:disabled * {
     filter: opacity(50%);
   }
+  .button--disabled-grayscale:disabled * {
+    filter: opacity(50%) grayscale(100%);
+  }
   .button.button:disabled {
     background-color: transparent;
     border-color: transparent;

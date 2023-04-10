@@ -14,12 +14,15 @@ import { zoomData } from '../misc/data';
 const ActionsContext = createContext();
 
 function ActionsProvider({ children }) {
-  const { doHistoryClear, doHistoryAdd } = useHistoryContext();
+  const { 
+    doHistoryClear, doHistoryAdd, isHistoryOnFirst,
+    isHistoryOnLast, history, setHistory
+  } = useHistoryContext();
   const { 
     setCanvasSize, primaryRef, lastPrimaryStateRef,
     fileData, isBlackAndWhite, doGetEveryContext,
     canvasZoom, setCanvasZoom, doCanvasClearPrimary,
-    setFileData, canvasSize
+    setFileData, canvasSize, doCanvasDrawImageToPrimary
   } = useCanvasContext();
   const { doRequirePromptWindow } = useWindowsContext();
   const { 
@@ -306,6 +309,44 @@ function ActionsProvider({ children }) {
       doHistoryAdd({ element: primaryRef.current, ...canvasSize });
     }
   }
+
+  function doHistorySetToState(index) {
+    const data = history.dataArray[index];
+    const bufCanvas = document.createElement('canvas');
+    bufCanvas.width = data.width;
+    bufCanvas.height = data.height;
+    bufCanvas.getContext('2d').drawImage(data.element, 0, 0);
+  
+    doCanvasClearPrimary({ ...data });
+    doCanvasDrawImageToPrimary(bufCanvas);
+    lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
+  
+    setCanvasSize({ width: data.width, height: data.height });
+    setHistory(prev => ({ ...prev, currentIndex: index }));
+  }
+  
+  function doHistoryGoBack() {
+    if(selectionPhase === 2) {
+      doSelectionEnd();
+      return;
+    }
+
+    if(!isHistoryOnFirst) {
+      doHistorySetToState(history.currentIndex - 1);
+    }
+  }
+
+  function doHistoryGoForward() {
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary();
+      doSelectionEnd();
+      return;
+    }
+
+    if(!isHistoryOnLast) {
+      doHistorySetToState(history.currentIndex + 1);
+    }
+  }
   
   return (
     <ActionsContext.Provider
@@ -323,6 +364,9 @@ function ActionsProvider({ children }) {
         doSharedRotate,
         doSharedFlip,
         doSharedInvertColor,
+        doHistorySetToState,
+        doHistoryGoBack,
+        doHistoryGoForward,
       }}
     >
       {children}
