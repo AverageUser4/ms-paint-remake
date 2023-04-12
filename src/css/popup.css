@@ -84,10 +84,10 @@
     background-color: rgb(206, 229, 252);
     outline: 1px solid rgb(100, 165, 230);
   }
-  .popup__button:disabled * {
+  .popup__button--disabled * {
     filter: opacity(60%) grayscale(100%);
   }
-  .popup__button:disabled:hover {
+  .popup__button--disabled:hover {
     background-color: transparent;
     outline: none;
   }

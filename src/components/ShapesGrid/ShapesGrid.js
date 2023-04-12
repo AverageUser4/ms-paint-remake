@@ -84,16 +84,19 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
     
     return (
       <button
-        disabled={shape.isDisabled}
         key={id}
         className={`
           button
-          ${currentTool === `shape-${id}` ? 'button--active' : ''}
           tooltip-container 
-          ${isOut && 'tooltip-container--out'}
+          ${currentTool === `shape-${id}` ? 'button--active' : ''}
+          ${isOut ? 'tooltip-container--out' : ''}
+          ${shape.isDisabled ? 'button--disabled' : ''}
         `}
         aria-label={shape.name}
         onClick={() => { 
+          if(shape.isDisabled) {
+            return;
+          }
           setCurrentTool(`shape-${id}`); 
           setIsGridDropdownOpen(false);
           setIsDropdownOpen(false);

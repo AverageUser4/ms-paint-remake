@@ -130,9 +130,15 @@ const ContextMenu = memo(function ContextMenu() {
             <div className="popup__line popup__line--separator"></div>
 
             <button 
-              disabled={data === 'primary'}
-              className="popup__button text text--4 text--nowrap"
+              className={`
+                popup__button
+                ${data === 'primary' ? 'popup__button--disabled' : ''}
+                text text--4 text--nowrap
+              `}
               onClick={() => {
+                if(data === 'primary') {
+                  return;
+                }
                 doSelectionCrop();
                 setIsOpen(false);
               }}
@@ -153,9 +159,15 @@ const ContextMenu = memo(function ContextMenu() {
             </button>
 
             <button 
-              disabled={data === 'primary' || currentTool.startsWith('shape')}
-              className="popup__button text text--4 text--nowrap"
+              className={`
+                popup__button
+                ${data === 'primary' || currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                text text--4 text--nowrap
+              `}
               onClick={() => {
+                if(data === 'primary' || currentTool.startsWith('shape')) {
+                  return;
+                }
                 doSelectionInvertSelection();
                 setIsOpen(false);
               }}
@@ -187,9 +199,15 @@ const ContextMenu = memo(function ContextMenu() {
               >
                 <div className="popup__part">
                   <button
-                    disabled={currentTool.startsWith('shape')}
-                    className="popup__button text text--4 text--nowrap"
+                    className={`
+                      popup__button
+                      ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                      text text--4 text--nowrap
+                    `}
                     onClick={() => {
+                      if(currentTool.startsWith('shape')) {
+                        return;
+                      }
                       doSharedRotate(90);
                       setIsOpen(false);
                     }}
@@ -199,9 +217,15 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
-                    disabled={currentTool.startsWith('shape')}
-                    className="popup__button text text--4 text--nowrap"
+                    className={`
+                      popup__button
+                      ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                      text text--4 text--nowrap
+                    `}
                     onClick={() => {
+                      if(currentTool.startsWith('shape')) {
+                        return;
+                      }
                       doSharedRotate(-90);
                       setIsOpen(false);
                     }}
@@ -211,9 +235,15 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
-                    disabled={currentTool.startsWith('shape')}
-                    className="popup__button text text--4 text--nowrap"
+                    className={`
+                      popup__button
+                      ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                      text text--4 text--nowrap
+                    `}
                     onClick={() => {
+                      if(currentTool.startsWith('shape')) {
+                        return;
+                      }
                       doSharedRotate(180);
                       setIsOpen(false);
                     }}
@@ -223,9 +253,15 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
-                    disabled={currentTool.startsWith('shape')}
-                    className="popup__button text text--4 text--nowrap"
+                    className={`
+                      popup__button
+                      ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                      text text--4 text--nowrap
+                    `}
                     onClick={() => {
+                      if(currentTool.startsWith('shape')) {
+                        return;
+                      }
                       doSharedFlip('vertical');
                       setIsOpen(false);
                     }}
@@ -235,9 +271,15 @@ const ContextMenu = memo(function ContextMenu() {
                   </button>
 
                   <button
-                    disabled={currentTool.startsWith('shape')}
-                    className="popup__button text text--4 text--nowrap"
+                    className={`
+                      popup__button
+                      ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                      text text--4 text--nowrap
+                    `}
                     onClick={() => {
+                      if(currentTool.startsWith('shape')) {
+                        return;
+                      }
                       doSharedFlip('horizontal');
                       setIsOpen(false);
                     }}
@@ -250,9 +292,15 @@ const ContextMenu = memo(function ContextMenu() {
             </div>
 
             <button
-              disabled={currentTool.startsWith('shape')}
-              className="popup__button text text--4 text--nowrap"
+              className={`
+                popup__button
+                ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                text text--4 text--nowrap
+              `}
               onClick={() => {
+                if(currentTool.startsWith('shape')) {
+                  return;
+                }
                 setIsResizeWindowOpen(true);
                 setIsOpen(false);
               }}
@@ -262,9 +310,15 @@ const ContextMenu = memo(function ContextMenu() {
             </button>
 
             <button 
-              disabled={currentTool.startsWith('shape')}
-              className="popup__button text text--4 text--nowrap"
+              className={`
+                popup__button
+                ${currentTool.startsWith('shape') ? 'popup__button--disabled' : ''}
+                text text--4 text--nowrap
+              `}
               onClick={() => {                
+                if(currentTool.startsWith('shape')) {
+                  return;
+                }
                 doSharedInvertColor();
                 setIsOpen(false);
               }}

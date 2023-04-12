@@ -20,26 +20,41 @@ function useSelection() {
     doSelectionResize,
     doSelectionSetPosition,
     doSelectionDrawToPrimary,
+    selectionPhase,
   } = useSelectionContext();
 
   const { onPointerDownRectangularSelection } = useRectangularSelection();
   const { onPointerDownFreeFormSelection } = useFreeFormSelection();
 
-  let usedPosition = selectionOutlinePosition || selectionPosition;
-  let usedSetPosition = setSelectionOutlinePosition;
-  let usedSize = selectionOutlineSize || selectionSize;
-  let usedSetSize = setSelectionOutlineSize;
+  let usedPositionMove = selectionPosition;
+  let usedSetPositionMove = doSelectionSetPosition;
+  let usedSizeMove = selectionSize;
+  let usedSetSizeMove = doSelectionSetSize;
 
-  if(currentTool.startsWith('shape')) {
-    usedPosition = selectionPosition;
-    usedSetPosition = (position) => {
+  let usedPositionResize = selectionOutlinePosition || selectionPosition;
+  let usedSetPositionResize = setSelectionOutlinePosition;
+  let usedSizeResize = selectionOutlineSize || selectionSize;
+  let usedSetSizeResize = setSelectionOutlineSize;
+
+  if(!selectionPhase) {
+    usedPositionMove = { x: 0, y: 0 };
+    usedSetPositionMove = () => 0;
+    usedSizeMove = { width: 0, heigth: 0 };
+    usedSetSizeMove = () => 0;
+    usedPositionResize = { x: 0, y: 0 };
+    usedSetPositionResize = () => 0;
+    usedSizeResize = { width: 0, heigth: 0 };
+    usedSetSizeResize = () => 0;
+  } else if(currentTool.startsWith('shape')) {
+    usedPositionResize = selectionPosition;
+    usedSetPositionResize = (position) => {
       position = { ...position };
       position.x = Math.round(position.x / canvasZoom);
       position.y = Math.round(position.y / canvasZoom);
       doSelectionSetPosition(position);
     };
-    usedSize = selectionSize;
-    usedSetSize = (size) => {
+    usedSizeResize = selectionSize;
+    usedSetSizeResize = (size) => {
       size = { ...size };
       size.width = Math.round(size.width / canvasZoom);
       size.height = Math.round(size.height / canvasZoom);
@@ -69,10 +84,10 @@ function useSelection() {
     resizeGrabElements: selectionResizeGrabElements,
     resizeOutlineElement: selectionResizeOutlineElement
   } = useResize({ 
-    position: usedPosition,
-    setPosition: usedSetPosition,
-    size: usedSize,
-    setSize: usedSetSize,
+    position: usedPositionResize,
+    setPosition: usedSetPositionResize,
+    size: usedSizeResize,
+    setSize: usedSetSizeResize,
     minimalSize: { width: 1, height: 1, },
     maximalSize: { 
       width: MAX_CANVAS_SIZE * canvasZoom,
@@ -89,10 +104,10 @@ function useSelection() {
   });
   
   const { onPointerDownMove: onPointerDownSelectionMove } = useMove({
-    position: selectionPosition,
-    setPosition: doSelectionSetPosition,
-    size: selectionSize,
-    setSize: doSelectionSetSize,
+    position: usedPositionMove,
+    setPosition: usedSetPositionMove,
+    size: usedSizeMove,
+    setSize: usedSetSizeMove,
     containerRef: primaryRef,
     canvasZoom,
     onMoveCallback: (event) => {

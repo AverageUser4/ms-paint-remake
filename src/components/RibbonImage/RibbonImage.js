@@ -182,9 +182,16 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                   </button>
 
                   <button 
-                    disabled={selectionPhase !== 2 || currentTool.startsWith('shape')}
-                    className="tooltip-container popup__button text text--4 text--nowrap"
+                    className={`
+                      tooltip-container
+                      popup__button
+                      ${(selectionPhase !== 2 || currentTool.startsWith('shape')) ? 'popup__button--disabled' : ''}
+                      text text--4 text--nowrap
+                    `}
                     onClick={() => {
+                      if(selectionPhase !== 2 || currentTool.startsWith('shape')) {
+                        return;
+                      }
                       doSelectionInvertSelection();
                       setIsSelectionDropdownOpen(false);
                       setIsContainerDropdownOpen(false);
@@ -243,12 +250,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
 
             <div data-cy="Image-buttons">
               <button 
-                className="tooltip-container button"
-                onClick={() => { 
+                className={`
+                  tooltip-container button
+                  ${selectionPhase !== 2 ? 'button--disabled' : ''}
+                `}
+                onClick={() => {
+                  if(selectionPhase !== 2) {
+                    return;
+                  }
                   doSelectionCrop(); 
                   setIsContainerDropdownOpen(false);
                 }}
-                disabled={selectionPhase !== 2}
                 aria-describedby="id-image-crop"
               >
                 <img draggable="false" src={crop16} alt="Crop."/>
@@ -307,10 +319,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                   >
                     <div className="popup__part">
                       <button
-                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
-                        className="tooltip-container popup__button text text--4 text--nowrap"
+                        className={`
+                          tooltip-container
+                          popup__button
+                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          text text--4 text--nowrap
+                        `}
                         aria-describedby="id-image-rotate-right-90"
                         onClick={() => {
+                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                            return;
+                          }
                           doSharedRotate(90);
                           setIsRotateDropdownOpen(false);
                           setIsContainerDropdownOpen(false);
@@ -325,10 +344,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
-                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
-                        className="tooltip-container popup__button text text--4 text--nowrap"
+                        className={`
+                          tooltip-container
+                          popup__button
+                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          text text--4 text--nowrap
+                        `}
                         aria-describedby="id-image-rotate-left-90"
                         onClick={() => {
+                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                            return;
+                          }
                           doSharedRotate(-90);
                           setIsRotateDropdownOpen(false);
                           setIsContainerDropdownOpen(false);
@@ -343,10 +369,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
-                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
-                        className="tooltip-container popup__button text text--4 text--nowrap"
+                        className={`
+                          tooltip-container
+                          popup__button
+                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          text text--4 text--nowrap
+                        `}
                         aria-describedby="id-image-rotate-180"
                         onClick={() => {
+                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                            return;
+                          }
                           doSharedRotate(180);
                           setIsRotateDropdownOpen(false);
                           setIsContainerDropdownOpen(false);
@@ -361,10 +394,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
-                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
-                        className="tooltip-container popup__button text text--4 text--nowrap"
+                        className={`
+                          tooltip-container
+                          popup__button
+                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          text text--4 text--nowrap
+                        `}
                         aria-describedby="id-image-flip-vertical"
                         onClick={() => {
+                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                            return;
+                          }
                           doSharedFlip('vertical');
                           setIsRotateDropdownOpen(false);
                           setIsContainerDropdownOpen(false);
@@ -379,10 +419,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
-                        disabled={currentTool.startsWith('shape') && selectionPhase === 2}
-                        className="tooltip-container popup__button text text--4 text--nowrap"
+                        className={`
+                          tooltip-container
+                          popup__button
+                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          text text--4 text--nowrap
+                        `}
                         aria-describedby="id-image-flip-horizontal"
                         onClick={() => {
+                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                            return;
+                          }
                           doSharedFlip('horizontal');
                           setIsRotateDropdownOpen(false);
                           setIsContainerDropdownOpen(false);

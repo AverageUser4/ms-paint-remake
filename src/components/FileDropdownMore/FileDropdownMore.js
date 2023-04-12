@@ -156,10 +156,12 @@ const FileDropdownMore = memo(function FileDropdownMore({ currentMore, setCurren
   function mapItems(data, index) {
     return (
       <li key={index}>
-        <button 
-          disabled={data.isDisabled}
-          className={css['button']} 
-          onClick={data.onClick}
+        <button
+          className={`
+            ${css['button']}
+            ${data.isDisabled ? css['button--disabled'] : ''}
+          `} 
+          onClick={(e) => !data.isDisabled && data.onClick(e)}
         >
           <img src={data.src} alt=""/>
           <div>

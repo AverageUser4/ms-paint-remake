@@ -10,9 +10,7 @@ GOING TO:
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
   - add unit tests to funcions in utils
-  - changing history when selectionPhase === 1 or selection is moved or selection is resized causes error messages and even crash,
-  because useMove, useResize and selection phase handling cannot handle situation when selection is cancelled in the middle of operation
-  - clicking disabled buttons (in firefox) causes native context menu to be open
+  - currently when there is selection clicking outside of it just breaks the selection,
+    ideally it should start new selection if the mouse is moved, like in real paint
 
 DONE:
-

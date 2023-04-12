@@ -32,10 +32,10 @@
   background-color: rgb(233, 240, 248);
   border-color: rgb(165, 207, 249);
 }
-.button:disabled * {
+.button--disabled * {
   filter: opacity(0.5);
 }
-.button:disabled:hover {
+.button--disabled:hover {
   background-color: transparent;
   border-color: transparent;
 }

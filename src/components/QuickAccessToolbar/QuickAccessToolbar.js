@@ -101,11 +101,14 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
     return (
       <button 
         key={data.id}
-        className="tooltip-container button button--disabled-grayscale"
-        onClick={data.onClick}
+        className={`
+          tooltip-container
+          button button--disabled-grayscale
+          ${data.isDisabled ? 'button--disabled' : ''}
+        `}
+        onClick={(e) => !data.isDisabled && data.onClick(e)}
         data-cy={`QuickAccessToolbar-element-${data.id}`}
         aria-describedby={`id-qat-${data.id}`}
-        disabled={data.isDisabled}
       >
         <img draggable="false" src={data.src} alt={data.id}/>
         <Tooltip
