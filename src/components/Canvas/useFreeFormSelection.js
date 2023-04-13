@@ -116,8 +116,7 @@ function useFreeFormSelection() {
     setSelectionPhase(2);
 
     new MutationObserver((records, observer) => {
-      const selectionCanvas = document.querySelector('#pxp-selection-canvas');
-      if(!selectionCanvas) {
+      if(!document.querySelector('#pxp-selection-canvas')) {
         return;
       }
       observer.disconnect();

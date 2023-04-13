@@ -16,7 +16,7 @@ import resizeVertical from './assets/resize-vertical.ico';
 import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
-import { checkNumberValue, clamp, getCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
+import { checkNumberValue, clamp, getCanvasCopy, getSkewedSize, objectEquals, setSkew } from '../../misc/utils';
 
 const WIDTH = 280;
 const HEIGHT = 400;
@@ -160,6 +160,8 @@ const ResizeWindow = memo(function ResizeWindow() {
 
   function onSubmit(event) {
     event.preventDefault();
+
+    setIsOpen(false);
     
     const newSize = {
       width: data.resizeHorizontal || 1,
@@ -172,46 +174,37 @@ const ResizeWindow = memo(function ResizeWindow() {
     }
 
     const usedResize = isSelectionActive ? doSelectionResize : setCanvasSize;
-    const oldCanvasSize = canvasSize;
+    const usedOldSize = isSelectionActive ? selectionSize : canvasSize;
     const primaryCopy = getCanvasCopy(primaryRef.current);
-
-    if(newSize.width !== usedSize.width || newSize.height !== usedSize.height) {
-      usedResize(newSize);
-    }
-
     const usedSkewHorizontal = data.skewHorizontal === '-' ? 0 : data.skewHorizontal;
     const usedSkewVertical = data.skewVertical === '-' ? 0 : data.skewVertical;
+    const usedElement = document.querySelector(isSelectionActive ? '#pxp-selection-canvas' : '#pxp-primary-canvas');
 
-    if(!isSelectionActive) {
-      setTimeout(() => {
+    function afterFirstSizeChange() {
+      if(!isSelectionActive) {
         const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
         const scale = {
-          x: newSize.width / oldCanvasSize.width,
-          y: newSize.height / oldCanvasSize.height,
+          x: newSize.width / usedOldSize.width,
+          y: newSize.height / usedOldSize.height,
         };
-
-        function draw(context) {
+  
+        const draw = (context) => {
           context.save();
           context.scale(scale.x, scale.y);
           context.drawImage(primaryCopy, 0, 0);
           context.restore();
-        }
-
+        };
+  
         doCanvasClearPrimary();
         draw(primaryContext);
         thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
-
+  
         if(usedSkewHorizontal === 0 && usedSkewVertical === 0) {
-          doHistoryAdd({
-            element: primaryRef.current,
-            ...newSize,
-          });
+          doHistoryAdd({ element: primaryRef.current, ...newSize });
         }
-      }, 20);
-    }
-    
-    if(usedSkewHorizontal !== 0 || usedSkewVertical !== 0) {
-      setTimeout(() => {
+      }
+
+      if(usedSkewHorizontal !== 0 || usedSkewVertical !== 0) {
         const usedSize = newSize;
         const usedSetSize = isSelectionActive ? doSelectionSetSize : setCanvasSize;
     
@@ -229,9 +222,7 @@ const ResizeWindow = memo(function ResizeWindow() {
           height: Math.min(height > 0 ? height : usedSize.height - height, MAX_CANVAS_SIZE),
         };
         
-        usedSetSize(usedNewSize);
-        
-        setTimeout(() => {
+        const afterSecondSizeChange = () => {
           function draw(context) {
             context.save();
             context.clearRect(0, 0, usedNewSize.width, usedNewSize.height);
@@ -240,24 +231,40 @@ const ResizeWindow = memo(function ResizeWindow() {
             context.drawImage(usedCopy, 0, 0);
             context.restore();
           }
-
+  
           draw(usedContext);
-
+  
           if(isSelectionActive) {
             thumbnailSelectionContext && draw(thumbnailSelectionContext);
           } else {
             thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
-            
-            doHistoryAdd({
-              element: primaryRef.current,
-              ...usedNewSize,
-            });
+            doHistoryAdd({ element: primaryRef.current, ...usedNewSize });
           }
-        }, 20);
-      }, 20);
+        };
+
+        if(!objectEquals(usedOldSize, usedNewSize)) {
+          usedSetSize(usedNewSize);
+          new MutationObserver((records, observer) => {
+            console.log('second')
+            observer.disconnect();
+            afterSecondSizeChange();
+          }).observe(usedElement, { attributes: true, attributeFilter: ['width', 'height'] });
+        } else {
+          afterSecondSizeChange();
+        }
+      }
     }
-  
-    setIsOpen(false);
+
+    if(!objectEquals(newSize, usedSize)) {
+      usedResize(newSize);
+      new MutationObserver((records, observer) => {
+        console.log('first')
+        observer.disconnect();
+        afterFirstSizeChange();
+      }).observe(usedElement, { attributes: true, attributeFilter: ['width', 'height'] });
+    } else {
+      afterFirstSizeChange();
+    }  
   }
 
   return (
