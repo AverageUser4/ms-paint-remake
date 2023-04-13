@@ -30,7 +30,7 @@ const initialData = {
 const ResizeWindow = memo(function ResizeWindow() {
   const { 
     selectionPhase, selectionSize, doSelectionResize,
-    doSelectionSetSize, selectionRef, doSelectionGetEveryContext
+    doSelectionSetSize, selectionRef, doSelectionGetEveryContext,
   } = useSelectionContext();
   const { canvasSize, setCanvasSize, primaryRef, doCanvasClearPrimary, doGetEveryContext } = useCanvasContext();
   const { isResizeWindowOpen: isOpen, setIsResizeWindowOpen: setIsOpen } = useWindowsContext();
@@ -160,7 +160,6 @@ const ResizeWindow = memo(function ResizeWindow() {
 
   function onSubmit(event) {
     event.preventDefault();
-
     setIsOpen(false);
     
     const newSize = {
@@ -174,18 +173,27 @@ const ResizeWindow = memo(function ResizeWindow() {
     }
 
     const usedResize = isSelectionActive ? doSelectionResize : setCanvasSize;
-    const usedOldSize = isSelectionActive ? selectionSize : canvasSize;
     const primaryCopy = getCanvasCopy(primaryRef.current);
     const usedSkewHorizontal = data.skewHorizontal === '-' ? 0 : data.skewHorizontal;
     const usedSkewVertical = data.skewVertical === '-' ? 0 : data.skewVertical;
     const usedElement = document.querySelector(isSelectionActive ? '#pxp-selection-canvas' : '#pxp-primary-canvas');
 
+    if(!objectEquals(usedSize, newSize)) {
+      usedResize(newSize);
+      new MutationObserver((records, observer) => {
+        observer.disconnect();
+        afterFirstSizeChange();
+      }).observe(usedElement, { attributes: true, attributeFilter: ['width', 'height'] });
+    } else {
+      afterFirstSizeChange();
+    }  
+
     function afterFirstSizeChange() {
       if(!isSelectionActive) {
         const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
         const scale = {
-          x: newSize.width / usedOldSize.width,
-          y: newSize.height / usedOldSize.height,
+          x: newSize.width / usedSize.width,
+          y: newSize.height / usedSize.height,
         };
   
         const draw = (context) => {
@@ -242,10 +250,9 @@ const ResizeWindow = memo(function ResizeWindow() {
           }
         };
 
-        if(!objectEquals(usedOldSize, usedNewSize)) {
+        if(!objectEquals(usedSize, usedNewSize)) {
           usedSetSize(usedNewSize);
           new MutationObserver((records, observer) => {
-            console.log('second')
             observer.disconnect();
             afterSecondSizeChange();
           }).observe(usedElement, { attributes: true, attributeFilter: ['width', 'height'] });
@@ -254,17 +261,6 @@ const ResizeWindow = memo(function ResizeWindow() {
         }
       }
     }
-
-    if(!objectEquals(newSize, usedSize)) {
-      usedResize(newSize);
-      new MutationObserver((records, observer) => {
-        console.log('first')
-        observer.disconnect();
-        afterFirstSizeChange();
-      }).observe(usedElement, { attributes: true, attributeFilter: ['width', 'height'] });
-    } else {
-      afterFirstSizeChange();
-    }  
   }
 
   return (

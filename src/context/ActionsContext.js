@@ -8,7 +8,7 @@ import { useCanvasContext } from './CanvasContext';
 import { useSelectionContext } from './SelectionContext';
 import { useWindowsContext } from './WindowsContext';
 import { useToolContext } from './ToolContext';
-import { getCanvasCopy, writeCanvasToClipboard, degreesToRadians, ImageDataUtils } from '../misc/utils';
+import { getCanvasCopy, writeCanvasToClipboard, degreesToRadians, ImageDataUtils, objectEquals } from '../misc/utils';
 import { zoomData } from '../misc/data';
 
 const ActionsContext = createContext();
@@ -38,21 +38,23 @@ function ActionsProvider({ children }) {
     const { naturalWidth: width, naturalHeight: height } = image;
 
     setCanvasSize({ width, height });
-    
-    setTimeout(() => {
-      const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
 
+    new MutationObserver((records, observer) => {
+      observer.disconnect();
+      
+      const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
+  
       function draw(context) {
         context.imageSmoothingEnabled = false;
         context.drawImage(image, 0, 0);
       }
-
+  
       draw(primaryContext);
       thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
       
       lastPrimaryStateRef.current = getCanvasCopy(primaryRef.current);
       URL.revokeObjectURL(image.src);
-    }, 20);
+    }).observe(document.querySelector('#pxp-primary-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
   }
 
   function doStartNewProject() {
@@ -174,6 +176,7 @@ function ActionsProvider({ children }) {
     let usedLastStateRef = lastPrimaryStateRef;
     let usedCopy = getCanvasCopy(primaryRef.current);
     let usedClear = doCanvasClearPrimary;
+    let usedElementID = '#pxp-primary-canvas';
     let offset = 0;
 
     if(selectionPhase === 2) {
@@ -185,10 +188,15 @@ function ActionsProvider({ children }) {
       usedLastStateRef = lastSelectionStateRef;
       usedCopy = getCanvasCopy(selectionRef.current);
       usedClear = doSelectionClear;
+      usedElementID = '#pxp-selection-canvas';
     }
 
+    let newSize = usedSize;
+    usedClear();
+
     if(degree === 90 || degree === -90) {
-      usedSetSize({ width: usedSize.height, height: usedSize.width });
+      newSize = { width: usedSize.height, height: usedSize.width };
+      usedSetSize(newSize);
       offset = (usedSize.width - usedSize.height) / 2;
       if(degree < 0) {
         offset *= -1;
@@ -196,9 +204,16 @@ function ActionsProvider({ children }) {
       usedLastStateRef.current = null;
     }
 
-    usedClear();
+    if(objectEquals(usedSize, newSize)) {
+      afterSizeChange();
+    } else {
+      new MutationObserver((records, observer) => {
+        observer.disconnect();
+        afterSizeChange();
+      }).observe(document.querySelector(usedElementID), { attributes: true, attributeFilter: ['width', 'height'] });
+    }
 
-    setTimeout(() => {
+    function afterSizeChange() {
       function rotateAndDraw(context) {
         context.save();
         context.translate(usedSize.width / 2, usedSize.height / 2);
@@ -219,7 +234,7 @@ function ActionsProvider({ children }) {
           height: primaryRef.current.height,
         });
       }
-    }, 20);
+    }
   }
 
   function doSharedFlip(direction) {

@@ -11,7 +11,9 @@ GOING TO:
   - currently when there is selection clicking outside of it just ends the selection,
     ideally it should start new selection if the mouse is moved, like in real paint
   - fix bug in useRectangularSelection (there is a comment explaining it)
-  - changed setTimeout to MutationObserver where it made sense
   - traversing history is buggy
+  - image data may be unnecesserily used in some cases (copy of canvas may be enough)
+  - pasting image or select all may cause brush canvas to get stuck (tool changes to one which doesnt cause it to be cleared)
 
 DONE:
+

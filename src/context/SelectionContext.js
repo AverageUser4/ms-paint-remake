@@ -7,7 +7,7 @@ import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
 import { useColorContext } from './ColorContext';
-import { getCanvasCopy, ImageDataUtils } from '../misc/utils';
+import { getCanvasCopy, ImageDataUtils, objectEquals } from '../misc/utils';
 
 const SelectionContext = createContext();
 
@@ -122,6 +122,10 @@ function SelectionProvider({ children }) {
   }
 
   function doSelectionResize(newSize) {
+    if(!selectionPhase) {
+      return;
+    }
+
     const selectionCanvasCopy = getCanvasCopy(selectionRef.current);
     const multiplier = {
       x: newSize.width / selectionSize.width,
@@ -130,7 +134,9 @@ function SelectionProvider({ children }) {
     
     doSelectionSetSize(newSize);
 
-    setTimeout(() => {
+    new MutationObserver((records, observer) => {
+      observer.disconnect();
+
       const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
 
       function drawToContext(context) {
@@ -145,7 +151,7 @@ function SelectionProvider({ children }) {
       drawToContext(selectionContext);
       thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
       lastSelectionStateRef.current = selectionRef.current;
-    }, 20);
+    }).observe(document.querySelector('#pxp-selection-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
   }
 
   function doSelectionDrawToPrimary(adjustedPosition) {
@@ -179,14 +185,15 @@ function SelectionProvider({ children }) {
 
     const newPosition = { x: 0, y: 0 };
 
-    doSelectionSetPosition(newPosition);
     setCanvasSize(selectionSize);
 
-    setTimeout(() => {
+    new MutationObserver((records, observer) => {
+      observer.disconnect();
+
       doSelectionEnd();
       doCanvasClearPrimary();
       doSelectionDrawToPrimary(newPosition);
-    }, 20);
+    }).observe(document.querySelector('#pxp-primary-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
   }
 
   const onLoadImage = useCallback(event => {
@@ -284,8 +291,6 @@ function SelectionProvider({ children }) {
     doCanvasClearPrimary();
     doSelectionDrawToPrimary();
 
-    console.log(selectionSize, selectionPosition)
-
     const usedPosition = {
       x: Math.max(Math.floor(selectionPosition.x), 0),
       y: Math.max(Math.floor(selectionPosition.y), 0),
@@ -308,11 +313,16 @@ function SelectionProvider({ children }) {
     }
 
     doSelectionSetPosition({ x: 0, y: 0 });
-    doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
+    doSelectionSetSize({ ...canvasSize });
 
-    setTimeout(() => {
+    if(!objectEquals(selectionSize, canvasSize)) {
+      new MutationObserver((records, observer) => {
+        observer.disconnect();
+        doSelectionDrawToSelection(primaryImageData);
+      }).observe(document.querySelector('#pxp-selection-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    } else {
       doSelectionDrawToSelection(primaryImageData);
-    }, 20);
+    }
   }
   
   return (
