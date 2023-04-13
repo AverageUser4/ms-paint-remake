@@ -5,13 +5,12 @@ GOING TO:
     that can cause that but it may need to be investigated
   - fix FreeFormSelection selecting shapes that are not exactly like expected
   - rework outline in useResize
-  - changes to useMove could potentially make selectionCanvas perfectly aligned with primaryCanvas (would move pixel by pixel)
-  - remove unnecessary clearRect calls on brush canvas
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
   - add unit tests to funcions in utils
-  - currently when there is selection clicking outside of it just breaks the selection,
+  - currently when there is selection clicking outside of it just ends the selection,
     ideally it should start new selection if the mouse is moved, like in real paint
+  - investigate usage of setTimeout
+  - fix bug in useRectangularSelection (there is a comment explaining it)
 
 DONE:
-  

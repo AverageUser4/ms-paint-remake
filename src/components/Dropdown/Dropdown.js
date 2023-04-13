@@ -25,8 +25,9 @@ const Dropdown = forwardRef(function Dropdown(props, ref) {
       setIsActuallyVisible(true);
       setIsPositionAdjusted(false);
     }
-    if(!isVisible && isActuallyVisible)
+    if(!isVisible && isActuallyVisible) {
       setTimeout(() => setIsActuallyVisible(false), 300);
+    }
   }, [isVisible, isActuallyVisible]);
 
   useEffect(() => {

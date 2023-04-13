@@ -20,12 +20,12 @@
 }
 
 .canvas--selection {
-  border: 1px dashed rgb(0, 0, 0);
+  outline: 1px dashed rgb(0, 0, 0);
 
   box-sizing: border-box;
 }
 .canvas--selection--ready {
-  border-color: rgb(0, 120, 215);
+  outline-color: rgb(0, 120, 215);
 }
 
 .canvas--grid-lines {

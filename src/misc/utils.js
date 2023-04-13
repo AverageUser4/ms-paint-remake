@@ -524,3 +524,16 @@ export function getGridData(zoom) {
 
   return gridData;
 }
+
+// export function setUpSelectionSizeObserver(callback) {
+//   if(typeof callback !== 'function') {
+//     console.error('First argument has to be a function, provided:', callback);
+//     return;
+//   }
+
+//   const selectionCanvas = document.querySelector('#pxp-selection-canvas');
+//   const observer = new MutationObserver(callback);
+//   observer.observe(selectionCanvas, { attributes: true, attributeFilter: ['width', 'height'] });
+
+//   return observer;
+// }

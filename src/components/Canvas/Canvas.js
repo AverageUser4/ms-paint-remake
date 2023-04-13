@@ -98,10 +98,14 @@ function Canvas() {
   }
 
   return (
-    <div className="point-container">
+    <div 
+      id="pxp-direct-canvas-container"
+      className="point-container"
+    >
       <div style={canvasStyle}></div>
 
       <canvas
+        id="pxp-primary-canvas"
         style={{ ...canvasStyle, backgroundColor: RGBObjectToString(colorData.secondary) }}
         className={`${css['canvas']} ${css['canvas--primary']}`}
         width={canvasSize.width}

@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ImageDataUtils, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useSelectionContext } from "../../context/SelectionContext";
@@ -115,7 +115,13 @@ function useFreeFormSelection() {
     doSelectionSetSize({ width, height });
     setSelectionPhase(2);
 
-    setTimeout(() => {
+    new MutationObserver((records, observer) => {
+      const selectionCanvas = document.querySelector('#pxp-selection-canvas');
+      if(!selectionCanvas) {
+        return;
+      }
+      observer.disconnect();
+
       const primaryImageData = primaryContext.getImageData(x, y, width, height);
       const selectionImageData = selectionRef.current.getContext('2d').getImageData(x, y, width, height);
       
@@ -160,7 +166,7 @@ function useFreeFormSelection() {
         element: primaryRef.current,
         ...canvasSize,
       });
-    }, 20);
+    }).observe(document.querySelector('#pxp-direct-canvas-container'), { childList: true });
   }
 
   function onCancelCallback() {

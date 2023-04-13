@@ -6,6 +6,7 @@ import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useColorContext } from '../../context/ColorContext';
 import { useToolContext } from '../../context/ToolContext';
+import { setUpSelectionSizeObserver } from '../../misc/utils';
 
 function useRectangularSelection() {
   const { 
@@ -143,8 +144,9 @@ function useRectangularSelection() {
     }
     
     setTimeout(() => {
-      /* there was a bug here: if mouse moves too fast this function reads stale width and height,
-         that's why timeout is used, if it still happens increasing timeout my help */
+      /* there is a bug here: if mouse moves too fast (and browser is slow), this function reads stale width and height,
+         causing smaller than expected part of primary canvas to be written to selection canvas,
+         that's why timeout is used, this bug still happens, but very rarely and you have to try a bit to get it to happen */
 
       setSelectionPhase(2);
       setResizeData(null);
@@ -171,11 +173,6 @@ function useRectangularSelection() {
           element: primaryRef.current,
           ...canvasSize,
         });
-      } else if(currentTool.startsWith('shape')) {
-        setSelectionPhase(2);
-        setResizeData(null);
-        
-        drawCallback();
       }
     }, 20);
   }
@@ -186,7 +183,7 @@ function useRectangularSelection() {
   }
 
   useEffect(() => {
-    if(!currentTool.startsWith('shape') || selectionPhase !== 2) {
+    if(!currentTool.startsWith('shape') || !selectionPhase) {
       return;
     }
 
