@@ -8,7 +8,7 @@ import { useWindowsContext } from '../../context/WindowsContext';
 import { useMainWindowContext } from '../../context/MainWindowContext';
 
 import { innerWindowConfig, MAX_CANVAS_SIZE } from '../../misc/data';
-import { getWindowCenteredPosition, doGetParsedFileSize, checkNumberValue } from '../../misc/utils';
+import { getWindowCenteredPosition, getParsedFileSize, checkNumberValue } from '../../misc/utils';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 
@@ -39,7 +39,7 @@ const PropertiesWindow = memo(function PropertiesWindow() {
   }, [isOpen, mainWindowPosition, mainWindowSize, size.width, size.height, isBlackAndWhite, canvasSize]);
 
   if(fileData) {
-    parsedFileSize = doGetParsedFileSize(fileData.size);
+    parsedFileSize = getParsedFileSize(fileData.size);
     parsedFileDate = (new Date(fileData.lastModified)).toLocaleDateString();
   }
 

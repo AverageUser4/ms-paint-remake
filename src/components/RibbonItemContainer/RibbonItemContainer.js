@@ -4,7 +4,6 @@ import css from './RibbonItemContainer.module.css';
 
 import Dropdown from '../Dropdown/Dropdown';
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../misc/utils";
 import { useMainWindowContext } from "../../context/MainWindowContext";
 
 import { ReactComponent as TriangleDown } from '../../assets/global/triangle-down.svg';
@@ -38,7 +37,7 @@ function RibbonItemContainer({ isDropdownOpen, setIsDropdownOpen, iconSrc, name,
 
       <button 
         className={`tooltip-container ${css['button']}`}
-        onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+        onClick={(e) => e.button === 0 && setIsDropdownOpen(prev => !prev)}
       >
 
         <div className={css['image-container']}>

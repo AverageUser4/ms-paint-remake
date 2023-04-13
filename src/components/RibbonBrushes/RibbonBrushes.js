@@ -5,7 +5,6 @@ import BigButtonDuo from "../BigButtonDuo/BigButtonDuo";
 import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../misc/utils";
 import { useToolContext } from "../../context/ToolContext";
 
 import air32 from './assets/air-32.png';
@@ -101,7 +100,7 @@ const RibbonBrushes = memo(function RibbonBrushes() {
       name="Brushes"
       isShowChildren={isDropdownOpen}
       setIsShowChildren={setIsDropdownOpen}
-      onClickBottom={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      onClickBottom={(e) => e.button === 0 && setIsDropdownOpen(prev => !prev)}
       onClickTop={() => !currentTool.startsWith('brushes-') && doSetCurrentTool(latestTools.brushes)}
       isActive={currentTool.startsWith('brushes-')}
       ariaDescribedByTop="id-brushes-bbd-top"

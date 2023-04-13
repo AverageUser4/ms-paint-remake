@@ -7,7 +7,7 @@ import { useWindowsContext } from "../../context/WindowsContext";
 import { useCanvasContext } from "../../context/CanvasContext";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
-import { doGetParsedFileSize } from "../../misc/utils";
+import { getParsedFileSize } from "../../misc/utils";
 
 import canvas16 from './assets/canvas-16.ico';
 import cursor16 from './assets/cursor-16.ico';
@@ -35,7 +35,7 @@ const StatusBar = memo(function StatusBar({ windowWidth, isMainWindowMaximized }
   }
 
   if(fileData) {
-    parsedFileSize = doGetParsedFileSize(fileData.size);
+    parsedFileSize = getParsedFileSize(fileData.size);
   }
 
   return (

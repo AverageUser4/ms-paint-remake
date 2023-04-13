@@ -12,7 +12,7 @@ import { useColorContext } from "../../context/ColorContext";
 import { useContextMenuContext } from "../../context/ContextMenuContext";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useWindowsContext } from "../../context/WindowsContext";
-import { RGBObjectToString, doGetGridData } from "../../misc/utils";
+import { RGBObjectToString, getGridData } from "../../misc/utils";
 import { MAX_CANVAS_SIZE, cursorData } from "../../misc/data";
 
 function Canvas() {
@@ -34,7 +34,7 @@ function Canvas() {
   } = useSelectionContext();
   const { openContextMenu } = useContextMenuContext();
   const { isGridLinesVisible } = useWindowsContext();
-  const gridData = doGetGridData(canvasZoom);
+  const gridData = getGridData(canvasZoom);
   const { onPointerDownBrush } = useBrush();
 
   const canvasStyle = useMemo(() => ({ 

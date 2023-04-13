@@ -20,5 +20,6 @@ module.exports = {
     ],
     "rules": {
       "no-unused-vars": "warn"
-    }
+    },
+    "ignorePatterns": ["*.test.js"]
 }

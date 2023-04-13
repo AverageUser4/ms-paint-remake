@@ -5,7 +5,6 @@ import BigButton from "../BigButton/BigButton";
 import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { toggleBoolState } from "../../misc/utils";
 import { useToolContext } from "../../context/ToolContext";
 
 import size32 from './assets/size-32.png';
@@ -24,7 +23,7 @@ const RibbonSize = memo(function RibbonSize() {
       strName="Size"
       isShowChildren={isDropdownOpen}
       setIsShowChildren={setIsDropdownOpen}
-      onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+      onClick={(e) => e.button === 0 && setIsDropdownOpen(prev => !prev)}
       isDisabled={!sizes}
       isHasArrow={true}
       ariaDescribedBy="id-size-big-button"

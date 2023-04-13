@@ -14,3 +14,4 @@ GOING TO:
     ideally it should start new selection if the mouse is moved, like in real paint
 
 DONE:
+  

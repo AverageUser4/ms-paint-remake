@@ -9,7 +9,6 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 import Dropdown from "../Dropdown/Dropdown";
 import Tooltip from "../Tooltip/Tooltip";
 
-import { toggleBoolState } from "../../misc/utils";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useToolContext } from "../../context/ToolContext";
 import { useWindowsContext } from "../../context/WindowsContext";
@@ -83,7 +82,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
               name="Select"
               isShowChildren={isSelectionDropdownOpen}
               setIsShowChildren={setIsSelectionDropdownOpen}
-              onClickBottom={(e) => e.button === 0 && toggleBoolState(isSelectionDropdownOpen, setIsSelectionDropdownOpen)}
+              onClickBottom={(e) => e.button === 0 && setIsSelectionDropdownOpen(prev => !prev)}
               onClickTop={() => { 
                 if(!currentTool.startsWith('selection-')) {
                   doSetCurrentTool(latestTools.selection);
@@ -293,7 +292,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
               <div className="dropdown-container" ref={dropdownContainerRef}>
                 <button 
                   className="tooltip-container button"
-                  onClick={(e) => e.button === 0 && toggleBoolState(isRotateDropdownOpen, setIsRotateDropdownOpen)}
+                  onClick={(e) => e.button === 0 && setIsRotateDropdownOpen(prev => !prev)}
                   data-cy="Image-toggle-Rotate"
                   aria-describedby="id-image-rotate"
                 >

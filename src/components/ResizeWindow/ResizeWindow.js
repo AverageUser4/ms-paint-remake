@@ -16,7 +16,7 @@ import resizeVertical from './assets/resize-vertical.ico';
 import skewHorizontal from './assets/skew-horizontal.ico';
 import skewVertical from './assets/skew-vertical.ico';
 import { ReactComponent as Checkmark } from './assets/checkmark.svg';
-import { checkNumberValue, clamp, doGetCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
+import { checkNumberValue, clamp, getCanvasCopy, getSkewedSize, setSkew } from '../../misc/utils';
 
 const WIDTH = 280;
 const HEIGHT = 400;
@@ -173,7 +173,7 @@ const ResizeWindow = memo(function ResizeWindow() {
 
     const usedResize = isSelectionActive ? doSelectionResize : setCanvasSize;
     const oldCanvasSize = canvasSize;
-    const primaryCopy = doGetCanvasCopy(primaryRef.current);
+    const primaryCopy = getCanvasCopy(primaryRef.current);
 
     if(newSize.width !== usedSize.width || newSize.height !== usedSize.height) {
       usedResize(newSize);
@@ -222,7 +222,7 @@ const ResizeWindow = memo(function ResizeWindow() {
         const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
         const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
         const usedContext = isSelectionActive ? selectionContext : primaryContext;
-        const usedCopy = doGetCanvasCopy(isSelectionActive ? selectionRef.current : primaryRef.current);
+        const usedCopy = getCanvasCopy(isSelectionActive ? selectionRef.current : primaryRef.current);
         
         const usedNewSize = {
           width: Math.min(width > 0 ? width : usedSize.width - width, MAX_CANVAS_SIZE),

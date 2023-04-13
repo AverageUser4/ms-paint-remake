@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useColorContext } from './ColorContext';
 import { initialCanvasSize } from '../misc/data';
-import { RGBObjectToString, doGetCanvasCopy } from '../misc/utils';
+import { RGBObjectToString, getCanvasCopy } from '../misc/utils';
 
 const CanvasContext = createContext();
 
@@ -95,7 +95,7 @@ function CanvasProvider({ children }) {
     if(lastPrimaryStateRef.current) {
       doCanvasDrawImageToPrimary(lastPrimaryStateRef.current);
       // so the parts of image that end up outside the viewable are are cut off
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      lastPrimaryStateRef.current = getCanvasCopy(primaryRef.current);
     }
   }, [canvasSize, doCanvasClearPrimary, doCanvasDrawImageToPrimary]);
   

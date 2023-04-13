@@ -6,7 +6,6 @@ import FileDropdown from '../FileDropdown/FileDropdown';
 import Tooltip from '../Tooltip/Tooltip';
 
 import useOutsideClick from '../../hooks/useOutsideClick';
-import { toggleBoolState } from '../../misc/utils';
 
 import info from './assets/info.png';
 import { ReactComponent as ArrowUp } from '../../assets/global/arrow-up.svg';
@@ -23,7 +22,7 @@ const RibbonControls = memo(function RibbonControls({ ribbonData }) {
       <div className={css['left']}>
         <button
           className="tooltip-container ribbon-button ribbon-button--blue"
-          onClick={(e) => e.button === 0 && toggleBoolState(isFileDropdownOpen, setIsFileDropdownOpen)}
+          onClick={(e) => e.button === 0 && setIsFileDropdownOpen(prev => !prev)}
           data-cy="RibbonControls-toggle-FileDropdown"
           aria-describedby="id-ribbon-controls-file"
         >

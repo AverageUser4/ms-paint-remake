@@ -10,7 +10,6 @@ import Tooltip from "../Tooltip/Tooltip";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useSelectionContext } from "../../context/SelectionContext";
 import { useActionsContext } from "../../context/ActionsContext";
-import { toggleBoolState } from "../../misc/utils";
 
 import clipboard32 from './assets/clipboard-32.png';
 import pasteFrom16 from './assets/paste-from-16.png';
@@ -50,7 +49,7 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
               name="Paste"
               isShowChildren={isPasteDropdownOpen}
               setIsShowChildren={setIsPasteDropdownOpen}
-              onClickBottom={(e) => e.button === 0 && toggleBoolState(isPasteDropdownOpen, setIsPasteDropdownOpen)}
+              onClickBottom={(e) => e.button === 0 && setIsPasteDropdownOpen(prev => !prev)}
               onClickTop={() => {
                 doSelectionPasteFromClipboard();
                 setIsContainerDropdownOpen(false);

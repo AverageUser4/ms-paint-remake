@@ -93,7 +93,7 @@ class ShapeBase {
             r: Math.max(color.r - currentColor.r, 0),
             g: Math.max(color.g - currentColor.g, 0),
             b: Math.max(color.b - currentColor.b, 0),
-            a: Math.max(255 - getAverage(currentColor.r, currentColor.g, currentColor.b), 0),
+            a: Math.max(255 - Math.round(getAverage([currentColor.r, currentColor.g, currentColor.b])), 0),
           };
           ImageDataUtils.setColorAtCoords(imageData, x, y, modifiedColor);
         }

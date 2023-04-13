@@ -6,7 +6,6 @@ import Dropdown from '../Dropdown/Dropdown';
 import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../misc/utils";
 import { useToolContext } from "../../context/ToolContext";
 
 import callout16 from './assets/callout-16.png';
@@ -177,7 +176,7 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
                   ${css['button']}
                   ${currentRow === maxRow ? css['button--has-border'] : ''}
                 `}
-                onClick={(e) => e.button === 0 && toggleBoolState(isDropdownOpen, setIsDropdownOpen)}
+                onClick={(e) => e.button === 0 && setIsDropdownOpen(prev => !prev)}
                 data-cy="ShapesGrid-toggle-Dropdown"
               >
                 <TriangleLine/>

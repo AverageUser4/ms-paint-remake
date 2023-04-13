@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useCanvasContext } from './CanvasContext';
 import { initialCanvasSize } from '../misc/data';
-import { doGetCanvasCopy } from '../misc/utils';
+import { getCanvasCopy } from '../misc/utils';
 
 const MAX_HISTORY_ENTRIES = 50;
 const HistoryContext = createContext();
@@ -19,8 +19,8 @@ function HistoryProvider({ children }) {
 
   function doHistoryAdd(data) {
     // data = { element: canvas, width: number, height: number }
-    data.element = doGetCanvasCopy(data.element);
-    lastPrimaryStateRef.current = doGetCanvasCopy(data.element);
+    data.element = getCanvasCopy(data.element);
+    lastPrimaryStateRef.current = getCanvasCopy(data.element);
     
     setHistory(prev => {
       let newIndex = prev.currentIndex + 1;

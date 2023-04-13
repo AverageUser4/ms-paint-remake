@@ -1,18 +1,5 @@
-export function toggleBoolState(isOn, setIsOn) {
-  if(typeof isOn !== 'boolean') {
-    console.error(`First argument of this function should be a boolean value, provided:`, isOn);
-  }
-  if(typeof setIsOn !== 'function') {
-    console.error(`Second argument of this function should be a function, provided:`, setIsOn);
-  }
+export { getAverage } from './utils/getAverage';
 
-  if(isOn) {
-    setIsOn(false);
-  }
-  else {
-    setTimeout(() => setIsOn(true));
-  }
-}
 
 export function HSLtoRGB({ h, s, l }) {
   if(typeof h !== 'number' || h < 0 || h > 359)
@@ -235,7 +222,7 @@ export function objectEquals(obj1, obj2, ignoredProperties = []) {
   return true;
 }
 
-export function doGetCanvasCopy(canvasElement) {
+export function getCanvasCopy(canvasElement) {
   if(canvasElement.tagName !== 'CANVAS') {
     console.error(`First argument has to be a reference to a canvas element, provided:`, canvasElement);
   }
@@ -498,7 +485,7 @@ export function writeCanvasToClipboard(canvas) {
   }
 }
 
-export function doGetParsedFileSize(bytes) {
+export function getParsedFileSize(bytes) {
   if(!Number.isInteger(bytes)) {
     console.error(`This function takes integer as its first argument, provided:`, bytes);
   }
@@ -516,7 +503,7 @@ export function doGetParsedFileSize(bytes) {
   return parsedSize;
 }
 
-export function doGetGridData(zoom) {
+export function getGridData(zoom) {
   const gridData = {
     cellSize: 12,
     color_1: 'rgba(0, 0, 0, 0.5)',
@@ -536,21 +523,4 @@ export function doGetGridData(zoom) {
   }
 
   return gridData;
-}
-
-export function getAverage(...nums) {
-  if(!nums.length) {
-    console.error('Function expects at least one argument');
-  }
-  
-  let sum = 0;
-
-  for(let num of nums) {
-    if(typeof num !== 'number') {
-      console.error('One of arguments provided to this function is not a number.');
-    }
-    sum += num;
-  }
-  
-  return Math.round(sum / nums.length);
 }

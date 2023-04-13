@@ -29,18 +29,18 @@ const ZoomRange = memo(function ZoomRange() {
   const [isControlFocused, setIsControlFocused] = useState(false);
   const rangeRef = useRef();
   
+  function onPointerMove(event) {
+    const difference = event.clientX - rangeRef.current.getBoundingClientRect().x;
+    const multiplier = findClosestMultiplier(difference);
+
+    if(canvasZoom !== multiplier) {
+      doCanvasSetZoom(multiplier);
+    }
+  }
+
   useEffect(() => {
     function onPointerUp() {
       setIsControlFocused(false);
-    }
-
-    function onPointerMove(event) {
-      const difference = event.clientX - rangeRef.current.getBoundingClientRect().x;
-      const multiplier = findClosestMultiplier(difference);
-
-      if(canvasZoom !== multiplier) {
-        doCanvasSetZoom(multiplier);
-      }
     }
 
     if(isControlFocused) {
@@ -52,7 +52,7 @@ const ZoomRange = memo(function ZoomRange() {
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointermove', onPointerMove);
     };
-  }, [isControlFocused, canvasZoom, doCanvasSetZoom]);
+  });
 
   return (
     <>
@@ -84,11 +84,19 @@ const ZoomRange = memo(function ZoomRange() {
         tabIndex="0" 
         ref={rangeRef}
         aria-description="Zoom"
+        onPointerDown={(e) => {
+          if(e.button === 0) {
+            setIsControlFocused(true);
+            onPointerMove(e);
+          }
+        }}
       >
         <div 
           style={{ left: getOffsetForMultiplier(canvasZoom) }} 
-          className={css['range-control']}
-          onPointerDown={(e) => e.button === 0 && setIsControlFocused(true)}
+          className={`
+            ${css['range-control']}
+            ${isControlFocused ? css['range-control--active'] : ''}
+          `}
         ></div>
         <Tooltip
           type="generic"

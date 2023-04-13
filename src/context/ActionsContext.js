@@ -8,7 +8,7 @@ import { useCanvasContext } from './CanvasContext';
 import { useSelectionContext } from './SelectionContext';
 import { useWindowsContext } from './WindowsContext';
 import { useToolContext } from './ToolContext';
-import { doGetCanvasCopy, writeCanvasToClipboard, degreesToRadians, ImageDataUtils } from '../misc/utils';
+import { getCanvasCopy, writeCanvasToClipboard, degreesToRadians, ImageDataUtils } from '../misc/utils';
 import { zoomData } from '../misc/data';
 
 const ActionsContext = createContext();
@@ -50,7 +50,7 @@ function ActionsProvider({ children }) {
       draw(primaryContext);
       thumbnailPrimaryContext && draw(thumbnailPrimaryContext);
       
-      lastPrimaryStateRef.current = doGetCanvasCopy(primaryRef.current);
+      lastPrimaryStateRef.current = getCanvasCopy(primaryRef.current);
       URL.revokeObjectURL(image.src);
     }, 20);
   }
@@ -172,7 +172,7 @@ function ActionsProvider({ children }) {
     let usedSize = canvasSize;
     let usedSetSize = setCanvasSize;
     let usedLastStateRef = lastPrimaryStateRef;
-    let usedCopy = doGetCanvasCopy(primaryRef.current);
+    let usedCopy = getCanvasCopy(primaryRef.current);
     let usedClear = doCanvasClearPrimary;
     let offset = 0;
 
@@ -183,7 +183,7 @@ function ActionsProvider({ children }) {
       usedSize = selectionSize;
       usedSetSize = doSelectionSetSize;
       usedLastStateRef = lastSelectionStateRef;
-      usedCopy = doGetCanvasCopy(selectionRef.current);
+      usedCopy = getCanvasCopy(selectionRef.current);
       usedClear = doSelectionClear;
     }
 
@@ -210,7 +210,7 @@ function ActionsProvider({ children }) {
 
       rotateAndDraw(usedContext);
       usedThumbnailContext && rotateAndDraw(usedThumbnailContext);
-      usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+      usedLastStateRef.current = getCanvasCopy(usedRef.current);
 
       if(selectionPhase !== 2) {
         doHistoryAdd({ 
@@ -236,7 +236,7 @@ function ActionsProvider({ children }) {
     let usedSize = canvasSize;
     let usedLastStateRef = lastPrimaryStateRef;
     let usedClear = doCanvasClearPrimary;
-    let usedCopy = doGetCanvasCopy(primaryRef.current);
+    let usedCopy = getCanvasCopy(primaryRef.current);
 
     if(selectionPhase === 2) {
       usedRef = selectionRef;
@@ -245,7 +245,7 @@ function ActionsProvider({ children }) {
       usedSize = selectionSize;
       usedLastStateRef = lastSelectionStateRef;
       usedClear = doSelectionClear;
-      usedCopy = doGetCanvasCopy(selectionRef.current);
+      usedCopy = getCanvasCopy(selectionRef.current);
     }
 
     usedClear();
@@ -263,7 +263,7 @@ function ActionsProvider({ children }) {
 
     flipAndDraw(usedContext);
     usedThumbnailContext && flipAndDraw(usedThumbnailContext, true);
-    usedLastStateRef.current = doGetCanvasCopy(usedRef.current);
+    usedLastStateRef.current = getCanvasCopy(usedRef.current);
 
     if(selectionPhase !== 2) {
       doHistoryAdd({ 
@@ -302,7 +302,7 @@ function ActionsProvider({ children }) {
       if(thumbnailSelectionContext) {
         thumbnailSelectionContext.drawImage(selectionRef.current, 0, 0);
       }
-      lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+      lastSelectionStateRef.current = getCanvasCopy(selectionRef.current);
     } else {
       primaryContext.putImageData(usedImageData, 0, 0);
       thumbnailPrimaryContext?.putImageData(usedImageData, 0, 0);
@@ -319,7 +319,7 @@ function ActionsProvider({ children }) {
   
     doCanvasClearPrimary({ ...data });
     doCanvasDrawImageToPrimary(bufCanvas);
-    lastPrimaryStateRef.current = doGetCanvasCopy(bufCanvas);
+    lastPrimaryStateRef.current = getCanvasCopy(bufCanvas);
   
     setCanvasSize({ width: data.width, height: data.height });
     setHistory(prev => ({ ...prev, currentIndex: index }));

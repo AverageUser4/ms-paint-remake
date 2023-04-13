@@ -10,7 +10,6 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import Dropdown from "../Dropdown/Dropdown";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import { toggleBoolState } from "../../misc/utils";
 import { useToolContext } from "../../context/ToolContext";
 
 import shapes16 from './assets/shapes-16.png';
@@ -71,7 +70,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
               strName="Shapes"
               isHasArrow={true}
               isOnlyChildren={isBigButtonHidden}
-              onClick={(e) => e.button === 0 && toggleBoolState(isGridDropdownOpen, setIsGridDropdownOpen)}
+              onClick={(e) => e.button === 0 && setIsGridDropdownOpen(prev => !prev)}
               ariaDescribedBy="id-shapes-big-button"
               tooltipElement={
                 <Tooltip
@@ -106,7 +105,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
             <div className="dropdown-container" ref={outlineDropdownContainerRef}>
               <button 
                 className="tooltip-container button"
-                onClick={(e) => e.button === 0 && toggleBoolState(isOutlineDropdownOpen, setIsOutlineDropdownOpen)}
+                onClick={(e) => e.button === 0 && setIsOutlineDropdownOpen(prev => !prev)}
                 data-cy="Shapes-toggle-Outline"
                 aria-describedby="id-shapes-outline"
               >
@@ -243,7 +242,7 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
             <div className="dropdown-container" ref={fillDropdownContainerRef}>
               <button 
                 className="tooltip-container button"
-                onClick={(e) => e.button === 0 && toggleBoolState(isFillDropdownOpen, setIsFillDropdownOpen)}
+                onClick={(e) => e.button === 0 && setIsFillDropdownOpen(prev => !prev)}
                 data-cy="Shapes-toggle-Fill"
                 aria-describedby="id-shapes-fill"
               >

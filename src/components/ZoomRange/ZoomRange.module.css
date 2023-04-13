@@ -48,7 +48,7 @@
 .range-control:hover {
   --range-control-bg: rgb(23, 23, 23);
 }
-.range-control:active {
+.range-control.range-control--active {
   --range-control-bg: rgb(204, 204, 204);
 }
 

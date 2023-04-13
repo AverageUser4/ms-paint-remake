@@ -7,7 +7,7 @@ import { useCanvasContext } from './CanvasContext';
 import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
 import { useColorContext } from './ColorContext';
-import { doGetCanvasCopy, ImageDataUtils } from '../misc/utils';
+import { getCanvasCopy, ImageDataUtils } from '../misc/utils';
 
 const SelectionContext = createContext();
 
@@ -90,7 +90,7 @@ function SelectionProvider({ children }) {
 
     drawToContext(selectionContext);
     thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
-    lastSelectionStateRef.current = doGetCanvasCopy(selectionRef.current);
+    lastSelectionStateRef.current = getCanvasCopy(selectionRef.current);
   }, [isSelectionTransparent, colorData.secondary, doSelectionGetEveryContext]);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ function SelectionProvider({ children }) {
   }
 
   function doSelectionResize(newSize) {
-    const selectionCanvasCopy = doGetCanvasCopy(selectionRef.current);
+    const selectionCanvasCopy = getCanvasCopy(selectionRef.current);
     const multiplier = {
       x: newSize.width / selectionSize.width,
       y: newSize.height / selectionSize.height,
@@ -154,7 +154,7 @@ function SelectionProvider({ children }) {
     function draw(context) {
       context.imageSmoothingEnabled = false;
       context.drawImage(
-        doGetCanvasCopy(selectionRef.current),
+        getCanvasCopy(selectionRef.current),
         (adjustedPosition ? adjustedPosition.x : selectionPosition.x),
         (adjustedPosition ? adjustedPosition.y : selectionPosition.y),
         selectionSize.width,
