@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { ImageDataUtils, getDrawData } from "../../misc/utils";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useSelectionContext } from "../../context/SelectionContext";
@@ -40,8 +40,7 @@ function useFreeFormSelection() {
       return;
     }
 
-    primaryImageDataRef.current = primaryRef.current.getContext('2d').getImageData(
-      0, 0, primaryRef.current.width, primaryRef.current.height);
+    primaryImageDataRef.current = primaryRef.current.getContext('2d').getImageData(0, 0, primaryRef.current.width, primaryRef.current.height);
     const { pageX, pageY } = event;
     const secondaryRect = secondaryRef.current.getBoundingClientRect();
     const offsetX = Math.round((pageX - secondaryRect.x) / canvasZoom);

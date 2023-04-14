@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import usePointerTrack from "../../hooks/usePointerTrack";
 import { useCanvasContext } from "../../context/CanvasContext";
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
@@ -6,13 +6,13 @@ import { useToolContext } from "../../context/ToolContext";
 import { useColorContext } from "../../context/ColorContext";
 import { useHistoryContext } from "../../context/HistoryContext";
 import { useActionsContext } from "../../context/ActionsContext";
-import { RGBObjectToString, getDrawData } from "../../misc/utils";
+import { getDrawData } from "../../misc/utils";
 
 function useBrush() {
   const { 
     primaryRef, secondaryRef, doCanvasDrawImageToPrimary,
     doCanvasClearSecondary, canvasZoom, canvasSize,
-    lastPointerPositionRef, doGetEveryContext,
+    lastPointerPositionRef, doGetEveryContext, brushCanvasRef
   } = useCanvasContext();
   const { canvasMousePosition, canvasOutlineSize } = useCanvasMiscContext();
   const { currentTool, currentToolData } = useToolContext();
@@ -20,6 +20,10 @@ function useBrush() {
   const { doHistoryAdd } = useHistoryContext();
   const { doCanvasChangeZoom } = useActionsContext();
   const primaryImageDataRef = useRef();
+
+  useEffect(() => {
+    brushCanvasRef.current.getContext('2d').clearRect(0, 0, canvasSize.width, canvasSize.height);
+  }, [currentTool, brushCanvasRef, canvasSize]);
   
   let usedPressedMoveCallback = onPointerMoveCallback;
   let usedPressStartCallback = onPressStartCallback;
@@ -100,8 +104,6 @@ function useBrush() {
   }
 
   function onPressEndCallback() {
-    // lastPointerPositionRef.current = {};
-
     doCanvasDrawImageToPrimary(secondaryRef.current);
     doCanvasClearSecondary();
 
@@ -113,7 +115,6 @@ function useBrush() {
   }
 
   function onCancelCallback() {
-    // lastPointerPositionRef.current = {};
     doCanvasClearSecondary();
   }
 

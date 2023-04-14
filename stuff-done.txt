@@ -1,9 +1,6 @@
 GOING TO:
   - investigate z-index
   - investigate font-family
-  - changes to code can cause primaryCanvas to lose it's background color and become transparent, it does not seem that there is user action
-    that can cause that but it may need to be investigated
-  - fix FreeFormSelection selecting shapes that are not exactly like expected
   - rework outline in useResize
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
@@ -11,9 +8,8 @@ GOING TO:
   - currently when there is selection clicking outside of it just ends the selection,
     ideally it should start new selection if the mouse is moved, like in real paint
   - fix bug in useRectangularSelection (there is a comment explaining it)
-  - traversing history is buggy
-  - image data may be unnecesserily used in some cases (copy of canvas may be enough)
-  - pasting image or select all may cause brush canvas to get stuck (tool changes to one which doesnt cause it to be cleared)
+  - fix FreeFormSelection selecting shapes that are not exactly like expected
+  - there are still some places where we could get rid of setTimeout, also consider using effects with callbacks
+    instead of MutationObservers
 
 DONE:
-
