@@ -11,5 +11,15 @@ GOING TO:
   - there are still some places where we could get rid of setTimeout, also consider using effects with callbacks
     instead of MutationObservers
   - some resizers on selection seem to be slightly misplaced (probably because border was changed to outline)
+  - add missing shapes
+
+  - dropdowns don't open on focus + enter for some reason (click event is dispatched)
+  - after drawing to canvas (or maybe some other action associated with it) all the buttons stop responding to focus + enter
+  - user can tab through elements that are supposed to be disabled
+  - inner windows don't trap focus
+  - dropdowns should get closed when Escape key is pressed
+  - focusing element within main window with tab now makes main window focused, fixing dropdowns not opening
 
 DONE:
+  - fixed tabbing not working when window was focused (because of GlobalShortcuts calling preventDefault)
+  - fixed accessibility issues caused by GlobalShortcuts

@@ -56,8 +56,15 @@ function GlobalShortcuts({ ribbonData }) {
 
   useEffect(() => {
     function onKeyDown(event) {
-      event.preventDefault();
-      
+      if(event.ctrlKey || event.altKey) {
+        event.preventDefault();
+      }
+
+      if(event.key === 'Tab') {
+        console.log(event)
+        console.log(document.activeElement);
+      }
+
       if(event.ctrlKey) {
         switch(event.key.toLowerCase()) {
           case 'a':
@@ -185,8 +192,9 @@ function GlobalShortcuts({ ribbonData }) {
       }
     }
 
+    window.addEventListener('keydown', onKeyDown);
+
     if(isMainWindowFocused) {
-      window.addEventListener('keydown', onKeyDown);
       window.addEventListener('wheel', onWheel, { passive: false });
     }
 
