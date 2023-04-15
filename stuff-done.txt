@@ -11,5 +11,6 @@ GOING TO:
   - fix FreeFormSelection selecting shapes that are not exactly like expected
   - there are still some places where we could get rid of setTimeout, also consider using effects with callbacks
     instead of MutationObservers
+  - some resizers on selection seem to be slightly misplaced (probably because border was changed to outline)
 
 DONE:

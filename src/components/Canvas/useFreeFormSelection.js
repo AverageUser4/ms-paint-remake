@@ -123,10 +123,17 @@ function useFreeFormSelection() {
       const primaryImageData = primaryContext.getImageData(x, y, width, height);
       const selectionImageData = selectionRef.current.getContext('2d').getImageData(x, y, width, height);
       
-      function isThereTerminatingLine(column, row) {
+      function getIsLinePixel(x, y) {
+        if(x >= boundariesImageData.width || y >= boundariesImageData.height) {
+          return false;
+        }
+        return ImageDataUtils.getColorFromCoords(boundariesImageData, x, y).a > 0;
+      }
+
+      function getIsThereTerminatingLine(column, row) {
         for(let i = column + 2; i < width; i++) {
-          const isBlack = ImageDataUtils.getColorFromCoords(boundariesImageData, i, row).a > 0;
-          if(isBlack) {
+          const isCurrentLinePixel = getIsLinePixel(i, row);
+          if(isCurrentLinePixel) {
             return true;
           }
         }
@@ -137,15 +144,13 @@ function useFreeFormSelection() {
         let isWithinLine = false;
 
         for(let column = 0; column < width; column++) {
-          const isBlack = ImageDataUtils.getColorFromCoords(boundariesImageData, column, row).a > 0;
-          const isNextBlack = column === width - 1 ? false : ImageDataUtils.getColorFromCoords(boundariesImageData, column + 1, row).a > 0;
+          const isCurrentLinePixel = getIsLinePixel(column, row);
+          const isNextLinePixel = column === width - 1 ? false : getIsLinePixel(column + 1, row);
 
-          if(isWithinLine && isNextBlack) {
-              isWithinLine = false;
-          } else if(!isWithinLine && isBlack && !isNextBlack) {
-            if(isThereTerminatingLine(column, row)) {
-              isWithinLine = true;
-            }
+          if(isNextLinePixel) {
+            isWithinLine = false;
+          } else if(isCurrentLinePixel && !isNextLinePixel) {
+            isWithinLine = getIsThereTerminatingLine(column, row);
           }
           
           if(isWithinLine) {
