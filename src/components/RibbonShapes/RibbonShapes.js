@@ -33,17 +33,29 @@ const RibbonShapes = memo(function RibbonShapes({ ribbonWidth }) {
   const [isFillDropdownOpen, setIsFillDropdownOpen] = useState(false);
   const fillDropdownRef = useRef();
   const fillDropdownContainerRef = useRef();
-  useOutsideClick(fillDropdownRef, () => isFillDropdownOpen && setIsFillDropdownOpen(false));
+  useOutsideClick({
+    containerRef: fillDropdownRef,
+    callback: () => setIsFillDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   const [isOutlineDropdownOpen, setIsOutlineDropdownOpen] = useState(false);
   const outlineDropdownRef = useRef();
   const outlineDropdownContainerRef = useRef();
-  useOutsideClick(outlineDropdownRef, () => isOutlineDropdownOpen && setIsOutlineDropdownOpen(false));
+  useOutsideClick({
+    containerRef: outlineDropdownRef,
+    callback: () => setIsOutlineDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   const [isGridDropdownOpen, setIsGridDropdownOpen] = useState(false);
   const gridDropdownRef = useRef();
   const gridDropdownContainerRef = useRef();
-  useOutsideClick(gridDropdownRef, () => isGridDropdownOpen && setIsGridDropdownOpen(false));
+  useOutsideClick({
+    containerRef: gridDropdownRef,
+    callback: () => setIsGridDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
   
   const isOnlyContent = ribbonWidth >= 800;
   const isShowText = ribbonWidth < 800 || ribbonWidth >= 900;

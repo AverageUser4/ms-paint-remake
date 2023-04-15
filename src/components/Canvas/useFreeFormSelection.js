@@ -174,7 +174,13 @@ function useFreeFormSelection() {
         return getIsPixelFilled(column, row) || false;
       }
 
+      const startTime = performance.now();
+
       for(let row = 1; row < height; row++) {
+        if(performance.now() - startTime > 3_000) {
+          console.error('de_Time limit for free form selection exceeded.');
+          return;
+        }
         let isPixelOnLeftToLatestLineFilled = false;
 
         for(let column = 1; column < width; column++) {

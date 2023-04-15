@@ -1,4 +1,4 @@
-import React, { useContext, createContext, useState } from 'react';
+import React, { useContext, createContext, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 const MainWindowContext = createContext();
@@ -10,6 +10,7 @@ function MainWindowProvider({ children, initialPosition, initialSize, isInitiall
   const [mainWindowLatestPosition, setMainWindowLatestPosition] = useState(initialPosition);
   const [isMainWindowFocused, setIsMainWindowFocused] = useState(false);
   const [isMainWindowMaximized, setIsMainWindowMaximized] = useState(isInitiallyMaximized);
+  const mainWindowRef = useRef();
 
   function doMainWindowMinimize() {
     setIsMainWindowMaximized(false);
@@ -55,6 +56,7 @@ function MainWindowProvider({ children, initialPosition, initialSize, isInitiall
         mainWindowLatestSize,
         mainWindowLatestPosition,
         mainWindowMinimalSize: minimalSize,
+        mainWindowRef,
      }}
     >
       {children}

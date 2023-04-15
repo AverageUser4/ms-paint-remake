@@ -28,7 +28,11 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
   
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   const buttonsData = [
     {
@@ -99,7 +103,8 @@ const QuickAccessToolbar = memo(function QuickAccessToolbar({ toolbarData, setTo
       throw new Error(`de_Unexpected item in 'toolbarData.buttons' array: '${item}'`);
 
     return (
-      <button 
+      <button
+        tabIndex={data.isDisabled ? -1 : 0}
         key={data.id}
         className={`
           tooltip-container

@@ -45,7 +45,8 @@ function BigButton({
       ref={dropdownContainerRef}
       data-cy={`BigButton-${strName}`}
     >
-      <button 
+      <button
+        tabIndex={isDisabled ? -1 : 0}
         className={buttonClasses}
         onClick={onClick && !isDisabled ? onClick : ()=>0}
         aria-describedby={ariaDescribedBy}

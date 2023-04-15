@@ -14,7 +14,11 @@ import pin from '../../assets/global/pin.png';
 const RibbonControls = memo(function RibbonControls({ ribbonData }) {
   const dropdownRef = useRef();
   const [isFileDropdownOpen, setIsFileDropdownOpen] = useState(false);
-  useOutsideClick(dropdownRef, () => isFileDropdownOpen && setIsFileDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsFileDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   return (
     <div className={css['container']}>

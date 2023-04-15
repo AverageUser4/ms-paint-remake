@@ -91,7 +91,11 @@ const ColorsWindow = memo(function ColorsWindow() {
                 </div>
 
                 <div>
-                  <button type="button" disabled className="form-button form-button--full-width">
+                  <button 
+                    type="button"
+                    className="form-button form-button--full-width form-button--disabled"
+                    tabIndex={-1}
+                  >
                     Define Custom Colors
                     <img className="form-button__icon" src={duoArrow} alt=""/>
                   </button>

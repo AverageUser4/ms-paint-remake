@@ -42,6 +42,7 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   } = useActionsContext();
   const { setIsResizeWindowOpen } = useWindowsContext();
   let icon = image32;
+  const disabledData = { isShape: currentTool.startsWith('shape') };
   
   switch(currentTool.startsWith('selection') ? currentTool : latestTools.selection) {
     case 'selection-free-form':
@@ -54,11 +55,19 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   const dropdownContainerRef = useRef();
   const [isSelectionDropdownOpen, setIsSelectionDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => isSelectionDropdownOpen && setIsSelectionDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsSelectionDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   const [isRotateDropdownOpen, setIsRotateDropdownOpen] = useState(false);
   const rotateDropdownRef = useRef();
-  useOutsideClick(rotateDropdownRef, () => isRotateDropdownOpen && setIsRotateDropdownOpen(false));
+  useOutsideClick({
+    containerRef: rotateDropdownRef,
+    callback: () => setIsRotateDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   const isOnlyContent = ribbonWidth >= 840;
   const isShowText = ribbonWidth < 840 || ribbonWidth >= 1000;
@@ -180,15 +189,17 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     />
                   </button>
 
+                  {disabledData.invertSelection = selectionPhase !== 2 || currentTool.startsWith('shape')}
                   <button 
+                    tabIndex={disabledData.invertSelection ? -1 : 0}
                     className={`
                       tooltip-container
                       popup__button
-                      ${(selectionPhase !== 2 || currentTool.startsWith('shape')) ? 'popup__button--disabled' : ''}
+                      ${(disabledData.invertSelection) ? 'popup__button--disabled' : ''}
                       text text--4 text--nowrap
                     `}
                     onClick={() => {
-                      if(selectionPhase !== 2 || currentTool.startsWith('shape')) {
+                      if(disabledData.invertSelection) {
                         return;
                       }
                       doSelectionInvertSelection();
@@ -247,14 +258,16 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
               </div>
             </BigButtonDuo>
 
+            {disabledData.crop = selectionPhase !== 2}
             <div data-cy="Image-buttons">
               <button 
+                tabIndex={disabledData.crop ? -1 : 0}
                 className={`
                   tooltip-container button
-                  ${selectionPhase !== 2 ? 'button--disabled' : ''}
+                  ${disabledData.crop ? 'button--disabled' : ''}
                 `}
                 onClick={() => {
-                  if(selectionPhase !== 2) {
+                  if(disabledData.crop) {
                     return;
                   }
                   doSelectionCrop(); 
@@ -316,17 +329,19 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                     ref={rotateDropdownRef}
                     data-cy="Image-Rotate-Dropdown"
                   >
+                    {disabledData.rotate = currentTool.startsWith('shape') && selectionPhase === 2}
                     <div className="popup__part">
                       <button
+                        tabIndex={disabledData.rotate ? -1 : 0}
                         className={`
                           tooltip-container
                           popup__button
-                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          ${disabledData.rotate ? 'popup__button--disabled' : ''}
                           text text--4 text--nowrap
                         `}
                         aria-describedby="id-image-rotate-right-90"
                         onClick={() => {
-                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                          if(disabledData.rotate) {
                             return;
                           }
                           doSharedRotate(90);
@@ -343,15 +358,16 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        tabIndex={disabledData.rotate ? -1 : 0}
                         className={`
                           tooltip-container
                           popup__button
-                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          ${disabledData.rotate ? 'popup__button--disabled' : ''}
                           text text--4 text--nowrap
                         `}
                         aria-describedby="id-image-rotate-left-90"
                         onClick={() => {
-                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                          if(disabledData.rotate) {
                             return;
                           }
                           doSharedRotate(-90);
@@ -368,15 +384,16 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        tabIndex={disabledData.rotate ? -1 : 0}
                         className={`
                           tooltip-container
                           popup__button
-                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          ${disabledData.rotate ? 'popup__button--disabled' : ''}
                           text text--4 text--nowrap
                         `}
                         aria-describedby="id-image-rotate-180"
                         onClick={() => {
-                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                          if(disabledData.rotate) {
                             return;
                           }
                           doSharedRotate(180);
@@ -393,15 +410,16 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        tabIndex={disabledData.rotate ? -1 : 0}
                         className={`
                           tooltip-container
                           popup__button
-                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          ${disabledData.rotate ? 'popup__button--disabled' : ''}
                           text text--4 text--nowrap
                         `}
                         aria-describedby="id-image-flip-vertical"
                         onClick={() => {
-                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                          if(disabledData.rotate) {
                             return;
                           }
                           doSharedFlip('vertical');
@@ -418,15 +436,16 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
                       </button>
 
                       <button
+                        tabIndex={disabledData.rotate ? -1 : 0}
                         className={`
                           tooltip-container
                           popup__button
-                          ${(currentTool.startsWith('shape') && selectionPhase === 2) ? 'popup__button--disabled' : ''}
+                          ${disabledData.rotate ? 'popup__button--disabled' : ''}
                           text text--4 text--nowrap
                         `}
                         aria-describedby="id-image-flip-horizontal"
                         onClick={() => {
-                          if(currentTool.startsWith('shape') && selectionPhase === 2) {
+                          if(disabledData.rotate) {
                             return;
                           }
                           doSharedFlip('horizontal');

@@ -25,7 +25,11 @@ const RibbonClipboard = memo(function RibbonClipboard({ ribbonWidth }) {
 
   const [isPasteDropdownOpen, setIsPasteDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => isPasteDropdownOpen && setIsPasteDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsPasteDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   const isOnlyContent = ribbonWidth >= 855;
   const isShowText = ribbonWidth < 855 || ribbonWidth >= 1025; 

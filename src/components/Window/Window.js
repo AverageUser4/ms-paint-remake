@@ -28,7 +28,7 @@ function Window({
 }) {
   isResizable = isResizable && !isMaximized;
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
-  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize, isMainWindowMaximized } = useMainWindowContext();
+  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize, isMainWindowMaximized, mainWindowRef } = useMainWindowContext();
   const { containerRect, isConstrained, isAutoFit, isAllowToLeaveViewport } = useContainerContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
@@ -92,12 +92,15 @@ function Window({
     isResizable 
   });
 
-  useOutsideClick(windowRef, () => { 
-    if(isMainWindow && isFocused) {
-      setIsFocused(false);
-    } else if(isBlockingMainWindow && !isMainWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
-      setIsAttentionAnimated(true);
-      setTimeout(() => setIsAttentionAnimated(false), 1000);
+  useOutsideClick({
+    containerRef: windowRef,
+    callback: () => { 
+      if(isMainWindow && isFocused) {
+        setIsFocused(false);
+      } else if(isBlockingMainWindow && !isMainWindow && !isAttentionAnimated && isOpen && isActuallyOpen) {
+        setIsAttentionAnimated(true);
+        setTimeout(() => setIsAttentionAnimated(false), 1000);
+      }
     }
   });
 
@@ -129,9 +132,15 @@ function Window({
   return (
     <>
       <article
+        tabIndex={0}
         data-cy={ID}
         onPointerDown={onPointerDownFocus}
-        ref={windowRef}
+        ref={(element) => {
+          if(isMainWindow) {
+            mainWindowRef.current = element;
+          }
+          windowRef.current = element;
+        }}
         style={{ 
           top: position.y,
           left: position.x,

@@ -12,7 +12,11 @@ import Tooltip from "../Tooltip/Tooltip";
 function RibbonItemContainer({ isDropdownOpen, setIsDropdownOpen, iconSrc, name, children, isOnlyContent }) {
   const { isMainWindowFocused } = useMainWindowContext();
   const containerRef = useRef();
-  useOutsideClick(containerRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick({
+    containerRef,
+    callback: () => setIsDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   useEffect(() => {
     if(isDropdownOpen && isOnlyContent)

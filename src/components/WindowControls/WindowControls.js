@@ -41,7 +41,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
         className={`
           tooltip-container
           ${css['button']} 
-          ${!isMainWindowFocused ? css['button--disabled'] : ''}
+          ${!isMainWindowFocused ? css['button--inactive'] : ''}
         `}
         onClick={() => {
           setMainWindowSize(mainWindowMinimalSize);
@@ -59,7 +59,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
         className={`
           tooltip-container
           ${css['button']} 
-          ${!isMainWindowFocused ? css['button--disabled'] : ''}
+          ${!isMainWindowFocused ? css['button--inactive'] : ''}
         `}
         onClick={doMainWindowToggleMaximize}
         aria-label={isMainWindowMaximized ? 'Restore Down' : 'Maximize'}
@@ -87,7 +87,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
         className={`
           tooltip-container
           ${css['button']} ${css['button--danger']} 
-          ${!isMainWindowFocused ? css['button--disabled'] : ''}
+          ${!isMainWindowFocused ? css['button--inactive'] : ''}
         `}
         onClick={closeCallback}
         data-cy="WindowControls-close"

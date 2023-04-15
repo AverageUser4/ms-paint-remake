@@ -13,7 +13,7 @@ import { getDrawData } from '../../misc/utils';
 
 function GlobalShortcuts({ ribbonData }) {
   // https://www.guidingtech.com/15171/ms-microsoft-paint-keyboard-shortcuts/
-  const { isMainWindowFocused } = useMainWindowContext();
+  const { isMainWindowFocused, mainWindowRef, setIsMainWindowFocused } = useMainWindowContext();
   const { 
     doSelectionSelectAll, doSelectionPasteFromClipboard,
     doSelectionDrawToPrimary, doSelectionEnd, selectionPhase,
@@ -60,9 +60,13 @@ function GlobalShortcuts({ ribbonData }) {
         event.preventDefault();
       }
 
-      if(event.key === 'Tab') {
-        console.log(event)
-        console.log(document.activeElement);
+      if(
+          event.key === 'Tab' &&
+          !isMainWindowFocused &&
+          (document.activeElement === mainWindowRef.current ||
+          mainWindowRef.current.contains(document.activeElement))
+        ) {
+          setIsMainWindowFocused(true);
       }
 
       if(event.ctrlKey) {

@@ -1,6 +1,11 @@
 import { useEffect } from "react";
 
-function useOutsideClick(containerRef, callback, dataControl = 'veryRandomString') {
+function useOutsideClick({
+  containerRef,
+  callback,
+  dataControl = 'veryRandomString',
+  isInvokeOnEscapeKey,
+}) {
   useEffect(() => {
     function onClick(event) {
       if(
@@ -14,12 +19,22 @@ function useOutsideClick(containerRef, callback, dataControl = 'veryRandomString
       callback();
     }
 
+    function onKeyDown(event) {
+      if(event.key === 'Escape') {
+        callback();
+      }
+    }
+
     window.addEventListener('click', onClick);
+    if(isInvokeOnEscapeKey) {
+      window.addEventListener('keydown', onKeyDown);
+    }
 
     return () => {
       window.removeEventListener('click', onClick);
+      window.removeEventListener('keydown', onKeyDown);
     };
-  }, [containerRef, callback, dataControl]);
+  }, [containerRef, callback, dataControl, isInvokeOnEscapeKey]);
 }
 
-export default useOutsideClick
+export default useOutsideClick;

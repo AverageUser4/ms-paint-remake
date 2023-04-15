@@ -23,7 +23,11 @@ const RibbonBrushes = memo(function RibbonBrushes() {
   const dropdownRef = useRef();
   const { currentTool, latestTools } = useToolContext();
   const { doSetCurrentTool } = useActionsContext();
-  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
 
   let icon = brush32;
 

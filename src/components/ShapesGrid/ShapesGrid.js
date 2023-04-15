@@ -69,7 +69,11 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
-  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
   
   let columns = 4;
   if(ribbonWidth >= 1060) columns = 5;
@@ -77,12 +81,14 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
   if(ribbonWidth >= 1100) columns = 7;
   const rows = Math.ceil(shapesDataArray.length / columns);
   const maxRow = rows - 3;
+  const disabledData = {};
 
   function mapToButtons(isOut, shape) {
     const id = shape.name.toLowerCase().replace(/ /g, '-');
     
     return (
       <button
+        tabIndex={shape.isDisabled ? -1 : 0}
         key={id}
         className={`
           button
@@ -152,22 +158,36 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
             </div>
 
             <div>
+              {disabledData.up = currentRow === 0}
               <button 
+                tabIndex={disabledData.up ? -1 : 0}
                 className={`
                   ${css['button']}
-                  ${currentRow === 0 ? css['button--disabled'] : ''}
+                  ${disabledData.up ? css['button--disabled'] : ''}
                   ${currentRow === maxRow ? css['button--has-border'] : ''}
                 `}
-                onClick={() => changeCurrentRow(true)}
+                onClick={() => {
+                  if(disabledData.up) {
+                    return;
+                  }
+                  changeCurrentRow(true)
+                }}
               >
                 <TriangleDown className="rotate-180"/>
               </button>
+              {disabledData.down = currentRow === maxRow}
               <button 
+                tabIndex={disabledData.down ? -1 : 0}
                 className={`
                   ${css['button']}
-                  ${currentRow === maxRow ? css['button--disabled'] : ''}
+                  ${disabledData.down ? css['button--disabled'] : ''}
                 `}
-                onClick={() => changeCurrentRow(false)}
+                onClick={() => {
+                  if(disabledData.down) {
+                    return;
+                  }
+                  changeCurrentRow(false)
+                }}
               >
                 <TriangleDown/>
               </button>
@@ -201,10 +221,10 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
           </div>
 
           <div className={css['expanded__scrollbar']}>
-            <button className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
+            <button tabIndex={-1} className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
               <TriangleDown className="rotate-180"/>
             </button>
-            <button className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
+            <button tabIndex={-1} className={`${css['expanded__scrollbar__button']} ${css['expanded__scrollbar__button--disabled']}`}>
               <TriangleDown/>
             </button>
           </div>

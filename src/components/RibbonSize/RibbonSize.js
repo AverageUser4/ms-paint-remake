@@ -13,7 +13,11 @@ const RibbonSize = memo(function RibbonSize() {
   const { toolsData, doCurrentToolSetSize, currentTool } = useToolContext();
   const dropdownRef = useRef();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  useOutsideClick(dropdownRef, () => isDropdownOpen && setIsDropdownOpen(false));
+  useOutsideClick({
+    containerRef: dropdownRef,
+    callback: () => setIsDropdownOpen(false),
+    isInvokeOnEscapeKey: true,
+  });
   const { sizes } = toolsData.get(currentTool);
 
   return (

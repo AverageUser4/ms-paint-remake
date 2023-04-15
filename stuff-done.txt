@@ -12,14 +12,11 @@ GOING TO:
     instead of MutationObservers
   - some resizers on selection seem to be slightly misplaced (probably because border was changed to outline)
   - add missing shapes
-
-  - dropdowns don't open on focus + enter for some reason (click event is dispatched)
-  - after drawing to canvas (or maybe some other action associated with it) all the buttons stop responding to focus + enter
-  - user can tab through elements that are supposed to be disabled
-  - inner windows don't trap focus
-  - dropdowns should get closed when Escape key is pressed
-  - focusing element within main window with tab now makes main window focused, fixing dropdowns not opening
-
+  - consider using transform: translate instead of position for moving elements
+  - ContextMenu, minimized Ribbon and possibly other elements are not animated when disappearing
+  - improve window focus management (window does not lose focus when tabbing out of it, etc.)
+  - add functionality to ContextMenu when open over the window (top part)
+  - implement recent files (in FileDropdownMore)
+  - inner windows and dropdowns should trap focus
+  
 DONE:
-  - fixed tabbing not working when window was focused (because of GlobalShortcuts calling preventDefault)
-  - fixed accessibility issues caused by GlobalShortcuts

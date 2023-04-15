@@ -29,7 +29,7 @@
 .button--danger:active {
   background-color: var(--widnow-control-bg-danger-active);
 }
-.button--disabled {
+.button--inactive {
   color: rgb(153, 153, 153);
 }
 @keyframes attention {

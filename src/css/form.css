@@ -21,16 +21,16 @@
   .form-button--full-width {
     width: 100%
   }
-  .form-button:disabled {
+  .form-button.form-button--disabled {
     background-color: rgb(204, 204, 204);
     border-color: rgb(193, 193, 193);
     color: rgb(144, 144, 168);
   }
-  .form-button:hover:not(:disabled) {
+  .form-button:hover:not(.form-button--disabled) {
     background-color: rgb(229, 241, 251);
     border: 1px solid rgb(0, 120, 215);
   }
-  .form-button:active:not(:disabled) {
+  .form-button:active:not(.form-button--disabled) {
     background-color: rgb(204, 228, 247);
   }
   .form-button__icon {

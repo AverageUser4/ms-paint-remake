@@ -153,12 +153,9 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
               data-cy="FileDropdown-duo-print"
             >
               <button 
-                disabled
+                tabIndex={-1}
                 aria-describedby="id-fd-print"
-                className={`tooltip-container ${css['button']}`}
-                onClick={() => {
-                  setIsShown(false);
-                }}
+                className={`tooltip-container ${css['button']} ${css['button--disabled']}`}
               >
                 <img src={print32} alt=""/>
                 <span className="text text--1"><span className="text--underline">P</span>rint</span>
@@ -179,12 +176,9 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
             </div>
             
             <button 
-              disabled
+              tabIndex={-1}
               aria-describedby="id-fd-scanner"
               className={`tooltip-container ${css['button']} ${css['button--disabled']}`}
-              onClick={() => {
-                setIsShown(false);
-              }}
             >
               <img src={scanner32} alt=""/>
               <span className="text text--1">Fro<span className="text--underline">m</span> scanner or camera</span>
@@ -195,12 +189,9 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
             </button>
     
             <button 
-              disabled
+              tabIndex={-1}
               aria-describedby="id-fd-email"
               className={`tooltip-container ${css['button']} ${css['button--disabled']}`}
-              onClick={() => {
-                setIsShown(false);
-              }}
             >
               <img src={email32} alt=""/>
               <span className="text text--1">Sen<span className="text--underline">d</span> in email</span>
@@ -220,12 +211,9 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
               data-cy="FileDropdown-duo-set"
             >
               <button 
-                disabled
+                tabIndex={-1}
                 aria-describedby="id-fd-desktop"
-                className={`tooltip-container ${css['button']}`}
-                onClick={() => {
-                  setIsShown(false);
-                }}
+                className={`tooltip-container ${css['button']} ${css['button--disabled']}`}
               >
                 <img src={set32} alt=""/>
                 <span className="text text--1">Set as desktop <span className="text--underline">b</span>ackground</span>

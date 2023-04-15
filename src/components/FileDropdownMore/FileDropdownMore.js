@@ -157,6 +157,7 @@ const FileDropdownMore = memo(function FileDropdownMore({ currentMore, setCurren
     return (
       <li key={index}>
         <button
+          tabIndex={data.isDisabled ? -1 : 0}
           className={`
             ${css['button']}
             ${data.isDisabled ? css['button--disabled'] : ''}
@@ -186,11 +187,21 @@ const FileDropdownMore = memo(function FileDropdownMore({ currentMore, setCurren
       <ul className="clean-list">
 
         <li>
-          <button className={`${css['button']} text text--1`}><span className="text--underline">1</span>file.png</button>
+          <button 
+            className={`${css['button']} text text--1`}
+            tabIndex={currentMore === 'recent' ? 0 : -1} 
+          >
+            <span className="text--underline">1</span>file.png
+          </button>
         </li>
 
         <li>
-          <button className={`${css['button']} text text--1`}><span className="text--underline">2</span>important.jpg</button>
+          <button 
+            className={`${css['button']} text text--1`}
+            tabIndex={currentMore === 'recent' ? 0 : -1} 
+          >
+            <span className="text--underline">2</span>important.jpg
+          </button>
         </li>
 
       </ul>

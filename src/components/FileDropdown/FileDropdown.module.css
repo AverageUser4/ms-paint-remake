@@ -75,7 +75,7 @@
   background-color: rgb(234, 244, 252);
   border-color: rgb(168, 210, 253);
 }
-.button:disabled * {
+.button.button--disabled * {
   filter: opacity(0.5);
 }
 .button--disabled:hover {
@@ -105,7 +105,7 @@
   background-color: rgb(234, 244, 252);
   border-color: rgb(168, 210, 253);
 }
-.arrow-button:disabled * {
+.arrow-button.arrow-button--disabled * {
   filter: opacity(0.5);
 }
 

@@ -16,7 +16,12 @@ import useOutsideClick from "../../hooks/useOutsideClick";
 
 const Ribbon = memo(function Ribbon({ windowWidth, ribbonData }) {
   const containerRef = useRef();
-  useOutsideClick(containerRef, () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(), 'ribbon');
+  useOutsideClick({
+    containerRef,
+    callback: () => ribbonData.minimize && ribbonData.expand && ribbonData.stopExpanding(),
+    dataControl: 'ribbon',
+    isInvokeOnEscapeKey: true,
+  });
   
   let ribbonClasses = css['ribbon'];
   if(ribbonData.minimize)
