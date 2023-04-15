@@ -122,6 +122,7 @@ function useFreeFormSelection() {
 
       const primaryImageData = primaryContext.getImageData(x, y, width, height);
       const selectionImageData = selectionRef.current.getContext('2d').getImageData(x, y, width, height);
+      const filledMap = new Map();
       
       function getIsLinePixel(x, y) {
         if(x >= boundariesImageData.width || y >= boundariesImageData.height) {
@@ -131,32 +132,48 @@ function useFreeFormSelection() {
       }
 
       function getIsThereTerminatingLine(column, row) {
-        for(let i = column + 2; i < width; i++) {
+        let horizontal = false;
+
+        for(let i = column + 1; i < width; i += 2) {
           const isCurrentLinePixel = getIsLinePixel(i, row);
           if(isCurrentLinePixel) {
-            return true;
+            horizontal = true;
+            break;
           }
         }
+
+        if(horizontal) {
+          for(let i = row + 1; i < height; i += 2) {
+            const isCurrentLinePixel = getIsLinePixel(column, i);
+            if(isCurrentLinePixel) {
+              return true;
+            }
+          } 
+        }
+
         return false;
       }
-      
-      for(let row = 0; row < height; row++) {
-        let isWithinLine = false;
 
-        for(let column = 0; column < width; column++) {
+      for(let row = 1; row < height; row++) {
+        let isPixelOnLeftToLatestLineFilled = false;
+
+        for(let column = 1; column < width; column++) {
           const isCurrentLinePixel = getIsLinePixel(column, row);
-          const isNextLinePixel = column === width - 1 ? false : getIsLinePixel(column + 1, row);
 
-          if(isNextLinePixel) {
-            isWithinLine = false;
-          } else if(isCurrentLinePixel && !isNextLinePixel) {
-            isWithinLine = getIsThereTerminatingLine(column, row);
-          }
-          
-          if(isWithinLine) {
+          if(
+              (!isCurrentLinePixel && (filledMap.get(`${column - 1},${row}`) || filledMap.get(`${column},${row - 1}`))) ||
+              (!isCurrentLinePixel && !isPixelOnLeftToLatestLineFilled && getIsLinePixel(column - 1, row) && getIsLinePixel(column, row - 1) && getIsThereTerminatingLine(column, row))
+            ) {
             const primaryColor = ImageDataUtils.getColorFromCoords(primaryImageData, column, row);
             ImageDataUtils.setColorAtCoords(selectionImageData, column, row, primaryColor);
             ImageDataUtils.setColorAtCoords(primaryImageData, column, row, colorData.secondary);
+            filledMap.set(`${column},${row}`, true);
+
+            if(getIsLinePixel(column + 1, row)) {
+              isPixelOnLeftToLatestLineFilled = true
+            }
+          } else if(!isCurrentLinePixel && getIsLinePixel(column + 1, row)) {
+            isPixelOnLeftToLatestLineFilled = false;
           }
         }
       }
