@@ -28,7 +28,7 @@ function Window({
 }) {
   isResizable = isResizable && !isMaximized;
   const [indicatorData, setIndicatorData] = useState({ strPosition: '', size: { width: 0, height: 0 }, position: { x: 0, y: 0 } });
-  const { doMainWindowRestoreSize, mainWindowLatestSize, doMainWindowMaximize, isMainWindowMaximized, mainWindowRef } = useMainWindowContext();
+  const { doMainWindowSetToLatestSize, mainWindowLatestSize, doMainWindowMaximize, isMainWindowMaximized, mainWindowRef } = useMainWindowContext();
   const { containerRect, isConstrained, isAutoFit, isAllowToLeaveViewport } = useContainerContext();
   const [isActuallyOpen, setIsActuallyOpen] = useState(isOpen);
   const [isAttentionAnimated, setIsAttentionAnimated] = useState(false);
@@ -58,7 +58,7 @@ function Window({
         const widthBeforeCursor = Math.round(mainWindowLatestSize.width * pointerRatioX);
         const adjustedX = pointerContainerX - widthBeforeCursor;
   
-        doMainWindowRestoreSize();
+        doMainWindowSetToLatestSize();
         data.setPositionDifference({ x: event.clientX - adjustedX, y: event.clientY });
         setPosition({ x: Math.round(adjustedX), y: 0 })
       }

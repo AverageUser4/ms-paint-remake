@@ -13,6 +13,11 @@ function MainWindowProvider({ children, initialPosition, initialSize, isInitiall
   const mainWindowRef = useRef();
 
   function doMainWindowMinimize() {
+    setMainWindowSize(minimalSize);
+    setIsMainWindowMaximized(false);
+  }
+
+  function doMainWindowEndMaximize() {
     setIsMainWindowMaximized(false);
     setMainWindowSize(mainWindowLatestSize);
     setMainWindowPosition(mainWindowLatestPosition);
@@ -26,14 +31,14 @@ function MainWindowProvider({ children, initialPosition, initialSize, isInitiall
 
   function doMainWindowToggleMaximize() {
     if(isMainWindowMaximized) {
-      doMainWindowMinimize();
+      doMainWindowEndMaximize();
     }
     else {
       doMainWindowMaximize();
     }
   }
   
-  function doMainWindowRestoreSize() {
+  function doMainWindowSetToLatestSize() {
     setMainWindowSize(mainWindowLatestSize);
     setIsMainWindowMaximized(false);
   }
@@ -49,10 +54,11 @@ function MainWindowProvider({ children, initialPosition, initialSize, isInitiall
         setIsMainWindowFocused,
         isMainWindowMaximized,
         setIsMainWindowMaximized,
-        doMainWindowMinimize,
+        doMainWindowEndMaximize,
         doMainWindowMaximize,
         doMainWindowToggleMaximize,
-        doMainWindowRestoreSize,
+        doMainWindowSetToLatestSize,
+        doMainWindowMinimize,
         mainWindowLatestSize,
         mainWindowLatestPosition,
         mainWindowMinimalSize: minimalSize,

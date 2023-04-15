@@ -8,7 +8,6 @@ import WindowControls from '../WindowControls/WindowControls';
 import { useContextMenuContext } from '../../context/ContextMenuContext';
 import { useMainWindowContext } from '../../context/MainWindowContext';
 import { useCanvasContext } from '../../context/CanvasContext';
-import { useActionsContext } from '../../context/ActionsContext';
 
 import logoMini from './assets/logo-mini.png';
 
@@ -21,7 +20,6 @@ const TopBar = memo(function TopBar({
 }) {
   const { openContextMenu } = useContextMenuContext();
   const { doMainWindowToggleMaximize } = useMainWindowContext();
-  const { doStartNewProject } = useActionsContext();
   const { fileData } = useCanvasContext();
   const containerRef = useRef();
   const textRef = useRef();
@@ -62,9 +60,7 @@ const TopBar = memo(function TopBar({
         
       </div>
 
-      <WindowControls 
-        closeCallback={() => doStartNewProject()}
-      />
+      <WindowControls/>
 
     </header>
   );

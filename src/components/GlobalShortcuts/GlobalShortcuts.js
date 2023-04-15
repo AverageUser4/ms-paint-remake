@@ -56,6 +56,8 @@ function GlobalShortcuts({ ribbonData }) {
 
   useEffect(() => {
     function onKeyDown(event) {
+      // shift + f10 to open context menu
+      
       if(event.ctrlKey || event.altKey) {
         event.preventDefault();
       }

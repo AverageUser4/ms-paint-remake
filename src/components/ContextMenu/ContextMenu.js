@@ -7,6 +7,7 @@ import { useWindowsContext } from '../../context/WindowsContext';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useActionsContext } from '../../context/ActionsContext';
 import { useToolContext } from '../../context/ToolContext';
+import { useMainWindowContext } from '../../context/MainWindowContext';
 
 import close from './assets/close.png';
 import minimize from './assets/minimize.png';
@@ -29,6 +30,10 @@ import rotateLeft16 from '../../assets/global/rotate-left-16.png';
 import { ReactComponent as ArrowRight } from '../../assets/global/arrow-right.svg';
 
 const ContextMenu = memo(function ContextMenu() {
+  const { 
+    isMainWindowMaximized, doMainWindowMaximize, doMainWindowEndMaximize,
+    doMainWindowMinimize
+  } = useMainWindowContext();
   const { setIsResizeWindowOpen } = useWindowsContext();
   const { isOpen, setIsOpen, contentType, position, data } = useContextMenuContext();
   const { 
@@ -37,7 +42,8 @@ const ContextMenu = memo(function ContextMenu() {
   } = useSelectionContext();
   const {
     doSharedCut, doSharedCopy, doSharedDelete,
-    doSharedRotate, doSharedFlip, doSharedInvertColor
+    doSharedRotate, doSharedFlip, doSharedInvertColor,
+    doStartNewProject
   } = useActionsContext();
   const { currentTool } = useToolContext();
   const containerRef = useRef();
@@ -56,34 +62,70 @@ const ContextMenu = memo(function ContextMenu() {
     case 'window':
       contents = (
         <div className={css['default']}>
-          <button className={`${css['button']}`}>
+          <button
+            tabIndex={isMainWindowMaximized ? 0 : -1}
+            className={`${css['button']} ${isMainWindowMaximized ? '' : css['button--disabled']}`}
+            onClick={() => {
+              if(!isMainWindowMaximized) {
+                return;
+              }
+              doMainWindowEndMaximize();
+              setIsOpen(false);
+            }}
+          >
             <img className={css['icon']} src={restore} alt=""/>
             <span>Restore</span>
           </button>
 
-          <button className={`${css['button']}`}>
+          <button
+            className={`${css['button']} ${css['button--disabled']}`}
+          >
             <span className={css['icon']}></span>
             <span>Move</span>
           </button>
 
-          <button className={`${css['button']}`}>
+          <button
+            className={`${css['button']} ${css['button--disabled']}`}
+          >
             <span className={css['icon']}></span>
             <span>Size</span>
           </button>
 
-          <button className={`${css['button']}`}>
+          <button
+            className={`${css['button']}`}
+            onClick={() => {
+              doMainWindowMinimize();
+              setIsOpen(false);
+            }}
+          >
             <img className={css['icon']} src={minimize} alt=""/>
             <span>Minimize</span>
           </button>
 
-          <button className={`${css['button']}`}>
+          <button
+            tabIndex={isMainWindowMaximized ? -1 : 0}
+            className={`${css['button']} ${isMainWindowMaximized ? css['button--disabled'] : ''}`}
+            onClick={() => {
+              if(isMainWindowMaximized) {
+                return;
+              }
+              doMainWindowMaximize();
+              setIsOpen(false);
+            }}
+          >
             <img className={css['icon']} src={maximize} alt=""/>
             <span>Maximize</span>
           </button>
 
           <div className={css['line']}></div>
 
-          <button className={`${css['button']} ${css['button--close']}`}>
+          <button
+            className={`${css['button']} ${css['button--close']}`}
+            onClick={() => {
+              doStartNewProject();
+              setIsOpen(false);
+            }}
+          >
             <img className={css['icon']} src={close} alt=""/>
             <span>Close</span>
           </button>

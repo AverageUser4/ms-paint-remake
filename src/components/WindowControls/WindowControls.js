@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import css from './WindowControls.module.css';
 
 import { useMainWindowContext } from "../../context/MainWindowContext";
+import { useActionsContext } from "../../context/ActionsContext";
 
 import { ReactComponent as Close } from './assets/close.svg';
 import { ReactComponent as Maximize } from './assets/maximize.svg';
@@ -13,8 +14,9 @@ import Tooltip from "../Tooltip/Tooltip";
 function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallback }) {
   const { 
     isMainWindowFocused, isMainWindowMaximized, doMainWindowToggleMaximize,
-    setMainWindowSize, mainWindowMinimalSize, setIsMainWindowMaximized,
+    doMainWindowMinimize
   } = useMainWindowContext();
+  const { doStartNewProject } = useActionsContext();
   
   // inner window
   if(!isMainWindow) {
@@ -26,7 +28,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
           ${css['button--only']}
           ${isAttentionAnimated ? css['button--attention'] : ''}
         `}
-        onClick={closeCallback}
+        onClick={(event) => closeCallback(event)}
         data-cy="WindowControls-InnerWindow-close"
       >
         <Close draggable="false"/>
@@ -43,10 +45,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--inactive'] : ''}
         `}
-        onClick={() => {
-          setMainWindowSize(mainWindowMinimalSize);
-          setIsMainWindowMaximized(false);
-        }}
+        onClick={(event) => doMainWindowMinimize(event)}
         aria-label="Minimize"
       >
         <Minimize draggable="false"/>
@@ -61,7 +60,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
           ${css['button']} 
           ${!isMainWindowFocused ? css['button--inactive'] : ''}
         `}
-        onClick={doMainWindowToggleMaximize}
+        onClick={(event) => doMainWindowToggleMaximize(event)}
         aria-label={isMainWindowMaximized ? 'Restore Down' : 'Maximize'}
       >
         {
@@ -89,7 +88,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
           ${css['button']} ${css['button--danger']} 
           ${!isMainWindowFocused ? css['button--inactive'] : ''}
         `}
-        onClick={closeCallback}
+        onClick={(event) => doStartNewProject(event)}
         data-cy="WindowControls-close"
         aria-label="Close"
       >
@@ -105,7 +104,7 @@ function WindowControls({ isAttentionAnimated, isMainWindow = true, closeCallbac
 
 WindowControls.propTypes = {
   isMainWindow: PropTypes.bool,
-  closeCallback: PropTypes.func.isRequired,
+  closeCallback: PropTypes.func,
   isAttentionAnimated: PropTypes.bool,
 };
 
