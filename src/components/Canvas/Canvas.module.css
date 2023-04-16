@@ -24,6 +24,9 @@
 
   box-sizing: border-box;
 }
+.canvas--selection--shape {
+  outline-color: transparent;
+}
 .canvas--selection--ready {
   outline-color: rgb(0, 120, 215);
 }

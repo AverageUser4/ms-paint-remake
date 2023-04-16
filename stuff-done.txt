@@ -4,9 +4,6 @@ GOING TO:
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
   - add unit tests to funcions in utils
-  - currently when there is selection, clicking outside of it just ends the selection,
-    ideally it should start new selection if the mouse is moved, like in real paint
-  - fix bug in useRectangularSelection (there is a comment explaining it)
   - there are still some places where we could get rid of setTimeout, also consider using effects with callbacks
     instead of MutationObservers
   - some resizers on selection seem to be slightly misplaced (probably because border was changed to outline)
@@ -16,7 +13,7 @@ GOING TO:
   - improve window focus management (window does not lose focus when tabbing out of it, etc.)
   - implement recent files (in FileDropdownMore)
   - inner windows and dropdowns should trap focus
+  - currently when there is selection, clicking outside of it just ends the selection,
+    ideally it should start new selection if the mouse is moved, like in real paint
   
 DONE:
-  - add functionality to ContextMenu when open over the window (top part)
-  - minor changes to MainWindowContext

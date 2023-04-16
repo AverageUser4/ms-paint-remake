@@ -6,7 +6,7 @@ import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
 import { useColorContext } from '../../context/ColorContext';
 import { useToolContext } from '../../context/ToolContext';
-import { setUpSelectionSizeObserver } from '../../misc/utils';
+import { objectEquals } from '../../misc/utils';
 
 function useRectangularSelection() {
   const { 
@@ -34,6 +34,7 @@ function useRectangularSelection() {
 
   const [resizeData, setResizeData] = useState(null);
   useResizeCursor(resizeData);
+  const [isResizingDone, setIsResizingDone] = useState(false);
 
   const { onPointerDown, doCancel, currentlyPressedRef } = usePointerTrack({ 
     onPressedMoveCallback,
@@ -142,45 +143,53 @@ function useRectangularSelection() {
       setResizeData(null);
       return;
     }
-    
-    setTimeout(() => {
-      /* there is a bug here: if mouse moves too fast (and browser is slow), this function reads stale width and height,
-         causing smaller than expected part of primary canvas to be written to selection canvas,
-         that's why timeout is used, this bug still happens, but very rarely and you have to try a bit to get it to happen */
 
-      setSelectionPhase(2);
-      setResizeData(null);
-
-      if(currentTool.startsWith('selection')) {
-        const { primaryContext } = doGetEveryContext();
-    
-        const imageData = primaryContext.getImageData(
-          lastSelectionPositionRef.current.x,
-          lastSelectionPositionRef.current.y,
-          lastSelectionSizeRef.current.width,
-          lastSelectionSizeRef.current.height,
-        );
-    
-        doSelectionDrawToSelection(imageData);
-        doCanvasClearPrimary({
-          x: lastSelectionPositionRef.current.x,
-          y: lastSelectionPositionRef.current.y,
-          width: lastSelectionSizeRef.current.width,
-          height: lastSelectionSizeRef.current.height,
-        });
-  
-        doHistoryAdd({
-          element: primaryRef.current,
-          ...canvasSize,
-        });
-      }
-    }, 20);
+    setIsResizingDone(true);
   }
 
   function onCancelCallback() {
     doSelectionEnd();
     setResizeData(null);
   }
+
+  useEffect(() => {
+    if(
+      !isResizingDone ||
+      !objectEquals(lastSelectionPositionRef.current, selectionPosition) ||
+      !objectEquals(lastSelectionSizeRef.current, selectionSize)
+    ) {
+      return;
+    }
+
+    setIsResizingDone(false);
+
+    setSelectionPhase(2);
+    setResizeData(null);
+
+    if(currentTool.startsWith('selection')) {
+      const { primaryContext } = doGetEveryContext();
+  
+      const imageData = primaryContext.getImageData(
+        lastSelectionPositionRef.current.x,
+        lastSelectionPositionRef.current.y,
+        lastSelectionSizeRef.current.width,
+        lastSelectionSizeRef.current.height,
+      );
+  
+      doSelectionDrawToSelection(imageData);
+      doCanvasClearPrimary({
+        x: lastSelectionPositionRef.current.x,
+        y: lastSelectionPositionRef.current.y,
+        width: lastSelectionSizeRef.current.width,
+        height: lastSelectionSizeRef.current.height,
+      });
+
+      doHistoryAdd({
+        element: primaryRef.current,
+        ...canvasSize,
+      });
+    }
+  });
 
   useEffect(() => {
     if(!currentTool.startsWith('shape') || !selectionPhase) {

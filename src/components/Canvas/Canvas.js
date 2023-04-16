@@ -164,6 +164,7 @@ function Canvas() {
               className={`
                 ${css['canvas']}
                 ${css['canvas--selection']}
+                ${(selectionPhase === 1 && currentTool.startsWith('shape')) ? css['canvas--selection--shape'] : ''}
                 ${selectionPhase === 2 && css['canvas--selection--ready']}
               `}
               onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
