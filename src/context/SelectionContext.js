@@ -17,7 +17,7 @@ function SelectionProvider({ children }) {
     primaryRef, doCanvasClearPrimary, doGetEveryContext,
   } = useCanvasContext();
   const { doHistoryAdd } = useHistoryContext();
-  const { setCurrentTool } = useToolContext();
+  const { currentTool, setCurrentTool, setLatestTools, } = useToolContext();
   const { colorData } = useColorContext();
   
   const [selectionSize, setSelectionSize] = useState(null);
@@ -216,20 +216,12 @@ function SelectionProvider({ children }) {
   }, [setCanvasSize, doSelectionDrawToSelection]);
   
   function doSelectionBrowseFile() {
-    if(selectionPhase === 2) {
-      doSelectionDrawToPrimary();
-      doSelectionEnd();
-    }
-
+    doSetCurrentTool('selection-rectangle');
     inputFileRef.current.click();
-    setCurrentTool('selection-rectangle');
   }
 
   function doSelectionPasteFromClipboard() {   
-    if(selectionPhase === 2) {
-      doSelectionDrawToPrimary();
-      doSelectionEnd();
-    }
+    doSetCurrentTool('selection-rectangle');
 
     if(!navigator.clipboard.read) {
       console.error('Reading images from clipboard does not seem to be implemented in your browser.');
@@ -251,7 +243,6 @@ function SelectionProvider({ children }) {
       .then(blob => {
         const image = new Image();
         image.src = URL.createObjectURL(blob);
-        setCurrentTool('selection-rectangle');
 
         image.addEventListener('load', onLoadImage);
         image.addEventListener('error', () => {
@@ -262,11 +253,7 @@ function SelectionProvider({ children }) {
   }
   
   function doSelectionSelectAll() {
-    if(selectionPhase === 2) {
-      doSelectionDrawToPrimary();
-    }
-    
-    setCurrentTool('selection-rectangle');
+    doSetCurrentTool('selection-rectangle');
     setSelectionPhase(2);
     doSelectionSetSize({ width: canvasSize.width, height: canvasSize.height });
     doSelectionSetPosition({ x: 0, y: 0 });
@@ -324,6 +311,20 @@ function SelectionProvider({ children }) {
       doSelectionDrawToSelection(primaryImageData);
     }
   }
+
+  function doSetCurrentTool(tool) {
+    if(selectionPhase === 2) {
+      doSelectionDrawToPrimary();
+    }
+    doSelectionEnd();
+
+    if(currentTool.startsWith('brushes')) {
+      setLatestTools(prev => ({ ...prev, brushes: currentTool }));
+    } else if(currentTool.startsWith('selection')) {
+      setLatestTools(prev => ({ ...prev, selection: currentTool }));
+    }
+    setCurrentTool(tool);
+  }
   
   return (
     <SelectionContext.Provider
@@ -352,6 +353,7 @@ function SelectionProvider({ children }) {
         doSelectionEnd,
         doSelectionGetEveryContext,
         doSelectionClear,
+        doSetCurrentTool,
       }}
     >
       <ImageInput

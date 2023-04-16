@@ -36,7 +36,7 @@ function useRectangularSelection() {
   useResizeCursor(resizeData);
   const [isResizingDone, setIsResizingDone] = useState(false);
 
-  const { onPointerDown, doCancel, currentlyPressedRef } = usePointerTrack({ 
+  const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
     onPressedMoveCallback,
     onPressStartCallback,
     onPressEndCallback,
@@ -58,8 +58,6 @@ function useRectangularSelection() {
   function onPressStartCallback(event) {
     if(selectionPhase === 2) {
       doSelectionDrawToPrimary();
-      doCancel();
-      return;
     }
     
     const { clientX, clientY } = event;
@@ -134,10 +132,10 @@ function useRectangularSelection() {
     }
   }
 
-  function onPressEndCallback(event) {
+  function onPressEndCallback() {
     if(
-        resizeData.initialX === event.clientX &&
-        resizeData.initialY === event.clientY
+        lastSelectionSizeRef.current.width < 2 ||
+        lastSelectionSizeRef.current.height < 2
       ) {
       doSelectionEnd();
       setResizeData(null);
@@ -169,19 +167,27 @@ function useRectangularSelection() {
     if(currentTool.startsWith('selection')) {
       const { primaryContext } = doGetEveryContext();
   
+      const size = {
+        width: Math.max(1, lastSelectionSizeRef.current.width),
+        height: Math.max(1, lastSelectionSizeRef.current.height),
+      };
+
+      console.log(size, lastSelectionPositionRef.current, selectionSize);
+
       const imageData = primaryContext.getImageData(
         lastSelectionPositionRef.current.x,
         lastSelectionPositionRef.current.y,
-        lastSelectionSizeRef.current.width,
-        lastSelectionSizeRef.current.height,
+        size.width,
+        size.height,
       );
+
+      console.log(imageData)
   
       doSelectionDrawToSelection(imageData);
       doCanvasClearPrimary({
         x: lastSelectionPositionRef.current.x,
         y: lastSelectionPositionRef.current.y,
-        width: lastSelectionSizeRef.current.width,
-        height: lastSelectionSizeRef.current.height,
+        ...size,
       });
 
       doHistoryAdd({

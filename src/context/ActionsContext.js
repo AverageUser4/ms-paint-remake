@@ -7,7 +7,6 @@ import { useHistoryContext } from './HistoryContext';
 import { useCanvasContext } from './CanvasContext';
 import { useSelectionContext } from './SelectionContext';
 import { useWindowsContext } from './WindowsContext';
-import { useToolContext } from './ToolContext';
 import { getCanvasCopy, writeCanvasToClipboard, degreesToRadians, ImageDataUtils, objectEquals } from '../misc/utils';
 import { zoomData } from '../misc/data';
 
@@ -30,7 +29,6 @@ function ActionsProvider({ children }) {
     selectionRef, selectionSize, doSelectionSetSize, lastSelectionStateRef,
     doSelectionClear, doSelectionGetEveryContext,
   } = useSelectionContext();
-  const { currentTool, setCurrentTool, setLatestTools } = useToolContext();
   const inputFileRef = useRef();
   
   function onLoadImage(event) {
@@ -116,20 +114,6 @@ function ActionsProvider({ children }) {
     setCanvasZoom(1);
     setFileData(null);
     lastPrimaryStateRef.current = null;
-  }
-
-  function doSetCurrentTool(tool) {
-    if(selectionPhase === 2) {
-      doSelectionDrawToPrimary();
-    }
-    doSelectionEnd();
-
-    if(currentTool.startsWith('brushes')) {
-      setLatestTools(prev => ({ ...prev, brushes: currentTool }));
-    } else if(currentTool.startsWith('selection')) {
-      setLatestTools(prev => ({ ...prev, selection: currentTool }));
-    }
-    setCurrentTool(tool);
   }
 
   function doSharedCut() {
@@ -372,7 +356,6 @@ function ActionsProvider({ children }) {
         doCanvasSetZoom,
         doCanvasChangeZoom,
         doCanvasFullReset,
-        doSetCurrentTool,
         doSharedCut,
         doSharedCopy,
         doSharedDelete,

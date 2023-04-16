@@ -34,11 +34,11 @@ const RibbonImage = memo(function RibbonImage({ ribbonWidth }) {
   const { 
     doSelectionCrop, selectionPhase, doSelectionSelectAll,
     doSelectionInvertSelection, isSelectionTransparent, setIsSelectionTransparent,
+    doSetCurrentTool,
   } = useSelectionContext();
   const { currentTool, latestTools } = useToolContext();
   const { 
-    doSetCurrentTool, doSharedDelete, doSharedRotate,
-    doSharedFlip
+    doSharedDelete, doSharedRotate, doSharedFlip
   } = useActionsContext();
   const { setIsResizeWindowOpen } = useWindowsContext();
   let icon = image32;

@@ -1,4 +1,5 @@
 GOING TO:
+  - contents of different Contexts are messy and all over the place (doSetCurrentTool in SelectionContext, etc.)
   - investigate font-family
   - rework outline in useResize
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
@@ -6,14 +7,13 @@ GOING TO:
   - add unit tests to funcions in utils
   - there are still some places where we could get rid of setTimeout, also consider using effects with callbacks
     instead of MutationObservers
-  - some resizers on selection seem to be slightly misplaced (probably because border was changed to outline)
   - add missing shapes
   - consider using transform: translate instead of position for moving elements
   - ContextMenu, minimized Ribbon and possibly other elements are not animated when disappearing
   - improve window focus management (window does not lose focus when tabbing out of it, etc.)
   - implement recent files (in FileDropdownMore)
   - inner windows and dropdowns should trap focus
-  - currently when there is selection, clicking outside of it just ends the selection,
-    ideally it should start new selection if the mouse is moved, like in real paint
+  - calling doSelectionSelectAll (and possilby other functions) when selection is moved / resized gives pretty weird behavior
+  - when choosing Open (file) option, if the same file is chosen two times in a row, the second time it does not get written to canvas
   
 DONE:

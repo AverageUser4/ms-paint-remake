@@ -224,7 +224,7 @@
     cursor: ns-resize;
   }
   .point-container--repositioned .point-top::after {
-    transform: translateY(3px);
+    transform: translateY(2px);
   }
   
   .point-bottom {
@@ -238,7 +238,7 @@
     cursor: ns-resize;
   }
   .point-container--repositioned .point-bottom::after {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
   }
   
   .point-right {
@@ -252,7 +252,7 @@
     cursor: ew-resize;
   }
   .point-container--repositioned .point-right::after {
-    transform: translateX(-3px);
+    transform: translateX(-2px);
   }
   
   .point-left {
@@ -266,7 +266,7 @@
     cursor: ew-resize;
   }
   .point-container--repositioned .point-left::after {
-    transform: translateX(3px);
+    transform: translateX(2px);
   }
   
   .point-bottom-right {
@@ -297,7 +297,7 @@
     height: var(--resizer-long);
   }
   .point-container--repositioned .point-bottom-right::after {
-    transform: translate(-3px, -3px);
+    transform: translate(-2px, -2px);
   }
   
   .point-top-right {
@@ -328,7 +328,7 @@
     height: var(--resizer-long);
   }
   .point-container--repositioned .point-top-right::after {
-    transform: translate(-3px, 3px);
+    transform: translate(-2px, 2px);
   }
   
   .point-top-left {
@@ -359,7 +359,7 @@
     height: var(--resizer-short);
   }
   .point-container--repositioned .point-top-left::after {
-    transform: translate(3px, 3px);
+    transform: translate(2px, 2px);
   }
   
   .point-bottom-left {
@@ -390,7 +390,7 @@
     height: var(--resizer-short);
   }
   .point-container--repositioned .point-bottom-left::after {
-    transform: translate(3px, -3px);
+    transform: translate(2px, -2px);
   }
   
 }

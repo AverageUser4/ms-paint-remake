@@ -6,6 +6,7 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useToolContext } from "../../context/ToolContext";
+import { useSelectionContext } from "../../context/SelectionContext";
 
 import air32 from './assets/air-32.png';
 import brush32 from './assets/brush-32.png';
@@ -16,13 +17,12 @@ import marker32 from './assets/marker-32.png';
 import oil32 from './assets/oil-32.png';
 import pencil32 from './assets/pencil-32.png';
 import water32 from './assets/water-32.png';
-import { useActionsContext } from "../../context/ActionsContext";
 
 const RibbonBrushes = memo(function RibbonBrushes() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef();
   const { currentTool, latestTools } = useToolContext();
-  const { doSetCurrentTool } = useActionsContext();
+  const { doSetCurrentTool } = useSelectionContext();
   useOutsideClick({
     containerRef: dropdownRef,
     callback: () => setIsDropdownOpen(false),

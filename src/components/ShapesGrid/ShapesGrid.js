@@ -7,6 +7,7 @@ import Tooltip from "../Tooltip/Tooltip";
 
 import useOutsideClick from "../../hooks/useOutsideClick";
 import { useToolContext } from "../../context/ToolContext";
+import { useSelectionContext } from "../../context/SelectionContext";
 
 import callout16 from './assets/callout-16.png';
 import cloudCallout16 from './assets/cloud-callout-16.png';
@@ -61,7 +62,8 @@ const shapesDataArray = [
 ];
 
 const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIsGridDropdownOpen }) {
-  const { currentTool, setCurrentTool } = useToolContext();
+  const { currentTool } = useToolContext();
+  const { doSetCurrentTool } = useSelectionContext();
   
   const [currentRow, setCurrentRow] = useState(0);
   const gridRef = useRef();
@@ -102,7 +104,7 @@ const ShapesGrid = memo(function ShapesGrid({ ribbonWidth, isOnlyDropdown, setIs
           if(shape.isDisabled) {
             return;
           }
-          setCurrentTool(`shape-${id}`); 
+          doSetCurrentTool(`shape-${id}`); 
           setIsGridDropdownOpen(false);
           setIsDropdownOpen(false);
         }}

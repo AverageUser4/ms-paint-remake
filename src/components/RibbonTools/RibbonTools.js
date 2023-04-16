@@ -7,7 +7,7 @@ import RibbonItemContainer from "../RibbonItemContainer/RibbonItemContainer";
 import Tooltip from "../Tooltip/Tooltip";
 
 import { useToolContext } from "../../context/ToolContext";
-import { useActionsContext } from "../../context/ActionsContext";
+import { useSelectionContext } from "../../context/SelectionContext";
 
 import tools16 from './assets/tools-16.png';
 import pencil16 from './assets/pencil-16.png';
@@ -22,7 +22,7 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
 
   const isOnlyContent = ribbonWidth >= 760;
   const { currentTool } = useToolContext();
-  const { doSetCurrentTool } = useActionsContext();
+  const { doSetCurrentTool } = useSelectionContext();
 
   return (
     <RibbonItemContainer 
