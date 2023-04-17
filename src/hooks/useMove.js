@@ -12,6 +12,7 @@ export default function useMove({
   size,
   setSize,
   canvasZoom = 1,
+  onStartCallback,
   onMoveCallback,
   onEndCallback,
   isConstrained,
@@ -35,6 +36,8 @@ export default function useMove({
     const y = event.clientY - (position.y * canvasZoom);
     
     setPositionDifference({ x, y });
+
+    onStartCallback && onStartCallback(event);
   }
 
   function onPressedMoveCallback(event) {

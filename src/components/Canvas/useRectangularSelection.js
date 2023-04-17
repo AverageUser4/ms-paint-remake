@@ -172,8 +172,6 @@ function useRectangularSelection() {
         height: Math.max(1, lastSelectionSizeRef.current.height),
       };
 
-      console.log(size, lastSelectionPositionRef.current, selectionSize);
-
       const imageData = primaryContext.getImageData(
         lastSelectionPositionRef.current.x,
         lastSelectionPositionRef.current.y,
@@ -181,8 +179,6 @@ function useRectangularSelection() {
         size.height,
       );
 
-      console.log(imageData)
-  
       doSelectionDrawToSelection(imageData);
       doCanvasClearPrimary({
         x: lastSelectionPositionRef.current.x,

@@ -192,7 +192,22 @@
   .point-bottom-left::before {
     background-color: green;
   } */
-  
+
+  .line-resizer {
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 20px;
+    height: 20px;
+
+    cursor: ns-resize;
+    /* background-color: green; */
+  }
+
+  .line-resizer::after,
   .point-top::after,
   .point-top-right::after,
   .point-right::after,

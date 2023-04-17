@@ -55,7 +55,7 @@ function Canvas() {
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection();
 
-  const { onPointerDownLine } = useLine();
+  const { onPointerDownLine, lineElements } = useLine();
 
   let onPointerDownSecondary = onPointerDownBrush;
   if(currentTool === 'shape-line') {
@@ -146,6 +146,8 @@ function Canvas() {
         }}
         ref={secondaryRef}
       ></canvas>
+
+      {lineElements}
 
       {
         selectionPhase > 0 &&

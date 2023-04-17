@@ -8,6 +8,7 @@ import { useHistoryContext } from './HistoryContext';
 import { useToolContext } from './ToolContext';
 import { useColorContext } from './ColorContext';
 import { getCanvasCopy, ImageDataUtils, objectEquals } from '../misc/utils';
+import { useLineContext } from './LineContext';
 
 const SelectionContext = createContext();
 
@@ -19,7 +20,8 @@ function SelectionProvider({ children }) {
   const { doHistoryAdd } = useHistoryContext();
   const { currentTool, setCurrentTool, setLatestTools, } = useToolContext();
   const { colorData } = useColorContext();
-  
+  const { linePhase, doLineDrawToPrimary, doLineEnd } = useLineContext();
+
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
   const [selectionOutlineSize, setSelectionOutlineSize] = useState(null);
@@ -329,6 +331,11 @@ function SelectionProvider({ children }) {
       doSelectionDrawToPrimary();
     }
     doSelectionEnd();
+
+    if(linePhase) {
+      doLineDrawToPrimary();
+      doLineEnd();
+    }
 
     if(currentTool.startsWith('brushes')) {
       setLatestTools(prev => ({ ...prev, brushes: currentTool }));

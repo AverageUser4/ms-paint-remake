@@ -30,6 +30,7 @@ import { ToolProvider } from '../../context/ToolContext';
 import { SelectionProvider } from '../../context/SelectionContext';
 import { ActionsProvider } from '../../context/ActionsContext';
 import { CanvasMiscProvider } from '../../context/CanvasMiscContext';
+import { LineProvider } from '../../context/LineContext';
 
 function Logic({ 
   minimalSize,
@@ -181,27 +182,29 @@ function PaintXPlatform({
             <CanvasMiscProvider>
               <HistoryProvider>
                 <ToolProvider>
-                  <SelectionProvider>
-                    <MainWindowProvider
-                      initialPosition={initialPosition}
-                      initialSize={initialSize}
-                      isInitiallyMaximized={isInitiallyMaximized}
-                      minimalSize={minimalSize}
-                    >
-                      <WindowsProvider>
-                        <ContextMenuProvider>
-                          <ActionsProvider>
-                            <Logic 
-                              minimalSize={minimalSize}
-                              isResizable={isResizable}
-                              isAutoShrink={isAutoShrink}
-                              isOpen={isOpen}
-                            />
-                          </ActionsProvider>
-                        </ContextMenuProvider>
-                      </WindowsProvider>
-                    </MainWindowProvider>
-                  </SelectionProvider>
+                  <LineProvider>
+                    <SelectionProvider>
+                      <MainWindowProvider
+                        initialPosition={initialPosition}
+                        initialSize={initialSize}
+                        isInitiallyMaximized={isInitiallyMaximized}
+                        minimalSize={minimalSize}
+                      >
+                        <WindowsProvider>
+                          <ContextMenuProvider>
+                            <ActionsProvider>
+                              <Logic 
+                                minimalSize={minimalSize}
+                                isResizable={isResizable}
+                                isAutoShrink={isAutoShrink}
+                                isOpen={isOpen}
+                              />
+                            </ActionsProvider>
+                          </ContextMenuProvider>
+                        </WindowsProvider>
+                      </MainWindowProvider>
+                    </SelectionProvider>
+                  </LineProvider>
                 </ToolProvider>
               </HistoryProvider>
             </CanvasMiscProvider>

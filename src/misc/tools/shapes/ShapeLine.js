@@ -3,21 +3,23 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeLine extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, shapeData, thumbnailSelectionContext }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
+  drawShape({ secondaryContext, colorData, canvasSize, currentlyPressedRef, shapeData, thumbnailSecondaryContext, lineData }) {
+    validateToolArgs(arguments, ['secondaryContext', 'colorData', 'canvasSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSecondaryContext', 'lineData']);
     
     this.prepareAndDraw({ 
-      selectionSize,
+      selectionSize: canvasSize,
       currentlyPressedRef,
       colorData,
-      selectionContext,
+      selectionContext: secondaryContext,
       shapeData,
-      thumbnailSelectionContext,
-      drawCallback: ({ context, startXY, end }) => {
+      thumbnailSelectionContext: thumbnailSecondaryContext,
+      drawCallback: ({ context }) => {
+        context.lineCap = 'round';
+        context.clearRect(0, 0, canvasSize.width, canvasSize.height);
         context.beginPath();
-        context.moveTo(startXY, startXY);
-        context.lineTo(end.x, end.y);
-        shapeData.outline && context.stroke();
+        context.moveTo(lineData.x1, lineData.y1);
+        context.lineTo(lineData.x2, lineData.y2);
+        context.stroke();
       }
     });
   }

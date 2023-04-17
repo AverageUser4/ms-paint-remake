@@ -7,10 +7,12 @@ import Rulers from '../Rulers/Rulers';
 
 import { useWindowsContext } from '../../context/WindowsContext';
 import { useSelectionContext } from '../../context/SelectionContext';
+import { useLineContext } from '../../context/LineContext';
 
 const CanvasContainer = memo(function CanvasContainer({ toolbarData, ribbonData }) {
   const { isStatusBarVisible, isRulersVisible } = useWindowsContext();
   const { selectionPhase, doSelectionDrawToPrimary, doSelectionEnd } = useSelectionContext();
+  const { linePhase, doLineDrawToPrimary, doLineEnd } = useLineContext();
   const containerRef = useRef();
   
   const containerStyle = {
@@ -33,9 +35,15 @@ const CanvasContainer = memo(function CanvasContainer({ toolbarData, ribbonData 
       ref={containerRef}
       style={containerStyle}
       onPointerDown={(event) => {
-        if(event.target === containerRef.current && selectionPhase === 2) {
-          doSelectionDrawToPrimary();
-          doSelectionEnd();
+        if(event.target === containerRef.current) {
+          if(selectionPhase === 2) {
+            doSelectionDrawToPrimary();
+            doSelectionEnd();
+          }
+          if(linePhase) {
+            doLineDrawToPrimary();
+            doLineEnd();
+          }
         }
       }}
     >
