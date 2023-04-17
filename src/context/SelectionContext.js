@@ -131,14 +131,10 @@ function SelectionProvider({ children }) {
       x: newSize.width / selectionSize.width,
       y: newSize.height / selectionSize.height,
     };
-    
-    doSelectionSetSize(newSize);
 
-    new MutationObserver((records, observer) => {
-      observer.disconnect();
-
+    function afterSizeChange() {
       const { selectionContext, thumbnailSelectionContext } = doSelectionGetEveryContext();
-
+  
       function drawToContext(context) {
         context.save();
         context.imageSmoothingEnabled = false;
@@ -151,7 +147,17 @@ function SelectionProvider({ children }) {
       drawToContext(selectionContext);
       thumbnailSelectionContext && drawToContext(thumbnailSelectionContext);
       lastSelectionStateRef.current = selectionRef.current;
-    }).observe(document.querySelector('#pxp-selection-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    }
+
+    if(!objectEquals(selectionSize, newSize)) {
+      doSelectionSetSize(newSize);
+      new MutationObserver((records, observer) => {
+        observer.disconnect();
+        afterSizeChange();
+      }).observe(document.querySelector('#pxp-selection-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    } else {
+      afterSizeChange();
+    }
   }
 
   function doSelectionDrawToPrimary(adjustedPosition) {
@@ -185,15 +191,21 @@ function SelectionProvider({ children }) {
 
     const newPosition = { x: 0, y: 0 };
 
-    setCanvasSize(selectionSize);
-
-    new MutationObserver((records, observer) => {
-      observer.disconnect();
-
+    function afterSizeChange() {
       doSelectionEnd();
       doCanvasClearPrimary();
       doSelectionDrawToPrimary(newPosition);
-    }).observe(document.querySelector('#pxp-primary-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    }
+
+    if(!objectEquals(selectionSize, canvasSize)) {
+      setCanvasSize(selectionSize);
+      new MutationObserver((records, observer) => {
+        observer.disconnect();  
+        afterSizeChange();
+      }).observe(document.querySelector('#pxp-primary-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    } else {
+      afterSizeChange();
+    }
   }
 
   const onLoadImage = useCallback(event => {

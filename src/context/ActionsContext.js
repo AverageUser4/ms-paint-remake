@@ -35,11 +35,7 @@ function ActionsProvider({ children }) {
     const image = event.target;
     const { naturalWidth: width, naturalHeight: height } = image;
 
-    setCanvasSize({ width, height });
-
-    new MutationObserver((records, observer) => {
-      observer.disconnect();
-      
+    function afterSizeChange() {
       const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
   
       function draw(context) {
@@ -52,7 +48,17 @@ function ActionsProvider({ children }) {
       
       lastPrimaryStateRef.current = getCanvasCopy(primaryRef.current);
       URL.revokeObjectURL(image.src);
-    }).observe(document.querySelector('#pxp-primary-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    }
+
+    if(!objectEquals({ width, height }, canvasSize)) {
+      setCanvasSize({ width, height });
+      new MutationObserver((records, observer) => {
+        observer.disconnect();
+        afterSizeChange();
+      }).observe(document.querySelector('#pxp-primary-canvas'), { attributes: true, attributeFilter: ['width', 'height'] });
+    } else {
+      afterSizeChange();
+    }
   }
 
   function doStartNewProject() {

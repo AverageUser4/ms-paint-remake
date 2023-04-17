@@ -1,6 +1,5 @@
 GOING TO:
   - contents of different Contexts are messy and all over the place (doSetCurrentTool in SelectionContext, etc.)
-  - investigate font-family
   - rework outline in useResize
   - when primaryCanvas is huge, secondaryCanvas could be only of size of currently viewed area, positioned correctly,
   that could improve performance greatly
@@ -14,6 +13,5 @@ GOING TO:
   - implement recent files (in FileDropdownMore)
   - inner windows and dropdowns should trap focus
   - calling doSelectionSelectAll (and possilby other functions) when selection is moved / resized gives pretty weird behavior
-  - when choosing Open (file) option, if the same file is chosen two times in a row, the second time it does not get written to canvas
   
 DONE:

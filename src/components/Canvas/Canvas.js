@@ -4,6 +4,7 @@ import css from './Canvas.module.css';
 import useResize from "../../hooks/useResize";
 import useSelection from "./useSelection";
 import useBrush from "./useBrush";
+import useLine from "./useLine";
 import { useCanvasContext } from "../../context/CanvasContext";
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
 import { useHistoryContext } from "../../context/HistoryContext";
@@ -54,12 +55,16 @@ function Canvas() {
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection();
 
+  const { onPointerDownLine } = useLine();
+
   let onPointerDownSecondary = onPointerDownBrush;
-  if(currentTool === 'selection-rectangle' || currentTool.startsWith('shape')) {
-    onPointerDownSecondary = onPointerDownRectangularSelection;
+  if(currentTool === 'shape-line') {
+    onPointerDownSecondary = onPointerDownLine;
   } else if(currentTool === 'selection-free-form') {
     onPointerDownSecondary = onPointerDownFreeFormSelection;
-  }
+  } else if(currentTool === 'selection-rectangle' || currentTool.startsWith('shape')) {
+    onPointerDownSecondary = onPointerDownRectangularSelection;
+  } 
 
   const { 
     resizeGrabElements: canvasResizeGrabElements,

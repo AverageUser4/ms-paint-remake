@@ -16,10 +16,7 @@ class ShapeLine extends ShapeBase {
       drawCallback: ({ context, startXY, end }) => {
         context.beginPath();
         context.moveTo(startXY, startXY);
-        context.lineTo(startXY, end.y);
         context.lineTo(end.x, end.y);
-        context.closePath();
-        shapeData.fill && context.fill();
         shapeData.outline && context.stroke();
       }
     });
