@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
-import useResizeCursor from "../../hooks/useResizeCursor";
+import useUnchangingCursor from "../../hooks/useUnchangingCursor";
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useHistoryContext } from '../../context/HistoryContext';
 import { useSelectionContext } from '../../context/SelectionContext';
@@ -33,7 +33,7 @@ function useRectangularSelection() {
   } = useSelectionContext();
 
   const [resizeData, setResizeData] = useState(null);
-  useResizeCursor(resizeData);
+  useUnchangingCursor(resizeData);
   const [isResizingDone, setIsResizingDone] = useState(false);
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 

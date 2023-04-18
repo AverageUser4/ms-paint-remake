@@ -4,7 +4,7 @@ import { useCanvasContext } from '../../context/CanvasContext';
 import { useLineContext } from '../../context/LineContext';
 import { useToolContext } from '../../context/ToolContext';
 import { useColorContext } from '../../context/ColorContext';
-import useResizeCursor from '../../hooks/useResizeCursor';
+import useUnchangingCursor from '../../hooks/useUnchangingCursor';
 import useMove from '../../hooks/useMove';
 
 function useLine() {
@@ -12,18 +12,20 @@ function useLine() {
     primaryRef, canvasSize, doGetEveryContext, canvasZoom,
     doCanvasClearSecondary,
   } = useCanvasContext();
-  const { currentTool, shapeData, currentToolData } = useToolContext();
-  const { colorData } = useColorContext();
+
   const { 
     lineData, setLineData, linePhase, setLinePhase,
     doLineDrawToPrimary, doLineEnd
   } = useLineContext();
+
+  const { currentTool, shapeData, currentToolData } = useToolContext();
+  const { colorData } = useColorContext();
+  
   const [trackedEnd, setTrackedEnd] = useState(false);
   const [linePosition, setLinePosition] = useState({ x: 0, y: 0 });
   const [moveStartLineData, setMoveStartLineData] = useState(null);
-  useResizeCursor(trackedEnd ? { type: 'top' } : null);
 
-  const { onPointerDownMove } = useMove({
+  const { onPointerDownMove, isMovePressed } = useMove({
     containerRef: primaryRef,
     position: linePosition,
     setPosition: setLinePosition,
@@ -39,6 +41,11 @@ function useLine() {
       setMoveStartLineData(null);
     },
   });
+
+  let cursorTypeObject = null;
+  cursorTypeObject = trackedEnd ? { type: 'top' } : cursorTypeObject;
+  cursorTypeObject = isMovePressed ? { type: 'move' } : cursorTypeObject;
+  useUnchangingCursor(cursorTypeObject);
 
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
     onPressedMoveCallback,
@@ -88,6 +95,70 @@ function useLine() {
     doCanvasClearSecondary();
   }
 
+  useEffect(() => {
+    if(
+        currentTool !== 'shape-line' ||
+        !lineData ||
+        Math.abs(lineData.x1 - lineData.x2) + Math.abs(lineData.y1 - lineData.y2) < 2
+      ) {
+      return;
+    }
+
+    if(currentlyPressedRef.current !== -1 || linePhase) {
+      currentToolData.drawShape({ 
+        ...doGetEveryContext(),
+        colorData,
+        canvasSize,
+        currentlyPressedRef,
+        shapeData,
+        lineData,
+      });
+    }
+  });
+
+  useEffect(() => {
+    if(!trackedEnd) {
+      return;
+    }
+
+    function onPointerUp() {
+      setTrackedEnd(null);
+    }
+
+    function onPointerMove(event) {
+      const primaryRect = primaryRef.current.getBoundingClientRect();
+      const offsetX = Math.round(event.pageX - primaryRect.x) / canvasZoom;
+      const offsetY = Math.round(event.pageY - primaryRect.y) / canvasZoom;
+
+      setLineData(prev => ({ 
+        ...prev,
+        [`x${trackedEnd}`]: offsetX,
+        [`y${trackedEnd}`]: offsetY,
+      }));
+    }
+
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointermove', onPointerMove);
+
+    return () => {
+      window.removeEventListener('pointerup', onPointerUp);
+      window.removeEventListener('pointermove', onPointerMove);
+    };
+  }, [trackedEnd, canvasZoom, primaryRef, setLineData]);
+
+  useEffect(() => {
+    if(!moveStartLineData) {
+      return;
+    }
+
+    setLineData({
+      x1: moveStartLineData.x1 + linePosition.x,
+      y1: moveStartLineData.y1 + linePosition.y,
+      x2: moveStartLineData.x2 + linePosition.x,
+      y2: moveStartLineData.y2 + linePosition.y,
+    });
+  }, [moveStartLineData, linePosition, setLineData]);
+
   const lineElements = (!linePhase || !lineData || currentTool !== 'shape-line') ? null : (
     <>
       <svg 
@@ -122,8 +193,6 @@ function useLine() {
       <div
         className="line-resizer"
         style={{
-          width: 20,
-          height: 20,
           top: lineData.y1 * canvasZoom - 10,
           left: lineData.x1 * canvasZoom - 10,
         }}
@@ -133,8 +202,6 @@ function useLine() {
       <div
         className="line-resizer"
         style={{
-          width: 20,
-          height: 20,
           top: lineData.y2 * canvasZoom - 10,
           left: lineData.x2 * canvasZoom - 10,
         }}
@@ -142,66 +209,6 @@ function useLine() {
       />
     </>
   );
-
-  useEffect(() => {
-    if(
-        currentTool !== 'shape-line' ||
-        !lineData ||
-        Math.abs(lineData.x1 - lineData.x2) + Math.abs(lineData.y1 - lineData.y2) < 2
-      ) {
-      return;
-    }
-
-    currentToolData.drawShape({ 
-      ...doGetEveryContext(),
-      colorData,
-      canvasSize,
-      currentlyPressedRef,
-      shapeData,
-      lineData,
-    });
-  });
-
-  useEffect(() => {
-    if(!trackedEnd) {
-      return;
-    }
-
-    function onPointerUp() {
-      setTrackedEnd(null);
-    }
-
-    function onPointerMove(event) {
-      const primaryRect = primaryRef.current.getBoundingClientRect();
-      const offsetX = Math.round(event.pageX - primaryRect.x) / canvasZoom;
-      const offsetY = Math.round(event.pageY - primaryRect.y) / canvasZoom;
-
-      setLineData(prev => ({ 
-        ...prev,
-        [`x${trackedEnd}`]: offsetX,
-        [`y${trackedEnd}`]: offsetY,
-      }));
-    }
-
-    window.addEventListener('pointerup', onPointerUp);
-    window.addEventListener('pointermove', onPointerMove);
-
-    return () => {
-      window.removeEventListener('pointerup', onPointerUp);
-      window.removeEventListener('pointermove', onPointerMove);
-    };
-  }, [trackedEnd, canvasZoom, primaryRef, setLineData]);
-
-  useEffect(() => {
-    if(moveStartLineData) {
-      setLineData({
-        x1: moveStartLineData.x1 + linePosition.x,
-        y1: moveStartLineData.y1 + linePosition.y,
-        x2: moveStartLineData.x2 + linePosition.x,
-        y2: moveStartLineData.y2 + linePosition.y,
-      });
-    }
-  }, [moveStartLineData, linePosition, setLineData]);
 
   return {
     onPointerDownLine: onPointerDown,

@@ -14,6 +14,7 @@ GOING TO:
   - inner windows and dropdowns should trap focus
   - calling doSelectionSelectAll (and possilby other functions) when selection is moved / resized gives pretty weird behavior
   - look into possibility of selection / shapes not getting written to primary and ended when zoom changes
-  - secondaryCanvas does not get cleared on cancel if mouse is moving
-  
+  - look into possibility of using svgs for shapes
+  - Line should be drawn without antialiasing
+
 DONE:

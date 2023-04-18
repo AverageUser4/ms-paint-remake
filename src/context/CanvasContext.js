@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useRef, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 import { useColorContext } from './ColorContext';
@@ -24,6 +24,12 @@ function CanvasProvider({ children }) {
   const lastCanvasSizeRef = useRef(canvasSize);
   const lastPointerPositionRef = useRef({});
   const lastCanvasZoomRef = useRef();
+
+  const canvasStyle = useMemo(() => ({ 
+    width: canvasSize.width * canvasZoom,
+    height: canvasSize.height * canvasZoom,
+    filter: isBlackAndWhite ? 'grayscale(100%)' : '',
+  }), [canvasSize, canvasZoom, isBlackAndWhite]);
 
   const doCanvasDrawImageToPrimary = useCallback((compatibleElement) => {
     const { primaryContext, thumbnailPrimaryContext } = doGetEveryContext();
@@ -119,6 +125,7 @@ function CanvasProvider({ children }) {
         doGetEveryContext,
         isFullScreenView, setIsFullScreenView,
         isBlackAndWhite, setIsBlackAndWhite,
+        canvasStyle,
       }}
     >
       {children}

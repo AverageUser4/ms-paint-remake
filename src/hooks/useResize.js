@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import useResizeCursor from './useResizeCursor';
+import useUnchangingCursor from './useUnchangingCursor';
 import usePointerTrack from './usePointerTrack';
 import { checkArgs } from "../misc/utils";
 
@@ -34,7 +34,7 @@ export default function useResize({
 
   const [resizeData, setResizeData] = useState(null);
   const [hasMoved, setHasMoved] = useState(false);
-  useResizeCursor(resizeData);
+  useUnchangingCursor(resizeData);
   const type = isPointBased ? 'point' : 'resize';
   const sizeClass = isSmallPoints ? 'point-small' : '';
 

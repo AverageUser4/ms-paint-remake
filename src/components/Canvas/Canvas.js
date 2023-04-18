@@ -1,5 +1,4 @@
-import React, { useMemo } from "react";
-import css from './Canvas.module.css';
+import React from "react";
 
 import useResize from "../../hooks/useResize";
 import useSelection from "./useSelection";
@@ -9,53 +8,31 @@ import { useCanvasContext } from "../../context/CanvasContext";
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
 import { useHistoryContext } from "../../context/HistoryContext";
 import { useToolContext } from "../../context/ToolContext";
-import { useColorContext } from "../../context/ColorContext";
-import { useContextMenuContext } from "../../context/ContextMenuContext";
 import { useSelectionContext } from "../../context/SelectionContext";
-import { useWindowsContext } from "../../context/WindowsContext";
-import { RGBObjectToString, getGridData } from "../../misc/utils";
-import { MAX_CANVAS_SIZE, cursorData } from "../../misc/data";
+import { MAX_CANVAS_SIZE } from "../../misc/data";
+import GridLines from "./GridLines";
+import BrushCanvas from "./BrushCanvas";
+import SelectionCanvas from "./SelectionCanvas";
+import SecondaryCanvas from "./SecondaryCanvas";
+import PrimaryCanvas from "./PrimaryCanvas";
 
 function Canvas() {
   const { 
-    canvasSize, canvasZoom, setCanvasSize,
-    primaryRef, secondaryRef, isBlackAndWhite,
-    brushCanvasRef
+    canvasSize, canvasZoom, setCanvasSize, primaryRef, canvasStyle
   } = useCanvasContext();
-  const { 
-    canvasOutlineSize, setCanvasOutlineSize,
-    setCanvasMousePosition 
-  } = useCanvasMiscContext();
-  const { currentTool, currentToolData } = useToolContext();
-  const { colorData } = useColorContext();
+  
+  const { selectionPhase } = useSelectionContext();
+  const { canvasOutlineSize, setCanvasOutlineSize, } = useCanvasMiscContext();
+  const { currentTool } = useToolContext();
   const { doHistoryAdd } = useHistoryContext();
-  const { 
-    selectionRef, selectionSize, selectionPhase, selectionPosition,
-    doSelectionDrawToPrimary, doSelectionEnd,
-  } = useSelectionContext();
-  const { openContextMenu } = useContextMenuContext();
-  const { isGridLinesVisible } = useWindowsContext();
-  const gridData = getGridData(canvasZoom);
-  const { onPointerDownBrush } = useBrush();
 
-  const canvasStyle = useMemo(() => ({ 
-    width: canvasSize.width * canvasZoom,
-    height: canvasSize.height * canvasZoom,
-    filter: isBlackAndWhite ? 'grayscale(100%)' : '',
-  }), [canvasSize, canvasZoom, isBlackAndWhite]);
-  const selectionStyle = {
-    width: selectionSize?.width * canvasZoom,
-    height: selectionSize?.height * canvasZoom,
-    top: selectionPosition?.y * canvasZoom,
-    left: selectionPosition?.x * canvasZoom,
-  }
+  const { onPointerDownBrush } = useBrush();
+  const { onPointerDownLine, lineElements } = useLine();
 
   const { 
     selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
     onPointerDownRectangularSelection, onPointerDownFreeFormSelection
   } = useSelection();
-
-  const { onPointerDownLine, lineElements } = useLine();
 
   let onPointerDownSecondary = onPointerDownBrush;
   if(currentTool === 'shape-line') {
@@ -109,86 +86,19 @@ function Canvas() {
     >
       <div style={canvasStyle}></div>
 
-      <canvas
-        id="pxp-primary-canvas"
-        style={{ ...canvasStyle, backgroundColor: RGBObjectToString(colorData.secondary) }}
-        className={`${css['canvas']} ${css['canvas--primary']}`}
-        width={canvasSize.width}
-        height={canvasSize.height}
-        ref={primaryRef}
-      ></canvas>
+      <PrimaryCanvas/>
 
-      <canvas
-        style={{ 
-          ...canvasStyle,
-          cursor: cursorData?.[currentToolData?.cursor]?.[canvasZoom] || cursorData?.[currentToolData?.cursor]?.default
-        }}
-        className={`${css['canvas']}`}
-        width={canvasSize.width}
-        height={canvasSize.height}
-        onPointerMove={(event) => {
-          const { offsetX, offsetY } = event.nativeEvent;
-          setCanvasMousePosition({ x: offsetX, y: offsetY });
-        }}
-        onPointerLeave={() => setCanvasMousePosition(null)}
-        onPointerDown={(e) => onPointerDownSecondary(e)}
-        onContextMenu={(e) => {
-          if(currentTool !== 'selection-rectangle' || selectionPhase === 1) {
-            return;
-          }
-
-          if(selectionPhase === 2) {
-            doSelectionDrawToPrimary();
-            doSelectionEnd();
-          }
-
-          openContextMenu(e, 'canvas', 'primary') 
-        }}
-        ref={secondaryRef}
-      ></canvas>
+      <SecondaryCanvas
+        onPointerDownSecondary={onPointerDownSecondary}
+      />
 
       {lineElements}
 
-      {
-        selectionPhase > 0 &&
-          <div 
-            className="point-container point-container--inner point-container--repositioned"
-            style={{
-              ...selectionStyle,
-              display: (selectionPhase === 2 || selectionSize.width > 1 || selectionSize.height > 1) ? 'block' : 'none'
-            }}
-          >
-            <canvas
-              id="pxp-selection-canvas"
-              width={selectionSize.width}
-              height={selectionSize.height}
-              style={{ 
-                ...canvasStyle,
-                ...selectionStyle,
-                left: 0,
-                top: 0,
-              }}
-              className={`
-                ${css['canvas']}
-                ${css['canvas--selection']}
-                ${(selectionPhase === 1 && currentTool.startsWith('shape')) ? css['canvas--selection--shape'] : ''}
-                ${selectionPhase === 2 && css['canvas--selection--ready']}
-              `}
-              onPointerDown={(e) => e.button === 0 && onPointerDownSelectionMove(e)}    
-              onContextMenu={(e) => {
-                if(selectionPhase === 1) {
-                  return;
-                }
-                openContextMenu(e, 'canvas', 'selection');
-              }}
-              ref={selectionRef}
-            ></canvas>
-
-            {selectionPhase === 2 && selectionResizeGrabElements}
-          </div>
-      }
-
-      {selectionPhase === 2 && !currentTool.startsWith('shape') && selectionResizeOutlineElement}
+      <SelectionCanvas
+        onPointerDownSelectionMove={onPointerDownSelectionMove}
+        selectionResizeGrabElements={selectionResizeGrabElements}
+        selectionResizeOutlineElement={selectionResizeOutlineElement}
+      />
 
       {
         selectionPhase !== 2 && 
@@ -198,49 +108,9 @@ function Canvas() {
           </>
       }
 
-      <canvas
-        className={`${css['canvas']} ${css['canvas--brush']}`}
-        ref={brushCanvasRef}
-        width={canvasSize.width}
-        height={canvasSize.height}
-        style={canvasStyle}
-      />
+      <BrushCanvas/>
 
-      {
-        /* https://codereview.stackexchange.com/questions/114702/drawing-a-grid-on-canvas */
-        isGridLinesVisible &&
-        <svg 
-          className={`
-            ${css['canvas']}
-            ${css['canvas--grid-lines']}
-          `}
-          width={canvasStyle.width}
-          height={canvasStyle.height}
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <defs>
-            <pattern id="smallGrid" width={gridData.cellSize} height={gridData.cellSize} patternUnits="userSpaceOnUse">
-              <path 
-                d={`M ${gridData.cellSize},0 L 0,0 0,${gridData.cellSize}`}
-                fill="none"
-                stroke={gridData.color_1}
-                strokeWidth="2"
-                strokeDasharray="1 1"
-              />
-              <path 
-                d={`M ${gridData.cellSize},0 L 0,0 0,${gridData.cellSize}`}
-                fill="none"
-                stroke={gridData.color_2}
-                strokeWidth="2"
-                strokeDasharray="1 1"
-                strokeDashoffset="1"
-              />
-            </pattern>
-          </defs>
-
-          <rect width="100%" height="100%" fill="url(#smallGrid)" />
-        </svg>
-      }
+      <GridLines/>
     </div>
   );
 }

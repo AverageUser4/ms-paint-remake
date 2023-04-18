@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-function useResizeCursor(resizeData) {
+function useUnchangingCursor(typeObject) {
   const [ID] = useState(Math.random());
   const [styleSheet] = useState(new CSSStyleSheet);
   
@@ -14,7 +14,7 @@ function useResizeCursor(resizeData) {
   }, [styleSheet, ID]);
   
   useEffect(() => {
-    if(!resizeData) {
+    if(!typeObject) {
       if(styleSheet.cssRules.length)
         styleSheet.deleteRule(0);
       return;
@@ -22,7 +22,7 @@ function useResizeCursor(resizeData) {
 
     let newCursor;
       
-    switch(resizeData.type) {
+    switch(typeObject.type) {
       case 'left':
       case 'right':
         newCursor = 'ew-resize';
@@ -46,9 +46,13 @@ function useResizeCursor(resizeData) {
       case 'selection':
         newCursor = 'var(--cursor-selection)';
         break;
+
+      case 'move':
+        newCursor = 'move';
+        break;
         
       default:
-        console.error(`Unrecognized "resizeData.type": "${resizeData.type}".`);
+        console.error(`Unrecognized "typeObject.type": "${typeObject.type}".`);
     }
 
     if(!styleSheet.cssRules.length) {
@@ -60,7 +64,7 @@ function useResizeCursor(resizeData) {
         styleSheet.deleteRule(0);
       }
     };
-  }, [resizeData, styleSheet]);
+  }, [typeObject, styleSheet]);
 
   useEffect(() => {
     function onMouseMove() {
@@ -69,14 +73,14 @@ function useResizeCursor(resizeData) {
       }
     }
 
-    if(!resizeData) {
+    if(!typeObject) {
       window.addEventListener('mousemove', onMouseMove);
     }
 
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
     };
-  }, [resizeData, styleSheet]);
+  }, [typeObject, styleSheet]);
 }
 
-export default useResizeCursor;
+export default useUnchangingCursor;
