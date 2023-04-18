@@ -4,6 +4,7 @@ import useResize from "../../hooks/useResize";
 import useSelection from "./useSelection";
 import useBrush from "./useBrush";
 import useLine from "./useLine";
+import useCurve from "./useCurve";
 import { useCanvasContext } from "../../context/CanvasContext";
 import { useCanvasMiscContext } from "../../context/CanvasMiscContext";
 import { useHistoryContext } from "../../context/HistoryContext";
@@ -28,6 +29,7 @@ function Canvas() {
 
   const { onPointerDownBrush } = useBrush();
   const { onPointerDownLine, lineElements } = useLine();
+  const { onPointerDownCurve } = useCurve();
 
   const { 
     selectionResizeGrabElements, selectionResizeOutlineElement, onPointerDownSelectionMove,
@@ -37,6 +39,8 @@ function Canvas() {
   let onPointerDownSecondary = onPointerDownBrush;
   if(currentTool === 'shape-line') {
     onPointerDownSecondary = onPointerDownLine;
+  } else if(currentTool === 'shape-curve') {
+    onPointerDownSecondary = onPointerDownCurve;
   } else if(currentTool === 'selection-free-form') {
     onPointerDownSecondary = onPointerDownFreeFormSelection;
   } else if(currentTool === 'selection-rectangle' || currentTool.startsWith('shape')) {

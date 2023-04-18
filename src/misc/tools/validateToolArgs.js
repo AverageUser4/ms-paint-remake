@@ -4,7 +4,7 @@ export default function validateToolArgs(args, toBeValidatedArray) {
     'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'isRepeated',
     'primaryImageData', 'canvasZoom', 'selectionSize', 'colorData', 'setColorData',
     'event', 'canvasSize', 'thumbnailPrimaryContext', 'doCanvasChangeZoom', 'drawCallback',
-    'shapeData', 'isLast', 'thumbnailSelectionContext', 'lineData'
+    'shapeData', 'isLast', 'thumbnailSelectionContext', 'lineData', 'curvePoints'
   ];
   
   try {
@@ -92,5 +92,8 @@ export default function validateToolArgs(args, toBeValidatedArray) {
   }
   if(is('lineData') && (typeof obj.lineData !== 'object')) {
     console.error(`"lineData" argument has to be an object, provided:`, obj.lineData);
+  }
+  if(is('curvePoints') && (typeof obj.curvePoints !== 'object')) {
+    console.error(`"curvePoints" argument has to be an object, provided:`, obj.curvePoints);
   }
 }

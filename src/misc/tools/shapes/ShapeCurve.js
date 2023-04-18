@@ -3,24 +3,24 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapeCurve extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, shapeData, thumbnailSelectionContext }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
+  drawShape({ secondaryContext, colorData, canvasSize, currentlyPressedRef, shapeData, thumbnailSecondaryContext, curvePoints }) {
+    validateToolArgs(arguments, ['secondaryContext', 'colorData', 'canvasSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSecondaryContext', 'curvePoints']);
     
     this.prepareAndDraw({ 
-      selectionSize,
+      selectionSize: canvasSize,
       currentlyPressedRef,
       colorData,
-      selectionContext,
+      selectionContext: secondaryContext,
       shapeData,
-      thumbnailSelectionContext,
-      drawCallback: ({ context, startXY, end }) => {
+      thumbnailSelectionContext: thumbnailSecondaryContext,
+      drawCallback: ({ context }) => {
+        context.lineCap = 'round';
+        context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+
         context.beginPath();
-        context.moveTo(startXY, startXY);
-        context.lineTo(startXY, end.y);
-        context.lineTo(end.x, end.y);
-        context.closePath();
-        shapeData.fill && context.fill();
-        shapeData.outline && context.stroke();
+        context.moveTo(curvePoints.x1, curvePoints.y1);
+        context.bezierCurveTo(curvePoints.x3, curvePoints.y3, curvePoints.x4, curvePoints.y4, curvePoints.x2, curvePoints.y2);
+        context.stroke();
       }
     });
   }
