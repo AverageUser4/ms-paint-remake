@@ -43,7 +43,7 @@ class ShapeCurve extends ShapeBase {
 
         context.beginPath();
         context.moveTo(curvePoints.x1, curvePoints.y1);
-        if(currentCurvePointRef.current <= 3) {
+        if(!selectionPhase && currentCurvePointRef.current <= 3) {
           context.quadraticCurveTo(curvePoints.x3, curvePoints.y3, curvePoints.x2, curvePoints.y2);
         } else {
           context.bezierCurveTo(curvePoints.x3, curvePoints.y3, curvePoints.x4, curvePoints.y4, curvePoints.x2, curvePoints.y2);

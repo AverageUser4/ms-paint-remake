@@ -98,9 +98,13 @@ function useLine() {
   useEffect(() => {
     if(
         currentTool !== 'shape-line' ||
-        !lineData ||
-        Math.abs(lineData.x1 - lineData.x2) + Math.abs(lineData.y1 - lineData.y2) < 2
+        !lineData
       ) {
+      return;
+    }
+
+    if(!linePhase && Math.abs(lineData.x1 - lineData.x2) + Math.abs(lineData.y1 - lineData.y2) < 2) {
+      doCanvasClearSecondary();
       return;
     }
 

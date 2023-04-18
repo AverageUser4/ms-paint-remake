@@ -29,7 +29,10 @@ function useCurve() {
     onPressedMoveCallback,
     onPressStartCallback,
     onPressEndCallback,
+    onCancelCallback,
     isTrackAlsoRight: true,
+    isCancelOnRightMouseDown: true,
+    isWitholdCancel: currentCurvePointRef.current > 2
   });
 
   const [isCurveReady, setIsCurveReady] = useState(false);
@@ -52,12 +55,11 @@ function useCurve() {
         x4: offsetX, y4: offsetY,
       });
 
-      currentCurvePointRef.current = 2;
-      onPressedMoveCallback(event);
-    } else if(currentCurvePointRef.current < 4) {
-      currentCurvePointRef.current++;
-      onPressedMoveCallback(event);
+      currentCurvePointRef.current = 1;
     }
+
+    currentCurvePointRef.current++;
+    onPressedMoveCallback(event);
   }
   
   function onPressedMoveCallback(event) {
@@ -73,14 +75,41 @@ function useCurve() {
   }
 
   function onPressEndCallback() {
+    if(Math.abs(curvePoints.x1 - curvePoints.x2) + Math.abs(curvePoints.y1 - curvePoints.y2) < 2) {
+      setCurvePoints(null);
+      currentCurvePointRef.current = 0;
+      return;
+    }
+
     if(currentCurvePointRef.current === 4) {
       currentCurvePointRef.current = 0;
       setIsCurveReady(true);
 
+      const xArray = Object.keys(curvePoints).filter(key => key.startsWith('x')).map(key => curvePoints[key]);
+      const yArray = Object.keys(curvePoints).filter(key => key.startsWith('y')).map(key => curvePoints[key]);
+
+      const min = {
+        x: Math.min(...xArray),
+        y: Math.min(...yArray),
+      };
+
+      const max = {
+        x: Math.max(...xArray),
+        y: Math.max(...yArray),
+      };
+
       setSelectionPhase(2);
-      doSelectionSetPosition({ x: 0, y: 0 });
-      doSelectionSetSize({ ...canvasSize });
+      doSelectionSetPosition({ ...min });
+      doSelectionSetSize({ 
+        width: max.x - min.x,
+        height: max.y - min.y,
+      });
     }
+  }
+
+  function onCancelCallback() {
+    setCurvePoints(null);
+    currentCurvePointRef.current = 0;
   }
 
   useEffect(() => {
@@ -96,9 +125,13 @@ function useCurve() {
   useEffect(() => {
     if(
         currentTool !== 'shape-curve' ||
-        !curvePoints ||
-        Math.abs(curvePoints.x1 - curvePoints.x2) + Math.abs(curvePoints.y1 - curvePoints.y2) < 2
+        !curvePoints
       ) {
+      return;
+    }
+
+    if(Math.abs(curvePoints.x1 - curvePoints.x2) + Math.abs(curvePoints.y1 - curvePoints.y2) < 2) {
+      doCanvasClearSecondary();
       return;
     }
 
