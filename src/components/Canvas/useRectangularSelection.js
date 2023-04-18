@@ -7,6 +7,7 @@ import { useSelectionContext } from '../../context/SelectionContext';
 import { useColorContext } from '../../context/ColorContext';
 import { useToolContext } from '../../context/ToolContext';
 import { objectEquals } from '../../misc/utils';
+import { useCurveContext } from '../../context/CurveContext';
 
 function useRectangularSelection() {
   const { 
@@ -16,6 +17,7 @@ function useRectangularSelection() {
   const { doHistoryAdd } = useHistoryContext();
   const { currentTool, currentToolData, shapeData } = useToolContext();
   const { colorData } = useColorContext();
+  const { curvePoints, currentCurvePointRef } = useCurveContext();
 
   const {
     selectionSize,
@@ -46,14 +48,31 @@ function useRectangularSelection() {
   });
 
   const drawCallback = useCallback(() => {
-    currentToolData.drawShape({ 
+    currentToolData.drawShape({
+      ...doGetEveryContext(),
       ...doSelectionGetEveryContext(),
       colorData,
       selectionSize,
       currentlyPressedRef,
       shapeData,
+      canvasSize,
+      curvePoints,
+      currentCurvePointRef,
+      selectionPhase,
     });
-  }, [colorData, selectionSize, currentlyPressedRef, shapeData, currentToolData, doSelectionGetEveryContext]);
+  }, [
+    colorData,
+    selectionSize,
+    currentlyPressedRef,
+    shapeData,
+    currentToolData,
+    doSelectionGetEveryContext,
+    canvasSize,
+    curvePoints,
+    currentCurvePointRef,
+    doGetEveryContext,
+    selectionPhase
+  ]);
   
   function onPressStartCallback(event) {
     if(selectionPhase === 2) {

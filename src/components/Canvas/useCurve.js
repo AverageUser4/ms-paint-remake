@@ -1,19 +1,29 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import usePointerTrack from '../../hooks/usePointerTrack';
 import { useCanvasContext } from '../../context/CanvasContext';
 import { useToolContext } from '../../context/ToolContext';
 import { useColorContext } from '../../context/ColorContext';
+import { useSelectionContext } from '../../context/SelectionContext';
+import { useCurveContext } from '../../context/CurveContext';
 
 function useCurve() {
   const { 
     primaryRef, canvasSize, doGetEveryContext, canvasZoom,
-    doCanvasClearSecondary,
+    doCanvasClearSecondary, secondaryRef,
   } = useCanvasContext();
+
+  const { 
+    doSelectionDrawToSelection, setSelectionPhase, doSelectionSetPosition,
+    doSelectionSetSize, selectionPhase, doSelectionDrawToPrimary, doSelectionEnd,
+    doSelectionGetEveryContext,
+  } = useSelectionContext();
+
+  const { 
+    curvePoints, setCurvePoints, currentCurvePointRef,
+  } = useCurveContext();
 
   const { currentTool, shapeData, currentToolData } = useToolContext();
   const { colorData } = useColorContext();
-  const [curvePoints, setCurvePoints] = useState(null);
-  const [currentPoint, setCurrentPoint] = useState(0);
   
   const { onPointerDown, currentlyPressedRef } = usePointerTrack({ 
     onPressedMoveCallback,
@@ -21,13 +31,20 @@ function useCurve() {
     onPressEndCallback,
     isTrackAlsoRight: true,
   });
-  
+
+  const [isCurveReady, setIsCurveReady] = useState(false);
+
   function onPressStartCallback(event) {
+    if(selectionPhase) {
+      doSelectionDrawToPrimary();
+      doSelectionEnd();
+    }
+
     const primaryRect = primaryRef.current.getBoundingClientRect();
     const offsetX = Math.round(event.pageX - primaryRect.x) / canvasZoom;
     const offsetY = Math.round(event.pageY - primaryRect.y) / canvasZoom;
     
-    if(!currentPoint) {
+    if(!currentCurvePointRef.current) {
       setCurvePoints({
         x1: offsetX, y1: offsetY,
         x2: offsetX, y2: offsetY,
@@ -35,11 +52,11 @@ function useCurve() {
         x4: offsetX, y4: offsetY,
       });
 
-      setCurrentPoint(1);
-    } else if(currentPoint < 4) {
-      setCurrentPoint(prev => prev + 1);
-    } else {
-      setCurrentPoint(0);
+      currentCurvePointRef.current = 2;
+      onPressedMoveCallback(event);
+    } else if(currentCurvePointRef.current < 4) {
+      currentCurvePointRef.current++;
+      onPressedMoveCallback(event);
     }
   }
   
@@ -50,14 +67,31 @@ function useCurve() {
 
     setCurvePoints(prev => ({ 
       ...prev,
-      [`x${currentPoint}`]: offsetX,
-      [`y${currentPoint}`]: offsetY
+      [`x${currentCurvePointRef.current}`]: offsetX,
+      [`y${currentCurvePointRef.current}`]: offsetY
     }));
   }
 
   function onPressEndCallback() {
+    if(currentCurvePointRef.current === 4) {
+      currentCurvePointRef.current = 0;
+      setIsCurveReady(true);
 
+      setSelectionPhase(2);
+      doSelectionSetPosition({ x: 0, y: 0 });
+      doSelectionSetSize({ ...canvasSize });
+    }
   }
+
+  useEffect(() => {
+    if(!isCurveReady) {
+      return;
+    }
+    setIsCurveReady(false);
+
+    doSelectionDrawToSelection(secondaryRef.current);
+    doCanvasClearSecondary();
+  }, [isCurveReady, doSelectionDrawToSelection, doCanvasClearSecondary, secondaryRef]);
 
   useEffect(() => {
     if(
@@ -68,14 +102,17 @@ function useCurve() {
       return;
     }
 
-    if(currentlyPressedRef.current !== -1 || currentPoint) {
+    if(currentlyPressedRef.current !== -1 || currentCurvePointRef.current) {
       currentToolData.drawShape({ 
         ...doGetEveryContext(),
+        ...doSelectionGetEveryContext(),
         colorData,
         canvasSize,
         currentlyPressedRef,
         shapeData,
         curvePoints,
+        currentCurvePointRef,
+        selectionPhase
       });
     }
   });

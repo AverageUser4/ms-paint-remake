@@ -16,5 +16,6 @@ GOING TO:
   - look into possibility of selection / shapes not getting written to primary and ended when zoom changes
   - look into possibility of using svgs for shapes
   - Line should be drawn without antialiasing
+  - fill dropdown in Shapes should be disabled when current shape cannot have fill
 
 DONE:

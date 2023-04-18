@@ -4,7 +4,8 @@ export default function validateToolArgs(args, toBeValidatedArray) {
     'thumbnailSecondaryContext', 'currentPixel', 'currentlyPressedRef', 'isRepeated',
     'primaryImageData', 'canvasZoom', 'selectionSize', 'colorData', 'setColorData',
     'event', 'canvasSize', 'thumbnailPrimaryContext', 'doCanvasChangeZoom', 'drawCallback',
-    'shapeData', 'isLast', 'thumbnailSelectionContext', 'lineData', 'curvePoints'
+    'shapeData', 'isLast', 'thumbnailSelectionContext', 'lineData', 'curvePoints', 'currentCurvePointRef',
+    'selectionPhase'
   ];
   
   try {
@@ -95,5 +96,11 @@ export default function validateToolArgs(args, toBeValidatedArray) {
   }
   if(is('curvePoints') && (typeof obj.curvePoints !== 'object')) {
     console.error(`"curvePoints" argument has to be an object, provided:`, obj.curvePoints);
+  }
+  if(is('currentCurvePointRef') && (typeof obj.currentCurvePointRef !== 'object')) {
+    console.error(`"currentCurvePointRef" argument has to be an object, provided:`, obj.currentCurvePointRef);
+  }
+  if(is('selectionPhase') && !Number.isInteger(obj.selectionPhase)) {
+    console.error(`"selectionPhase" argument has to be an integer, provided:`, obj.selectionPhase);
   }
 }
