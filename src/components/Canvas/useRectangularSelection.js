@@ -17,7 +17,7 @@ function useRectangularSelection() {
   const { doHistoryAdd } = useHistoryContext();
   const { currentTool, currentToolData, shapeData } = useToolContext();
   const { colorData } = useColorContext();
-  const { curvePoints, currentCurvePointRef } = useCurveContext();
+  const { curvePoints, currentCurvePointRef, curvePointPercents } = useCurveContext();
 
   const {
     selectionSize,
@@ -59,6 +59,7 @@ function useRectangularSelection() {
       curvePoints,
       currentCurvePointRef,
       selectionPhase,
+      curvePointPercents,
     });
   }, [
     colorData,

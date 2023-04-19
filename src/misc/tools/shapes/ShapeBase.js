@@ -17,10 +17,10 @@ class ShapeBase {
   prepareAndDraw({ selectionSize, currentlyPressedRef, selectionContext, colorData, drawCallback, shapeData, thumbnailSelectionContext }) {
     validateToolArgs(arguments, ['selectionSize', 'currentlyPressedRef', 'selectionContext', 'colorData', 'drawCallback', 'shapeData', 'thumbnailSelectionContext']);
 
-    const startXY = this.chosenSize;
+    const startXY = (this.chosenSize / 2);
     const end = {
-      x: selectionSize.width - this.chosenSize,
-      y: selectionSize.height - this.chosenSize,
+      x: selectionSize.width - (this.chosenSize / 2),
+      y: selectionSize.height - (this.chosenSize / 2),
     };
     const middle = {
       x: selectionSize.width / 2,

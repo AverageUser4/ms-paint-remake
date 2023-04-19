@@ -13,13 +13,14 @@ function useCurve() {
   } = useCanvasContext();
 
   const { 
-    doSelectionDrawToSelection, setSelectionPhase, doSelectionSetPosition,
-    doSelectionSetSize, selectionPhase, doSelectionDrawToPrimary, doSelectionEnd,
+    setSelectionPhase, doSelectionSetPosition, doSelectionSetSize,
+     selectionPhase, doSelectionDrawToPrimary, doSelectionEnd,
     doSelectionGetEveryContext,
   } = useSelectionContext();
 
   const { 
-    curvePoints, setCurvePoints, currentCurvePointRef,
+    curvePoints, setCurvePoints, currentCurvePointRef, setCurvePointPercents,
+    doCurveEnd
   } = useCurveContext();
 
   const { currentTool, shapeData, currentToolData } = useToolContext();
@@ -42,6 +43,8 @@ function useCurve() {
       doSelectionDrawToPrimary();
       doSelectionEnd();
     }
+
+    setCurvePointPercents(null);
 
     const primaryRect = primaryRef.current.getBoundingClientRect();
     const offsetX = Math.round(event.pageX - primaryRect.x) / canvasZoom;
@@ -76,8 +79,7 @@ function useCurve() {
 
   function onPressEndCallback() {
     if(Math.abs(curvePoints.x1 - curvePoints.x2) + Math.abs(curvePoints.y1 - curvePoints.y2) < 2) {
-      setCurvePoints(null);
-      currentCurvePointRef.current = 0;
+      doCurveEnd();
       return;
     }
 
@@ -98,18 +100,37 @@ function useCurve() {
         y: Math.max(...yArray),
       };
 
+      const size = {
+        width: Math.round(max.x - min.x),
+        height: Math.round(max.y - min.y),
+      };
+
+      setCurvePointPercents({
+        x1: Math.round((curvePoints.x1 - min.x) / size.width * 100),
+        x2: Math.round((curvePoints.x2 - min.x) / size.width * 100),
+        x3: Math.round((curvePoints.x3 - min.x) / size.width * 100),
+        x4: Math.round((curvePoints.x4 - min.x) / size.width * 100),
+        y1: Math.round((curvePoints.y1 - min.y) / size.height * 100),
+        y2: Math.round((curvePoints.y2 - min.y) / size.height * 100),
+        y3: Math.round((curvePoints.y3 - min.y) / size.height * 100),
+        y4: Math.round((curvePoints.y4 - min.y) / size.height * 100),
+      });
+
       setSelectionPhase(2);
-      doSelectionSetPosition({ ...min });
+      doSelectionSetPosition({ 
+        x: Math.round(min.x - currentToolData.chosenSize / 2),
+        y: Math.round(min.y - currentToolData.chosenSize / 2),
+      });
       doSelectionSetSize({ 
-        width: max.x - min.x,
-        height: max.y - min.y,
+        width: size.width + currentToolData.chosenSize,
+        height: size.height + currentToolData.chosenSize,
       });
     }
   }
 
   function onCancelCallback() {
-    setCurvePoints(null);
-    currentCurvePointRef.current = 0;
+    doCurveEnd();
+    doCanvasClearSecondary();
   }
 
   useEffect(() => {
@@ -118,9 +139,8 @@ function useCurve() {
     }
     setIsCurveReady(false);
 
-    doSelectionDrawToSelection(secondaryRef.current);
     doCanvasClearSecondary();
-  }, [isCurveReady, doSelectionDrawToSelection, doCanvasClearSecondary, secondaryRef]);
+  }, [isCurveReady, doCanvasClearSecondary, secondaryRef]);
 
   useEffect(() => {
     if(
@@ -145,7 +165,7 @@ function useCurve() {
         shapeData,
         curvePoints,
         currentCurvePointRef,
-        selectionPhase
+        selectionPhase,
       });
     }
   });

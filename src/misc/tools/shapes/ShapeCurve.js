@@ -15,6 +15,8 @@ class ShapeCurve extends ShapeBase {
     curvePoints,
     currentCurvePointRef,
     currentlyPressedRef,
+    curvePointPercents,
+    selectionSize,
   }) {
     validateToolArgs(arguments, [
       'secondaryContext',
@@ -29,25 +31,45 @@ class ShapeCurve extends ShapeBase {
       'currentCurvePointRef',
       'currentlyPressedRef',
     ]);
+
+    let usedSize = canvasSize;
+    let usedContext = secondaryContext;
+    let usedThumbnailContext = thumbnailSecondaryContext;
+
+    if(selectionPhase) {
+      usedSize = selectionSize;
+      usedContext = selectionContext;
+      usedThumbnailContext = thumbnailSelectionContext;
+    }
     
     this.prepareAndDraw({ 
-      selectionSize: canvasSize,
+      selectionSize: usedSize,
       currentlyPressedRef,
       colorData,
-      selectionContext: selectionPhase ? selectionContext : secondaryContext,
+      selectionContext: usedContext,
       shapeData,
-      thumbnailSelectionContext: selectionPhase ? thumbnailSelectionContext : thumbnailSecondaryContext,
-      drawCallback: ({ context }) => {
+      thumbnailSelectionContext: usedThumbnailContext,
+      drawCallback: ({ context, getCoordFromPercent }) => {
         context.lineCap = 'round';
-        context.clearRect(0, 0, canvasSize.width, canvasSize.height);
+        context.clearRect(0, 0, usedSize.width, usedSize.height);
 
         context.beginPath();
-        context.moveTo(curvePoints.x1, curvePoints.y1);
+
         if(!selectionPhase && currentCurvePointRef.current <= 3) {
+          context.moveTo(curvePoints.x1, curvePoints.y1);
           context.quadraticCurveTo(curvePoints.x3, curvePoints.y3, curvePoints.x2, curvePoints.y2);
-        } else {
+        } else if(!curvePointPercents) {
+          context.moveTo(curvePoints.x1, curvePoints.y1);
           context.bezierCurveTo(curvePoints.x3, curvePoints.y3, curvePoints.x4, curvePoints.y4, curvePoints.x2, curvePoints.y2);
+        } else {
+          context.moveTo(getCoordFromPercent('x', curvePointPercents.x1), getCoordFromPercent('y', curvePointPercents.y1));
+          context.bezierCurveTo(
+            getCoordFromPercent('x', curvePointPercents.x3), getCoordFromPercent('y', curvePointPercents.y3),
+            getCoordFromPercent('x', curvePointPercents.x4), getCoordFromPercent('y', curvePointPercents.y4),
+            getCoordFromPercent('x', curvePointPercents.x2), getCoordFromPercent('y', curvePointPercents.y2),
+          );
         }
+
         context.stroke();
       }
     });

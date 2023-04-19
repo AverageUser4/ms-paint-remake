@@ -9,6 +9,7 @@ import { useToolContext } from './ToolContext';
 import { useColorContext } from './ColorContext';
 import { getCanvasCopy, ImageDataUtils, objectEquals } from '../misc/utils';
 import { useLineContext } from './LineContext';
+import { useCurveContext } from './CurveContext';
 
 const SelectionContext = createContext();
 
@@ -20,7 +21,8 @@ function SelectionProvider({ children }) {
   const { doHistoryAdd } = useHistoryContext();
   const { currentTool, setCurrentTool, setLatestTools, } = useToolContext();
   const { colorData } = useColorContext();
-  const { linePhase, doLineDrawToPrimary, doLineEnd } = useLineContext();
+  const { doLineDrawToPrimary, doLineEnd } = useLineContext();
+  const { doCurveDrawToPrimary, doCurveEnd } = useCurveContext();
 
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
@@ -332,10 +334,11 @@ function SelectionProvider({ children }) {
     }
     doSelectionEnd();
 
-    if(linePhase) {
-      doLineDrawToPrimary();
-      doLineEnd();
-    }
+    doLineDrawToPrimary();
+    doLineEnd();
+
+    doCurveDrawToPrimary();
+    doCurveEnd();
 
     if(currentTool.startsWith('brushes')) {
       setLatestTools(prev => ({ ...prev, brushes: currentTool }));
