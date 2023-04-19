@@ -39,16 +39,20 @@ class ShapePolygon extends ShapeBase {
         context.beginPath();
 
         if(polygonPointPercents) {
-          console.error('not implemented');
+          context.moveTo(getCoordFromPercent('x', polygonPointPercents[0].x), getCoordFromPercent('y', polygonPointPercents[0].y));
+          for(let i = 1; i < polygonPointPercents.length; i++) {
+            context.lineTo(getCoordFromPercent('x', polygonPointPercents[i].x), getCoordFromPercent('y', polygonPointPercents[i].y))
+          }
+          context.closePath();
         } else {
           context.moveTo(polygonPoints[0].x, polygonPoints[0].y);
-
           for(let i = 1; i < polygonPoints.length; i++) {
             context.lineTo(polygonPoints[i].x, polygonPoints[i].y);
           }
         }
 
-        context.stroke();
+        shapeData.fill && context.fill();
+        shapeData.outline && context.stroke();
       }
     });
   }

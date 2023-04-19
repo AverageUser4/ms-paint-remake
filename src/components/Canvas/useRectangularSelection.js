@@ -8,6 +8,7 @@ import { useColorContext } from '../../context/ColorContext';
 import { useToolContext } from '../../context/ToolContext';
 import { objectEquals } from '../../misc/utils';
 import { useCurveContext } from '../../context/CurveContext';
+import { usePolygonContext } from '../../context/PolygonContext';
 
 function useRectangularSelection() {
   const { 
@@ -18,6 +19,7 @@ function useRectangularSelection() {
   const { currentTool, currentToolData, shapeData } = useToolContext();
   const { colorData } = useColorContext();
   const { curvePoints, currentCurvePointRef, curvePointPercents } = useCurveContext();
+  const { polygonPoints, polygonPointPercents } = usePolygonContext();
 
   const {
     selectionSize,
@@ -60,6 +62,8 @@ function useRectangularSelection() {
       currentCurvePointRef,
       selectionPhase,
       curvePointPercents,
+      polygonPoints,
+      polygonPointPercents,
     });
   }, [
     colorData,
@@ -72,7 +76,8 @@ function useRectangularSelection() {
     curvePoints,
     currentCurvePointRef,
     doGetEveryContext,
-    selectionPhase
+    selectionPhase,
+    curvePointPercents,
   ]);
   
   function onPressStartCallback(event) {

@@ -10,6 +10,7 @@ import { useColorContext } from './ColorContext';
 import { getCanvasCopy, ImageDataUtils, objectEquals } from '../misc/utils';
 import { useLineContext } from './LineContext';
 import { useCurveContext } from './CurveContext';
+import { usePolygonContext } from './PolygonContext';
 
 const SelectionContext = createContext();
 
@@ -23,6 +24,7 @@ function SelectionProvider({ children }) {
   const { colorData } = useColorContext();
   const { doLineDrawToPrimary, doLineEnd } = useLineContext();
   const { doCurveDrawToPrimary, doCurveEnd } = useCurveContext();
+  const { doPolygonDrawToPrimary, doPolygonEnd } = usePolygonContext();
 
   const [selectionSize, setSelectionSize] = useState(null);
   const [selectionPosition, setSelectionPosition] = useState(null);
@@ -339,6 +341,9 @@ function SelectionProvider({ children }) {
 
     doCurveDrawToPrimary();
     doCurveEnd();
+
+    doPolygonDrawToPrimary();
+    doPolygonEnd();
 
     if(currentTool.startsWith('brushes')) {
       setLatestTools(prev => ({ ...prev, brushes: currentTool }));

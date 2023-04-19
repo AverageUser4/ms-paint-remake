@@ -36,8 +36,6 @@ function useCurve() {
     isWitholdCancel: currentCurvePointRef.current > 2
   });
 
-  const [isCurveReady, setIsCurveReady] = useState(false);
-
   function onPressStartCallback(event) {
     if(selectionPhase) {
       doSelectionDrawToPrimary();
@@ -85,7 +83,7 @@ function useCurve() {
 
     if(currentCurvePointRef.current === 4) {
       currentCurvePointRef.current = 0;
-      setIsCurveReady(true);
+      doCanvasClearSecondary();
 
       const xArray = Object.keys(curvePoints).filter(key => key.startsWith('x')).map(key => curvePoints[key]);
       const yArray = Object.keys(curvePoints).filter(key => key.startsWith('y')).map(key => curvePoints[key]);
@@ -132,15 +130,6 @@ function useCurve() {
     doCurveEnd();
     doCanvasClearSecondary();
   }
-
-  useEffect(() => {
-    if(!isCurveReady) {
-      return;
-    }
-    setIsCurveReady(false);
-
-    doCanvasClearSecondary();
-  }, [isCurveReady, doCanvasClearSecondary, secondaryRef]);
 
   useEffect(() => {
     if(

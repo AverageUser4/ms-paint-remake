@@ -52,7 +52,7 @@ class ShapeCurve extends ShapeBase {
           );
         }
 
-        context.stroke();
+        shapeData.outline && context.stroke();
       }
     });
   }

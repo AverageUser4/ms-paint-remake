@@ -20,5 +20,7 @@ GOING TO:
   - check how new shapes work with History
   - make Line, Polygon, Curve size check (that are used 2 times) into functions
   - when using alternate mouse buttons during Polygon / Curve creation, it changes color, although it should not
+  - look into new shapes behavior when canvas size / color / tool changes (may still work not as expected for some)
+  - after changing fill of shape to one using texture (eg. crayon), it cannot be changed to solid color (any shape, doesn't seem too happen with outline)
 
 DONE:

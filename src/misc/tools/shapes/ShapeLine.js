@@ -19,7 +19,7 @@ class ShapeLine extends ShapeBase {
         context.beginPath();
         context.moveTo(lineData.x1, lineData.y1);
         context.lineTo(lineData.x2, lineData.y2);
-        context.stroke();
+        shapeData.outline && context.stroke();
       }
     });
   }
