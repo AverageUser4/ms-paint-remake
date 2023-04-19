@@ -32,6 +32,7 @@ import { ActionsProvider } from '../../context/ActionsContext';
 import { CanvasMiscProvider } from '../../context/CanvasMiscContext';
 import { LineProvider } from '../../context/LineContext';
 import { CurveProvider } from '../../context/CurveContext';
+import { PolygonProvider } from '../../context/PolygonContext';
 
 function Logic({ 
   minimalSize,
@@ -185,27 +186,29 @@ function PaintXPlatform({
                 <ToolProvider>
                   <LineProvider>
                     <CurveProvider>
-                      <SelectionProvider>
-                        <MainWindowProvider
-                          initialPosition={initialPosition}
-                          initialSize={initialSize}
-                          isInitiallyMaximized={isInitiallyMaximized}
-                          minimalSize={minimalSize}
-                        >
-                          <WindowsProvider>
-                            <ContextMenuProvider>
-                              <ActionsProvider>
-                                <Logic 
-                                  minimalSize={minimalSize}
-                                  isResizable={isResizable}
-                                  isAutoShrink={isAutoShrink}
-                                  isOpen={isOpen}
-                                />
-                              </ActionsProvider>
-                            </ContextMenuProvider>
-                          </WindowsProvider>
-                        </MainWindowProvider>
-                      </SelectionProvider>
+                      <PolygonProvider>
+                        <SelectionProvider>
+                          <MainWindowProvider
+                            initialPosition={initialPosition}
+                            initialSize={initialSize}
+                            isInitiallyMaximized={isInitiallyMaximized}
+                            minimalSize={minimalSize}
+                          >
+                            <WindowsProvider>
+                              <ContextMenuProvider>
+                                <ActionsProvider>
+                                  <Logic 
+                                    minimalSize={minimalSize}
+                                    isResizable={isResizable}
+                                    isAutoShrink={isAutoShrink}
+                                    isOpen={isOpen}
+                                  />
+                                </ActionsProvider>
+                              </ContextMenuProvider>
+                            </WindowsProvider>
+                          </MainWindowProvider>
+                        </SelectionProvider>
+                      </PolygonProvider>
                     </CurveProvider>
                   </LineProvider>
                 </ToolProvider>

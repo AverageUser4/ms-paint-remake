@@ -18,5 +18,7 @@ GOING TO:
   - Line should be drawn without antialiasing
   - fill dropdown in Shapes should be disabled when current shape cannot have fill
   - check how new shapes work with History
+  - make Line, Polygon, Curve size check (that are used 2 times) into functions
+  - when using alternate mouse buttons during Polygon / Curve creation, it changes color, although it should not
 
 DONE:

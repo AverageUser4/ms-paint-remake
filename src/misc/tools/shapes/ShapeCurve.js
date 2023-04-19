@@ -4,32 +4,14 @@ import validateToolArgs from "../validateToolArgs";
 class ShapeCurve extends ShapeBase {
 
   drawShape({ 
-    secondaryContext,
-    thumbnailSecondaryContext,
-    selectionContext,
-    thumbnailSelectionContext,
-    selectionPhase,
-    colorData,
-    shapeData,
-    canvasSize,
-    curvePoints,
-    currentCurvePointRef,
-    currentlyPressedRef,
-    curvePointPercents,
-    selectionSize,
+    secondaryContext, thumbnailSecondaryContext, selectionContext, thumbnailSelectionContext,
+    selectionPhase, colorData, shapeData, canvasSize, curvePoints, currentCurvePointRef,
+    currentlyPressedRef, curvePointPercents, selectionSize,
   }) {
     validateToolArgs(arguments, [
-      'secondaryContext',
-      'thumbnailSecondaryContext',
-      // 'selectionContext',
-      'thumbnailSelectionContext',
-      'selectionPhase',
-      'colorData',
-      'shapeData',
-      'canvasSize',
-      'curvePoints',
-      'currentCurvePointRef',
-      'currentlyPressedRef',
+      'secondaryContext', 'thumbnailSecondaryContext', /* 'selectionContext', */
+      'thumbnailSelectionContext', 'selectionPhase', 'colorData', 'shapeData',
+      'canvasSize', 'curvePoints', 'currentCurvePointRef', 'currentlyPressedRef',
     ]);
 
     let usedSize = canvasSize;

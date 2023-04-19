@@ -3,24 +3,52 @@ import validateToolArgs from "../validateToolArgs";
 
 class ShapePolygon extends ShapeBase {
 
-  drawShape({ selectionContext, colorData, selectionSize, currentlyPressedRef, shapeData, thumbnailSelectionContext }) {
-    validateToolArgs(arguments, ['selectionContext', 'colorData', 'selectionSize', 'currentlyPressedRef', 'shapeData', 'thumbnailSelectionContext']);
+  drawShape({ 
+    secondaryContext, thumbnailSecondaryContext, selectionContext,
+    thumbnailSelectionContext, selectionPhase, colorData, shapeData,
+    canvasSize, polygonPoints, currentlyPressedRef, polygonPointPercents,
+    selectionSize,
+  }) {
+    validateToolArgs(arguments, [
+      'secondaryContext', 'thumbnailSecondaryContext', /* 'selectionContext', */
+      'thumbnailSelectionContext', 'selectionPhase', 'colorData', 'shapeData',
+      'canvasSize', 'currentlyPressedRef',
+    ]);
+
+    let usedSize = canvasSize;
+    let usedContext = secondaryContext;
+    let usedThumbnailContext = thumbnailSecondaryContext;
+
+    if(selectionPhase) {
+      usedSize = selectionSize;
+      usedContext = selectionContext;
+      usedThumbnailContext = thumbnailSelectionContext;
+    }
     
     this.prepareAndDraw({ 
-      selectionSize,
+      selectionSize: usedSize,
       currentlyPressedRef,
       colorData,
-      selectionContext,
+      selectionContext: usedContext,
       shapeData,
-      thumbnailSelectionContext,
-      drawCallback: ({ context, startXY, end }) => {
+      thumbnailSelectionContext: usedThumbnailContext,
+      drawCallback: ({ context, getCoordFromPercent }) => {
+        context.lineCap = 'round';
+        context.clearRect(0, 0, usedSize.width, usedSize.height);
+
         context.beginPath();
-        context.moveTo(startXY, startXY);
-        context.lineTo(startXY, end.y);
-        context.lineTo(end.x, end.y);
-        context.closePath();
-        shapeData.fill && context.fill();
-        shapeData.outline && context.stroke();
+
+        if(polygonPointPercents) {
+          console.error('not implemented');
+        } else {
+          context.moveTo(polygonPoints[0].x, polygonPoints[0].y);
+
+          for(let i = 1; i < polygonPoints.length; i++) {
+            context.lineTo(polygonPoints[i].x, polygonPoints[i].y);
+          }
+        }
+
+        context.stroke();
       }
     });
   }
