@@ -13,9 +13,13 @@ function ContainerProvider({ children, containerRef, isConstrained, isAutoFit, i
     }
 
     function onResize() {
+      console.log('onResize')
+
       if(isConstrained && containerRef.current) {
+        console.log('getting container')
         setContainerRect(containerRef.current.getBoundingClientRect());
       } else if(!isConstrained) {
+        console.log('getting body')
         setContainerRect(document.body.getBoundingClientRect());
       }
     }
@@ -26,6 +30,8 @@ function ContainerProvider({ children, containerRef, isConstrained, isAutoFit, i
       window.removeEventListener('resize', onResize);
     };
   }, [containerRef, isConstrained, containerRect]);
+
+  console.log(containerRect)
 
   return (
     <ContainerContext.Provider

@@ -12,7 +12,6 @@ import { useCanvasMiscContext } from '../../context/CanvasMiscContext';
 import { getDrawData } from '../../misc/utils';
 
 function GlobalShortcuts({ ribbonData }) {
-  // https://www.guidingtech.com/15171/ms-microsoft-paint-keyboard-shortcuts/
   const { isMainWindowFocused, mainWindowRef, setIsMainWindowFocused } = useMainWindowContext();
   const { 
     doSelectionSelectAll, doSelectionPasteFromClipboard,
@@ -58,7 +57,7 @@ function GlobalShortcuts({ ribbonData }) {
     function onKeyDown(event) {
       // shift + f10 to open context menu
       
-      if(event.ctrlKey || event.altKey) {
+      if((event.ctrlKey || event.altKey) && !event.shiftKey) {
         event.preventDefault();
       }
 
@@ -173,7 +172,7 @@ function GlobalShortcuts({ ribbonData }) {
             setIsFullScreenView(prev => !prev);
             break;
 
-          case 'f12':
+          case 'f2':
             doSaveFile();
             break;
 

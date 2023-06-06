@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import PaintXPlatform from './components/PaintXPlatform/PaintXPlatform';
 
@@ -11,10 +11,14 @@ function App() {
   /* TEMP */
   /* TEMP */
   /* TEMP */
+  const [force, setForce] = useState(false);
   useEffect(() => {
+    console.log('changing to full size')
     const fullSize = true;
-    if(fullSize)
+    if(fullSize) {
       document.querySelector('html').classList.add('full');
+      setForce(true);
+    }
   }, []);
   /* TEMP */
   /* TEMP */

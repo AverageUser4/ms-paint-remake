@@ -130,7 +130,7 @@ const FileDropdown = memo(forwardRef(function FileDropdown(props, ref) {
                 <span className="text text--1">Save <span className="text--underline">a</span>s</span>
                 <Tooltip
                   ID="id-fd-save-as"
-                  heading="Save as (F12)"
+                  heading="Save as (F2)"
                   text="Save the current picture as a new file."
                 />
               </button>
