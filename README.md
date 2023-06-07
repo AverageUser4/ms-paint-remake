@@ -1,5 +1,6 @@
 # MsPaint for browser
-
+  ![showcase](../assets/showcase.jpg?raw=true)
+  
 # Useful resources:
 - https://superuser.com/questions/1491798/where-are-ms-paint-icons-stored
 - https://stackoverflow.com/questions/41143631/html5-canvas-curve-image-along-the-path
