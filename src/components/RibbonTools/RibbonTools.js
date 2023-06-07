@@ -71,10 +71,11 @@ const RibbonTools = memo(function RibbonTools({ ribbonWidth }) {
           </button>
 
           <button
-            className={`tooltip-container button ${currentTool === 'text' && 'button--active'}`}
+            className={`tooltip-container button--disabled button ${currentTool === 'text' && 'button--active'}`}
             onClick={() => {
-              doSetCurrentTool('text');
-              setIsContainerDropdownOpen(false);
+              console.error('Text tool is not implemented.');
+              // doSetCurrentTool('text');
+              // setIsContainerDropdownOpen(false);
             }}
             aria-describedby="id-tools-text"
           >
